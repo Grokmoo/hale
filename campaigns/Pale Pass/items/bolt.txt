@@ -1,0 +1,13 @@
+name "Bolt"
+icon "items/S_Bow16" "#ffffffff"
+subIcon "subIcons/quiver01" "#ffffffff"
+projectileIcon "subIcons/projectile-bolt01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A crossbow bolt, used as ammunition in crossbows."
+value "1 CP" 2
+weight 100
+itemType "AMMO"
+quality "Good"
+weaponType "CROSSBOW"

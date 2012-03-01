@@ -1,0 +1,19 @@
+name "Total Defense"
+type "Defensive"
+description "You dedicate your entire turn to defending yourself with your shield.  You gain a +40 bonus to Armor Class until your next turn.  You must be wielding a shield to use this ability."
+activateable true
+fixed true
+cooldown 3
+
+icon "icons/totalDefense"
+
+scriptFile "abilities/totalDefense"
+
+actionPointCost 8400
+
+actionType Tactical
+groupType Single
+rangeType Personal
+
+addPrereq Ability DefensiveFighting
+addPrereq Stat LevelAttackBonus 30

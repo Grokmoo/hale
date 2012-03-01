@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<themes>
+	<theme name="mainmenubutton" ref="-defaults">
+		<param name=""><image>hoverbutton.*</image></param>
+		<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<param name="font"><font>nobile-bold</font></param>
+		
+		<param name="minWidth"><int>200</int></param>
+		<param name="minHeight"><int>50</int></param>
+	</theme>
+	
+	<theme name="loadingwaitpopup" ref="-defaults">
+		<param name="titleGap"><int>20</int></param>
+		<param name="labelBarGap"><int>5</int></param>
+		
+		<theme name="content" ref="-defaults">
+			<param name="background"><image>black</image></param>
+			<param name="border"><border>50,100,50,100</border></param>
+			<theme name="titlelabel" ref="labelbig"/>
+			<theme name="descriptionlabel" ref="label"/>
+			<theme name="progressbar" ref="progressbar">
+				<param name="minWidth"><int>200</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="errorpopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="border"><border>10</border></param>
+			<param name="gap"><int>10</int></param>
+			
+			<theme name="messagelabel" ref="labelbigblack"/>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>OK</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="confirmationpopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="titleGap"><int>50</int></param>
+			<param name="acceptCancelGap"><int>30</int></param>
+		
+			<param name="border"><border>10</border></param>
+			
+			<theme name="titlelabel" ref="labelbigblack"/>
+			
+			<theme name="warninglabel" ref="labelbigred"/>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>Yes</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>No</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="confirmquitpopup" ref="confirmationpopup"/>
+	
+	<theme name="characterselector" ref="-defaults">
+		<param name=""><image>characterselector.*</image></param>
+		<param name="border"><border>2,2,2,2</border></param>
+	
+		<theme name="portraitviewer" ref="portraitviewer"/>
+	
+		<theme name="description" ref="textarea">
+			<param name="minWidth"><int>160</int></param>
+			<param name="background"><image>transparent</image></param>
+		</theme>
+		
+		<theme name="detailsbutton" ref="-defaults">
+			<param name=""><image>hoverbutton.*</image></param>
+			<param name="textAlignment"><enum type="alignment">center</enum></param>
+			<param name="text"><string>Show Details</string></param>
+			<param name="minWidth"><int>140</int></param>
+			<param name="minHeight"><int>20</int></param>
+			<param name="tooltip"><string>Show the Character Sheet for this Character</string></param>
+		</theme>
+		
+		<theme name="addremovebutton" ref="-defaults">
+			<param name=""><image>hoverbutton.*</image></param>
+			<param name="textAlignment"><enum type="alignment">center</enum></param>
+			<param name="font"><font>blue</font></param>
+			<param name="minWidth"><int>140</int></param>
+			<param name="minHeight"><int>20</int></param>
+		</theme>
+		
+		<theme name="deletebutton" ref="-defaults">
+			<param name="background"><image>deletebutton.background</image></param>
+			
+			<param name="minWidth"><int>19</int></param>
+			<param name="minHeight"><int>19</int></param>
+		</theme>
+		
+		<param name="expandboxy"><int>39</int></param>
+		<param name="expandboxborder"><int>1</int></param>
+		
+		<theme name="expandbox" ref="-defaults">
+			<param name="tooltip"><string>Select another version of this character</string></param>
+		
+			<theme name="expandbutton" ref="decrementbutton">
+				<param name="tooltip"><string>Select another version of this character</string></param>
+			</theme>
+			
+			<theme name="box" ref="-defaults">
+				<param name="background"><image>characterselectorbox.background</image></param>
+				<param name="border"><border>1</border></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="difficultyselector" ref="-defaults">
+		<param name="border"><border>5</border></param>
+		<param name="background"><image>-borderD</image></param>
+	
+		<theme name="difficultylabel" ref="labelbigblack">
+			<param name="text"><string>Difficulty Level</string></param>
+		</theme>
+			
+		<theme name="difficultybutton" ref="-defaults">
+			<param name=""><image>hoverbutton.*</image></param>
+			<param name="border"><border>background.border</border></param>
+			<param name="textAlignment"><enum type="alignment">center</enum></param>
+			<param name="minWidth"><int>70</int></param>
+			<param name="minHeight"><int>25</int></param>
+		</theme>
+			
+		<theme name="difficultydescription" ref="textarea">
+			<param name="maxHeight"><int>62</int></param>
+		</theme>
+	</theme>
+	
+	<theme name="characterselectorpopup" ref="-defaults">
+		<param name="background"><image>-borderH</image></param>
+		<param name="border"><border>2</border></param>
+
+		<theme name="content" ref="-defaults">
+			<theme name="characterbutton" ref="-defaults">
+				<param name="height"><int>25</int></param>
+				<param name="background"><image>characterbutton.background</image></param>
+			
+				<theme name="textarea" ref="textarea">
+					<param name="background"><image>transparent</image></param>
+				</theme>
+			</theme>
+			
+			<theme name="deletebutton" ref="-defaults">
+				<param name="background"><image>deletebutton.background</image></param>
+			
+				<param name="minWidth"><int>19</int></param>
+				<param name="minHeight"><int>19</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="savegameselector" ref="-defaults">
+		<param name=""><image>hoverbutton.*</image></param>
+		<param name="minHeight"><int>50</int></param>
+		<param name="border"><border>2</border></param>
+	
+		<param name="nameDateGap"><int>50</int></param>
+		<param name="partyLevelGap"><int>10</int></param>
+						
+		<theme name="namelabel" ref="labelbigred"/>
+		<theme name="datelabel" ref="labelblack"/>
+		<theme name="partynamelabel" ref="labelblack"/>
+		<theme name="partylevellabel" ref="labelgreen"/>
+		<theme name="arealabel" ref="labelblue"/>
+	</theme>
+	
+	<theme name="newsaveselector" ref="savegameselector">
+		<param name="editFieldGap"><int>10</int></param>
+		<param name="topRowCenter"><int>25</int></param>
+	
+		<param name="minHeight"><int>62</int></param>
+	
+		<theme name="namelabel" ref="labelbigred">
+			<param name="text"><string>New Save File</string></param>
+		</theme>
+	
+		<theme name="nameeditfield" ref="editfield">
+			<param name="minWidth"><int>250</int></param>
+			<theme name="renderer" ref="labelbigblack"/>
+		</theme>
+		
+		<theme name="errorlabel" ref="labelred"/>
+	</theme>
+	
+	<theme name="optionspopup" ref="iconbuttongrey">
+		<theme name="content" ref="dialoglayout">
+			<param name="border"><border>10</border></param>
+			<param name="defaultGap"><dimension>10,10</dimension></param>
+			<param name="largeGap"><dimension>30,30</dimension></param>
+		
+			<theme name="titlelabel" ref="labelbigblack">
+				<param name="text"><string>Game Options</string></param>
+			</theme>
+			
+			<theme name="editortitlelabel" ref="labelbigblack">
+				<param name="text"><string>Editor Options</string></param>
+			</theme>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>Cancel</string></param>
+				<param name="minWidth"><int>120</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>Accept</string></param>
+				<param name="minWidth"><int>120</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="modeslabel" ref="labelblack">
+				<param name="text"><string>Resolution</string></param>
+			</theme>
+			
+			<theme name="modesbox" ref="combobox">
+				<param name="minWidth"><int>120</int></param>
+			</theme>
+			
+			<theme name="fullscreentoggle" ref="radiobutton">
+				<param name="text"><string>Run in Fullscreen Mode</string></param>
+			</theme>
+			
+			<theme name="tooltiplabel" ref="labelblack">
+				<param name="text"><string>Tooltip Delay</string></param>
+			</theme>
+			
+			<theme name="tooltipadjuster" ref="valueadjuster"/>
+			
+			<theme name="tooltipunitslabel" ref="labelblack">
+				<param name="text"><string>seconds</string></param>
+			</theme>
+			
+			<theme name="combatspeedlabel" ref="labelblack">
+				<param name="text"><string>Combat Delay</string></param>
+			</theme>
+			
+			<theme name="combatspeedadjuster" ref="valueadjuster"/>
+			
+			<theme name="combatspeedunitslabel" ref="labelblack">
+				<param name="text"><string>seconds</string></param>
+			</theme>
+			
+			<theme name="editormodeslabel" ref="labelblack">
+				<param name="text"><string>Resolution</string></param>
+			</theme>
+			
+			<theme name="editormodesbox" ref="combobox">
+				<param name="minWidth"><int>120</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="savegamepopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="acceptCancelGap"><int>5</int></param>
+		
+			<param name="border"><border>10</border></param>
+			<param name="minWidth"><int>500</int></param>
+			<param name="minHeight"><int>400</int></param>
+			
+			<theme name="titlelabel" ref="labelbigblack">
+				<param name="text"><string>Select a Save File</string></param>
+			</theme>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>Cancel</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>Save</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="deletebutton" ref="mainmenubutton">
+				<param name="text"><string>Delete</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="selectorpane" ref="scrollpane">
+				<theme name="content" ref="dialoglayout">
+					<theme name="savegameselector" ref="savegameselector"/>
+					<theme name="newsaveselector" ref="newsaveselector"/>
+				</theme>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="loadgamepopup" ref="savegamepopup">
+		<theme name="content" ref="savegamepopup.content">
+			<param name="acceptCancelGap"><int>5</int></param>
+			
+			<theme name="titlelabel" ref="savegamepopup.content.titlelabel">
+				<param name="text"><string>Select a Saved Game to Load</string></param>
+			</theme>
+			
+			<theme name="acceptbutton" ref="savegamepopup.content.acceptbutton">
+				<param name="text"><string>Load</string></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="campaignpopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="acceptCancelGap"><int>5</int></param>
+		
+			<param name="border"><border>10</border></param>
+			<param name="minWidth"><int>650</int></param>
+			<param name="minHeight"><int>400</int></param>
+			
+			<theme name="titlelabel" ref="labelbigblack">
+				<param name="text"><string>Select a Campaign</string></param>
+			</theme>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>Cancel</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>Accept</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="descriptionpane" ref="scrollpane"/>
+			
+			<theme name="selectorpane" ref="scrollpane">
+				<param name="maxWidth"><int>250</int></param>
+				<param name="minWidth"><int>250</int></param>
+			
+				<theme name="content" ref="dialoglayout">
+					<theme name="campaignselector" ref="mainmenubutton">
+						<param name="minWidth"><int>150</int></param>
+					</theme>
+				</theme>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="partyformationwindow" ref="iconbuttongrey">
+		<param name="smallGap"><int>5</int></param>
+		<param name="sectionGap"><int>20</int></param>
+		<param name="selectableWidth"><int>600</int></param>
+	
+		<param name="border"><border>10</border></param>
+		<param name="maxHeight"><int>600</int></param>
+		<param name="minHeight"><int>300</int></param>
+			
+		<theme name="titlelabel" ref="labelbigblack">
+			<param name="text"><string>Party Formation</string></param>
+		</theme>
+		
+		<theme name="namelabel" ref="labelbigblack">
+			<param name="text"><string>Enter a Name</string></param>
+		</theme>
+		
+		<theme name="namefield" ref="editfield">
+			<param name="minWidth"><int>250</int></param>
+			<theme name="renderer" ref="labelbigred"/>
+		</theme>
+		
+		<theme name="partytitlelabel" ref="labelbigred">
+			<param name="text"><string>Your Party</string></param>
+		</theme>
+		
+		<theme name="partysizelabel" ref="labelblack"/>
+		
+		<theme name="availabletitlelabel" ref="labelbigred">
+			<param name="text"><string>Available Characters</string></param>
+		</theme>
+
+		<theme name="showpregeneratedcharactersbutton" ref="checkbutton">
+			<param name="text"><string>Show Pregenerated Characters</string></param>
+			<param name="minWidth"><int>220</int></param>
+		</theme>
+		
+		<theme name="newcharacterbutton" ref="mainmenubutton">
+			<param name="text"><string>Create New Character</string></param>
+			<param name="minWidth"><int>240</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="cancelbutton" ref="mainmenubutton">
+			<param name="text"><string>Cancel</string></param>
+			<param name="minWidth"><int>100</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="acceptbutton" ref="mainmenubutton">
+			<param name="text"><string>Accept</string></param>
+			<param name="minWidth"><int>100</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="partypane" ref="scrollpane">
+			<theme name="content" ref="-defaults">
+				<param name="selectorGap"><int>10</int></param>
+				<theme name="characterselector" ref="characterselector"/>
+			</theme>
+		</theme>
+		
+		<theme name="selectorpane" ref="scrollpane">
+			<theme name="content" ref="-defaults">
+				<param name="selectorGap"><int>10</int></param>
+				<theme name="characterselector" ref="characterselector"/>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="partyselector" ref="-defaults">
+		<param name=""><image>partyselector.*</image></param>
+		<param name="border"><border>2</border></param>
+	
+		<theme name="textarea" ref="textarea">
+			<param name="background"><image>transparent</image></param>
+		</theme>
+		
+		<theme name="deletebutton" ref="-defaults">
+			<param name="background"><image>deletebutton.background</image></param>
+			
+			<param name="minWidth"><int>19</int></param>
+			<param name="minHeight"><int>19</int></param>
+		</theme>
+	</theme>
+	
+	<theme name="newgamewindow" ref="iconbuttongrey">
+		<param name="acceptCancelGap"><int>5</int></param>
+		<param name="sectionGap"><int>20</int></param>
+		<param name="innerwidth"><int>580</int></param>
+		<param name="preselectedwidth"><int>290</int></param>
+		<param name="preselectedheight"><int>414</int></param>
+		<param name="border"><border>10</border></param>
+		<param name="maxHeight"><int>600</int></param>
+	
+		<theme name="titlelabel" ref="labelbigblack">
+			<param name="text"><string>New Game</string></param>
+		</theme>
+		
+		<theme name="cancelbutton" ref="mainmenubutton">
+			<param name="text"><string>Cancel</string></param>
+			<param name="minWidth"><int>100</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="acceptbutton" ref="mainmenubutton">
+			<param name="text"><string>Accept</string></param>
+			<param name="minWidth"><int>100</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="difficultyselector" ref="difficultyselector"/>
+		
+		<theme name="partylabel" ref="labelbigred">
+			<param name="text"><string>Select a Party</string></param>
+		</theme>
+		
+		<theme name="showinvalidpartiesbutton" ref="checkbutton">
+			<param name="text"><string>Show Invalid Parties</string></param>
+			<param name="minWidth"><int>150</int></param>
+		</theme>
+		
+		<theme name="characterslabel" ref="labelbigred">
+			<param name="text"><string>Party Members</string></param>
+		</theme>
+		
+		<theme name="newpartybutton" ref="mainmenubutton">
+			<param name="text"><string>Create New Party</string></param>
+			<param name="minWidth"><int>240</int></param>
+			<param name="minHeight"><int>30</int></param>
+		</theme>
+		
+		<theme name="partypane" ref="scrollpane">
+			<theme name="content" ref="dialoglayout">
+				<theme name="partyselector" ref="partyselector"/>
+			</theme>
+		</theme>
+		
+		<theme name="characterspane" ref="scrollpane">
+			<theme name="content" ref="dialoglayout">
+				<theme name="characterselector" ref="characterselector"/>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="mainmenu" ref="-defaults">
+		<param name="buttonGap"><int>20</int></param>
+		<param name="titleOffset"><int>40</int></param>
+		
+		<theme name="campaignlabel" ref="labelbig">
+			<param name="text"><string>Hale</string></param>
+		</theme>
+		
+		<theme name="versionlabel" ref="label"/>
+		
+		<theme name="campaignbutton" ref="mainmenubutton">
+			<param name="text"><string>Choose Campaign</string></param>
+		</theme>
+		
+		<theme name="newgamebutton" ref="mainmenubutton">
+			<param name="text"><string>New Game</string></param>
+		</theme>
+		
+		<theme name="loadgamebutton" ref="mainmenubutton">
+			<param name="text"><string>Load Game</string></param>
+		</theme>
+		
+		<theme name="editorbutton" ref="mainmenubutton">
+			<param name="text"><string>Launch Editor</string></param>
+		</theme>
+		
+		<theme name="optionsbutton" ref="mainmenubutton">
+			<param name="text"><string>Options</string></param>
+		</theme>
+		
+		<theme name="exitbutton" ref="mainmenubutton">
+			<param name="text"><string>Exit</string></param>
+		</theme>
+		
+		<theme name="loadgamepopup" ref="loadgamepopup"/>
+		<theme name="newgamewindow" ref="newgamewindow"/>
+		<theme name="partyformationwindow" ref="partyformationwindow"/>
+		<theme name="characterbuilder" ref="characterbuilder"/>
+		<theme name="characterwindow" ref="characterwindow"/>
+		<theme name="abilitydetailswindow" ref="abilitydetailswindow"/>
+		<theme name="abilitylistwindow" ref="abilitylistwindow"/>
+	</theme>
+	
+	<theme name="ingamemenu" ref="iconbuttongrey">
+		<theme name="content" ref="dialoglayout">
+			<param name="border"><border>10</border></param>
+			
+			<theme name="backbutton" ref="mainmenubutton">
+				<param name="text"><string>Back to Game</string></param>
+			</theme>
+		
+			<theme name="savebutton" ref="mainmenubutton">
+				<param name="text"><string>Save</string></param>
+			</theme>
+		
+			<theme name="loadbutton" ref="mainmenubutton">
+				<param name="text"><string>Load</string></param>
+			</theme>
+			
+			<theme name="optionsbutton" ref="mainmenubutton">
+				<param name="text"><string>Options</string></param>
+			</theme>
+		
+			<theme name="menubutton" ref="mainmenubutton">
+				<param name="text"><string>Quit to Menu</string></param>
+			</theme>
+		
+			<theme name="exitbutton" ref="mainmenubutton">
+				<param name="text"><string>Exit Game</string></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="ingameoptionspopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="border"><border>10</border></param>
+			<param name="sectiongap"><int>10</int></param>
+			<param name="largegap"><int>30</int></param>
+		
+			<theme name="titlelabel" ref="labelbigblack">
+				<param name="text"><string>Game Options</string></param>
+			</theme>
+			
+			<theme name="difficultyselector" ref="difficultyselector"/>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>Cancel</string></param>
+				<param name="minWidth"><int>120</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+			
+			<theme name="acceptbutton" ref="mainmenubutton">
+				<param name="text"><string>Accept</string></param>
+				<param name="minWidth"><int>120</int></param>
+				<param name="minHeight"><int>30</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
+	<theme name="campaignconclusionpopup" ref="-defaults">
+		<theme name="content" ref="-defaults">
+			<theme name="characterwindow" ref="characterwindow"/>
+		
+			<param name="background"><image>black</image></param>
+			
+			<theme name="window" ref="iconbuttongrey">
+				<param name="border"><border>10</border></param>
+				<param name="gap"><int>5</int></param>
+			
+				<param name="defaultwidth"><int>550</int></param>
+				<param name="defaultheight"><int>450</int></param>
+				<param name="textareaheight"><int>150</int></param>
+				
+				<param name="exportpressedtext"><string>Party Exported</string></param>
+				
+				<theme name="scrollpane" ref="scrollpane">
+					<theme name="content" ref="-defaults">
+						<theme name="characterselector" ref="characterselector"/>
+					</theme>
+				</theme>
+				
+				<theme name="exportbutton" ref="mainmenubutton">
+					<param name="text"><string>Export Party</string></param>
+					<param name="border"><border>5</border></param>
+				</theme>
+				
+				<theme name="continuebutton" ref="mainmenubutton">
+					<param name="border"><border>5</border></param>
+				</theme>
+				
+				<theme name="quittomenubutton" ref="mainmenubutton">
+					<param name="text"><string>Quit to Menu</string></param>
+				</theme>
+				
+				<theme name="exitbutton" ref="mainmenubutton">
+					<param name="text"><string>Exit</string></param>
+				</theme>
+				
+				<theme name="textarea" ref="textarea">
+					<param name="background"><image>transparent</image></param>
+				</theme>
+			</theme>
+		</theme>
+	</theme>
+	
+</themes>

@@ -1,0 +1,5 @@
+size 3
+faction "Neutral"
+challenge 0
+creature "peasant01" -2 1
+creature "fareach_healer" 1 -2

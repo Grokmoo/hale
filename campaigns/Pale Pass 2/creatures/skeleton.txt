@@ -1,0 +1,25 @@
+playerCharacter false
+
+name "Skeleton"
+icon "creatures/skeleton01" "#ffffffff"
+gender "Male"
+race "Skeleton"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 4400
+role "UndeadWarrior" 8
+attributes 15 12 14 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "SlashingImmunity50"
+level 1 addAbility "PiercingImmunity50"
+level 1 addAbility "CriticalHitImmunity"
+
+currencyReward 30 65
+equip "longsword" Good
+equip "armor_leatherhard_base" Good
+addloot "LootLevel5" 50 PER_LIST

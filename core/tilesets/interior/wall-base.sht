@@ -1,0 +1,6 @@
+Spritesheet "wall-base"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image "wall" 0 0

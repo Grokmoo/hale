@@ -1,0 +1,13 @@
+playerCharacter false
+
+name "Barkeep"
+icon "creatures/human07" "#ffffffff"
+portrait "Human/peasant"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+role "Commoner" 1
+attributes 10 11 12 9 10 10
+conversation "conversations/willowInn_barkeep"
+

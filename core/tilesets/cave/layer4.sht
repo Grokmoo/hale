@@ -1,0 +1,13 @@
+Spritesheet "layer4"
+defaultWidth 108
+defaultHeight 144
+
+image "wall-rough-concave-l"     0   0
+image "wall-rough-concave-r"   108   0
+image "wall-rough-concave-tl"  216   0
+image "wall-rough-concave-tr"  324   0
+
+image "wall-rough-convex-bl"    0 144
+image "wall-rough-convex-br"  108 144
+image "wall-rough-convex-l"   216 144
+image "wall-rough-convex-r"   324 144

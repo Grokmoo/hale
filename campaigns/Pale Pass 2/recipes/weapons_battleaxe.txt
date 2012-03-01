@@ -1,0 +1,19 @@
+name "Battleaxe"
+description "Creates a battleaxe.  The quality is dependant on your Craft Weapons skill."
+skill "CraftWeapons"
+skillRequirement 20
+result "battleaxe"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_iron" 2
+ingredient "bar_wood" 1
+ingredient "coal" 5
+qualityModifier 15 ""
+qualityModifier 35 ""
+qualityModifier 55 ""
+qualityModifier 75 ""
+qualityModifier 95 ""
+qualityModifier 115 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

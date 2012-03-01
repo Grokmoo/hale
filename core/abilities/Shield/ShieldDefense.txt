@@ -1,0 +1,8 @@
+name "Shield Defense"
+type "Defensive"
+description "You gain an additional 20% to Armor Class from Shields and Tower Shields."
+activateable false
+
+icon "icons/shieldDefense"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addArmorBonus('Shield', 'ArmorClass', 20); effect.getBonuses().addArmorBonus('Tower Shield', 'ArmorClass', 20); parent.applyEffect(effect); }"

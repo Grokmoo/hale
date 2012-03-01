@@ -1,0 +1,32 @@
+name "Restoration"
+
+add "Renewal"           0.5 1
+add "RestoreMorale"     0.0 2
+add "RemoveParalysis"   1.0 2
+add "RaiseDead"         0.5 3
+
+add "Cure"              3.0 0
+add "FortifyHealth"     4.0 1
+add "Regeneration"      2.0 1
+add "MassCure"          3.0 2
+add "MassRegeneration"  2.5 3
+
+add "Dispell"           5.5 1
+add "GreaterDispell"    5.0 3
+add "Ward"              6.0 2
+
+connect 2.0 1.0 OneDown
+connect 2.0 2.0 Through
+
+connect 3.0 0.0 ThreeDown
+connect 2.5 3.0 TwoUp
+
+connect 3.0 1.0 OneDown
+connect 3.0 1.0 Through
+
+connect 0.5 1 TwoDown
+connect 0.5 3 TwoUp
+
+connect 5.5 1 TwoDown
+connect 5.0 2 Through
+connect 5.0 2 OneDown

@@ -1,0 +1,15 @@
+name "Note"
+icon "items/I_SilverCoin" "#ffffffff"
+forceNoQuality true
+ingredient false
+quest false
+cursed false
+description "A note written on parchment"
+value "5 CP" 1
+weight 30
+itemType "ITEM"
+quality "Good"
+script "items/readBook"
+conversation "conversations/sonorinDesertNote"
+useButtonText "Read"
+useAPCost 4000

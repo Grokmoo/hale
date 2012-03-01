@@ -1,0 +1,3 @@
+area "Dark Cave"
+script "triggers/darkCave01"
+addPoints   10 5

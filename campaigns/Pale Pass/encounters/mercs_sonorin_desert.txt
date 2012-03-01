@@ -1,0 +1,7 @@
+size 2
+faction "Neutral"
+challenge 60
+creature "merc_lvl06_leader" 0 1
+creature "merc_lvl06_mage" 0 -1
+creature "merc_lvl06" -1 -1
+creature "merc_lvl06" 1 -1

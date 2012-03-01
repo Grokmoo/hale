@@ -1,0 +1,9 @@
+name "Crippling Backstab"
+type "Rogue Abilities"
+description "Your backstabs can now cripple your opponent.  Targets of a successful backstab must succeed at a physical resistance check or suffer a -1 penalty to Strength and Dexterity for 3 rounds."
+activateable false
+
+icon "icons/cripplingBackstab"
+
+addPrereq Ability ImprovedBackstab
+addPrereq Role Rogue 8

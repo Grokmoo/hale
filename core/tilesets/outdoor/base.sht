@@ -1,0 +1,77 @@
+Spritesheet "base"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image path0      0 0
+image path1      1 0
+image path2      2 0
+image path3      3 0
+
+image pathclean0 4 0
+image pathclean1 5 0
+image pathclean2 6 0
+
+image pathgrass0 0 1
+image pathgrass1 1 1
+
+image water0     2 1
+image water1     3 1
+image water2     4 1
+image water3     5 1
+image water4     6 1
+
+image dirt0      0 2
+image dirt1      1 2
+image dirt2      2 2
+image dirt3      3 2
+image dirt4      4 2
+image dirt5      5 2
+image dirt6      6 2
+
+image grassdry0  0 3
+image grassdry1  1 3
+image grassdry2  2 3
+image grassdry3  3 3
+image grassdry4  4 3
+image grassdry5  5 3
+
+image grass0       0 4
+image grass1       1 4
+image grass2       2 4
+image grass3       3 4
+image grass4       4 4
+image grass5       5 4
+image grass6       6 4
+
+image leaves0      1 5
+image leaves1      2 5
+image leaves2      3 5
+image leaves3      4 5
+image leaves4      5 5
+image leaves5      6 5
+
+image desert0      0 5
+
+image desert1      0 6
+image desert2      1 6
+image desert3      2 6
+image desert4      3 6
+image desert5      4 6
+image desert6      5 6
+image desert7      6 6
+
+image deserthills0 0 7
+image deserthills1 1 7
+image deserthills2 2 7
+
+image hills0       3 7
+image hills1       4 7
+image hills2       5 7
+
+image stone0       7 0
+image stone1       7 1
+image stone2       7 2
+image stone3       6 3
+image stone4       7 3
+image stone5       7 4

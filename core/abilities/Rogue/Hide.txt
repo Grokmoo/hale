@@ -1,0 +1,14 @@
+name "Hide"
+type "Rogue Abilities"
+description "You are able to hide from enemies, using stealth to sneak around them or perform a surprise attack."
+activateable true
+mode true
+cancelable true
+fixed true
+
+icon "icons/hide"
+
+scriptFile "abilities/hide"
+
+cooldown 5
+actionPointCost 8000

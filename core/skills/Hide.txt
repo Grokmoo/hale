@@ -1,0 +1,7 @@
+name Hide
+verb Hide
+untrained true
+keyAttribute Dex
+hasArmorPenalty true
+restrictToRole Rogue
+icon "icons/hide"

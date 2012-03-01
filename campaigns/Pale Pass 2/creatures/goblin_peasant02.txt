@@ -1,0 +1,16 @@
+playerCharacter false
+
+name "Goblin"
+icon "creatures/goblin02" "#ffffffff"
+gender "Male"
+race "Goblin"
+immortal true
+unspentSkillPoints 0
+xp 1500
+role "Commoner" 5
+attributes 11 12 9 5 9 7
+script "ai/aiStandard"
+
+currencyReward 50 90
+addloot "LootLevel5" 50 PER_LIST
+addloot "LootLevel5" 10 PER_LIST

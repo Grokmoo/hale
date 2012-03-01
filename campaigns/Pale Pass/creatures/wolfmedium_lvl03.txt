@@ -1,0 +1,15 @@
+playerCharacter false
+
+name "Wolf"
+icon "creatures/wolf-medium" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 300
+role "Monster" 3
+attributes 10 11 13 3 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor5"
+
+currencyReward 4 10
+equip "mediumClaw" Good

@@ -1,0 +1,20 @@
+Spritesheet "animations"
+
+defaultWidth 64
+defaultHeight 64
+multiplyValuesBy 64
+
+image lightning1    0    0
+image lightning2    1    0
+image lightning3    2    0
+image lightning4    3    0
+
+image blast1 0 1
+image blast2 1 1
+image blast3 2 1
+image blast4 3 1
+image blast5 0 2
+image blast6 1 2
+image blast7 2 2
+image blast8 3 2
+

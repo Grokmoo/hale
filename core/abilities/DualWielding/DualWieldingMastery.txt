@@ -1,0 +1,13 @@
+name "Dual Wielding Mastery"
+type "Dual Wielding"
+activateable false
+description "You gain an additional +15 bonus to attack and a +1 damage bonus per point of Strength above 10 while Dual Wielding.  With this ability, the penalties for dual wielding are completely offset for the main hand and nearly offset for the off hand."
+
+icon "icons/dualWieldMastery"
+
+addPrereq Ability DualWieldingDefense
+addPrereq Ability ExpertDualWielding
+
+addPrereq Stat LevelAttackBonus 60
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('DualWieldAttack', 'Stackable', 15); effect.getBonuses().addBonus('DualWieldStrDamage', 'Stackable', 1); parent.applyEffect(effect); }"

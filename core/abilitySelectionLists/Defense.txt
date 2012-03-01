@@ -1,0 +1,15 @@
+name "Defense"
+
+add "ShieldDefense" 1.0 0.0
+
+add "ShieldCombat" 0.0 1.0
+add "ShieldBash"   1.0 1.0
+add "ImprovedShieldBash" 1.0 2.0
+
+add "DefensiveFighting" 2.0 1.0
+add "TotalDefense"      2.0 2.0
+
+connect 1.0 0.0 ThreeDown
+connect 1.0 1.0 OneDown
+
+connect 2.0 1.0 OneDown

@@ -1,0 +1,15 @@
+playerCharacter false
+
+name "Sea Serpent"
+icon "creatures/serpent" "#ffffffff"
+gender "Male"
+race "LargeAnimal"
+unspentSkillPoints 0
+role "Monster" 10
+attributes 17 20 15 3 5 9
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor5"
+
+currencyReward 20 30
+equip "unarmedLargeThreatens" Superb
+addloot "LootLevel5" 25 PER_LIST

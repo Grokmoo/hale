@@ -1,0 +1,43 @@
+Project Lead:     Jared Stephen
+Design & Testing: Shirish Agarwal
+
+
+
+
+This game is distributed under the terms of the GPL.  See COPYING.txt for details.
+
+Thanks to the many artists working on the Battle for Wesnoth project, much of the art used here is derived from that project.
+
+This product includes software developed by the Indiana University Extreme! Lab (http://www.extreme.indiana.edu/).
+
+Thanks to the developers of LWJGL. (http://www.lwjgl.org)
+
+Thanks to the developers of TWL (http://twl.l33tlabs.org)
+
+Thanks to a number of individuals & organizations for making their work available at opengameart.org:
+
+David E. Gervais
+Wrath Games (http://wrathgames.com/blog)
+Ails (http://ails.deviantart.com)
+artisticdude (OpenGameArt.org user)
+Azoris (OpenGameArt.org user)
+Clint Bellanger (OpenGameArt.org user)
+Dakal (OpenGameArt.org user)
+J. W. Bjerk (eleazzaar) -- www.jwbjerk.com/art
+Blarumyrran (OpenGameArt.org user)
+hc (OpenGameArt.org user)
+JAP (OpenGameArt.org user)
+Jetrel (OpenGameArt.org user)
+josepzin (OpenGameArt.org user) and the Glest team (http://glest.org)
+Lorc (OpenGameArt.org user)
+Matt Merkulov (OpenGameArt.org user)
+Mumu (OpenGameArt.org user)
+n4pgamer (OpenGameArt.org user)
+Paulius Jurgelevicius (http://dustychest.tk/)
+pfunked (OpenGameArt.org user)
+qubodup (OpenGameArt.org user)
+Ravenmore (OpenGameArt.org user)
+Redshrike (OpenGameArt.org user)
+Luke.RUSTLTD (OpenGameArt.org user)
+thespaceinvader (OpenGameArt.org user)
+Unknown Horizons (users eoc and stubb)

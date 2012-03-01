@@ -1,0 +1,34 @@
+playerCharacter false
+
+name "Lizardling Shaman"
+icon "creatures/lizardling04" "#ffffffff"
+gender "Male"
+race "Lizardling"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 3100
+role "Priest" 8
+attributes 12 15 12 8 15 10
+script "ai/aiStandard"
+level 1 addAbility "Firebolt"
+level 1 addAbility "EnhanceAttributes"
+level 1 addAbility "Sleep"
+level 1 addAbility "Slow"
+level 1 addAbility "AnimalPower"
+level 1 addAbility "Blindness"
+level 1 addAbility "NaturalArmor20"
+level 1 addAbility "Cure"
+level 1 addAbility "Regeneration"
+
+currencyReward 30 70
+equip "quarterstaff" Good
+addloot "LootMagicGood" 2 PER_LIST
+addloot "LootPotionsGood" 5 PER_LIST
+addloot "LootScrollsGood" 5 PER_LIST
+addloot "LootCraft" 20 PER_LIST
+addloot "LootGems" 20 PER_LIST

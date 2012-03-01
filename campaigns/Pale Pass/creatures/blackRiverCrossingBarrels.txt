@@ -1,0 +1,10 @@
+playerCharacter false
+
+name "Barrels"
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+attributes 10 10 10 10 10 10
+conversation "conversations/blackRiverCrossingBarrels"
+

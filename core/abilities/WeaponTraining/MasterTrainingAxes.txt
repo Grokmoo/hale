@@ -1,0 +1,11 @@
+name "Master Training, Axes"
+type "Weapon Training"
+description "You do an additional 1x damage on critical hits with handaxes, battleaxes, waraxes, and greataxes."
+activateable false
+
+icon "icons/masterAxes"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Handaxe', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Battleaxe', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Waraxe', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Greataxe', 'CriticalMultiplier', 1); parent.applyEffect(effect); }"
+
+addPrereq Ability ExpertTrainingAxes
+addPrereq Stat LevelAttackBonus 70

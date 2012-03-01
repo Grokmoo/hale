@@ -1,0 +1,11 @@
+name "Expert Training, Axes"
+type "Weapon Training"
+description "You gain an additional +3 chance to inflict critical hits with handaxes, battleaxes, waraxes, and greataxes."
+activateable false
+
+icon "icons/expertAxes"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Handaxe', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Battleaxe', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Waraxe', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Greataxe', 'CriticalChance', 3); parent.applyEffect(effect); }"
+
+addPrereq Ability AdvancedTrainingAxes
+addPrereq Stat LevelAttackBonus 50

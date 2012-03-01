@@ -1,0 +1,12 @@
+name "Scroll of Tanglefoot"
+icon "items/Z_scroll_green" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Reading this scroll aloud casts the spell Tanglefoot.  The power of the spell is dependant on the quality of the scroll."
+value "1 GP" 1
+weight 50
+itemType "ITEM"
+quality "Good"
+script "items/scrollTanglefoot"
+useButtonText "Read"

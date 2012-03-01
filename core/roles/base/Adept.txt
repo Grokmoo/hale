@@ -1,0 +1,67 @@
+playerSelectable true
+baseRole true
+defaultPlayerAttributeSelections 1 5 3 0 0 6
+
+icon "icons/adept"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+SkillPointsPerLevel 10
+level1HP 9
+HPPerLevel 3
+
+level  1 selectAbilityFromList Adept
+level  3 selectAbilityFromList Adept
+level  5 selectAbilityFromList Adept
+level  7 selectAbilityFromList Adept
+level  9 selectAbilityFromList Adept
+level 11 selectAbilityFromList Adept
+level 13 selectAbilityFromList Adept
+level 15 selectAbilityFromList Adept
+level 17 selectAbilityFromList Adept
+level 19 selectAbilityFromList Adept
+
+level 1 addAbility ProficiencyLightArmor
+level 1 addAbility ProficiencyShields
+level 1 addAbility ProficiencySimpleWeapons
+level 1 addAbility ProficiencySmallSwords
+level 1 addAbility ProficiencyBows
+level 1 addAbility ProficiencySpears
+
+spellCastingAttribute Cha
+
+spellFailureBase 5
+spellFailureSpellLevelFactor 4
+spellFailureAbilityScoreFactor 2
+spellFailureCasterLevelFactor 1
+
+level  1 addCasterLevel
+level  2 addCasterLevel
+level  3 addCasterLevel
+level  4 addCasterLevel
+level  5 addCasterLevel
+level  6 addCasterLevel
+level  7 addCasterLevel
+level  8 addCasterLevel
+level  9 addCasterLevel
+level 10 addCasterLevel
+level 11 addCasterLevel
+level 12 addCasterLevel
+level 13 addCasterLevel
+level 14 addCasterLevel
+level 15 addCasterLevel
+level 16 addCasterLevel
+level 17 addCasterLevel
+level 18 addCasterLevel
+level 19 addCasterLevel
+level 20 addCasterLevel
+level 21 addCasterLevel
+level 22 addCasterLevel
+level 23 addCasterLevel
+level 24 addCasterLevel
+level 25 addCasterLevel
+level 26 addCasterLevel
+level 27 addCasterLevel
+level 28 addCasterLevel
+level 29 addCasterLevel
+level 30 addCasterLevel

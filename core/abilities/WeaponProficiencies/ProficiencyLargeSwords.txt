@@ -1,0 +1,9 @@
+name "Proficiency, Large Swords"
+description "You are able to use longswords and two handed greatswords in combat."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencyLargeSwords"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Longsword'); effect.getBonuses().addWeaponProficiency('Greatsword'); parent.applyEffect(effect); }"

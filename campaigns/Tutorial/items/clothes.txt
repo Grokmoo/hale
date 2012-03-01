@@ -1,0 +1,15 @@
+name "Clothes"
+icon "items/A_Clothing02" "#ffffffff"
+subIcon "subIcons/clothes01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A basic set of clothes"
+value "5 CP" 1
+weight 500
+itemType "ARMOR"
+quality "Good"
+armorType "None"
+armorClass 0
+armorPenalty 0
+movementPenalty 0

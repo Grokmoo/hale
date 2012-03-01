@@ -1,0 +1,16 @@
+Spritesheet "walls"
+defaultWidth 100
+defaultHeight 140
+
+image "wall-stone-n"         0   0
+image "wall-stone-n-ne"    100   0
+image "wall-stone-nw-n"    200   0
+image "wall-stone-nw-n-ne" 300   0
+image "wall-stone-ne"      400   0
+
+image "wall-stone-nw"        0 140
+
+image "building01"         100 140
+image "building02"         200 140
+image "building03"         300 140
+image "building04"         400 140

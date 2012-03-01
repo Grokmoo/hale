@@ -1,0 +1,11 @@
+Spritesheet "walls"
+defaultWidth 100
+defaultHeight 140
+
+image "wall-wood-n"         0   0
+image "wall-wood-n-ne"    100   0
+image "wall-wood-nw-n"    200   0
+
+image "wall-wood-nw-n-ne"   0 140
+image "wall-wood-ne"      100 140
+image "wall-wood-nw"      200 140

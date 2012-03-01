@@ -1,0 +1,5 @@
+size Small
+movementCost 1200
+unarmedWeapon unarmedSmall
+
+racialType Animal

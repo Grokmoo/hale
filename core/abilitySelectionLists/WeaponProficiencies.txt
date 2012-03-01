@@ -1,0 +1,19 @@
+name "Weapon Proficiencies"
+
+add ProficiencySimpleWeapons 0   0
+add ProficiencySpears        1   0
+add ProficiencyHammers       2   0
+add ProficiencySmallSwords   3   0
+
+add ProficiencyMaces         0   1
+add ProficiencyAxes          1   1
+add ProficiencyLargeSwords   2   1
+add ProficiencyBows          3   1
+
+add ProficiencyFlail         0 2
+add ProficiencyWaraxe        1 2
+add ProficiencyBastardSword  2 2
+
+connect 0 1 OneDown
+connect 1 1 OneDown
+connect 2 1 OneDown

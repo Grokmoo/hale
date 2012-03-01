@@ -1,0 +1,26 @@
+name "Tremor"
+type "Evocation"
+description "A seismic shockwave is sent out in a narrow cone, hitting all creatures within 40 feet of the caster.  All targets must succeed at a physical resistance check or be stunned for 1 round."
+activateable true
+fixed true
+cooldown 9
+
+icon "icons/tremor"
+scriptFile "spells/tremor"
+
+spell true
+
+spellLevel 2
+verbalComponent true
+somaticComponent true
+spellResistance true
+
+actionPointCost 6000
+
+addPrereq Ability Crush
+addPrereq Stat CasterLevel 4
+
+actionType Debuff
+GroupType Multiple
+RangeType Long
+aiPower 20

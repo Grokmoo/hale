@@ -1,0 +1,19 @@
+playerSelectable true
+baseRole false
+
+icon "icons/paladin"
+
+damageBonusPerLevel 4
+attackBonusPerLevel 4
+
+skillPointsPerLevel 5
+
+HPPerLevel 4
+
+addPrereq Role Warrior 7
+addPrereq Role Priest 7
+
+addPrereq Skill Speech 30
+
+addPrereq Ability StrongSoul
+addPrereq Ability ToughBody

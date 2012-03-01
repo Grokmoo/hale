@@ -1,0 +1,6 @@
+name "Mage"
+
+subList Evocation   0.5   0.5
+
+subList Alteration  0.5   6.0
+subList Conjuration 0.5  10.5

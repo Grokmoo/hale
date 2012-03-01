@@ -1,0 +1,20 @@
+name "Mail Helmet"
+description "Creates a mail helmet.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 20
+result "helmet_mail_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 1
+ingredient "thread" 2
+ingredient "bar_iron" 2
+ingredient "coal" 2
+qualityModifier 15 ""
+qualityModifier 35 ""
+qualityModifier 55 ""
+qualityModifier 75 ""
+qualityModifier 95 ""
+qualityModifier 115 ""
+qualityModifier 135 ""
+qualityModifier 155 ""

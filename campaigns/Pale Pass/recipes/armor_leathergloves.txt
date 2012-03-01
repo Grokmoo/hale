@@ -1,0 +1,18 @@
+name "Leather Gloves"
+description "Creates a pair of leather gloves.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 5
+result "gloves_leather_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 2
+ingredient "thread" 5
+qualityModifier 5 ""
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 125 ""
+qualityModifier 145 ""

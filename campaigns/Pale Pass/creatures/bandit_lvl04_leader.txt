@@ -1,0 +1,29 @@
+playerCharacter false
+
+name "Bandit"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair007" "#fff6e419"
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 1000
+role "Priest" 5
+attributes 12 10 11 10 14 8
+script "ai/aiStandard"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Sleep"
+level 1 addAbility "Slow"
+level 1 addAbility "HardenArmor"
+level 1 addAbility "Cure"
+
+currencyReward 25 40
+equip "warhammer" Decent
+equip "shield_heavy_base" Decent
+equip "armor_scale_base" Decent
+equip "gloves_leather_base" Decent
+equip "boots_leather_base" Decent
+addloot "LootLevel10" 50 PER_LIST
+addloot "LootLevel5" 50 PER_LIST

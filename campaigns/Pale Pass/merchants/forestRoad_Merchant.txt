@@ -1,0 +1,10 @@
+name "Merchant"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 50
+sellValuePercentage 150
+respawnhours 0
+additems "Ammo" 100 PER_ITEM
+additems "ArmorMediocre" 80 PER_ITEM
+additems "WeaponsMediocre" 80 PER_ITEM
+additems "EquipmentMediocre" 80 PER_ITEM

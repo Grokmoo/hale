@@ -1,0 +1,18 @@
+name "Acid Trap"
+icon "items/Z_trap_poison" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A trap that does acid damage for several rounds.  The amount and duration of the damage is dependant on the quality of the trap."
+value "1 GP 5 SP" 1
+weight 2000
+itemType "ITEM"
+quality "Good"
+trap true
+trapDifficulties 85 90 95 105 100
+trapActivatesOnlyOnce true
+damageType "Acid"
+damage 5 15
+script "items/acidTrap"
+useButtonText "Place Trap"
+useAPCost 8000

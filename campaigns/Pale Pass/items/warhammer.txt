@@ -1,0 +1,21 @@
+name "Warhammer"
+icon "items/W_Hammer01" "#ffffffff"
+subIcon "subIcons/weapon_warhammer01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A powerful heavy hammer designed to be used in one hand to deliver crushing blows."
+value "1 GP 9 SP" 1
+weight 3800
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Warhammer"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 6
+criticalRange 97
+criticalMultiplier 2
+attackCost 2800

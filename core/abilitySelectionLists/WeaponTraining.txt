@@ -1,0 +1,49 @@
+name "Weapon Training"
+
+add TrainingSlashing 0.5 0
+add TrainingPiercing 3.0 0
+add TrainingBlunt    5.5 0
+
+add AdvancedTrainingAxes        0 1
+add AdvancedTrainingLargeSwords 1 1
+add AdvancedTrainingSmallSwords 2 1
+add AdvancedTrainingSpears      3 1
+add AdvancedTrainingBows        4 1
+add AdvancedTrainingMaces       5 1
+add AdvancedTrainingHammers     6 1
+
+add ExpertTrainingAxes        0 2
+add ExpertTrainingLargeSwords 1 2
+add ExpertTrainingSmallSwords 2 2
+add ExpertTrainingSpears      3 2
+add ExpertTrainingBows        4 2
+add ExpertTrainingMaces       5 2
+add ExpertTrainingHammers     6 2
+
+add MasterTrainingAxes        0 3
+add MasterTrainingLargeSwords 1 3
+add MasterTrainingSmallSwords 2 3
+add MasterTrainingSpears      3 3
+add MasterTrainingBows        4 3
+add MasterTrainingMaces       5 3
+add MasterTrainingHammers     6 3
+
+connect 0.5 0 TwoDown
+connect 3.0 0 ThreeDown
+connect 5.5 0 TwoDown
+
+connect 0 1 OneDown
+connect 1 1 OneDown
+connect 2 1 OneDown
+connect 3 1 OneDown
+connect 4 1 OneDown
+connect 5 1 OneDown
+connect 6 1 OneDown
+
+connect 0 2 OneDown
+connect 1 2 OneDown
+connect 2 2 OneDown
+connect 3 2 OneDown
+connect 4 2 OneDown
+connect 5 2 OneDown
+connect 6 2 OneDown

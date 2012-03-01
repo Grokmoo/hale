@@ -1,0 +1,17 @@
+name "Leather Boots of Reflexes"
+icon "items/A_Shoes02" "#ffa39cc9"
+subIcon "subIcons/boots03" "#ff93e178"
+ingredient false
+quest false
+cursed false
+description "Magically enchanted, these boots provide a +10 bonus to Reflex Resistance in addition to protection."
+value "1 GP 4 SP" 1
+weight 800
+itemType "BOOTS"
+quality "Fine"
+enchantment "entity.addBonus('ReflexResistance', 'Enhancement', 10);"
+useButtonText ""
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

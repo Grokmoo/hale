@@ -1,0 +1,6 @@
+name Search
+verb Search
+untrained true
+keyAttribute Int
+hasArmorPenalty false
+icon "icons/search"

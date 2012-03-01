@@ -1,0 +1,11 @@
+name "Proficiency, Tower Shields"
+description "You are able to use man sized tower shields."
+activateable false
+
+type "Armor Proficiencies"
+
+addPrereq ArmorProficiency Shield
+
+icon "icons/proficiencyTowerShields"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addArmorProficiency('Tower Shield'); parent.applyEffect(effect); }"

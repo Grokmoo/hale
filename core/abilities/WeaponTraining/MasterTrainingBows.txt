@@ -1,0 +1,11 @@
+name "Master Training, Bows"
+type "Weapon Training"
+description "You do an additional 1x damage on critical hits with shortbows and longbows."
+activateable false
+
+icon "icons/masterBows"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Shortbow', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Longbow', 'CriticalMultiplier', 1); parent.applyEffect(effect); }"
+
+addPrereq Ability ExpertTrainingBows
+addPrereq Stat LevelAttackBonus 70

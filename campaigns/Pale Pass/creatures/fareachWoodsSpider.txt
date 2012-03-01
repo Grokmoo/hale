@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Giant Spider"
+icon "creatures/spider" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 100
+role "Monster" 3
+attributes 11 15 8 1 10 10
+script "ai/aiStandard"
+
+currencyReward 4 8
+equip "unarmedSpider" Good

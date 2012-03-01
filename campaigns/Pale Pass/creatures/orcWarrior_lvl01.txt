@@ -1,0 +1,22 @@
+playerCharacter false
+
+name "Orc"
+icon "creatures/orc01" "#ffffffff"
+gender "Male"
+race "Orc"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+role "Monster" 1
+attributes 12 11 8 7 9 6
+script "ai/aiStandard"
+level 1 addAbility "ProficiencyAxes"
+
+currencyReward 6 13
+equip "handaxe" Decent
+addloot "LootLevel1" 50 PER_LIST
+addloot "LootLevel1" 5 PER_LIST

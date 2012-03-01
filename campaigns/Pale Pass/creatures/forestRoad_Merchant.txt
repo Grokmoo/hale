@@ -1,0 +1,16 @@
+playerCharacter false
+
+name "Traveling Merchant"
+icon "creatures/dwarf05" "#ffffffff"
+portrait "Dwarf/explorer"
+
+gender "Male"
+race "Dwarf"
+immortal true
+unspentSkillPoints 0
+xp 300
+role "Artisan" 3
+attributes 10 11 12 13 13 11
+conversation "conversations/forestRoad_Merchant"
+
+equip "armor_clothes" Good

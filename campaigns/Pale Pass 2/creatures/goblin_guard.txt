@@ -1,0 +1,25 @@
+playerCharacter false
+
+name "Goblin Guard"
+icon "creatures/goblin02" "#ffffffff"
+gender "Male"
+race "Goblin"
+immortal true
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ff8dc935"
+xp 1500
+role "Warrior" 7
+attributes 13 15 11 6 9 7
+script "ai/aiStandard"
+
+currencyReward 50 90
+equip "shortSword" Good
+equip "shield_light_base" Good
+equip "armor_leather_base" Good
+addloot "LootLevel5" 50 PER_LIST
+addloot "LootLevel5" 10 PER_LIST

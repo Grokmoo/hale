@@ -1,0 +1,16 @@
+playerSelectable true
+baseRole false
+
+icon "icons/druid"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+
+SkillPointsPerLevel 15
+HPPerLevel 4
+
+addPrereq Role Priest 8
+addPrereq Role Adept 8
+
+addPrereq Ability Summon
+addPrereq Ability Tanglefoot

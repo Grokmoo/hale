@@ -1,0 +1,21 @@
+playerCharacter false
+
+name "Soldier"
+icon "creatures/human10" "#ffffffff"
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 300
+role "Warrior" 3
+attributes 12 11 12 10 10 10
+conversation "conversations/blackRiverCrossing_soldier"
+
+equip "longsword" Good
+equip "shield_heavy_base" Good

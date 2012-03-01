@@ -1,0 +1,12 @@
+ResolutionX 1280
+ResolutionY 800
+Fullscreen false
+EditorResolutionX 1280
+EditorResolutionY 800
+ShowFPS false
+CapFPS true
+TooltipDelay 400
+CombatDelay 150
+ScriptConsoleEnabled true
+DebugMode true
+# RandSeed 1

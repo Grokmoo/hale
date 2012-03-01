@@ -1,0 +1,23 @@
+name "Charge Attack"
+type "Offensive"
+description "You launch at your target with a powerful charge followed by an melee weapon attack.  You must have sufficient AP to both move within weapon range of the target and execute the attack.  The attack is performed with a +40 attack bonus and a +100 damage bonus.  You must have a clear, straight line path to the target at least 15 feet away.  If the movement part of the charge is interrupted for any reason (such as an attack of opportunity), the attack is not completed."
+activateable true
+mode false
+cancelable false
+fixed true
+cooldown 6
+
+icon "icons/chargeAttack"
+scriptFile "abilities/chargeAttack"
+
+actionPointCostDescription "See Description"
+
+addPrereq Stat LevelAttackBonus 30
+
+actionType Damage
+groupType Single
+RangeType Short
+
+addPrereq Ability MightyBlow
+
+aiPower 20

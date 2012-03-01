@@ -1,0 +1,15 @@
+name "Cave door"
+icon "doors/gate-rusty-opaque-se" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A large metal retracting door."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+door true
+doorTransparent "false"
+openicon "doors/gate-rusty-se-open"
+lock 0
+keyRequired true

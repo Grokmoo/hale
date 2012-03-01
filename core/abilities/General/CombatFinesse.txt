@@ -1,0 +1,10 @@
+name "Combat Finesse"
+type "General"
+description "You gain a +10 bonus to all attacks in combat."
+
+icon "icons/combatFinesse"
+
+addPrereq Ability CombatReady
+addPrereq Ability BlindFighting
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('Attack', 'Stackable', 10); parent.applyEffect(effect); }"

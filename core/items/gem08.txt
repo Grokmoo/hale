@@ -1,0 +1,10 @@
+name "Amethyst"
+icon "items/I_Amethist" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A good example of an amethyst stone, worth a bit of coin."
+value "3 SP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

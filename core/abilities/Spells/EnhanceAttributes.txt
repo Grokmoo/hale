@@ -1,0 +1,26 @@
+name "Enhance Attributes"
+type "Enchantment"
+description "The caster touches a single creature.  That creatures gains a bonus of 1 plus 1 point per 4 caster levels to Intelligence, Wisdom, and Charisma for 5 to 10 rounds."
+activateable true
+fixed true
+cooldown 9
+
+icon "icons/enhanceAttributes"
+scriptFile "spells/enhanceAttributes"
+
+spell true
+spellLevel 2
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 15
+
+addPrereq Stat CasterLevel 4
+
+upgrade "AnimalPower" "With Animal Power, Strength, Constitution, and Dexterity are additionally enhanced for the duration of the spell."

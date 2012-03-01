@@ -1,0 +1,73 @@
+playerSelectable true
+baseRole true
+defaultPlayerAttributeSelections 3 0 3 0 7 2
+
+icon "icons/priest"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+SkillPointsPerLevel 10
+HPPerLevel 4
+level1HP 12
+
+level  1 selectAbilityFromList Priest
+level  2 selectAbilityFromList Priest
+level  4 selectAbilityFromList Priest
+level  5 selectAbilityFromList Priest
+level  7 selectAbilityFromList Priest
+level  8 selectAbilityFromList Priest
+level 10 selectAbilityFromList Priest
+level 11 selectAbilityFromList Priest
+level 13 selectAbilityFromList Priest
+level 14 selectAbilityFromList Priest
+level 16 selectAbilityFromList Priest
+level 17 selectAbilityFromList Priest
+level 19 selectAbilityFromList Priest
+level 20 selectAbilityFromList Priest
+
+level 1 addAbility ProficiencyLightArmor
+level 1 addAbility ProficiencyMediumArmor
+level 1 addAbility ProficiencyHeavyArmor
+level 1 addAbility ProficiencyShields
+level 1 addAbility ProficiencyMaces
+level 1 addAbility ProficiencyHammers
+level 1 addAbility ProficiencySimpleWeapons
+level 1 addAbility ProficiencySpears
+
+spellCastingAttribute Wis
+
+spellFailureBase -30
+spellFailureSpellLevelFactor 5
+spellFailureAbilityScoreFactor 2
+spellFailureCasterLevelFactor 1
+
+level  1 addCasterLevel
+level  2 addCasterLevel
+level  3 addCasterLevel
+level  4 addCasterLevel
+level  5 addCasterLevel
+level  6 addCasterLevel
+level  7 addCasterLevel
+level  8 addCasterLevel
+level  9 addCasterLevel
+level 10 addCasterLevel
+level 11 addCasterLevel
+level 12 addCasterLevel
+level 13 addCasterLevel
+level 14 addCasterLevel
+level 15 addCasterLevel
+level 16 addCasterLevel
+level 17 addCasterLevel
+level 18 addCasterLevel
+level 19 addCasterLevel
+level 20 addCasterLevel
+level 21 addCasterLevel
+level 22 addCasterLevel
+level 23 addCasterLevel
+level 24 addCasterLevel
+level 25 addCasterLevel
+level 26 addCasterLevel
+level 27 addCasterLevel
+level 28 addCasterLevel
+level 29 addCasterLevel
+level 30 addCasterLevel

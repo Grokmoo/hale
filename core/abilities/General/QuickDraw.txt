@@ -1,0 +1,10 @@
+name "Quick Draw"
+type "General"
+activateable false
+description "You are exceptionally fast at switching weapons in combat.  Equipping and unequipping weapons and shields takes you 60% fewer action points."
+
+icon "icons/quickDraw"
+
+addPrereq Stat Dex 13
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ActionPointEquipHands', 60); parent.applyEffect(effect); }"

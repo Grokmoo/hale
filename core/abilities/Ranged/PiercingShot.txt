@@ -1,0 +1,18 @@
+name "Piercing Shot"
+type "Offensive"
+description "You fire a single shot from your ranged weapon with such force that it penetrates all targets it hits, continuing in a straight line path for 50 feet or until it hits a solid obstruction.  You must roll to hit each target in the path of the projectile."
+activateable true
+fixed true
+cooldown 6
+
+icon "icons/piercingShot"
+scriptFile "abilities/piercingShot"
+
+actionPointCostDescription "Same as an attack"
+
+actionType Damage
+groupType Multiple
+rangeType Long
+
+addPrereq Ability CripplingShot
+addPrereq Stat LevelAttackBonus 30

@@ -1,0 +1,13 @@
+name "Potion of Healing"
+icon "items/P_Blue02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This potion restores hit points to anyone that drinks it.  The number of hit points healed depends on the quality of the potion."
+value "8 SP" 1
+weight 300
+itemType "ITEM"
+quality "Good"
+script "items/healingPotion"
+useButtonText "Drink"
+useAPCost 4000

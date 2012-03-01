@@ -1,0 +1,18 @@
+name "Leather Helmet"
+description "Creates a leather helmet.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 10
+result "helmet_leather_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 2
+ingredient "thread" 4
+qualityModifier 5 ""
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 125 ""
+qualityModifier 145 ""

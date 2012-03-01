@@ -1,0 +1,13 @@
+name "Healing Potion"
+icon "items/P_Blue02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This potion will restore some health when consumed."
+value "1 SP" 1
+weight 200
+itemType "ITEM"
+quality "Good"
+script "items/healingPotion"
+useButtonText "Drink"
+useAPCost 4000

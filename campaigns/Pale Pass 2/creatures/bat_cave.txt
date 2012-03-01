@@ -1,0 +1,13 @@
+playerCharacter false
+
+name "Cave Bat"
+icon "creatures/giantbat" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 1500
+role "Monster" 6
+attributes 12 18 13 3 9 9
+script "ai/aiStandard"
+
+equip "unarmedBat" Good

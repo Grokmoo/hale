@@ -1,0 +1,21 @@
+Spritesheet "doors"
+
+defaultWidth 72
+defaultHeight 100
+
+image rural_gate-se       0   0
+image rural_gate-sw      72   0
+image rural_gate-se-open  0 100
+image rural_gate-sw-open 72 100
+
+image empty 0  200  1  1
+
+defaultWidth  60
+defaultHeight 100
+
+image gate-rusty-opaque-se  144   0
+image gate-rusty-opaque-sw  204   0
+image gate-rusty-se         264   0
+image gate-rusty-se-open    324   0
+image gate-rusty-sw         384   0
+image gate-rusty-sw_open    444   0

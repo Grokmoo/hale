@@ -1,0 +1,9 @@
+name "Proficiency, Light Armor"
+description "You are able to use light armor, such as leather and hardened leather."
+activateable false
+
+type "Armor Proficiencies"
+
+icon "icons/proficiencyLightArmor"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addArmorProficiency('Light'); parent.applyEffect(effect); }"

@@ -1,0 +1,26 @@
+name "Improve Weapon"
+type "Alteration"
+description "The equipped melee weapon of the targeted creature touched by the caster becomes magically enhanced.  Attacks with the weapon are made with a +10 bonus, and the weapon gains a 10% increased chance on each hit of a critical hit.  The effect lasts for 5 to 10 rounds.  If the wielder stops using the weapon, the effect immediately ends."
+activateable true
+fixed true
+cooldown 8
+
+icon "icons/improveWeapon"
+scriptFile "spells/improveWeapon"
+
+spell true
+spellLevel 1
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 10
+
+addPrereq Stat CasterLevel 1
+
+upgrade FlamingWeapon "With Flaming Weapon, the targeted weapon becomes enhanced with magical flames, doing an additional 1 to 4 plus 1 per 4 caster levels of fire damage on every hit."

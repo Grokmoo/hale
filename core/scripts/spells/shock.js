@@ -1,0 +1,116 @@
+function onActivate(game, slot) {
+	if (slot.getParent().getAbilities().has("LightningBolt")) {
+		var targeter = game.createCircleTargeter(slot);
+		targeter.setRadius(2);
+		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.activate();
+	} else {
+		var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Hostile");
+	
+		var targeter = game.createListTargeter(slot);
+		targeter.addAllowedCreatures(creatures);
+		targeter.activate();
+	}
+}
+
+function onTargetSelect(game, targeter) {
+	// cast the spell
+	targeter.getSlot().activate();
+
+	if (targeter.getSlot().getParent().getAbilities().has("LightningBolt")) {
+	    lightningBolt(game, targeter);
+    } else {
+	    shock(game, targeter);
+    }
+}
+
+function lightningBolt(game, targeter) {
+	var spell = targeter.getSlot().getAbility();
+	var parent = targeter.getParent();
+	var casterLevel = parent.getCasterLevel();
+
+	// check for spell failure
+	if (!spell.checkSpellFailure(parent)) return;
+	
+	var center = targeter.getMouseGridPosition();
+	var centerScreen = center.toScreen();
+	
+	var g1 = game.getBaseParticleGenerator("explosion");
+	g1.setPosition(center);
+	g1.setDurationDistribution(game.getFixedDistribution(1.0));
+	g1.setAlphaSpeedDistribution(game.getFixedDistribution(-1.0));
+	g1.setVelocityDistribution(game.getEquallySpacedAngleDistribution(0.0, 100.0, 5.0, 1000.0, 10.0));
+	g1.setGreenSpeedDistribution(game.getUniformDistributionWithBase(game.getSpeedDistributionBase(), -0.005, 0.0, 0.05));
+	g1.setRedSpeedDistribution(game.getUniformDistributionWithBase(game.getSpeedDistributionBase(), -0.01, 0.0, 0.05));
+	game.runParticleGeneratorNoWait(g1);
+	game.lockInterface(g1.getTimeLeft());
+	
+	var targets = targeter.getAffectedCreatures();
+	for (var i = 0; i < targets.size(); i++) {
+		var target = targets.get(i);
+		var damage = game.dice().d12(2) + casterLevel;
+		
+		var targetPosition = target.getPosition();
+		var targetDistance = center.screenDistance(targetPosition);
+		var targetAngle = center.angleTo(targetPosition);
+		var speed = 288.0;
+		
+		var anim = game.getBaseAnimation("lightning");
+		
+		anim.setPosition(centerScreen.x, centerScreen.y);
+		anim.setVelocityMagnitudeAngle(speed, targetAngle);
+		anim.setDuration(targetDistance / speed);
+		anim.setRotation(targetAngle * 180.0 / 3.14159);
+	
+		var callback = spell.createDelayedCallback("applyDamage");
+		callback.setDelay(anim.getSecondsRemaining());
+		callback.addArguments([parent, target, damage, spell]);
+		callback.start();
+	
+		game.runAnimationNoWait(anim);
+		game.lockInterface(anim.getSecondsRemaining());
+	}
+}
+
+function shock(game, targeter) {
+    var spell = targeter.getSlot().getAbility();
+	var parent = targeter.getParent();
+	var target = targeter.getSelectedCreature();
+
+	// check for spell failure
+	if (!spell.checkSpellFailure(parent, target)) return;
+	
+	// perform the touch attack in a new thread as it will block
+	var cb = spell.createDelayedCallback("performTouch");
+	cb.addArgument(targeter);
+	cb.start();
+}
+
+function performTouch(game, targeter) {
+	var spell = targeter.getSlot().getAbility();
+	var parent = targeter.getParent();
+	var target = targeter.getSelectedCreature();
+	var casterLevel = parent.getCasterLevel();
+	
+	var damage = game.dice().d8(2) + casterLevel;
+	
+	if (game.meleeTouchAttack(parent, target)) {
+		// create the callback that will apply damage partway through the animation
+		var callback = spell.createDelayedCallback("applyDamage");
+		callback.setDelay(0.2);
+		callback.addArguments([parent, target, damage, spell]);
+		
+		// create the animation
+		var anim = game.getBaseAnimation("blast");
+		var position = target.getScreenPosition();
+		anim.setPosition(position.x, position.y);
+		
+		game.runAnimationNoWait(anim);
+		game.lockInterface(anim.getSecondsRemaining());
+		callback.start();
+	}
+}
+
+function applyDamage(game, parent, target, damage, spell) {
+	spell.applyDamage(parent, target, damage, "Electrical");
+}

@@ -1,0 +1,19 @@
+size 2
+faction "Hostile"
+challenge 80
+randomize true
+numRandomCreatures 4 5
+respawn true
+respawnHours 24
+creature "skeleton05" 0 2
+creature "skeleton06" 1 1
+creature "skeleton07" 2 1
+creature "skeleton08" -1 1
+creature "skeleton" -2 -1
+creature "skeleton" -1 -2
+creature "skeleton02" 0 -2
+creature "skeleton02" -2 0
+creature "skeleton03" -1 -1
+creature "skeleton03" 0 -1
+creature "skeleton04" 1 -2
+creature "skeleton04" 1 -1

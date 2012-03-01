@@ -1,0 +1,9 @@
+name "Proficiency, Shields"
+description "You are able to use basic shields."
+activateable false
+
+type "Armor Proficiencies"
+
+icon "icons/proficiencyShields"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addArmorProficiency('Shield'); parent.applyEffect(effect); }"

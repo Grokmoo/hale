@@ -1,0 +1,17 @@
+name "Hat of Intellect"
+icon "items/C_Hat02" "#ffffffff"
+subIcon "subIcons/head_hat05" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This hat has a minor enchantment that provides a +1 bonus to Intelligence, although it provides no noticeable protection."
+value "5 CP" 1
+weight 800
+itemType "HELMET"
+quality "Fine"
+enchantment "entity.addBonus('Int', 'Enhancement', 1);"
+useButtonText ""
+armorType "None"
+armorClass 0
+armorPenalty 0
+movementPenalty 0

@@ -1,0 +1,11 @@
+size 1
+faction "Hostile"
+challenge 30
+randomize true
+numRandomCreatures 4 4
+respawn true
+respawnHours 24
+creature "orcWarrior_lvl04" -1 -1
+creature "orcWarrior_lvl04" 0 0
+creature "orcArcher_lvl04" 0 -1
+creature "orcArcher_lvl04" 1 -1

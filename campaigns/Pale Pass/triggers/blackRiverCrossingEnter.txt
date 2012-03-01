@@ -1,0 +1,3 @@
+area "Black River Crossing"
+script "triggers/blackRiverCrossingEnter"
+addPoints

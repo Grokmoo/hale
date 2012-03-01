@@ -1,0 +1,26 @@
+Spritesheet "editor"
+
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image 1        0  0
+image 2        1  0
+image 3        2  0
+image 4        3  0
+image 5        4  0
+image 6        5  0
+image 7        6  0
+image 8        7  0
+image 9        8  0
+image 0        9  0
+
+image -1        0  1
+image -2        1  1
+image -3        2  1
+image -4        3  1
+image -5        4  1
+image -6        5  1
+image -7        6  1
+image -8        7  1
+image -9        8  1

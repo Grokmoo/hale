@@ -1,0 +1,20 @@
+name "Scale Armor"
+description "Creates scale armor.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 30
+result "armor_scale_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 2
+ingredient "thread" 10
+ingredient "coal" 4
+ingredient "bar_iron" 4
+qualityModifier 20 ""
+qualityModifier 40 ""
+qualityModifier 60 ""
+qualityModifier 80 ""
+qualityModifier 100 ""
+qualityModifier 120 ""
+qualityModifier 140 ""
+qualityModifier 160 ""

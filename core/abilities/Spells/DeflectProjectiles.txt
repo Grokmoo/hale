@@ -1,0 +1,29 @@
+name "Deflect Projectiles"
+type "Alteration"
+description "The caster touches a single creature.  The creature gains 100% immunity from all damage from normal projectile attacks for 3 rounds plus 1 round per 5 caster levels."
+activateable true
+fixed true
+cooldown 11
+
+icon "icons/deflectProjectiles"
+scriptFile "spells/deflectProjectiles"
+
+spell true
+
+spellLevel 4
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Touch
+
+aiPower 40
+
+addPrereq Ability ResistWeapons
+addPrereq Ability AbsorbEnergy
+
+addPrereq Stat CasterLevel 10

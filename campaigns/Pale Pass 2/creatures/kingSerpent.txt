@@ -1,0 +1,16 @@
+playerCharacter false
+
+name "King Serpent"
+icon "creatures/serpent02" "#ffffffff"
+gender "Male"
+race "LargeAnimal"
+unspentSkillPoints 0
+xp 7900
+role "MonsterStrong" 12
+attributes 23 17 18 3 5 9
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor5"
+
+currencyReward 20 30
+equip "unarmedLargeThreatens" Superb
+addloot "LootLevel5" 25 PER_LIST

@@ -1,0 +1,17 @@
+name "Feint"
+description "As a standard attack action, you make a melee attack against a target intended to mislead.  If the target fails a mental resistance check, they suffer an Armor Class penalty of 20 plus one per the attacker's Rogue level for 2 rounds."
+type "Rogue Abilities"
+activateable true
+fixed true
+cooldown 6
+
+icon "icons/feint"
+scriptFile "abilities/feint"
+
+actionPointCostDescription "Same as attack"
+
+actionType Debuff
+groupType Single
+rangeType Short
+
+addPrereq Role Rogue 3

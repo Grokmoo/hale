@@ -1,0 +1,11 @@
+name "Expert Dual Wielding"
+type "Dual Wielding"
+activateable false
+description "You gain an additional +2 damage bonus per point of Strength above 10 with both weapons while dual wielding, partially offsetting the dual wielding damage penalties."
+
+addPrereq Ability AdvancedDualWielding
+addPrereq Stat LevelAttackBonus 40
+
+icon "icons/expertDualWielding"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('DualWieldStrDamage', 'Stackable', 2); parent.applyEffect(effect); }"

@@ -1,0 +1,3 @@
+area "The Road to Fareach"
+script "triggers/onCampaignLoad"
+addPoints

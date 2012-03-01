@@ -1,0 +1,7 @@
+name "Barkeep"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 60
+sellValuePercentage 120
+respawnhours 48
+additems "EquipmentMediocre" 70 PER_ITEM

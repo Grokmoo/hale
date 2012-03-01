@@ -1,0 +1,16 @@
+name "Tower Shield"
+icon "items/E_Wood04" "#ffffffff"
+subIcon "subIcons/shield_towershield01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Almost as big as a man, a tower shield provides a large bonus to armor class but at the expense of a great deal of mobility and an attack penalty."
+value "5 GP" 1
+weight 20000
+itemType "SHIELD"
+quality "Good"
+shieldAttackPenalty 10
+armorType "Tower Shield"
+armorClass 25
+armorPenalty 45
+movementPenalty 10

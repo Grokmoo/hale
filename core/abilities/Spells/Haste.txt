@@ -1,0 +1,24 @@
+name "Haste"
+type "Alteration"
+description "A single touched target suddenly finds the entire world around them moving more slowly than usual.  The target gains an Action Point bonus of 15 plus one per two caster levels.  The effect lasts for 3 rounds plus one round per 4 caster levels."
+activateable true
+fixed true
+cooldown 10
+
+icon "icons/haste"
+scriptFile "spells/haste"
+
+spell true
+spellLevel 3
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 30
+
+addPrereq Stat CasterLevel 7

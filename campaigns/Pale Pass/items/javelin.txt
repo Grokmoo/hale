@@ -1,0 +1,25 @@
+name "Javelin"
+icon "items/W_Spear001" "#ffffffff"
+subIcon "subIcons/weapon_spear03" "#ffffffff"
+projectileIcon "subIcons/projectile-javelin01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A light spear designed to be thrown.  This weapon is frequently used at the beginning of combat, before closing and switching to melee weapons."
+value "1 SP" 1
+weight 1000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Javelin"
+weaponType "THROWN"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens false
+damageType "Piercing"
+damage 1 6
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800
+rangePenalty 40
+maximumRange 50
+maxStrengthBonus 0

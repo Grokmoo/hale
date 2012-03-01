@@ -1,0 +1,40 @@
+playerCharacter false
+
+name "Mercenary Leader"
+icon "creatures/human22" "#ffffffff"
+portrait "Human/iron-mauler"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 2100
+role "Priest" 7
+attributes 13 10 12 10 16 8
+script "ai/aiStandard"
+conversation "conversations/sonorinDesertMercLeader"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Enfeeble"
+level 1 addAbility "Curse"
+level 1 addAbility "Sleep"
+level 1 addAbility "Slow"
+level 1 addAbility "DivineLuck"
+level 1 addAbility "FlamingWeapon"
+level 1 addAbility "ImproveWeapon"
+level 1 addAbility "Haste"
+level 1 addAbility "Cure"
+
+currencyReward 35 50
+equip "warhammer" Good
+equip "shield_heavy_base" Good
+equip "armor_scale_base" Good
+equip "gloves_leather_base" Good
+equip "boots_leather_base" Good
+addloot "LootLevel10" 50 PER_LIST
+addloot "LootLevel5" 50 PER_LIST
+addloot "SonorinDesertMercLeader" 100 PER_ITEM

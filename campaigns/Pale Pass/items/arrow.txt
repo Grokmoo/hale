@@ -1,0 +1,13 @@
+name "Arrow"
+icon "items/S_Bow15" "#ffffffff"
+subIcon "subIcons/quiver01" "#ffffffff"
+projectileIcon "subIcons/projectile-arrow01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "An arrow, useful as ammunition for bows."
+value "1 CP" 3
+weight 100
+itemType "AMMO"
+quality "Good"
+weaponType "BOW"

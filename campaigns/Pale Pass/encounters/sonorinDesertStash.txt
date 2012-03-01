@@ -1,0 +1,4 @@
+size 0
+faction "Object"
+challenge 0
+creature "sonorinDesertStash" 0 0

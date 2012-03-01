@@ -1,0 +1,18 @@
+playerSelectable true
+baseRole false
+
+icon "icons/healer"
+
+damageBonusPerLevel 2
+attackBonusPerLevel 2
+
+skillPointsPerLevel 5
+
+HPPerLevel 3
+
+addPrereq Role Priest 8
+
+addPrereq Ability Cure
+addPrereq Ability Regeneration
+
+

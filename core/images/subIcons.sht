@@ -1,0 +1,172 @@
+Spritesheet "subIcons"
+defaultWidth 44
+defaultHeight 44
+multiplyValuesBy 44
+
+image "hair001"     0  0
+image "hair002"     1  0
+image "hair003"     2  0
+image "hair004"     3  0
+image "hair005"     4  0
+image "hair006"     5  0
+image "hair007"     6  0
+image "hair008"     7  0
+image "hair009"     8  0
+image "hair010"     9  0
+image "hair011"    10  0
+image "hair012"    11  0
+image "hair013"    12  0
+image "hair014"    13  0
+image "hair015"    14  0
+image "hair016"    15  0
+
+image "beard001"    0  1
+image "beard002"    1  1
+image "beard003"    2  1
+image "beard004"    3  1
+image "beard005"    4  1
+image "beard006"    5  1
+image "beard007"    6  1
+
+image projectile-bullet01    8 1
+image projectile-arrow01     9 1
+image projectile-bolt01     10 1
+image projectile-javelin01  11 1
+image "quiver01"            12 1
+image "cloak01"             13 1
+image "earsElfMale"         14 1
+image "earsElfFemale"       15 1
+
+image "weapon_axe01"            0  2
+image "weapon_axe02"            1  2
+image "weapon_axe03"            2  2
+
+image "weapon_sword01"          4  2
+image "weapon_sword02"          5  2
+image "weapon_sword03"          6  2
+image "weapon_sword05"          7  2
+image "weapon_mace02"           8  2
+image "weapon_club01"           9  2
+image "weapon_mace01"          10  2
+image "weapon_flail01"         11  2
+image "weapon_light-hammer01"  12  2
+image "weapon_warhammer01"     13  2
+image "weapon_spear02"         14  2
+image "weapon_spear03"         15  2
+
+image "weapon_axe01OffHandWeapon"            0  3
+image "weapon_axe02OffHandWeapon"            1  3
+image "weapon_axe03OffHandWeapon"            2  3
+
+image "weapon_sword01OffHandWeapon"          4  3
+image "weapon_sword02OffHandWeapon"          5  3
+image "weapon_sword03OffHandWeapon"          6  3
+image "weapon_sword05OffHandWeapon"          7  3
+image "weapon_mace02OffHandWeapon"           8  3
+image "weapon_club01OffHandWeapon"           9  3
+image "weapon_mace01OffHandWeapon"          10  3
+image "weapon_flail01OffHandWeapon"         11  3
+image "weapon_light-hammer01OffHandWeapon"  12  3
+image "weapon_warhammer01OffHandWeapon"     13  3
+image "weapon_spear02OffHandWeapon"         14  3
+image "weapon_spear03OffHandWeapon"         15  3
+
+image "weapon_axe05"            0  4
+image "weapon_sword07"          1  4
+image "weapon_spear04"          2  4
+image "weapon_bow01"            3  4
+image "weapon_bow02"            4  4
+image "weapon_crossbow01"       5  4
+image "weapon_sling01"          6  4
+image "weapon_quarterstaff01"   7  4
+image "weapon_maul01"           8  4
+
+image "shield_buckler01"        0  5
+image "shield_smallshield01"    1  5
+image "shield_largeshield01"    2  5
+image "shield_towershield01"    3  5
+image "head_helmet02"           4  5
+image "head_helmet03"           5  5
+image "head_helmet04"           6  5
+image "head_helmet05"           7  5
+image "head_hat05"              8  5
+
+image "shield_buckler01Secondary"        0  6
+image "shield_smallshield01Secondary"    1  6
+image "shield_largeshield01Secondary"    2  6
+image "shield_towershield01Secondary"    3  6
+image "head_helmet02Secondary"           4  6
+image "head_helmet03Secondary"           5  6
+image "head_helmet04Secondary"           6  6
+image "head_helmet05Secondary"           7  6
+image "head_hat05Secondary"              8  6
+
+image "boots01"     0  7
+image "boots03"     1  7
+image "boots06"     2  7
+image "gloves01"    3  7
+image "gloves02"    4  7
+image "gloves03"    5  7
+image "torso01"     6  7
+image "torso04"     7  7
+image "torso05"     8  7
+image "torso06"     9  7
+image "torso07"    10  7
+
+image "torso01Secondary"     6  8
+image "torso04Secondary"     7  8
+image "torso05Secondary"     8  8
+image "torso06Secondary"     9  8
+image "torso07Secondary"    10  8
+
+image "clothes01ElfFemale"     11  7
+image "clothes01HumanFemale"   11  7
+image "clothes01"              12  7
+image "clothes01Dwarf"         13  7
+
+image "torso04HumanFemale"     14  7
+image "torso04ElfFemale"       14  7
+image "torso07HumanFemale"     15  7
+image "torso07ElfFemale"       15  7
+
+image "torso04HumanFemaleSecondary" 14 8
+image "torso04ElfFemaleSecondary"   14 8
+image "torso07HumanFemaleSecondary" 15 8
+image "torso07ElfFemaleSecondary"   15 8
+
+image "clothes01ElfFemaleSecondary"   11 8
+image "clothes01HumanFemaleSecondary" 11 8
+image "clothes01Secondary"            12 8
+image "clothes01DwarfSecondary"       13 8
+
+image "boots01Dwarf"     0  9
+image "boots03Dwarf"     1  9
+image "boots06Dwarf"     2  9
+image "gloves01Dwarf"    3  9
+image "gloves02Dwarf"    4  9
+image "gloves03Dwarf"    5  9
+image "torso01Dwarf"     6  9
+image "torso04Dwarf"     7  9
+image "torso05Dwarf"     8  9
+image "torso06Dwarf"     9  9
+image "torso07Dwarf"    10  9
+
+image "torso05HumanFemale" 11 9
+image "torso05ElfFemale"   11 9
+image "torso01HumanFemale" 12 9
+image "torso01ElfFemale"   12 9
+image "torso06HumanFemale" 13 9
+image "torso06ElfFemale"   13 9
+
+image "torso01DwarfSecondary"     6  10
+image "torso04DwarfSecondary"     7  10
+image "torso05DwarfSecondary"     8  10
+image "torso06DwarfSecondary"     9  10
+image "torso07DwarfSecondary"    10  10
+
+image "torso05HumanFemaleSecondary" 11 10
+image "torso05ElfFemaleSecondary"   11 10
+image "torso01HumanFemaleSecondary" 12 10
+image "torso01ElfFemaleSecondary"   12 10
+image "torso06HumanFemaleSecondary" 13 10
+image "torso06ElfFemaleSecondary"   13 10

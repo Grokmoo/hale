@@ -1,0 +1,34 @@
+playerCharacter false
+
+name "Skeleton"
+icon "creatures/skeleton04" "#ffffffff"
+gender "Male"
+race "Skeleton"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 4400
+role "Priest" 8
+attributes 16 12 15 10 17 10
+script "ai/aiStandard"
+level 1 addAbility "EnhanceAttributes"
+level 1 addAbility "AnimalPower"
+level 1 addAbility "Chameleon"
+level 1 addAbility "HardenArmor"
+level 1 addAbility "SlashingImmunity50"
+level 1 addAbility "PiercingImmunity50"
+level 1 addAbility "CriticalHitImmunity"
+level 1 addAbility "Ward"
+
+currencyReward 30 65
+equip "morningstar" Good
+equip "shield_heavy_base" Good
+equip "armor_mail_base" Decent
+equip "gloves_mail_base" Decent
+equip "helmet_mail_base" Decent
+equip "boots_mail_base" Decent
+addloot "LootLevel5" 50 PER_LIST

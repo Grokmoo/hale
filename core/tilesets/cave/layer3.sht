@@ -1,0 +1,8 @@
+Spritesheet "layer3"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image "wall-rough3" 0 0
+image "wall-rough2" 1 0
+image "wall-rough"  2 0

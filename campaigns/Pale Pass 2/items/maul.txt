@@ -1,0 +1,21 @@
+name "Maul"
+icon "items/W_Mace013" "#ffffffff"
+subIcon "subIcons/weapon_maul01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A huge and very heavy hammer that does a large amount of crushing damage."
+value "3 GP 2 SP" 1
+weight 8000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Maul"
+weaponType "MELEE"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 3 12
+criticalRange 97
+criticalMultiplier 2
+attackCost 4200

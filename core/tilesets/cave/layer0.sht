@@ -1,0 +1,38 @@
+Spritesheet "layer0"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+
+image "path9"  0 0
+image "path8"  1 0
+image "path7"  2 0
+image "path6"  3 0
+image "path5"  4 0
+image "path4"  5 0
+image "floor6" 6 0
+
+image "path3" 0 1
+image "path2" 1 1
+image "path1" 2 1
+image "path"  3 1
+image "hills-variation3" 4 1
+image "hills-variation2" 5 1
+image "hills-variation"  6 1
+
+
+image "floor5"  0 2
+image "floor4"  1 2
+image "floor3"  2 2
+image "floor2"  3 2
+image "floor"   4 2
+image "cobbles" 5 2
+image "chasm"   6 2
+
+image flagstone1 0 3
+image flagstone2 1 3
+image flagstone3 2 3
+image lava1      3 3
+image lava2      4 3
+image lava3      5 3
+image lava4      6 3

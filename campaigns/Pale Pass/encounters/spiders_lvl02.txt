@@ -1,0 +1,10 @@
+size 1
+faction "Hostile"
+challenge 18
+randomize true
+numRandomCreatures 3 4
+respawn true
+respawnHours 24
+creature "fareachWoodsSpider" 0 0
+creature "fareachWoodsSpider" -1 0
+creature "fareachWoodsSpider" -1 -1

@@ -1,0 +1,15 @@
+playerCharacter false
+
+name "Healer"
+icon "creatures/human03" "#ffffffff"
+portrait "Human/mage-light"
+
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+xp 100
+role "Priest" 2
+attributes 10 11 12 9 10 10
+conversation "conversations/fareachHealer"
+

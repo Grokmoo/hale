@@ -1,0 +1,4 @@
+size 0
+faction "Hostile"
+challenge 1
+creature "tutorialOrc" 0 0

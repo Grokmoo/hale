@@ -1,0 +1,19 @@
+name "Devastating Shot"
+type "Offensive"
+description "You fire a single shot with a +40 attack bonus and a +160 damage bonus.  If the attack hits, the target must succeed at a Physical Resistance check or suffer a -6 penalty to Strength, Dexterity, and Constitution for 4 rounds."
+activateable true
+fixed true
+cooldown 8
+
+icon "icons/devastatingShot"
+scriptFile "abilities/devastatingShot"
+
+actionPointCostDescription "Same as an attack"
+
+actionType Damage
+groupType Single
+rangeType Long
+
+addPrereq Ability PiercingShot
+addPrereq Ability MultiShot
+addPrereq Stat LevelAttackBonus 50

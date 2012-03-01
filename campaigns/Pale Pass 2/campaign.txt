@@ -1,0 +1,40 @@
+name "Pale Pass Chapter 2"
+startArea "Large Cavern"
+minPartySize 2
+maxPartySize 4
+minStartingLevel 6
+maxStartingLevel 15
+roundsPerMinute 10
+minutesPerHour 60
+hoursPerDay 24
+daysPerMonth 30
+stripStartingCharacters false
+worldMapImage "worldMap"
+addLocation "Goblin City" "goblinCityToWorldMap" "worldmap/cave" 250 240
+addLocation "Mushroom Forest" "mushroomForestToWorldMap" "worldmap/mushrooms-tile" 250 120
+addLocation "Dwarven City" "null" "worldmap/castle" 150 15
+addLocation "Ancient Tomb" "null" "worldmap/temple1" 45 125
+addLocation "Underground Lake" "undergroundLakeToWorldMap" "worldmap/lake1" 490 110
+addLocation "Drake Caves" "null" "worldmap/dwarven" 300 380
+addLocation "The Gate" "null" "worldmap/drake4" 470 390
+setTravelTime "Goblin City" "Mushroom Forest" 6
+setTravelTime "Goblin City" "Dwarven City" 24
+setTravelTime "Goblin City" "Ancient Tomb" 24
+setTravelTime "Goblin City" "Underground Lake" 36
+setTravelTime "Goblin City" "Drake Caves" 24
+setTravelTime "Goblin City" "The Gate" 36
+setTravelTime "Mushroom Forest" "Dwarven City" 12
+setTravelTime "Mushroom Forest" "Ancient Tomb" 12
+setTravelTime "Mushroom Forest" "Underground Lake" 24
+setTravelTime "Mushroom Forest" "Drake Caves" 30
+setTravelTime "Mushroom Forest" "The Gate" 42
+setTravelTime "Dwarven City" "Ancient Tomb" 24
+setTravelTime "Dwarven City" "Underground Lake" 36
+setTravelTime "Dwarven City" "Drake Caves" 42
+setTravelTime "Dwarven City" "The Gate" 54
+setTravelTime "Ancient Tomb" "Underground Lake" 36
+setTravelTime "Ancient Tomb" "Drake Caves" 42
+setTravelTime "Ancient Tomb" "The Gate" 54
+setTravelTime "Underground Lake" "Drake Caves" 54
+setTravelTime "Underground Lake" "The Gate" 66
+setTravelTime "Drake Caves" "The Gate" 12

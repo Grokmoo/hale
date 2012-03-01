@@ -1,0 +1,20 @@
+pregenerated true
+playerCharacter true
+faction "Player"
+name "Anech"
+portrait "Human/general"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair005" "#ff5c3317"
+beardicon "subIcons/beard003" "#ffee7600"
+skincolor "#ffffc794"
+clothingcolor "#ffff0000"
+role "Warrior" 1
+attributes 18 13 13 10 10 10
+addSkillRanks "CraftWeapons" 5
+level 1 addAbility "ShieldDefense"
+
+equip "armor_clothes" Good

@@ -1,0 +1,10 @@
+name "Lizardling Key Fragment"
+icon "items/I_Map" "#ff88ede8"
+ingredient false
+quest true
+cursed false
+description "The fragment of the gate key that was held by the Lizardlings."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"

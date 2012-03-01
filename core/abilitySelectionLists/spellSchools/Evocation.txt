@@ -1,0 +1,49 @@
+name "Evocation"
+
+add "Firebolt"       0.5 0
+add "FlamingFingers" 0.0 1
+add "Fireball"       1.0 2
+add "Meteor"         1.0 4
+
+add "Freeze"         3 0
+add "IcicleStab"     2 1
+add "Storm"          4 2
+add "GlacialWave"    3 4
+
+add "Shock"          5 0
+add "LightningBolt"  5 2
+
+add "LightningStorm" 4.5 3
+
+add "Crush"          6.5 0
+add "Tremor"           6 1
+add "MassCrush"        7 3
+
+connect 0.5 0.0 TwoDown
+connect 1.0 1.0 OneDown
+connect 1.0 1.0 Through
+connect 1.0 2.0 OneDown
+connect 1.0 3.0 Through
+connect 1.0 3.0 OneDown
+
+connect 3 0 ThreeDown
+connect 4 1 Through
+connect 4 1 OneDown
+connect 3 1 Through
+connect 3 1 OneDown
+connect 3 2 Through
+connect 3 2 OneDown
+connect 3 3 Through
+connect 3 3 OneDown
+
+connect 4.5 3 TwoUp
+
+connect 5 0 OneDown
+connect 5 1 Through
+connect 5 1 OneDown
+
+connect 6.5 0 TwoDown
+connect   7 1 OneDown
+connect   7 1 Through
+connect   7 2 OneDown
+connect   7 2 Through

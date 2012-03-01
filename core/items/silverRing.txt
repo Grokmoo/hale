@@ -1,0 +1,10 @@
+name "Silver Ring"
+icon "items/Ac_Ring01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A valuable ring made out of solid silver."
+value "1 SP" 1
+weight 50
+itemType "RING"
+quality "Good"

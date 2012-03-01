@@ -1,0 +1,27 @@
+name "Storm"
+type "Evocation"
+description "The caster selects a circular area of radius 15 feet.  A powerful storm of magical ice envelopes the area for 3 to 6 rounds.  Each round, all creatures in the area of effect take 4 to 8 plus one per two caster levels cold damage."
+activateable true
+fixed true
+cooldown 10
+
+icon "icons/storm"
+scriptfile "spells/storm"
+
+spell true
+spellLevel 3
+verbalComponent true
+somaticComponent true
+spellResistance true
+
+actionPointCost 6000
+
+actionType Damage
+groupType Multiple
+rangeType Long
+aiPower 30
+
+addPrereq Stat CasterLevel 7
+addPrereq Ability Freeze
+
+upgrade LightningStorm "With Lightning Storm, each creature within the effect of a Storm spell has a 33% chance each round to be struck with a bolt of lightning, doing 1 to 10 plus one per caster level damage."

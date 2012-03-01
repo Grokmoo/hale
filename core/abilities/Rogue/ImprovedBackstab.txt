@@ -1,0 +1,9 @@
+name "Improved Backstab"
+type "Rogue Abilities"
+description "You can now perform backstab attacks when flanking an opponent."
+activateable false
+
+icon "icons/improvedBackstab"
+
+addPrereq Ability Backstab
+addPrereq Role Rogue 4

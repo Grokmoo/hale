@@ -1,0 +1,5 @@
+size Medium
+movementCost 1000
+unarmedWeapon unarmedMediumThreatens
+
+racialType Animal

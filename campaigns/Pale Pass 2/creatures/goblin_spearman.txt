@@ -1,0 +1,25 @@
+playerCharacter false
+
+name "Goblin Spearman"
+icon "creatures/goblin03" "#ffffffff"
+gender "Male"
+race "Goblin"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ff722626"
+xp 1500
+role "Warrior" 5
+attributes 12 14 9 5 9 7
+script "ai/aiStandard"
+
+currencyReward 50 90
+equip "shortspear" Good
+equip "armor_leather_base" Good
+equip "gloves_leather_base" Good
+equip "boots_leather_base" Good
+addloot "LootLevel5" 50 PER_LIST
+addloot "LootLevel5" 10 PER_LIST

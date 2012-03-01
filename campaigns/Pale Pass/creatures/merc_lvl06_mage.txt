@@ -1,0 +1,31 @@
+playerCharacter false
+
+name "Mercenary Mage"
+icon "creatures/human16" "#ffffffff"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 2100
+role "Mage" 7
+attributes 10 12 12 17 10 11
+script "ai/aiStandard"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Crush"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Sleep"
+level 1 addAbility "Paralyze"
+level 1 addAbility "Slow"
+level 1 addAbility "Chameleon"
+
+currencyReward 35 50
+equip "sling" Good
+equip "slingstone" Good
+additem "slingstone" 88 Good
+addloot "LootLevel10" 50 PER_LIST
+addloot "LootLevel5" 50 PER_LIST

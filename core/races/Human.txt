@@ -1,0 +1,38 @@
+icon "icons/human"
+
+size medium
+movementCost 1000
+unarmedWeapon unarmedMedium
+playerSelectable true
+
+baseAttributes 10 10 10 10 10 10
+
+racialType Humanoid
+
+maleForegroundIcon creatures/human-male-fg
+maleBackgroundIcon creatures/human-male-bg
+femaleForegroundIcon creatures/human-female-fg
+femaleBackgroundIcon creatures/human-female-bg
+maleClothesIcon creatures/human-male-clothes
+femaleClothesIcon creatures/human-female-clothes
+
+iconOffset Cloak  16 15
+iconOffset Quiver 16 15
+iconOffset Torso 16 15
+iconOffset Gloves 16 15
+iconOffset Head 16 4
+iconOffset Ears 16 4
+iconOffset Hair 16 4
+iconOffset Beard 16 5
+iconOffset Shield 22 15
+iconOffset Boots 16 26
+iconOffset MainHandWeapon 4 10
+iconOffset OffHandWeapon 24 11
+
+level  2 selectAbilityFromList General
+level  5 selectAbilityFromList General
+level  8 selectAbilityFromList General
+level 11 selectAbilityFromList General
+level 14 selectAbilityFromList General
+level 17 selectAbilityFromList General
+level 20 selectAbilityFromList General

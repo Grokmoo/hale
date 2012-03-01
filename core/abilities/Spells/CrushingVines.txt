@@ -1,0 +1,17 @@
+name "Crushing Vines"
+type "Conjuration"
+description "Crushing Vines upgrades your tanglefoot spell.  Hostile creatures in the area of the spell must succeed at a physical resistance check each round or be immobilized for that round.  Creatures that are immobilized by this spell take 1 to 10 blunt damage each round."
+activateable false
+
+icon "icons/crushingVines"
+
+spellLevel 2
+
+actionType Tactical
+groupType Multiple
+rangeType Long
+aiPower 10
+
+addPrereq Stat CasterLevel 4
+
+addPrereq Ability Tanglefoot

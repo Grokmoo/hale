@@ -1,0 +1,15 @@
+name "Mail Helmet"
+icon "items/C_Elm02" "#ffffffff"
+subIcon "subIcons/head_helmet02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A helmet made of interlocking mail rings, providing good protection of the wearer's head."
+value "6 SP 2 CP" 1
+weight 1200
+itemType "HELMET"
+quality "Good"
+armorType "Medium"
+armorClass 3
+armorPenalty 2
+movementPenalty 2

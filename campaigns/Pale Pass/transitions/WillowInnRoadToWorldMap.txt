@@ -1,0 +1,14 @@
+icon "transition"
+twoWay true
+activated false
+location "The Willow Inn"
+from "The Road to Fareach" 1 4
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addFromPosition 2 -1
+addFromPosition 1 -1
+addFromPosition 1 0
+addFromPosition 0 0

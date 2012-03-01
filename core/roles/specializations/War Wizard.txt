@@ -1,0 +1,16 @@
+playerselectable true
+baseRole false
+
+icon "icons/warWizard"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+
+skillPointsPerLevel 5
+
+HPPerLevel 4
+
+addPrereq Role Mage 8
+
+addPrereq Ability ElementalShield
+addPrereq Ability HardenArmor

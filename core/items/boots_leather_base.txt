@@ -1,0 +1,15 @@
+name "Leather Boots"
+icon "items/A_Shoes01" "#ffffffff"
+subIcon "subIcons/boots03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Boots made out of hardened leather, to protect the wearer's feet."
+value "2 SP" 1
+weight 800
+itemType "BOOTS"
+quality "Good"
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

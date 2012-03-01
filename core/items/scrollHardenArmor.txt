@@ -1,0 +1,12 @@
+name "Scroll of Harden Armor"
+icon "items/Z_scroll_cyan" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Reading this scroll aloud casts the spell Harden Armor.  The power of the spell is dependant on the quality of the scroll."
+value "1 GP" 1
+weight 50
+itemType "ITEM"
+quality "Good"
+script "items/scrollHardenArmor"
+useButtonText "Read"

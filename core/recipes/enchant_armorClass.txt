@@ -1,0 +1,18 @@
+name "Enhance Armor Class"
+description "Enchants armor with a bonus to armor class.  The amount of the bonus is dependant on your Enchanting skill."
+skill "Enchanting"
+skillRequirement 15
+resultQuantity 1
+resultHasQuality "true
+anyItemOfTypeIngredient "ARMOR"
+resultIsIngredient true
+ingredient "bar_silver" 2
+ingredient "gem06" 1
+qualityModifier 5 "entity.addBonus('ArmorClass', 'Deflection',  2);"
+qualityModifier 20 "entity.addBonus('ArmorClass', 'Deflection',  4);"
+qualityModifier 40 "entity.addBonus('ArmorClass', 'Deflection',  6);"
+qualityModifier 60 "entity.addBonus('ArmorClass', 'Deflection',  8);"
+qualityModifier 80 "entity.addBonus('ArmorClass', 'Deflection',  10);"
+qualityModifier 100 "entity.addBonus('ArmorClass', 'Deflection',  12);"
+qualityModifier 120 "entity.addBonus('ArmorClass', 'Deflection',  14);"
+qualityModifier 140 "entity.addBonus('ArmorClass', 'Deflection',  16);"
