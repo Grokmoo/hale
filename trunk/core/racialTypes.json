@@ -1,0 +1,7 @@
+{ "racialTypes" : [
+	"Humanoid",
+	"Undead",
+	"Incorporal",
+	"Animal",
+	"Lycanthrope"
+] }

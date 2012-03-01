@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Sabretooth"
+icon "creatures/sabretooth" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+role "Monster" 6
+attributes 16 18 12 3 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 0 0
+equip "mediumClaw" Good

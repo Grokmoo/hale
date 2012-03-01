@@ -1,0 +1,6 @@
+name Speech
+verb Speak
+untrained true
+keyAttribute Cha
+hasArmorPenalty false
+icon "icons/speech"

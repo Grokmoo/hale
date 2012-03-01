@@ -1,0 +1,9 @@
+name "Proficiency, Small Swords"
+description "You are able to use short swords and daggers in combat."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencySmallSwords"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Dagger'); effect.getBonuses().addWeaponProficiency('Short Sword'); parent.applyEffect(effect); }"

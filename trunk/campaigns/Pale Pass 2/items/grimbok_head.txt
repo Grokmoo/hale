@@ -1,0 +1,12 @@
+name "Grimbok Head"
+icon "items/I_BatWing" "#ffffffff"
+ingredient false
+quest true
+cursed false
+description "The severed head of the fearsom beast, the Grimbok.  This serves as proof that you have slayed the creature."
+value "0 CP" 1
+weight 1000
+itemType "ITEM"
+quality "Good"
+script "items/grimbokHead"
+useButtonText ""

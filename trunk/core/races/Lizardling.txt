@@ -1,0 +1,10 @@
+size medium
+movementCost 1200
+unarmedWeapon unarmedMedium
+
+racialType Humanoid
+
+iconOffset Shield 25 20
+iconOffset OffHandWeapon 29 15
+iconOffset MainHandWeapon 2 15
+addAbility Ambidextrous

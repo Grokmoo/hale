@@ -1,0 +1,10 @@
+name "Iron Bar"
+icon "items/I_C_Apple" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "An iron bar for use in crafting weapons and armor."
+value "1 GP" 1
+weight 3000
+itemType "ITEM"
+quality "Good"

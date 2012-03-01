@@ -1,0 +1,22 @@
+playerCharacter false
+
+name "Mushroom Man"
+icon "creatures/mushroom" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 4400
+role "Monster" 8
+attributes 14 13 17 2 5 9
+script "ai/aiStandard"
+level 1 addAbility "MightyBlow"
+level 1 addAbility "CriticalHitImmunity"
+
+currencyReward 20 40
+equip "unarmedClaw" Fine
+addloot "LootCraft" 20 PER_LIST
+addloot "LootGems" 20 PER_LIST
+addloot "LootMagicGood" 2 PER_LIST
+addloot "LootPotionsGood" 5 PER_LIST
+addloot "LootScrollsGood" 5 PER_LIST
+addloot "LootMushroomMan" 50 PER_LIST

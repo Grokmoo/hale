@@ -1,0 +1,10 @@
+name "Hematite"
+icon "items/I_Rock05" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A good example of a hematite stone, worth a bit of coin."
+value "2 SP 5 CP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

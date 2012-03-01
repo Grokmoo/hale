@@ -1,0 +1,15 @@
+name "Leather Helmet"
+icon "items/C_Elm01" "#ffffffff"
+subIcon "subIcons/head_helmet03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A helmet made of sturdy leather , providing some protection for the wearer's head."
+value "2 SP 4 CP" 1
+weight 800
+itemType "HELMET"
+quality "Good"
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

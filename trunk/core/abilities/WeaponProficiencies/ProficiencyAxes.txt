@@ -1,0 +1,9 @@
+name "Proficiency, Axes"
+description "You are able to use most axes in combat.  This includes handaxes, battleaxes, and two handed greataxes."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencyAxes"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Handaxe'); effect.getBonuses().addWeaponProficiency('Battleaxe'); effect.getBonuses().addWeaponProficiency('Greataxe'); parent.applyEffect(effect); }"

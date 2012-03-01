@@ -1,0 +1,12 @@
+name "Point Blank Shot"
+type "Offensive"
+description "You no longer suffer attacks of opportunity from firing a ranged weapon in melee combat."
+activateable false
+
+icon "icons/pointBlankShot"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('AoOFromRangedImmunity'); parent.applyEffect(effect); }"
+
+addPrereq Ability Longshot
+addPrereq Stat LevelAttackBonus 10
+

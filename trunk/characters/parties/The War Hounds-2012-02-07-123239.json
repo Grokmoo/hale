@@ -1,0 +1,13 @@
+{
+  "name" : "The War Hounds",
+  "currency" : 0,
+  "maxLevel" : 1,
+  "minLevel" : 1,
+  
+  "characters" : [
+    "Anech-2012-01-27-104035",
+    "Griman-2012-01-27-104502",
+    "Arana-2012-01-27-104223",
+    "Ducky-2012-01-27-104341"
+  ]
+}

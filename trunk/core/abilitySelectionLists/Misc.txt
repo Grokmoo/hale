@@ -1,0 +1,30 @@
+name "General"
+
+add "Athletic"          0.0  0
+add "PackMule"          0.0  1
+
+add "QuickDraw"         1.0  0
+add "ReflexiveAttacks"  2.0  0
+add "FastActions"       1.5  1
+
+add "BlindFighting"     3.0  0
+add "CombatReady"       4.0  0
+add "CombatFinesse"     3.5  1
+
+add "ToughBody"         5.0  0
+add "StrongSoul"        6.0  0
+add "LightningReflexes" 7.0  0
+
+add "AbsorbBlows"       5.0  1
+add "EnergyResistance"  6.0  1
+add "Dodger"            7.0  1
+
+connect 0.0 0.0 OneDown
+
+connect 1.5 1.0 TwoUp
+
+connect 3.5 1.0 TwoUp
+
+connect 5.0 0.0 OneDown
+connect 6.0 0.0 OneDown
+connect 7.0 0.0 OneDown

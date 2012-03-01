@@ -1,0 +1,3 @@
+area "Goblin Caves"
+script "triggers/goblinCavesEnter"
+addPoints

@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Southern Road" 43 25
+to "Secret Bandit Stash" 1 1
+addToPosition 2 1
+addToPosition 2 0
+addToPosition 1 0
+addToPosition 0 0
+addFromPosition -4 2
+addFromPosition -3 1
+addFromPosition -2 2
+addFromPosition -2 1

@@ -1,0 +1,22 @@
+name "Club"
+icon "items/W_Mace001" "#ffffffff"
+subIcon "subIcons/weapon_light-hammer01" "#ffffffff"
+ingredient false
+quest false
+cursed true
+description "A basic club.  For the purposes of the tutorial, you cannot unequip this item."
+value "1 GP 2 SP" 1
+weight 600
+itemType "WEAPON"
+quality "Good"
+script "items/tutorial_club"
+baseWeapon "Club"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 2 3
+criticalRange 95
+criticalMultiplier 1
+attackCost 2800

@@ -1,0 +1,18 @@
+name "Bolts"
+description "Creates 20 crossbow bolts."
+skill "CraftWeapons"
+skillRequirement 10
+result "bolt"
+resultQuantity 20
+resultHasQuality "false
+resultIsIngredient false
+ingredient "bar_iron" 2
+ingredient "coal" 4
+qualityModifier 5 ""
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 125 ""
+qualityModifier 145 ""

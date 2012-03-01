@@ -1,0 +1,19 @@
+name "Bastard Sword"
+description "Creates a bastard sword. The quality is dependant on your Craft Weapons skill."
+skill "CraftWeapons"
+skillRequirement 35
+result "bastardSword"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_iron" 4
+ingredient "bar_wood" 1
+ingredient "coal" 6
+qualityModifier 30 ""
+qualityModifier 50 ""
+qualityModifier 70 ""
+qualityModifier 90 ""
+qualityModifier 110 ""
+qualityModifier 125 ""
+qualityModifier 140 ""
+qualityModifier 160 ""

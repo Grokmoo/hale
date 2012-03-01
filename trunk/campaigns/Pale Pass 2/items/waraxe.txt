@@ -1,0 +1,21 @@
+name "Waraxe"
+icon "items/W_Axe014" "#ffffffff"
+subIcon "subIcons/weapon_axe03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A large and powerful one handed axe that deals out large slashing damage, but requires special training to use."
+value "3 GP 5 SP" 1
+weight 2400
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Waraxe"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 2 7
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800

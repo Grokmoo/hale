@@ -1,0 +1,7 @@
+name "Locks"
+verb Lock
+untrained false
+keyAttribute Dex
+hasArmorPenalty false
+restrictToRole Rogue
+icon "icons/locks"

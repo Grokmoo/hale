@@ -1,0 +1,21 @@
+name "Dagger"
+icon "items/W_Dagger002" "#ffffffff"
+subIcon "subIcons/weapon_sword01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A small blade shorter than 12 inches designed for stabbing.  This weapon is easy to conceal and use."
+value "1 GP 2 SP" 1
+weight 600
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Dagger"
+weaponType "MELEE"
+weaponSize "light" "Small"
+reach 1 1
+threatens true
+damageType "Piercing"
+damage 1 4
+criticalRange 93
+criticalMultiplier 2
+attackCost 2800

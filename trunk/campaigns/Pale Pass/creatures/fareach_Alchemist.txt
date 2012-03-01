@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Alchemist"
+icon "creatures/human15" "#ffffffff"
+portrait "Human/mage"
+
+gender "Female"
+race "Human"
+unspentSkillPoints 0
+xp 100
+role "Adept" 2
+attributes 10 10 10 10 10 10
+conversation "conversations/fareachAlchemist"
+

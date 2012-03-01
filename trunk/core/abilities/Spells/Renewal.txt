@@ -1,0 +1,27 @@
+name "Renewal"
+type "Restoration"
+description "The caster touches a friendly creature.  Up to 2 points plus 1 point per 2 caster levels of temporary or permanent attribute penalties are removed from the target.  The number of points negated is a total across all Attributes.  Temporary penalties are negated first."
+activateable true
+fixed true
+cooldown 9
+
+icon "icons/renewal"
+scriptFile "spells/renewal"
+
+spell true
+spellLevel 2
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+actionType Tactical
+groupType Single
+rangeType Touch
+aiPower 20
+
+addPrereq Stat CasterLevel 4
+
+upgrade RestoreMorale "With Restore Morale, Renewal now also negates the effects of spells which penalize Attack, Attack Cost, Armor Class, Armor Penalty, Skill Checks, Resistances, and Spell Failure.  Up to 5 points plus 1 point per 2 caster levels of penalties in each category are negated."
+
+upgrade RemoveParalysis "With Remove Paralysis, all effects causing immobilization or helplessness, including sleep and paralysis, are immediately removed from the target."

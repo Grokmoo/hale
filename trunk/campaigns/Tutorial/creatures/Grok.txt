@@ -1,0 +1,18 @@
+playerCharacter true
+
+name "Grok"
+portrait "Human/outlaw"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair007" "#ffc4ab78"
+
+skincolor "#fff6d39b"
+clothingcolor "#ff00ff00"
+role "Warrior" 1
+attributes 18 13 13 10 10 10
+level 1 addAbility "MightyBlow"
+
+equip "clothes" Good

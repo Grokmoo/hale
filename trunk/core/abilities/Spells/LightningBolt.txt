@@ -1,0 +1,16 @@
+name "Lightning Bolt"
+type "Evocation"
+description "Lightning Bolt upgrades your Shock spell.  All creatures within 10 feet of the caster take 8 to 16 plus one per caster level damage."
+activateable false
+
+icon "icons/lightningBolt"
+
+spellLevel 3
+
+actionType Damage
+groupType Multiple
+rangeType Short
+aiPower 30
+
+addPrereq Ability Shock
+addPrereq Stat CasterLevel 7

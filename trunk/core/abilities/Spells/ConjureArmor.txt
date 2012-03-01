@@ -1,0 +1,29 @@
+name "Conjure Armor"
+type "Conjuration"
+description "The caster touches one creature and calls forth a magical piece of armor directly onto that creature's body for 5 to 10 rounds.  The item cannot be removed until it disappears when the spell duration expires.  The caster may select a helmet, gloves, or boots made of leather, mail, or plate.  The item gains one rank of quality for every 3 caster levels, and is magically enchanted to provide an additional +5 to Armor Class.
+activateable true
+fixed true
+cooldown 9
+
+icon "icons/conjureArmor"
+scriptFile "spells/conjureArmor"
+
+spell true
+spellLevel 2
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Tactical
+groupType Single
+rangeType Touch
+
+aiPower 15
+
+addPrereq Stat CasterLevel 4
+
+addPrereq Ability Shield
+
+upgrade ConjureArmorSet "With Conjure Armor Set, the spell creates a complete set of Leather, Mail, Plate, or Heavy Plate armor on the target.  The quality of each piece is the same as if it were created by the base Conjure Armor spell.  Only the armor has the +5 Armor Class enchantment."

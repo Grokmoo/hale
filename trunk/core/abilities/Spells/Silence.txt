@@ -1,0 +1,16 @@
+name "Silence"
+type "Alteration"
+description "Silence upgrades your Deafen spell.  No sound is possible within the area targeted.  This will cause immediate spell failure on any spell with a verbal component.  The area of effect is fixed.  Targets may move into or out of the effect.  The silence effect lasts for 5 rounds."
+activateable false
+
+icon "icons/silence"
+
+spellLevel 4
+
+actionType Debuff
+groupType Multiple
+rangeType Long
+aiPower 40
+
+addPrereq Ability Deafen
+addPrereq Stat CasterLevel 10

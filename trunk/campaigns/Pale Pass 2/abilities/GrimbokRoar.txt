@@ -1,0 +1,16 @@
+name "Roar"
+type "Racial Abilities"
+description "The Grimbok lets out an Earth shattering roar, affecting creatures in a circular area of 20 feet around the creature.  All creatures in the area of effect must succeed at a Physical Resistance check or become deafened for 3 to 5 rounds."
+activateable true
+fixed true
+cooldown 5
+
+icon "icons/deafen"
+scriptFile "abilities/grimbokRoar"
+
+actionPointCost 6000
+
+actionType Debuff
+groupType Multiple
+rangeType Short
+aiPower 50

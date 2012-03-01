@@ -1,0 +1,16 @@
+playerSelectable true
+baseRole false
+
+icon "icons/elementalist"
+
+damageBonusPerLevel 1
+attackBonusPerLevel 1
+
+skillPointsPerLevel 5
+
+HPPerLevel 2
+
+addPrereq Role Mage 10
+
+addPrereq Ability Fireball
+addPrereq Ability LightningBolt

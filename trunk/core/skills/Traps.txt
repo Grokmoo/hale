@@ -1,0 +1,8 @@
+name "Traps"
+verb Trap
+untrained false
+keyAttribute Dex
+hasArmorPenalty false
+restrictToRole Rogue
+craft true
+icon "icons/traps"

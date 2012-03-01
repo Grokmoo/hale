@@ -1,0 +1,19 @@
+name "Potion of Wisdom"
+description "Creates a potion of wisdom.  The bonus conferred by the potion depends on your Alchemy Skill."
+skill "Alchemy"
+skillRequirement 10
+result "potionWis"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "empty_bottle" 1
+ingredient "water_jug" 1
+ingredient "gem07" 2
+qualityModifier 10 ""
+qualityModifier 30 ""
+qualityModifier 50 ""
+qualityModifier 70 ""
+qualityModifier 90 ""
+qualityModifier 110 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

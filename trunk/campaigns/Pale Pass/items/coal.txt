@@ -1,0 +1,10 @@
+name "Coal"
+icon "items/I_Crystal02" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A lump of coal, useful as fuel in various crafting recipes."
+value "5 CP" 1
+weight 500
+itemType "ITEM"
+quality "Good"

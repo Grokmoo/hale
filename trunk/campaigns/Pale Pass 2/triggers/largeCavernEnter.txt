@@ -1,0 +1,3 @@
+area "Large Cavern"
+script "triggers/largeCavernEnter"
+addPoints   7 9   7 8   7 7   7 6   8 6   9 5   10 5   12 4   13 3

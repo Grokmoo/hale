@@ -1,0 +1,8 @@
+name "Spell Resistance 30"
+type "Racial Abilities"
+description "This creature is naturally resistant to the effects of magic."
+activateable false
+
+icon "icons/naturalArmor"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('SpellResistance', 30); parent.applyEffect(effect); }"

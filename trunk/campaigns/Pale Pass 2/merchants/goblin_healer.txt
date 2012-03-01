@@ -1,0 +1,8 @@
+name "Healer"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 50
+sellValuePercentage 150
+respawnhours 24
+additems "PotionsGood" 80 PER_ITEM
+additems "ScrollsGood" 90 PER_ITEM

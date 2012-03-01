@@ -1,0 +1,15 @@
+playerCharacter false
+
+name "Gryphon"
+icon "creatures/gryphon" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 2100
+role "Monster" 7
+attributes 17 18 14 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor5"
+
+currencyReward 20 40
+equip "unarmedLarge" Exceptional

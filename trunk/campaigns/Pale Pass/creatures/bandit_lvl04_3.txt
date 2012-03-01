@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Bandit"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair005" "#ffb55c18"
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 600
+role "Warrior" 4
+attributes 12 10 9 8 10 8
+script "ai/aiStandard"
+
+currencyReward 20 30
+equip "shortspear" Decent
+equip "armor_leatherhard_base" Decent
+equip "gloves_leather_base" Decent
+equip "boots_leather_base" Decent
+addloot "LootLevel5" 50 PER_LIST
+addloot "LootLevel5" 8 PER_LIST

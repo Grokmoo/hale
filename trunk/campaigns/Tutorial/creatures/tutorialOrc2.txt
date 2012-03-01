@@ -1,0 +1,19 @@
+playerCharacter false
+
+name "Orc"
+icon "creatures/orc01" "#ffffffff"
+gender "Male"
+race "Orc"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 100
+role "Monster" 2
+attributes 10 1 12 10 10 10
+script "ai/aiStandard"
+
+equip "tutorial_orc_fist" Good

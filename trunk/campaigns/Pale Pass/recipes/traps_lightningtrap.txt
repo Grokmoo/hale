@@ -1,0 +1,20 @@
+name "Lightning Trap"
+description "Creates a shocking lightning trap.  The quality of the trap is dependant on your Traps skill."
+skill "Traps"
+skillRequirement 35
+result "lightningTrap"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "wire" 2
+ingredient "pressure_plate" 1
+ingredient "gem10" 1
+ingredient "bar_silver" 1
+qualityModifier 15 ""
+qualityModifier 40 ""
+qualityModifier 60 ""
+qualityModifier 80 ""
+qualityModifier 100 ""
+qualityModifier 120 ""
+qualityModifier 140 ""
+qualityModifier 160 ""

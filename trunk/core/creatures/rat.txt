@@ -1,0 +1,12 @@
+playerCharacter false
+
+name "Rat"
+icon "creatures/rat" "#ffffffff"
+gender "Male"
+race "SmallAnimal"
+unspentSkillPoints 0
+role "Monster" 1
+attributes 8 18 4 2 10 10
+script "ai/aiStandard"
+
+equip "smallClaw" Good

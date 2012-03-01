@@ -1,0 +1,21 @@
+name "Club"
+icon "items/W_Mace001" "#ffffffff"
+subIcon "subIcons/weapon_club01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A simple wooden club which can be used for bashing opponents.  It is inferior to more sophisticated weapons, however."
+value "1 SP" 1
+weight 2000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Club"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 4
+criticalRange 97
+criticalMultiplier 2
+attackCost 2800

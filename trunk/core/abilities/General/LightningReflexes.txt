@@ -1,0 +1,9 @@
+name "Lightning Reflexes"
+type "General"
+description "You have finely honed your reflexes, gaining a +10 bonus on all Reflex Resistance checks."
+
+icon "icons/lightningReflexes"
+
+addPrereq Stat Dex 12
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ReflexResistance', 'Stackable', 10); parent.applyEffect(effect); }"

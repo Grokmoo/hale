@@ -1,0 +1,23 @@
+name "Whirlwind Attack"
+type "Offensive"
+description "As a standard attack action, you launch into a spinning whirlwind, attacking all enemies within 5 feet of you.  Each attack is made at a -10 attack penalty.  This ability can only be used with a melee weapon."
+activateable true
+mode false
+cancelable false
+fixed true
+cooldown 8
+
+icon "icons/whirlwindAttack"
+scriptFile "abilities/whirlwindAttack"
+
+actionPointCostDescription "See Description"
+
+actionType Damage
+groupType Multiple
+RangeType Short
+
+addPrereq Stat LevelAttackBonus 50
+addPrereq Ability ChargeAttack
+addPrereq Ability Disarm
+
+aiPower 30

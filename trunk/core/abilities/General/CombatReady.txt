@@ -1,0 +1,7 @@
+name "Combat Ready"
+type "General"
+description "You are always ready for combat, gaining a +25 bonus on initiative which determines who goes first in combat."
+
+icon "icons/combatReady"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('Initiative', 'Stackable', 25); parent.applyEffect(effect); }"

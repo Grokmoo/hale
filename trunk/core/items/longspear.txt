@@ -1,0 +1,21 @@
+name "Longspear"
+icon "items/W_Spear006" "#ffffffff"
+subIcon "subIcons/weapon_spear04" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A spear with a shaft that is taller than a man.  This weapon can be used to attack targets 10 feet away, but not adjacent targets due to its length."
+value "3 GP" 1
+weight 5000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Long Spear"
+weaponType "MELEE"
+weaponSize "twohanded" "Medium"
+reach 2 2
+threatens true
+damageType "Piercing"
+damage 2 11
+criticalRange 95
+criticalMultiplier 3
+attackCost 4200

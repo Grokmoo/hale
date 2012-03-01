@@ -1,0 +1,20 @@
+name "Plate Helmet"
+description "Creates a plate helmet.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 45
+result "helmet_plate_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 1
+ingredient "thread" 2
+ingredient "bar_iron" 4
+ingredient "coal" 6
+qualityModifier 40 ""
+qualityModifier 60 ""
+qualityModifier 80 ""
+qualityModifier 100 ""
+qualityModifier 120 ""
+qualityModifier 130 ""
+qualityModifier 145 ""
+qualityModifier 160 ""

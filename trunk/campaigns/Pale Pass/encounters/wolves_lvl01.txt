@@ -1,0 +1,8 @@
+size 1
+faction "Hostile"
+challenge 8
+randomize true
+numRandomCreatures 3 4
+respawn true
+respawnHours 24
+creature "wolfsmall_lvl01" 0 0

@@ -1,0 +1,16 @@
+size 3
+faction "Hostile"
+challenge 15
+randomize true
+numRandomCreatures 5 7
+respawn true
+respawnHours 24
+creature "rat" 0 0
+creature "rat" -3 -2
+creature "rat" -1 -2
+creature "rat" 1 -2
+creature "rat" 3 0
+creature "rat" -1 2
+creature "rat" -3 1
+creature "rat" -2 0
+creature "rat" -1 0

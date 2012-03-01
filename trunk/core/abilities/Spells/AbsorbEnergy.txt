@@ -1,0 +1,27 @@
+name "Absorb Energy"
+type "Alteration"
+description "The targeted friendly creature is touched by the caster and gains Damage Reduction 5 plus 1 per two caster levels against either Fire, Cold, Electrical, or Acid damage for 5 to 10 rounds."
+activateable true
+fixed true
+cooldown 8
+
+icon "icons/absorbEnergy"
+scriptFile "spells/absorbEnergy"
+
+spell true
+
+spellLevel 1
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 10
+
+addPrereq Stat CasterLevel 4
+
+upgrade ResistSpells "With Resist Spells, the targeted creature now also gains spell resistance of 15 points plus 1 point per caster level."

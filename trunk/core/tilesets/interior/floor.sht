@@ -1,0 +1,11 @@
+Spritesheet "floor"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image "wood0"  0 0
+image "wood1"  1 0
+image "wood2"  2 0
+
+image "stone"  0 1
+image "cobble" 1 1

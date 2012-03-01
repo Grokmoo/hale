@@ -1,0 +1,12 @@
+name "Amulet of the Healer"
+icon "items/Ac_Medal01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A magically enchanted amulet, providing a 10% bonus to all healing spells."
+value "1 GP 8 SP" 1
+weight 500
+itemType "AMULET"
+quality "Good"
+enchantment "entity.addBonus('SpellHealing', 10);"
+useButtonText ""

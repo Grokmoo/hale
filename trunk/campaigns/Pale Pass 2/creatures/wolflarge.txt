@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Large Wolf"
+icon "creatures/wolf-large" "#ffffffff"
+gender "Male"
+race "LargeAnimal"
+unspentSkillPoints 0
+role "Monster" 7
+attributes 18 11 14 3 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 0 0
+equip "largeClaw" Good

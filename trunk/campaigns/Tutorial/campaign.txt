@@ -1,0 +1,13 @@
+name "Tutorial"
+startArea "Grassland"
+minPartySize 1
+maxPartySize 1
+minStartingLevel 1
+maxStartingLevel 1
+roundsPerMinute 10
+minutesPerHour 60
+hoursPerDay 24
+daysPerMonth 30
+stripStartingCharacters false
+startingCharacter "Grok"
+addLocation "Start" "null" "null" 0 0

@@ -1,0 +1,19 @@
+name "Gloves of Strength"
+description "Adds a strength enchantment to a pair of gloves.  The amount of the bonus depends on your enchanting skill."
+skill "Enchanting"
+skillRequirement 50
+resultQuantity 1
+resultHasQuality "true
+anyItemOfTypeIngredient "GLOVES"
+resultIsIngredient true
+ingredient "bar_lead" 1
+ingredient "crystal_green" 1
+ingredient "claw" 2
+qualityModifier 35 "entity.addBonus('Str',  1);"
+qualityModifier 55 "entity.addBonus('Str',  2);"
+qualityModifier 75 "entity.addBonus('Str',  3);"
+qualityModifier 95 "entity.addBonus('Str',  4);"
+qualityModifier 115 "entity.addBonus('Str',  5);"
+qualityModifier 135 "entity.addBonus('Str',  6);"
+qualityModifier 155 "entity.addBonus('Str',  7);"
+qualityModifier 175 "entity.addBonus('Str',  8);"

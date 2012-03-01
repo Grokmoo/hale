@@ -1,0 +1,8 @@
+name "Crafter"
+type "Skill Bonuses"
+description "You have a talent for creating useful crafts, both magical and mundane.  You gain a +5 bonus to Craft Weapons, Craft Armor and Enchanting."
+activateable false
+
+icon "icons/crafter"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('CraftWeapons', 'Stackable', 5); effect.getBonuses().addSkillBonus('CraftArmor', 'Stackable', 5); effect.getBonuses().addSkillBonus('Enchanting', 'Stackable', 5); parent.applyEffect(effect); }"

@@ -1,0 +1,10 @@
+name "Energy Resistance"
+type "General"
+description "Your exceptionally strong mind gives you a resistance to energy effects.  You can shrug off the first 2 points of Fire, Electrical, Cold, and Acid damage from all attacks."
+
+addPrereq Ability StrongSoul
+addPrereq Stat Wis 15
+
+icon "icons/energyResistance"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageReduction('Fire', 'Stackable', 2); effect.getBonuses().addDamageReduction('Electrical', 'Stackable', 2); effect.getBonuses().addDamageReduction('Cold', 'Stackable', 2); effect.getBonuses().addDamageReduction('Acid', 'Stackable', 2); parent.applyEffect(effect); }"

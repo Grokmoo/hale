@@ -1,0 +1,12 @@
+name "Proficiency, Bastard Sword"
+description "You are able to use the bastard sword in combat.  The bastard sword is larger and more powerful than other one handed swords."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencyBastardSword"
+
+addPrereq Ability ProficiencyLargeSwords
+addPrereq Stat LevelAttackBonus 10
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Bastard Sword'); parent.applyEffect(effect); }"

@@ -1,0 +1,13 @@
+name "Potion of Intelligence"
+icon "items/P_White04" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This potion will grant a bonus to intelligence to anyone who drinks it.  The amount of the bonus is dependant on the quality of the potion."
+value "1 GP" 1
+weight 300
+itemType "ITEM"
+quality "Good"
+script "items/potionInt"
+useButtonText "Drink"
+useAPCost 4000

@@ -1,0 +1,45 @@
+Spritesheet "explosion"
+
+defaultWidth 100
+defaultHeight 100
+multiplyValuesBy 100
+
+image frame00 0 0
+image frame01 1 0
+image frame02 2 0
+image frame03 3 0
+image frame04 4 0
+image frame05 5 0
+image frame06 6 0
+image frame07 7 0
+image frame08 8 0
+image frame09 9 0
+
+image frame10 0 1
+image frame11 1 1
+image frame12 2 1
+image frame13 3 1
+image frame14 4 1
+image frame15 5 1
+image frame16 6 1
+image frame17 7 1
+image frame18 8 1
+image frame19 9 1
+
+image frame20 0 2
+image frame21 1 2
+image frame22 2 2
+image frame23 3 2
+image frame24 4 2
+image frame25 5 2
+image frame26 6 2
+image frame27 7 2
+image frame28 8 2
+image frame29 9 2
+
+image frame30 0 3
+image frame31 1 3
+image frame32 2 3
+image frame33 3 3
+image frame34 4 3
+image frame35 5 3

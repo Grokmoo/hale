@@ -1,0 +1,15 @@
+playerSelectable true
+baseRole false
+
+icon "icons/ranger"
+
+damageBonusPerLevel 4
+attackBonusPerLevel 4
+
+SkillPointsPerLevel 10
+
+HPPerLevel 4
+
+addPrereq Role Warrior 7
+addPrereq Ability PiercingShot
+addPrereq Ability PointBlankShot

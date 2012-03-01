@@ -1,0 +1,16 @@
+playerSelectable true
+baseRole false
+
+icon "icons/duelist"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 5
+
+skillPointsPerLevel 5
+
+HPPerLevel 4
+
+addPrereq Role Rogue 8
+addPrereq Role Adept 8
+
+addPrereq Ability AdvancedDualWielding

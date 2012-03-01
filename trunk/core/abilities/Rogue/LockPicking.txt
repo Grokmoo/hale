@@ -1,0 +1,8 @@
+name "Lock Picking"
+type "Rogue Abilities"
+description "You are able to pick locks using your Locks skill."
+activateable false
+
+icon "icons/lockPicking"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('LockPicking'); parent.applyEffect(effect); }

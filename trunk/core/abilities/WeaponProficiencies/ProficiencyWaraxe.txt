@@ -1,0 +1,12 @@
+name "Proficiency, Waraxe"
+description "You are able to use the waraxe in combat.  The waraxe is larger and more powerful than other one handed axes."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencyWaraxe"
+
+addPrereq Ability ProficiencyAxes
+addPrereq Stat LevelAttackBonus 10
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Waraxe'); parent.applyEffect(effect); }"

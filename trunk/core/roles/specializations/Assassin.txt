@@ -1,0 +1,15 @@
+playerSelectable true
+baseRole false
+
+icon "icons/assassin"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+
+skillPointsPerLevel 10
+
+HPPerLevel 3
+
+addPrereq Role Rogue 8
+
+addPrereq Ability ImprovedBackstab

@@ -1,0 +1,2 @@
+"sonorinDesertKey" 1 "Good"
+"sonorinDesertNote" 1 "Good"

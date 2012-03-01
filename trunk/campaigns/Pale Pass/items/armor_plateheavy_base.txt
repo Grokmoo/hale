@@ -1,0 +1,15 @@
+name "Heavy Plate Armor"
+icon "items/A_Armour02" "#ffffffff"
+subIcon "subIcons/torso06" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Reinforced and with thicker steel than ordinary plate, this armor provides excellent defense but with significant mobility restrictions."
+value "2 PP 4 GP" 1
+weight 20000
+itemType "ARMOR"
+quality "Good"
+armorType "Heavy"
+armorClass 30
+armorPenalty 32
+movementPenalty 25

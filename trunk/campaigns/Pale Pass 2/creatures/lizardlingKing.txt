@@ -1,0 +1,36 @@
+playerCharacter false
+
+name "Lizardling King"
+icon "creatures/lizardling01" "#ffffffff"
+portrait "Monster/lizardling01"
+
+gender "Male"
+race "Lizardling"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 3100
+role "Priest" 10
+attributes 13 16 13 12 17 12
+script "ai/aiStandard"
+conversation "conversations/lizardlingKing"
+level 1 addAbility "Firebolt"
+level 1 addAbility "DivineBurst"
+level 1 addAbility "HardenArmor"
+level 1 addAbility "AnimalPower"
+level 1 addAbility "Blindness"
+level 1 addAbility "NaturalArmor20"
+level 1 addAbility "Cure"
+level 1 addAbility "Regeneration"
+
+currencyReward 30 70
+equip "quarterstaff" Fine
+addloot "LootMagicGood" 2 PER_LIST
+addloot "LootPotionsGood" 5 PER_LIST
+addloot "LootScrollsGood" 5 PER_LIST
+addloot "LootCraft" 20 PER_LIST
+addloot "LootGems" 20 PER_LIST

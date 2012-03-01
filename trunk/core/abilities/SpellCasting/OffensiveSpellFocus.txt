@@ -1,0 +1,9 @@
+name "Offensive Spell Focus"
+type "Spell Casting"
+description "You have focused on the casting of destructive magic.  All of your spells do an additional 5% damage."
+
+icon "icons/offensiveSpellFocus"
+
+addPrereq Ability IntenseCasting
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('SpellDamage', 'Stackable', 5); parent.applyEffect(effect); }"

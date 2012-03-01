@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Deep Dwarf"
+gender "Male"
+race "Dwarf"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair016" "#ff85b3d0"
+beardicon "subIcons/beard005" "#ff85b3d0"
+skincolor "#ff433f22"
+clothingcolor "#ffaa80d4"
+xp 4400
+role "Warrior" 8
+attributes 14 9 15 11 9 9
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 50 100
+equip "battleaxe" Fine
+equip "shield_light_base" Good
+equip "armor_leatherhard_base" Good
+equip "boots_leather_base" Fine
+addloot "LootLevel5" 50 PER_LIST

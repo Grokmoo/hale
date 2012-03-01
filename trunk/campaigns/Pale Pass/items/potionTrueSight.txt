@@ -1,0 +1,13 @@
+name "Potion of True Sight"
+icon "items/P_Yellow01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This potion will grant you the ability to see through concealment.  The amount of the bonus is dependant on the quality of the potion."
+value "2 GP 5 SP" 1
+weight 300
+itemType "ITEM"
+quality "Good"
+script "items/potionTrueSight"
+useButtonText "Drink"
+useAPCost 4000

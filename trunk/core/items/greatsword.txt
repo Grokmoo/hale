@@ -1,0 +1,21 @@
+name "Greatsword"
+icon "items/W_Sword006" "#ffffffff"
+subIcon "subIcons/weapon_sword07" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A sword too large to use in a single hand, this weapon does tremendous damage."
+value "5 GP" 1
+weight 4000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Greatsword"
+weaponType "MELEE"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 3 12
+criticalRange 93
+criticalMultiplier 2
+attackCost 4200

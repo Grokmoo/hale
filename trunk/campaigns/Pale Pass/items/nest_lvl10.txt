@@ -1,0 +1,14 @@
+name "Nest"
+ingredient false
+quest false
+cursed false
+description ""
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+container true
+addloot "LootLevel10" 25 PER_LIST
+addloot "LootLevel10" 100 PER_LIST
+addloot "WeaponsGood" 100 PER_LIST
+workbench false

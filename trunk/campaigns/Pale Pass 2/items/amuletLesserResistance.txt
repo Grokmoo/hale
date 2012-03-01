@@ -1,0 +1,12 @@
+name "Amulet of Resistance"
+icon "items/Ac_Necklace02" "#ff72c43a"
+ingredient false
+quest false
+cursed false
+description "A magically enchanted amulet, providing a +5 bonus to Mental Resistance Checks"
+value "9 SP" 1
+weight 500
+itemType "AMULET"
+quality "Good"
+enchantment "entity.addBonus('MentalResistance', 'Enhancement', 5);"
+useButtonText ""

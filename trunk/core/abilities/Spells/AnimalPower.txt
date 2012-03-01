@@ -1,0 +1,17 @@
+name "Animal Power"
+type "Enchantment"
+description "Animal Power improves your Enhance Attributes spell.  The target gains a bonus of 1 plus 1 point per 4 caster levels to Strength, Dexterity, and Constitution."
+activateable false
+
+spellLevel 3
+
+icon "icons/animalPower"
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 30
+
+addPrereq Ability EnhanceAttributes
+
+addPrereq Stat CasterLevel 7

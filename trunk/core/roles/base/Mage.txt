@@ -1,0 +1,72 @@
+playerSelectable true
+baseRole true
+defaultPlayerAttributeSelections 0 3 3 8 0 0
+
+icon "icons/mage"
+
+damageBonusPerLevel 2
+attackBonusPerLevel 2
+SkillPointsPerLevel 5
+level1HP 6
+HPPerLevel 2
+
+level 1 addAbility ProficiencySimpleWeapons
+
+level  1 selectAbilityFromList "Mage"
+level  2 selectAbilityFromList "Mage"
+level  3 selectAbilityFromList "Mage"
+level  4 selectAbilityFromList "Mage"
+level  5 selectAbilityFromList "Mage"
+level  6 selectAbilityFromList "Mage"
+level  7 selectAbilityFromList "Mage"
+level  8 selectAbilityFromList "Mage"
+level  9 selectAbilityFromList "Mage"
+level 10 selectAbilityFromList "Mage"
+level 11 selectAbilityFromList "Mage"
+level 12 selectAbilityFromList "Mage"
+level 13 selectAbilityFromList "Mage"
+level 14 selectAbilityFromList "Mage"
+level 15 selectAbilityFromList "Mage"
+level 16 selectAbilityFromList "Mage"
+level 17 selectAbilityFromList "Mage"
+level 18 selectAbilityFromList "Mage"
+level 19 selectAbilityFromList "Mage"
+level 20 selectAbilityFromList "Mage"
+
+spellCastingAttribute Int
+
+spellFailureBase 7
+spellFailureSpellLevelFactor 12
+spellFailureAbilityScoreFactor 2
+spellFailureCasterLevelFactor 2
+
+level  1 addCasterLevel
+level  2 addCasterLevel
+level  3 addCasterLevel
+level  4 addCasterLevel
+level  5 addCasterLevel
+level  6 addCasterLevel
+level  7 addCasterLevel
+level  8 addCasterLevel
+level  9 addCasterLevel
+level 10 addCasterLevel
+level 11 addCasterLevel
+level 12 addCasterLevel
+level 13 addCasterLevel
+level 14 addCasterLevel
+level 15 addCasterLevel
+level 16 addCasterLevel
+level 17 addCasterLevel
+level 18 addCasterLevel
+level 19 addCasterLevel
+level 20 addCasterLevel
+level 21 addCasterLevel
+level 22 addCasterLevel
+level 23 addCasterLevel
+level 24 addCasterLevel
+level 25 addCasterLevel
+level 26 addCasterLevel
+level 27 addCasterLevel
+level 28 addCasterLevel
+level 29 addCasterLevel
+level 30 addCasterLevel

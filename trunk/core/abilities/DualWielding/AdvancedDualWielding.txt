@@ -1,0 +1,11 @@
+name "Advanced Dual Wielding"
+type "Dual Wielding"
+activateable false
+description "You gain a +10 bonus to attack with both weapons while dual wielding, partially offsetting the Dual Wielding attack penalties."
+
+addPrereq Ability DualWielding
+addPrereq Stat LevelAttackBonus 20
+
+icon "icons/advancedDualWielding"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('DualWieldAttack', 'Stackable', 10); parent.applyEffect(effect); }"

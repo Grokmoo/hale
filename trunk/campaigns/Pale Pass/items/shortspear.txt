@@ -1,0 +1,21 @@
+name "Short Spear"
+icon "items/W_Spear003" "#ffffffff"
+subIcon "subIcons/weapon_spear02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A spear with a shaft 4 or 5 feet in length, used as a one handed weapon."
+value "1 GP" 1
+weight 2500
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Short Spear"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Piercing"
+damage 1 6
+criticalRange 95
+criticalMultiplier 3
+attackCost 2800

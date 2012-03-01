@@ -1,0 +1,21 @@
+name "Longsword"
+icon "items/W_Sword002" "#ffffffff"
+subIcon "subIcons/weapon_sword03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A very effective one handed weapon, longswords due a respectible amount of slashing damage."
+value "2 GP 5 SP" 1
+weight 2000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Longsword"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 2 6
+criticalRange 93
+criticalMultiplier 2
+attackCost 2800

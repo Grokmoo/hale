@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "The Willow Inn" 13 13
+to "Willow Inn Basement" 1 1
+addToPosition 2 1
+addToPosition 2 0
+addToPosition 1 0
+addToPosition 0 0
+addFromPosition -4 -2
+addFromPosition -3 -2
+addFromPosition -4 -1
+addFromPosition -3 -1

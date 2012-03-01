@@ -1,0 +1,11 @@
+name "Shield Combat"
+type "Defensive"
+description "The Attack Penalty you suffer from the use of shields is reduced by 10 points.  This will not reduce the total penalty to less than 0."
+activateable false
+
+icon "icons/shieldCombat"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ShieldAttack', 'Stackable', 10); parent.applyEffect(effect); }"
+
+addPrereq Stat LevelAttackBonus 15
+addPrereq Ability ShieldDefense

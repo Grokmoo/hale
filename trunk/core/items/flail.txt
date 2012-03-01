@@ -1,0 +1,21 @@
+name "Flail"
+icon "items/W_Mace005" "#ffffffff"
+subIcon "subIcons/weapon_flail01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A spiked ball linked to a rod by a chain, this is a powerful one handed weapon that requires special training to use."
+value "3 GP 2 SP" 1
+weight 3800
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Flail"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 2 7
+criticalRange 97
+criticalMultiplier 2
+attackCost 2800

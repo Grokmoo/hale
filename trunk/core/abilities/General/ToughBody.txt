@@ -1,0 +1,9 @@
+name "Tough Body"
+type "General"
+description "You are strong of heart and body, gaining a +10 bonus on all Physical Resistance checks."
+
+icon "icons/toughBody"
+
+addPrereq Stat Con 12
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('PhysicalResistance', 'Stackable', 10); parent.applyEffect(effect); }"

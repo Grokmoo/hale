@@ -1,0 +1,17 @@
+playerCharacter false
+
+name "Fire Elemental"
+icon "creatures/elemental" "#fff2700c"
+gender "Male"
+race "Elemental"
+unspentSkillPoints 0
+xp 1300
+role "Monster" 10
+attributes 15 22 13 1 10 10
+script "ai/aiStandard"
+level 1 addAbility "PiercingImmunity50"
+level 1 addAbility "DamageReduction5"
+level 1 addAbility "NaturalArmor10"
+level 1 addAbility "CriticalHitImmunity"
+
+equip "unarmedFireElemental" Good

@@ -1,0 +1,15 @@
+name "Mail Armor"
+icon "items/A_Armor07" "#ffffffff"
+subIcon "subIcons/torso05" "#ffc2c4b5"
+ingredient false
+quest false
+cursed false
+description "Widely available armor consisting of thousands of interlocking rings of metal covering all the vital areas of the wearer's body."
+value "8 GP" 1
+weight 6500
+itemType "ARMOR"
+quality "Good"
+armorType "Medium"
+armorClass 20
+armorPenalty 18
+movementPenalty 10

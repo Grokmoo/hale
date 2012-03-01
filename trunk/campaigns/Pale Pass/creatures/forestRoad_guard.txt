@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Guard"
+icon "creatures/human10" "#ffffffff"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 100
+role "Warrior" 2
+attributes 13 10 11 9 10 9
+
+equip "longsword" Decent
+equip "shield_light_base" Mediocre
+equip "armor_mail_base" Mediocre
+equip "gloves_leather_base" Mediocre
+equip "helmet_mail_base" Mediocre
+equip "boots_leather_base" Mediocre

@@ -1,0 +1,3 @@
+area "Dark Cave"
+script "triggers/onDarkCaveLoad"
+addPoints

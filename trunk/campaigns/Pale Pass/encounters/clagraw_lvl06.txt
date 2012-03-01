@@ -1,0 +1,11 @@
+size 2
+faction "Hostile"
+challenge 48
+randomize true
+numRandomCreatures 3 4
+respawn true
+respawnHours 24
+creature "clagraw" 0 0
+creature "clagraw" -1 -1
+creature "clagraw" 0 -1
+creature "clagraw" 1 -1

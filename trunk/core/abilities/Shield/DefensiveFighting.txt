@@ -1,0 +1,19 @@
+name "Defensive Fighting"
+type "Defensive"
+description "You enter into a defensive stance, increasing your AC but lowering your attack.  You can select an AC Bonus of 5, 10, 15, or 20 for a corresponding Attack Penalty of 5, 10, 15, or 20."
+activateable true
+mode true
+cancelable true
+fixed true
+cooldown 5
+
+icon "icons/defensiveFighting"
+
+scriptFile "abilities/defensiveFighting"
+
+actionType Tactical
+groupType Single
+rangeType Personal
+
+addPrereq Stat LevelAttackBonus 15
+addPrereq Ability ShieldDefense

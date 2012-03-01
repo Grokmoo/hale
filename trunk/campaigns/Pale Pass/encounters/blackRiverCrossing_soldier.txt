@@ -1,0 +1,4 @@
+size 0
+faction "Neutral"
+challenge 0
+creature "blackRiverCrossing_soldier" 0 0

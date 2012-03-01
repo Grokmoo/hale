@@ -1,0 +1,14 @@
+icon "transition"
+twoWay true
+activated true
+location "Southern Road"
+from "World Map" 0 0
+to "Southern Road" 10 1
+addToPosition 0 2
+addToPosition 0 1
+addToPosition -1 0
+addToPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0

@@ -1,0 +1,15 @@
+playerSelectable true
+baseRole false
+
+icon "icons/mechanist"
+
+damageBonusPerLevel 3
+attackBonusPerLevel 3
+
+skillPointsPerLevel 15
+
+HPPerLevel 3
+
+addPrereq Role Rogue 8
+
+addPrereq Skill Traps 30

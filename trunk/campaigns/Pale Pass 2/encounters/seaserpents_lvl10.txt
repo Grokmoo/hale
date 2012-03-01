@@ -1,0 +1,9 @@
+size 1
+faction "Hostile"
+challenge 80
+randomize true
+numRandomCreatures 3 4
+creature "seaSerpent" 0 0
+creature "seaSerpent" -1 0
+creature "seaSerpent" -1 -1
+creature "seaSerpent" 0 -1

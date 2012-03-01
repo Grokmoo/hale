@@ -1,0 +1,23 @@
+Spritesheet "particles"
+
+image circle17       0    0    17   17
+
+image sparkle25     17    0    25   25
+ 
+image icicle        42    0    39   19
+
+image circleborder  81    0    17   17
+
+image shield         0   25    34   34
+
+image circle33      34   25    33   33
+
+image cross29       70   23    29   29
+
+image sleepZ       101    0    15   18
+
+image circle9      101   21     9    9
+
+image arrow        113   21    15   24
+
+image arrowsmall     0   59    10   16

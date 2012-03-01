@@ -1,0 +1,11 @@
+name "Expert Training, Small Swords"
+type "Weapon Training"
+description "You gain an additional +3 chance to inflict critical hits with daggers and short swords."
+activateable false
+
+icon "icons/expertSmallSwords"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Dagger', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Short Sword', 'CriticalChance', 3); parent.applyEffect(effect); }"
+
+addPrereq Ability AdvancedTrainingSmallSwords
+addPrereq Stat LevelAttackBonus 50

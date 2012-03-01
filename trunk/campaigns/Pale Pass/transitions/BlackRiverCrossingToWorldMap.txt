@@ -1,0 +1,14 @@
+icon "transition"
+twoWay true
+activated true
+location "Black River Crossing"
+from "Black River Crossing" 2 1
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addFromPosition 2 1
+addFromPosition 1 0
+addFromPosition 0 1
+addFromPosition 0 0

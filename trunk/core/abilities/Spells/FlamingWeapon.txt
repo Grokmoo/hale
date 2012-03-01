@@ -1,0 +1,17 @@
+name "Flaming Weapon"
+type "Alteration"
+description "Your Improve Weapon spell becomes more powerful.  Now the targeted weapon becomes enhanced with magical flames.  These flames do not harm the weapon or wielder, but every hit from the weapon does an additional 1 to 4 plus 1 per 4 caster levels of fire damage."
+activateable false
+
+icon "icons/flamingWeapon"
+
+spellLevel 3
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 30
+
+addPrereq Stat CasterLevel 7
+
+addPrereq Ability ImproveWeapon

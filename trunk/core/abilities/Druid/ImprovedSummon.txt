@@ -1,0 +1,17 @@
+name "Improved Summon"
+type "Druid Abilities"
+description "Your summon ability becomes much more powerful.  For every 3 caster levels you gain beyond 10th, all summoned creatures gain an additional 2 creature levels."
+activateable false
+
+icon "icons/improvedSummon"
+
+spellLevel 4
+
+actionType Summon
+groupType Single
+rangeType Short
+aiPower 40
+
+addPrereq Stat CasterLevel 10
+
+addPrereq Ability Summon

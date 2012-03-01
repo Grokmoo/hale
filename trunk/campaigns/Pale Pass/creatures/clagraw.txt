@@ -1,0 +1,18 @@
+playerCharacter false
+
+name "Clagraw"
+icon "creatures/beetleman" "#ffffffff"
+gender "Male"
+race "LargeAnimal"
+unspentSkillPoints 0
+xp 1000
+role "Monster" 5
+attributes 14 12 13 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+level 1 addAbility "CriticalHitImmunity"
+level 1 addAbility "ColdVulnerability25"
+
+currencyReward 10 20
+equip "unarmedClaw" Good

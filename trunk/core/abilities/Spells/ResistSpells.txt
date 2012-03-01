@@ -1,0 +1,18 @@
+name "Resist Spells"
+type "Alteration"
+description "Your Absorb Energy spell is upgraded.  The targeted creature gains spell resistance in addition to the energy damage reduction, reducing the damage and duration of most hostile spells by 15 points plus 1 point per caster level."
+activateable false
+
+icon "icons/resistSpells"
+
+spellLevel 3
+
+actionType Buff
+groupType Single
+rangeType Touch
+aiPower 25
+
+addPrereq Ability AbsorbEnergy
+
+addPrereq Stat CasterLevel 7
+

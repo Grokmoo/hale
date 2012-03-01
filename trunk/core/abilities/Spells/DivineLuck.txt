@@ -1,0 +1,29 @@
+name "Divine Luck"
+type "Enchantment"
+description "All allies within 20 feet of the caster gain a bonus of 5 + caster level to attack and 10 + 2 * caster level to damage for 5 to 10 rounds."
+activateable true
+fixed true
+mode false
+cooldown 8
+
+icon "icons/divineLuck"
+scriptfile "spells/divineLuck"
+
+spell true
+spellLevel 1
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Multiple
+rangeType Personal
+aiPower 10
+
+addPrereq Stat CasterLevel 1
+
+upgrade Resistance "With Resistance, Divine Luck now provides a 10 + caster level bonus to Mental, Physical, and Reflex Resistance checks to all affected targets."
+
+upgrade DivineAura "With Divine Aura, Divine Luck now travels as an aura with the caster.  All creatures within the Aura are affected.  Furthermore, all hostile creatures within the aura are affected with penalties to Attack, Damage, and Resistances (if you have the ability 'Resistance') corresponding to the bonuses affecting friendly creatures."

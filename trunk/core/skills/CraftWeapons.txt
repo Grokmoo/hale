@@ -1,0 +1,7 @@
+name "Craft Weapons"
+verb Craft
+untrained false
+keyAttribute Int
+hasArmorPenalty false
+craft true
+icon "icons/craftWeapons"

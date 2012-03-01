@@ -1,0 +1,194 @@
+Spritesheet "borders"
+defaultWidth 72
+defaultHeight 72
+multiplyValuesBy 72
+
+image path-n               0 0
+image path-ne              1 0
+image path-ne-se           2 0
+image path-ne-se-s         3 0
+image path-n-ne            4 0
+image path-n-ne-se         5 0
+image path-n-ne-se-s-sw-nw 6 0
+image path-nw              7 0
+image path-nw-n            8 0
+image path-nw-n-ne         9 0
+
+image path-s               0 1
+image path-se              1 1
+image path-se-s            2 1
+image path-se-s-sw         3 1
+image path-s-sw            4 1
+image path-s-sw-nw         5 1
+image path-sw              6 1
+image path-sw-nw           7 1
+image path-sw-nw-n         8 1
+
+image pathclean-n               0 2
+image pathclean-ne              1 2
+image pathclean-ne-se           2 2
+image pathclean-ne-se-s         3 2
+image pathclean-n-ne            4 2
+image pathclean-n-ne-se         5 2
+image pathclean-n-ne-se-s-sw-nw 6 2
+image pathclean-nw              7 2
+image pathclean-nw-n            8 2
+image pathclean-nw-n-ne         9 2
+
+image pathclean-s               0 3
+image pathclean-se              1 3
+image pathclean-se-s            2 3
+image pathclean-se-s-sw         3 3
+image pathclean-s-sw            4 3
+image pathclean-s-sw-nw         5 3
+image pathclean-sw              6 3
+image pathclean-sw-nw           7 3
+image pathclean-sw-nw-n         8 3
+
+image pathgrass-n               0 4
+image pathgrass-ne              1 4
+image pathgrass-ne-se           2 4
+image pathgrass-ne-se-s         3 4
+image pathgrass-n-ne            4 4
+image pathgrass-n-ne-se         5 4
+image pathgrass-n-ne-se-s-sw-nw 6 4
+image pathgrass-nw              7 4
+image pathgrass-nw-n            8 4
+image pathgrass-nw-n-ne         9 4
+
+image pathgrass-s               0 5
+image pathgrass-se              1 5
+image pathgrass-se-s            2 5
+image pathgrass-se-s-sw         3 5
+image pathgrass-s-sw            4 5
+image pathgrass-s-sw-nw         5 5
+image pathgrass-sw              6 5
+image pathgrass-sw-nw           7 5
+image pathgrass-sw-nw-n         8 5
+
+image dirt-n 0 6
+image dirt-ne 1 6
+image dirt-ne-se 2 6
+image dirt-ne-se-s 3 6
+image dirt-ne-se-s-sw 4 6
+image dirt-n-ne 5 6
+image dirt-n-ne-se 6 6
+image dirt-n-ne-se-s 7 6
+image dirt-n-ne-se-s-sw-nw 8 6
+image dirt-nw 9 6
+
+image dirt-nw-n 0 7
+image dirt-nw-n-ne 1 7
+image dirt-nw-n-ne-se 2 7
+image dirt-s 3 7
+image dirt-se 4 7
+image dirt-se-s 5 7
+image dirt-se-s-sw 6 7
+image dirt-se-s-sw-nw 7 7
+image dirt-s-sw 8 7
+image dirt-s-sw-nw 9 7
+
+image dirt-s-sw-nw-n 0 8
+image dirt-sw 1 8
+image dirt-sw-nw 2 8
+image dirt-sw-nw-n 3 8
+image dirt-sw-nw-n-ne 4 8
+
+image grassdry-n 10 0
+image grassdry-ne 11 0
+image grassdry-ne-se 12 0
+
+image grassdry-ne-se-s 9 1
+image grassdry-n-ne 10 1
+image grassdry-n-ne-se 11 1
+image grassdry-nw 12 1
+
+image grassdry-nw-n 10 2
+image grassdry-nw-n-ne 11 2
+image grassdry-s 12 2
+
+image grassdry-se 9 3
+image grassdry-se-s 10 3
+image grassdry-se-s-sw 11 3
+image grassdry-s-sw 12 3
+
+image grassdry-s-sw-nw 10 4
+image grassdry-sw 11 4
+image grassdry-sw-nw 12 4
+
+image grassdry-sw-nw-n 9 5
+
+image leaves-n 10 5
+image leaves-ne 11 5
+image leaves-ne-se 12 5
+
+image leaves-ne-se-s 10 6
+image leaves-n-ne 11 6
+image leaves-n-ne-se 12 6
+
+image leaves-nw 10 7
+image leaves-nw-n 11 7
+image leaves-nw-n-ne 12 7
+
+image leaves-s 5 8
+image leaves-se 6 8
+image leaves-se-s 7 8
+image leaves-se-s-sw 8 8
+image leaves-s-sw 9 8
+image leaves-s-sw-nw 10 8
+image leaves-sw 11 8
+image leaves-sw-nw 12 8
+
+image leaves-sw-nw-n 0 9
+
+image grass-n 1 9
+image grass-ne 2 9
+image grass-ne-se 3 9
+image grass-ne-se-s 4 9
+image grass-n-ne 5 9
+image grass-n-ne-se 6 9
+image grass-nw 7 9
+image grass-nw-n 8 9
+image grass-nw-n-ne 9 9
+image grass-s 10 9
+image grass-se 11 9
+image grass-se-s 12 9
+
+image grass-se-s-sw 0 10
+image grass-s-sw 1 10
+image grass-s-sw-nw 2 10
+image grass-s-sw-nw-n-ne 3 10
+image grass-s-sw-nw-n-ne-se 4 10
+image grass-sw 5 10
+image grass-sw-nw 6 10
+image grass-sw-nw-n 7 10
+image grass-sw-nw-n-ne-se 8 10
+
+image desert-n   9 10
+image desert-ne 10 10
+image desert-nw 11 10
+image desert-s  12 10
+
+image desert-se  0 11
+image desert-sw  1 11
+
+image deserthills-n   2 11
+image deserthills-ne  3 11
+image deserthills-nw  4 11
+image deserthills-s   5 11
+image deserthills-se  6 11
+image deserthills-sw  7 11
+
+image hills-n   8 11
+image hills-ne  9 11
+image hills-nw 10 11
+image hills-s  11 11
+image hills-se 12 11
+image hills-sw  0 12
+
+image stone-n   1 12
+image stone-ne  2 12
+image stone-nw  3 12
+image stone-s   4 12
+image stone-se  5 12
+image stone-sw  6 12

@@ -1,0 +1,16 @@
+playerSelectable true
+baseRole false
+
+icon "icons/illusionist"
+
+damageBonusPerLevel 2
+attackBonusPerLevel 2
+
+skillPointsPerLevel 5
+
+HPPerLevel 2
+
+addPrereq Role Mage 8
+
+addPrereq Ability ConcealingFog
+addPrereq Ability Chameleon

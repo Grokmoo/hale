@@ -1,0 +1,21 @@
+pregenerated true
+playerCharacter true
+faction "Player"
+name "Ducky"
+portrait "Elf/druid"
+
+gender "Female"
+race "Elf"
+unspentSkillPoints 3
+drawWithSubIcons true
+hairicon "subIcons/hair013" "#ffee7600"
+
+skincolor "#fff6d39b"
+clothingcolor "#ff00ffff"
+role "Mage" 1
+attributes 9 15 12 18 10 10
+addSkillRanks "Enchanting" 5
+addSkillRanks "Alchemy" 5
+level 1 addAbility "Firebolt"
+
+equip "armor_clothes" Good

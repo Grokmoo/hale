@@ -1,0 +1,7 @@
+name "Self Sufficient"
+type "Skill Bonuses"
+description "You are able to take care of yourself (and others) better than most.  You gain +5 on Alchemy and Heal checks."
+
+icon "icons/selfSufficient"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Alchemy', 'Stackable', 5); effect.getBonuses().addSkillBonus('Heal', 'Stackable', 5); parent.applyEffect(effect); }"

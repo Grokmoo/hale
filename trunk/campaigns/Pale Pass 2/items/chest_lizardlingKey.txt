@@ -1,0 +1,14 @@
+name "Chest"
+icon "items/Z_chest001" "#ffecee87"
+ingredient false
+quest false
+cursed false
+description "A chest that can hold a variety of items within."
+value "0 CP" 1
+weight 20000
+itemType "ITEM"
+quality "Good"
+container true
+addloot "LootLizardling" 100 PER_LIST
+workbench false
+openicon "items/Z_chest001_open"

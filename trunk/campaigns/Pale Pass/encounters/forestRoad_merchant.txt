@@ -1,0 +1,6 @@
+size 2
+faction "Neutral"
+challenge 0
+creature "forestRoad_Merchant" 0 0
+creature "forestRoad_guard" -1 -2
+creature "forestRoad_guard" 2 0

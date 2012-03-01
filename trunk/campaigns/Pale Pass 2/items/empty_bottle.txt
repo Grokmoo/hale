@@ -1,0 +1,10 @@
+name "Empty Bottle"
+icon "items/I_armor-golden" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A small empty bottle.  This item can be used to store a variety of created potions."
+value "2 CP" 1
+weight 50
+itemType "ITEM"
+quality "Good"

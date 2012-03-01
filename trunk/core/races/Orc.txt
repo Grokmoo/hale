@@ -1,0 +1,9 @@
+size medium
+movementCost 1000
+unarmedWeapon unarmedMedium
+
+racialType Humanoid
+
+iconOffset Shield         22 14
+iconOffset OffHandWeapon  23 12
+iconOffset MainHandWeapon  2  6

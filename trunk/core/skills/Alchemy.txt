@@ -1,0 +1,7 @@
+name Alchemy
+verb Craft
+untrained false
+keyAttribute Wis
+hasArmorPenalty false
+craft true
+icon "icons/alchemy"

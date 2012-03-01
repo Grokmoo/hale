@@ -1,0 +1,27 @@
+playerCharacter false
+
+name "Mage"
+icon "creatures/human20" "#ffffffff"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+xp 2100
+role "Mage" 8
+attributes 10 12 12 18 10 11
+script "ai/sonorinDesertBoss"
+level 1 addAbility "Shield"
+level 1 addAbility "ElementalShield"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Crush"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Freeze"
+level 1 addAbility "Sleep"
+level 1 addAbility "Paralyze"
+level 1 addAbility "Slow"
+
+currencyReward 40 60
+equip "sling" Good
+equip "slingstone" Good
+additem "slingstone" 79 Good
+addloot "LootLevel10" 50 PER_LIST
+addloot "LootLevel5" 50 PER_LIST

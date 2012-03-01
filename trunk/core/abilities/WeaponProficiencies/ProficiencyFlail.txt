@@ -1,0 +1,12 @@
+name "Proficiency, Flail"
+description "You are able to use the flail in combat.  The flail is more powerful than other one handed blunt weapons."
+activateable false
+
+type "Weapon Proficiencies"
+
+icon "icons/proficiencyFlail"
+
+addPrereq Ability ProficiencyMaces
+addPrereq Stat LevelAttackBonus 10
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Flail'); parent.applyEffect(effect); }"

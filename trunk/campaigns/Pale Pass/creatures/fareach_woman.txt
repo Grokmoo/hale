@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Woman"
+icon "creatures/elf01" "#ffffffff"
+portrait "Elf/shaman"
+
+gender "Female"
+race "Elf"
+immortal true
+unspentSkillPoints 0
+role "Commoner" 1
+attributes 10 11 12 9 10 10
+conversation "conversations/fareachWoman"
+

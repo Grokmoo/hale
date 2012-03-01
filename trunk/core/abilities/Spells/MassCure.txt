@@ -1,0 +1,17 @@
+name "Mass Cure"
+type "Restoration"
+description "Mass cure upgrades your Cure spell.  All allies within 20 feet of the caster are now healed."
+activateable false
+
+icon "icons/massCure"
+
+spellLevel 3
+
+actionType Heal
+groupType Multiple
+rangeType Short
+aiPower 30
+
+addPrereq Ability Cure
+
+addPrereq Stat CasterLevel 7

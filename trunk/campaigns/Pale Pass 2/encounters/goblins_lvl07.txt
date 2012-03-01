@@ -1,0 +1,16 @@
+size 2
+faction "Hostile"
+challenge 56
+randomize true
+numRandomCreatures 4 5
+respawn true
+respawnHours 24
+creature "goblin_archer" 0 -1
+creature "goblin_spearman" -2 0
+creature "goblin_spearman" 1 1
+creature "goblin_warrior" 1 -1
+creature "goblin_shaman" 0 0
+creature "goblin_warrior" -1 -1
+creature "goblin_archer" -1 -2
+creature "goblin_spearman" -1 0
+creature "goblin_spearman" 0 1

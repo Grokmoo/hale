@@ -1,0 +1,26 @@
+name "Cure"
+type "Restoration"
+description "A targeted friendly creature is touched by the caster and healed for 5 hit points plus one to two hit points per caster level."
+activateable true
+fixed true
+cooldown 8
+
+icon "icons/cure"
+scriptfile "spells/cure"
+
+spell true
+spellLevel 1
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Heal
+groupType Single
+rangeType Touch
+aiPower 10
+
+addPrereq Stat CasterLevel 1
+
+upgrade MassCure "With Mass Cure, you now all heal all allies within 20 feet."

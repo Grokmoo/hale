@@ -1,0 +1,57 @@
+pregenerated true
+playerCharacter true
+faction "Player"
+name "Anech"
+portrait "Human/general"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair005" "#ff5c3317"
+beardicon "subIcons/beard003" "#ffee7600"
+skincolor "#ffffc794"
+clothingcolor "#ffff0000"
+xp 3124
+role "Warrior" 7
+attributes 18 13 13 10 10 10
+addSkillRanks "CraftWeapons" 35
+level 4 addAbility "MightyBlow"
+level 6 addAbility "ToughBody"
+level 3 addAbility "ProficiencyBastardSword"
+level 5 addAbility "DefensiveFighting"
+level 1 addAbility "ShieldDefense"
+level 7 addAbility "TrainingSlashing"
+level 8 addAbility "AdvancedTrainingLargeSwords"
+
+equip "bastardSword" Decent
+equip "shield_heavy_base" Decent
+equip "armor_mail_base" Decent
+equip "gloves_plate_base" Decent
+equip "helmet_plate_base" Decent
+equip "boots_plate_base" Decent
+equip "beltLesserFortitude" Good
+additem "potionStrength" 1 Mediocre
+additem "potionHealing" 5 Decent
+additem "potionStrength" 1 Decent
+additem "potionCon" 1 Decent
+additem "sonorinDesertNote" 1 Good
+additem "potionHealing" 1 Good
+additem "pressure_plate" 2 Good
+additem "wire" 6 Good
+additem "gem07" 3 Good
+additem "shield_light_base" 1 Decent
+additem "bar_gold" 1 Good
+additem "helmet_mail_base" 1 Decent
+additem "gem09" 2 Good
+additem "arrow" 29 Good
+additem "gem05" 1 Good
+
+quickbarslot 0 Ability MightyBlow
+quickbarslot 1 Ability DefensiveFighting
+
+quickbarslot 2 Equip bastardSword Decent shield_heavy_base Decent
+
+quickbarslot 3 Use potionHealing Decent
+quickbarslot 4 Use potionCon Decent
+quickbarslot 5 Use potionHealing Good

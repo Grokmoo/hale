@@ -1,0 +1,10 @@
+name "Grain Alcohol"
+icon "items/P_White03" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "Not purified enough for drinking, this grain alcohol can be used as a part of some crafting recipes."
+value "1 SP" 1
+weight 150
+itemType "ITEM"
+quality "Good"

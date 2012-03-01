@@ -1,0 +1,15 @@
+name "Plate Boots"
+icon "items/A_Shoes05" "#ffffffff"
+subIcon "subIcons/boots06" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Boots made of solid steel plates provide excellent protection for the wearer's feet."
+value "1 GP 8 SP 5 CP" 1
+weight 1500
+itemType "BOOTS"
+quality "Good"
+armorType "Heavy"
+armorClass 4
+armorPenalty 4
+movementPenalty 3

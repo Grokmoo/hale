@@ -1,0 +1,20 @@
+name "Fist"
+ingredient false
+quest false
+cursed false
+description ""
+value "0 CP" 1
+weight 0
+itemType "WEAPON"
+quality "Good"
+enchantment "entity.addPenalty('Initiative', -200);"
+baseWeapon "Unarmed"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 2
+criticalRange 99
+criticalMultiplier 1
+attackCost 2800

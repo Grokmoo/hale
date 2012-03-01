@@ -1,0 +1,7 @@
+icon "transition"
+twoWay true
+activated false
+from "Grassland" 12 1
+to "Dark Cave" 3 8
+addToPosition 0 0
+addFromPosition 0 0

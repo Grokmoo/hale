@@ -1,0 +1,10 @@
+name "Silver Bar"
+icon "items/I_SolidShell" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A silver bar for use in some crafting recipes."
+value "1 PP" 1
+weight 4000
+itemType "ITEM"
+quality "Good"

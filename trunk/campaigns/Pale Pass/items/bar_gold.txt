@@ -1,0 +1,10 @@
+name "Gold Bar"
+icon "items/I_C_Apple" "#ffeab951"
+ingredient true
+quest false
+cursed false
+description "A valuable bar of solid gold."
+value "3 PP" 1
+weight 6000
+itemType "ITEM"
+quality "Good"

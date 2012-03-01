@@ -1,0 +1,10 @@
+size 2
+faction "Hostile"
+challenge 65
+respawn true
+respawnHours 24
+creature "clagraw_queen" 0 -1
+creature "clagraw" -1 -2
+creature "clagraw" 1 -2
+creature "clagraw" 2 -1
+creature "clagraw" -2 -1

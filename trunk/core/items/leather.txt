@@ -1,0 +1,10 @@
+name "Leather"
+icon "items/I_Feather01" "#ffc08c6b"
+ingredient true
+quest false
+cursed false
+description "A piece of leather usable for crafting."
+value "3 CP" 1
+weight 100
+itemType "ITEM"
+quality "Good"

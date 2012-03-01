@@ -1,0 +1,35 @@
+playerCharacter false
+
+name "Priest"
+icon "creatures/human05" "#ffffffff"
+portrait "Human/mage-white"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 2100
+role "Priest" 8
+attributes 13 10 12 10 16 8
+script "ai/sonorinDesertBoss"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Resistance"
+level 1 addAbility "DivineLuck"
+level 1 addAbility "FlamingWeapon"
+level 1 addAbility "ImproveWeapon"
+level 1 addAbility "Cure"
+level 1 addAbility "Regeneration"
+
+currencyReward 40 60
+equip "warhammer" Good
+equip "shield_light_base" Good
+equip "armor_leatherhard_base" Good
+equip "gloves_leather_base" Good
+equip "boots_leather_base" Good
+addloot "LootLevel10" 50 PER_LIST
+addloot "LootLevel5" 50 PER_LIST

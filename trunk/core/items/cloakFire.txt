@@ -1,0 +1,13 @@
+name "Cloak of the Fire Mage"
+icon "items/A_Cloak01" "#ffff6666"
+subIcon "subIcons/cloak01" "#ffcd3131"
+ingredient false
+quest false
+cursed false
+description "Magically enchanted, this cloak grants an additional 10% damage from all fire spells."
+value "1 GP 5 SP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"
+enchantment "entity.addSpellDamageBonus('Fire', 10);"
+useButtonText ""

@@ -1,0 +1,19 @@
+Spritesheet "cliffs"
+
+defaultWidth 108
+defaultHeight 130
+
+image "concave-bl"   0   0
+image "concave-br" 108   0
+image "concave-l"  216   0
+image "concave-r"  324   0
+
+image "concave-tl"   0 130
+image "concave-tr" 108 130
+image "convex-bl"  216 130
+image "convex-br"  324 130
+
+image "convex-l"     0 260
+image "convex-r"   108 260
+image "convex-tl"  216 260
+image "convex-tr"  324 260
