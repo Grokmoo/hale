@@ -13,7 +13,7 @@ function onAttack(game, attack, effect) {
 	
 	if (mastery) {
 		extraDamage += 3;
-		extaAttack += parseInt(charLevel / 2);
+		extraAttack += parseInt(charLevel / 2);
 	}
 	
 	game.addMessage("red", attack.getAttacker().getName() + " gets Backstab against " + attack.getDefender().getName());
