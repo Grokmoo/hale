@@ -36,6 +36,7 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
 import net.sf.hale.loading.Saveable;
+import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.util.SimpleJSONArray;
@@ -86,7 +87,16 @@ public class AreaEffectList implements Saveable {
 		for (SimpleJSONArrayEntry entry : data) {
 			SimpleJSONObject entryObject = entry.getObject();
 			
-			Effect effect = refHandler.getEffect(entryObject.get("ref", null));
+			Effect effect = null;
+			
+			try {
+				effect = refHandler.getEffect(entryObject.get("ref", null));
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error loading effect ", e);
+			}
+			
+			// if the effect failed to load
+			if (effect == null) continue;
 			
 			List<Point> points = new ArrayList<Point>();
 			for (SimpleJSONArrayEntry pointEntry : entryObject.getArray("points")) {
