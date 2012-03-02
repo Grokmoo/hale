@@ -58,7 +58,6 @@ public class Particle extends AnimationBase {
 		int posX = (int)getX();
 		int posY = (int)getY();
 		
-		
 		Point pos1 = AreaUtil.convertScreenToGrid(posX + getHalfWidth(), posY + getHalfHeight());
 		Point pos2 = AreaUtil.convertScreenToGrid(posX + getHalfWidth(), posY - getHalfHeight());
 		Point pos3 = AreaUtil.convertScreenToGrid(posX - getHalfWidth(), posY + getHalfHeight());
@@ -75,16 +74,22 @@ public class Particle extends AnimationBase {
 			return;
 		}
 		
-		GL11.glPushMatrix();
-		
-		GL11.glTranslatef(getX(), getY(), 0.0f);
-		
-		if (getRotation() != 0.0f) GL11.glRotatef(getRotation(), 0.0f, 0.0f, 1.0f);
-		
-		if (area.isVisible(pos1) && area.isVisible(pos2) && area.isVisible(pos3) && area.isVisible(pos4)) {
-			sprite.drawNoTextureBind(-getHalfWidth(), -getHalfHeight());
+		if (getRotation() != 0.0f) {
+			GL11.glPushMatrix();
+			
+			GL11.glTranslatef(getX(), getY(), 0.0f);
+			
+			GL11.glRotatef(getRotation(), 0.0f, 0.0f, 1.0f);
+			
+			if (area.isVisible(pos1) && area.isVisible(pos2) && area.isVisible(pos3) && area.isVisible(pos4)) {
+				sprite.drawNoTextureBind(-getHalfWidth(), -getHalfHeight());
+			}
+			
+			GL11.glPopMatrix();
+		} else {
+			if (area.isVisible(pos1) && area.isVisible(pos2) && area.isVisible(pos3) && area.isVisible(pos4)) {
+				sprite.drawNoTextureBind((int)getX() - getHalfWidth(), (int)getY() - getHalfHeight());
+			}
 		}
-		
-		GL11.glPopMatrix();
 	}
 }
