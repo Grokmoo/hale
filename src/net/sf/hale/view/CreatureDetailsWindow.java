@@ -140,8 +140,10 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityViewer
 
 		}
 		
-		for (Effect effect : creature.getEffects()) {
-			effect.appendDescription(sb);
+		synchronized(creature.getEffects()) {
+			for (Effect effect : creature.getEffects()) {
+				effect.appendDescription(sb);
+			}
 		}
 		
 		return sb.toString();

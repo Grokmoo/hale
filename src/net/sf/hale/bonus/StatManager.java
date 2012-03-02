@@ -586,8 +586,10 @@ public class StatManager {
 	public void recomputeAllStats() {
 		bonuses.clear();
 		
-		for (Effect effect: parent.getEffects()) {
-			addAllNoRecompute(effect.getBonuses());
+		synchronized(parent.getEffects()) {
+			for (Effect effect: parent.getEffects()) {
+				addAllNoRecompute(effect.getBonuses());
+			}
 		}
 		
 		for (Item item : parent.getInventory().getEquippedItems()) {

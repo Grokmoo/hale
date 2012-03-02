@@ -534,9 +534,7 @@ public class Ability extends Scriptable {
 	 */
 	
 	public void activate(AbilityActivator parent) {
-		for (Effect effect : parent.getEffects()) {
-			effect.executeFunction(ScriptFunctionType.onAbilityActivated, this, parent);
-		}
+		parent.getEffects().executeOnAll(ScriptFunctionType.onAbilityActivated, this, parent);
 		
 		Game.mainViewer.addMessage(parent.getName() + " uses " + getName());
 		Game.mainViewer.addFadeAway(getName(), parent.getX(), parent.getY(), "green");

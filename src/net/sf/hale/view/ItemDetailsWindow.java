@@ -147,8 +147,10 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 			break;
 		}
 		
-		for (Effect effect : item.getEffects()) {
-			effect.appendDescription(sb);
+		synchronized(item.getEffects()) {
+			for (Effect effect : item.getEffects()) {
+				effect.appendDescription(sb);
+			}
 		}
 		
 		List<Enchantment> enchantments = item.getEnchantments();

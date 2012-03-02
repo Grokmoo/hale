@@ -634,8 +634,10 @@ public class Item extends Entity implements Referenceable {
 	public void recomputeBonuses() {
 		bonusManager.clear();
 		
-		for (Effect effect: getEffects()) {
-			bonusManager.addAll(effect.getBonuses());
+		synchronized(getEffects()) {
+			for (Effect effect: getEffects()) {
+				bonusManager.addAll(effect.getBonuses());
+			}
 		}
 		
 		for (Enchantment enchantment : enchantments) {

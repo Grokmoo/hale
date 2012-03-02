@@ -315,8 +315,10 @@ public class CharacterSheet extends ScrollPane {
 		
 		sb.append("</table></div>");
 		
-		for (Effect effect : parent.getEffects()) {
-			effect.appendDescription(sb);
+		synchronized(parent.getEffects()) {
+			for (Effect effect : parent.getEffects()) {
+				effect.appendDescription(sb);
+			}
 		}
 		
 		textAreaModel.setHtml(sb.toString());

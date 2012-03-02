@@ -167,7 +167,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * Removes all effects from this set
 	 */
 	
-	public void clear() {
+	public synchronized void clear() {
 		auras.clear();
 		effectsNoActiveScript.clear();
 		effectsWithActiveScript.clear();
@@ -187,7 +187,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * specified grid position.  Called whenever a creature moves
 	 */
 	
-	public void moveAuras() {
+	public synchronized void moveAuras() {
 		for (Aura aura : auras) {
 			Game.curCampaign.curArea.moveAura(aura, aura.getCurrentAffectedPoints());
 		}
@@ -202,7 +202,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @param rounds the number of rounds to elapse
 	 */
 	
-	public void elapseRounds(Entity parent, int rounds) {
+	public synchronized void elapseRounds(Entity parent, int rounds) {
 		elapseRounds(effectsNoActiveScript, parent, rounds);
 		elapseRounds(effectsWithActiveScript, parent, rounds);
 	}
@@ -228,7 +228,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the list of all dispellable effects
 	 */
 	
-	public List<Effect> getDispellableEffects() {
+	public synchronized List<Effect> getDispellableEffects() {
 		List<Effect> dispellables = new ArrayList<Effect>();
 		
 		for (Effect effect : effectsNoActiveScript) {
@@ -267,7 +267,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the effect created by the specified slot
 	 */
 	
-	public Effect getEffectCreatedBySlot(String abilityID) {
+	public synchronized Effect getEffectCreatedBySlot(String abilityID) {
 		for (Effect effect : effectsNoActiveScript) {
 			if (effect.getSlot() == null) continue;
 			
@@ -290,7 +290,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @param effect the Effect to add
 	 */
 	
-	public void add(Effect effect) {
+	public synchronized void add(Effect effect) {
 		if (effect instanceof Aura) {
 			Aura aura = (Aura)effect;
 			auras.add(aura);
@@ -312,7 +312,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @param effect the Effect to remove.
 	 */
 	
-	public void remove(Effect effect) {
+	public synchronized void remove(Effect effect) {
 		if (effect instanceof Aura) {
 			Aura aura = (Aura)effect;
 			auras.remove(aura);
@@ -337,7 +337,7 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @param arguments the arguments to pass to the functions executed
 	 */
 	
-	public void executeOnAll(ScriptFunctionType type, Object... arguments) {
+	public synchronized void executeOnAll(ScriptFunctionType type, Object... arguments) {
 		// create the argument array with room for the effect at the end
 		Object[] args = new Object[arguments.length + 1];
 		for (int i = 0; i < arguments.length; i++) {
@@ -376,8 +376,12 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @param screenDy the y coordinate screen amount
 	 */
 	
-	public void offsetAnimationPositions(int screenDx, int screenDy) {
-		for (Effect effect : this) {
+	public synchronized void offsetAnimationPositions(int screenDx, int screenDy) {
+		for (Effect effect : effectsNoActiveScript) {
+			effect.offsetAnimationPositions(screenDx, screenDy);
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
 			effect.offsetAnimationPositions(screenDx, screenDy);
 		}
 	}
@@ -387,8 +391,12 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * EntityEffectSet
 	 */
 	
-	public void endAllAnimations() {
-		for (Effect effect : this) {
+	public synchronized void endAllAnimations() {
+		for (Effect effect : effectsNoActiveScript) {
+			effect.endAnimations();
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
 			effect.endAnimations();
 		}
 	}
@@ -427,10 +435,19 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * @return the List of Effects with bonuses of the specified Type
 	 */
 	
-	public List<Effect> getEffectsWithBonusesOfType(Bonus.Type type) {
+	public synchronized List<Effect> getEffectsWithBonusesOfType(Bonus.Type type) {
 		List<Effect> effects = new ArrayList<Effect>();
 		
-		for (Effect effect : this) {
+		for (Effect effect : effectsNoActiveScript) {
+			for (Bonus bonus : effect.getBonuses()) {
+				if (bonus.getType() == type) {
+					effects.add(effect);
+					break;
+				}
+			}
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
 			for (Bonus bonus : effect.getBonuses()) {
 				if (bonus.getType() == type) {
 					effects.add(effect);
@@ -444,19 +461,27 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	
 	// if bonusOrPenalty true, find bonuses, else find penalties
 	
-	private BonusList getBonusesOfType(Bonus.Type type, boolean bonusOrPenalty) {
+	private synchronized BonusList getBonusesOfType(Bonus.Type type, boolean bonusOrPenalty) {
 		BonusList bonusesToReturn = new BonusList();
 		
-		for (Effect effect : this) {
-			for (Bonus bonus : effect.getBonuses()) {
-				if (bonus.getType() != type) continue;
-				
-				if (bonusOrPenalty && bonus.getValue() >= 0) bonusesToReturn.add(bonus);
-				else if (!bonusOrPenalty && bonus.getValue() <= 0) bonusesToReturn.add(bonus);
-			}
+		for (Effect effect : effectsNoActiveScript) {
+			addBonusesOfTypeToList(effect, bonusesToReturn, type, bonusOrPenalty);
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
+			addBonusesOfTypeToList(effect, bonusesToReturn, type, bonusOrPenalty);
 		}
 		
 		return bonusesToReturn;
+	}
+	
+	private void addBonusesOfTypeToList(Effect effect, BonusList list, Bonus.Type type, boolean bonusOrPenalty) {
+		for (Bonus bonus : effect.getBonuses()) {
+			if (bonus.getType() != type) continue;
+			
+			if (bonusOrPenalty && bonus.getValue() >= 0) list.add(bonus);
+			else if (!bonusOrPenalty && bonus.getValue() <= 0) list.add(bonus);
+		}
 	}
 	
 	/**
