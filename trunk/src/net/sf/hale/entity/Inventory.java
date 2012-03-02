@@ -20,7 +20,6 @@
 package net.sf.hale.entity;
 
 import net.sf.hale.Game;
-import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.loading.JSONOrderedObject;
@@ -389,9 +388,7 @@ public class Inventory implements Saveable {
 		}
 		
 		// stop all active animations on the item
-		for (Effect effect : item.getEffects()) {
-			effect.endAnimations();
-		}
+		item.getEffects().endAllAnimations();
 		
 		if (item.hasScript()) 
 			item.getScript().executeFunction(ScriptFunctionType.onUnequipItem, this.parent, item);
