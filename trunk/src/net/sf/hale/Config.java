@@ -390,6 +390,11 @@ public class Config {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL14.GL_COLOR_SUM);
 		
+//		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+//		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+		
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
+		
 		try {
 			File theme = new File("gui/simple.xml");
 			
