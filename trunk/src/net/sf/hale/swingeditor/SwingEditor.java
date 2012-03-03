@@ -30,6 +30,7 @@ import net.sf.hale.EntityManager;
 import net.sf.hale.Game;
 import net.sf.hale.loading.AsyncTextureLoader;
 import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.rules.Dice;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.util.JSEngineManager;
 
@@ -51,6 +52,7 @@ public class SwingEditor extends JFrame {
 		Game.config = new Config();
 		Game.scriptEngineManager = new JSEngineManager();
 		Game.entityManager = new EntityManager();
+		Game.dice = new Dice();
 		
 		ResourceManager.registerCorePackage();
 		
@@ -86,5 +88,23 @@ public class SwingEditor extends JFrame {
 			}
 		};
 		add(canvas, BorderLayout.CENTER);
+	}
+	
+	/**
+	 * Returns the Canvas that the OpenGL context is drawing on
+	 * @return the OpenGL canvas
+	 */
+	
+	public Canvas getOpenGLCanvas() {
+		return canvas;
+	}
+	
+	/**
+	 * Sets the AreaViewer that is used to draw the OpenGL content
+	 * @param viewer
+	 */
+	
+	public void setAreaViewer(AreaViewer viewer) {
+		glThread.setAreaViewer(viewer);
 	}
 }

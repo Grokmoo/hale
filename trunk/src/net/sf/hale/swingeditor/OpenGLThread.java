@@ -37,6 +37,8 @@ import org.lwjgl.opengl.GL14;
  */
 
 public class OpenGLThread extends Thread {
+	private AreaViewer viewer;
+	
 	private Canvas canvas;
 	
 	private boolean running = true;
@@ -48,6 +50,15 @@ public class OpenGLThread extends Thread {
 	
 	public OpenGLThread(Canvas parent) {
 		this.canvas = parent;
+	}
+	
+	/**
+	 * Sets the AreaViewer which is responsible for drawing within this OpenGL context
+	 * @param viewer
+	 */
+	
+	public void setAreaViewer(AreaViewer viewer) {
+		this.viewer = viewer;
 	}
 	
 	/**
@@ -86,7 +97,12 @@ public class OpenGLThread extends Thread {
 			
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			
-			GL11.glColor3f(1.0f, 0.0f, 0.0f);
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			
+			if (viewer != null) {
+				viewer.draw();
+				viewer.handleInput();
+			}
 			
 			Display.update(false);
             GL11.glGetError();

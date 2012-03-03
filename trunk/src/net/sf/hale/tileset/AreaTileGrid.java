@@ -214,9 +214,18 @@ public class AreaTileGrid {
 	}
 	
 	/**
+	 * Draws this AreaTileGrid with no drawing bounds or GUI animation state
+	 * @param renderer
+	 */
+	
+	public void draw(AreaRenderer renderer) {
+		draw(renderer, null, null, null);
+	}
+	
+	/**
 	 * Draws this AreaTileGrid
 	 * @param renderer the renderer for the Area being drawn
-	 * @param as the current GUI animation state
+	 * @param as the current GUI animation state or null to not specify an animation state
 	 * @param topLeft the top left grid point drawing bound, if non null then must be within
 	 * the area bounds and topLeft.x must be an even number
 	 * @param bottomRight the bottom right grid point drawing bound, if non null then must be within
@@ -242,10 +251,15 @@ public class AreaTileGrid {
 		
 		for (String layerID : tileset.getLayerIDs()) {
 			if (layerID.equals(entityLayerID)) {
-				Game.particleManager.drawBelowEntities();
+				if (Game.particleManager != null)
+					Game.particleManager.drawBelowEntities();
+				
 				renderer.drawTransitions();
+				
 				selected = tiles.get(layerID).draw(screenCoordinates, renderer, topLeft, bottomRight);
-				Game.particleManager.drawAboveEntities();
+				
+				if (Game.particleManager != null)
+					Game.particleManager.drawAboveEntities();
 				
 			} else if (layerID.equals(interfaceLayerID)) {
 				tiles.get(layerID).draw(screenCoordinates, topLeft, bottomRight);
