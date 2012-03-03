@@ -23,5 +23,5 @@ currencyReward 30 65
 equip "longbow" Good
 equip "armor_leatherhard_base" Good
 equip "arrow" Good
-additem "arrow" 96 Good
+additem "arrow" 95 Good
 addloot "LootLevel5" 50 PER_LIST
