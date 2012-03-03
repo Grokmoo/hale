@@ -22,6 +22,7 @@ package net.sf.hale.swingeditor;
 import java.awt.Canvas;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.AnimationState;
@@ -77,6 +78,21 @@ public class AreaViewer implements AreaTileGrid.AreaRenderer {
 		// handle key event
 		while (Keyboard.next()) {
 			
+		}
+		
+		// handle mouse
+		if (Mouse.isButtonDown(0)) {
+			int mouseX = Mouse.getDX();
+			int mouseY = Mouse.getDY();
+			
+			if (Mouse.isGrabbed()) {
+				scrollX -= (mouseX);
+				scrollY += (mouseY);
+			}
+
+			Mouse.setGrabbed(true);
+		} else {
+			Mouse.setGrabbed(false);
 		}
 	}
 	

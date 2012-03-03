@@ -71,6 +71,7 @@ public class SwingEditor extends JFrame {
 	private SwingEditor() {
 		setSize(Game.config.getEditorResolutionX(), Game.config.getEditorResolutionY());
 		setTitle("Hale Campaign Editor");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		menuBar = new EditorMenuBar(this);
 		setJMenuBar(menuBar);
