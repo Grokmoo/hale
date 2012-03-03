@@ -1,13 +1,13 @@
 
 function startConversation(game, parent, target, conversation) {
-	conversation.addText("Hello again surfacer.");
+    conversation.addText("Hello again surfacer.");
 
-	if (game.get("gateQuestStarted") == null) {
-		conversation.addResponse("You said you could help me return to the surface.", "convo02");
-		conversation.addResponse("Farewell.", "onExit");
-	} else {
-		addConvoGateQuest(game, parent, target, conversation);
-	}
+    if (game.get("gateQuestStarted") == null) {
+        conversation.addResponse("You said you could help me return to the surface.", "convo02");
+        conversation.addResponse("Farewell.", "onExit");
+    } else {
+        addConvoGateQuest(game, parent, target, conversation);
+    }
 }
 
 function onExit(game, parent, target, conversation) {
@@ -71,66 +71,66 @@ function convo05c(game, parent, target, conversation) {
 }
 
 function convo06(game, parent, target, conversation) {
-	game.put("gateQuestStarted", true);
-	
-	game.revealWorldMapLocation("Mushroom Forest");
-	game.runExternalScript("quests/theMaster", "startGate");
+    game.put("gateQuestStarted", true);
+    
+    game.revealWorldMapLocation("Mushroom Forest");
+    game.runExternalScript("quests/theMaster", "startGate");
 
     conversation.addText("There are three pieces you must collect.  One is with the lizard people, who live in a great underground lake to the northeast.  Another is with the deep dwarves, who live to the north of the forest.  Finally, I believe one piece is still in its original resting place - a great tomb to the northwest.");
-	
-	addConvoGateQuest(game, parent, target, conversation);
+    
+    addConvoGateQuest(game, parent, target, conversation);
 }
 
 function addConvoGateQuest(game, parent, target, conversation) {
-	conversation.addText("Do you have any questions?");
+    conversation.addText("Do you have any questions?");
 
-	conversation.addResponse("If the only gate to the surface is sealed, how do you know of my language?", "askLanguage");
-	conversation.addResponse("Tell me of the lizard people.", "askLizard");
-	conversation.addResponse("Tell me of the deep dwarves.", "askDwarves");
-	conversation.addResponse("Tell me about the tomb.", "askTomb");
-	conversation.addResponse("I will find the pieces of the key and return to you.  Farewell.", "onExit");
+    conversation.addResponse("If the only gate to the surface is sealed, how do you know of my language?", "askLanguage");
+    conversation.addResponse("Tell me of the lizard people.", "askLizard");
+    conversation.addResponse("Tell me of the deep dwarves.", "askDwarves");
+    conversation.addResponse("Tell me about the tomb.", "askTomb");
+    conversation.addResponse("I will find the pieces of the key and return to you.  Farewell.", "onExit");
 }
 
 function askLanguage(game, parent, target, conversation) {
-	conversation.addText("There are other keys, but they are possessed by surfacers who sometimes come through to trade.");
+    conversation.addText("There are other keys, but they are possessed by surfacers who sometimes come through to trade.");
     
     conversation.addText("If you wish to wait at least a few months for another trader to come, you may.  I had the sense that you had some urgency in your mission, however.");
-	
-	conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
-	conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
+    
+    conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
+    conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
 }
 
 function askLizard(game, parent, target, conversation) {
-	conversation.addText("The lizard people live around a great lake to the northeast.  To reach it, travel north to the mushroom forest and then east, over a great river and to the lake.");
-	conversation.addText("The lizard people are not friendly to outsiders, but you may be able to negotiate to get the key from them if you can talk to their leader.");
-	
-	conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
-	conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
+    conversation.addText("The lizard people live around a great lake to the northeast.  To reach it, travel north to the mushroom forest and then east, over a great river and to the lake.");
+    conversation.addText("The lizard people are not friendly to outsiders, but you may be able to negotiate to get the key from them if you can talk to their leader.");
+    
+    conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
+    conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
 }
 
 function askDwarves(game, parent, target, conversation) {
-	conversation.addText("The deep dwarves have built a vast underground city to the north of here.  To reach it, head north straight through the mushroom forest.");
-	conversation.addText("There is a group of slavers camped south of the city who will likely attack you on sight.");
-	conversation.addText("However, once you reach the city itself you can most likely avoid hostilities.");
+    conversation.addText("The deep dwarves have built a vast underground city to the north of here.  To reach it, head north straight through the mushroom forest.");
+    conversation.addText("There is a group of slavers camped south of the city who will likely attack you on sight.");
+    conversation.addText("However, once you reach the city itself you can most likely avoid hostilities.");
 
-	conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
-	conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
+    conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
+    conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
 }
 
 function askTomb(game, parent, target, conversation) {
-	conversation.addText("The tomb containing the key fragment is located north, and then west.");
-	conversation.addText("Originally, the entire key was located there, but looters have robbed the place of most of its treasure.  The entire place is infested with the undead.");
-	
-	conversation.addResponse("Tell me more about the tomb.", "askTomb2");
-	conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
-	conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
+    conversation.addText("The tomb containing the key fragment is located north, and then west.");
+    conversation.addText("Originally, the entire key was located there, but looters have robbed the place of most of its treasure.  The entire place is infested with the undead.");
+    
+    conversation.addResponse("Tell me more about the tomb.", "askTomb2");
+    conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
+    conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
 }
 
 function askTomb2(game, parent, target, conversation) {
-	conversation.addText("The tomb was created hundreds of years ago, after a great battle between the surfacers and the deep dwarves.  The result of that battle was the creation of a powerful spell sealing off the underground from the surface.");
-	
-	conversation.addText("If you go to the dwarven city, they will likely know more.");
-	
-	conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
-	conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
+    conversation.addText("The tomb was created hundreds of years ago, after a great battle between the surfacers and the deep dwarves.  The result of that battle was the creation of a powerful spell sealing off the underground from the surface.");
+    
+    conversation.addText("If you go to the dwarven city, they will likely know more.");
+    
+    conversation.addResponse("Back to my other questions.", "addConvoGateQuest");
+    conversation.addResponse("I had best get back to it then.  Farewell.", "onExit");
 }

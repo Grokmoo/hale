@@ -708,6 +708,14 @@
 	    "MustNotHave" : [ "SouthEast" ],
 	    "tiles" : [ { "id" : "ceiling/wall-stone-s-sw", "layer" : "ceiling", "position" : "NorthEast" } ]
 	  },
+	  { "MustHave" : [ "NorthWest", "NorthWest-SouthWest" ],
+	    "MustNotHave" : [ "SouthWest", "North", "North-NorthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-stone-se-s", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "NorthEast-SouthEast" ],
+	    "MustNotHave" : [ "SouthEast", "North", "North-NorthEast" ],
+	    "tiles" : [ { "id" : "ceiling/wall-stone-s-sw", "layer" : "ceiling", "position" : "NorthEast" } ]
+	  },
 	  { "MustHave" : [ "NorthEast" ],
 	    "MustNotHave" : [ "North", "North-NorthEast" ],
 	    "tiles" : [ { "id" : "ceiling/wall-stone-s-sw-ne-n-fg", "layer" : "ceiling", "position" : "NorthEast"} ]
