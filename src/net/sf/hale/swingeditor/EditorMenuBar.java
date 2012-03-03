@@ -27,13 +27,17 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import net.sf.hale.Area;
+import net.sf.hale.Encounter;
 import net.sf.hale.Game;
+import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.Trap;
+import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.DirectoryListing;
 
 /**
@@ -43,7 +47,7 @@ import net.sf.hale.util.DirectoryListing;
  */
 
 public class EditorMenuBar extends JMenuBar {
-	private JFrame frame;
+	private SwingEditor frame;
 	
 	private JMenu areasMenu;
 	private JMenu openAreasMenu;
@@ -53,7 +57,7 @@ public class EditorMenuBar extends JMenuBar {
 	 * @param frame the parent frame
 	 */
 	
-	public EditorMenuBar(JFrame frame) {
+	public EditorMenuBar(SwingEditor frame) {
 		this.frame = frame;
 		
 		// create campaign menu
@@ -106,6 +110,7 @@ public class EditorMenuBar extends JMenuBar {
 		
 		JMenuItem createAreaItem = new JMenuItem(new CreateAreaAction());
 		createAreaItem.setMnemonic(KeyEvent.VK_C);
+		createAreaItem.setEnabled(false);
 		areasMenu.add(createAreaItem);
 		
 		openAreasMenu = new JMenu("Open");
@@ -155,7 +160,23 @@ public class EditorMenuBar extends JMenuBar {
 		}
 		
 		@Override public void actionPerformed(ActionEvent e) {
+			Area area = Game.curCampaign.getArea(areaID);
+			AreaUtil.setMatrix(area.getExplored(), true);
 			
+			// remove automatically placed creatures from encounters
+			Encounter.removeCreaturesFromArea(area);
+			
+			// force spot all traps so we can see them in the editor
+			for (Entity entity : area.getEntities()) {
+				if (entity.getType() == Entity.Type.TRAP) ((Trap)entity).setSpotted(true);
+			}
+			
+			// load tileset
+			Game.curCampaign.getTileset(area.getTileset()).loadTiles();
+			area.getTileGrid().cacheSprites();
+			
+			AreaViewer viewer = new AreaViewer(area, frame.getOpenGLCanvas());
+			frame.setAreaViewer(viewer);
 		}
 	}
 	
