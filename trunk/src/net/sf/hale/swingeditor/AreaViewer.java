@@ -91,7 +91,7 @@ public class AreaViewer implements AreaTileGrid.AreaRenderer {
 			}
 
 			Mouse.setGrabbed(true);
-		} else {
+		} else if (Mouse.isGrabbed()) {
 			Mouse.setGrabbed(false);
 		}
 	}

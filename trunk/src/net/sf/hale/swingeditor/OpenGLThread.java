@@ -22,6 +22,7 @@ package net.sf.hale.swingeditor;
 import java.awt.Canvas;
 
 import net.sf.hale.Game;
+import net.sf.hale.tileset.Tileset;
 import net.sf.hale.util.Logger;
 
 import org.lwjgl.LWJGLException;
@@ -38,10 +39,14 @@ import org.lwjgl.opengl.GL14;
 
 public class OpenGLThread extends Thread {
 	private AreaViewer viewer;
+	private AreaViewer newViewer;
 	
 	private Canvas canvas;
 	
-	private boolean running = true;
+	private volatile boolean running;
+	
+	private boolean draw;
+	private boolean resize;
 	
 	/**
 	 * Creates a new OpenGL thread which will run using the specified canvas
@@ -50,6 +55,8 @@ public class OpenGLThread extends Thread {
 	
 	public OpenGLThread(Canvas parent) {
 		this.canvas = parent;
+		this.draw = true;
+		this.resize = true;
 	}
 	
 	/**
@@ -58,7 +65,7 @@ public class OpenGLThread extends Thread {
 	 */
 	
 	public void setAreaViewer(AreaViewer viewer) {
-		this.viewer = viewer;
+		this.newViewer = viewer;
 	}
 	
 	/**
@@ -69,15 +76,65 @@ public class OpenGLThread extends Thread {
 		Display.destroy();
 	}
 	
-	private void initGL() {
+	/**
+	 * Sets whether the OpenGL context should perform normal drawing (true)
+	 * or no drawing (false)
+	 * @param draw
+	 */
+	
+	public void setDrawingEnabled(boolean draw) {
+		this.draw = draw;
+	}
+	
+	/**
+	 * Resizes the OpenGL drawing context to fit the canvas
+	 */
+	
+	public void canvasResized() {
+		resize = true;
+	}
+	
+	private void resize() {
+		GL11.glViewport(0, 0, canvas.getWidth(), canvas.getHeight());
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, canvas.getWidth(), canvas.getHeight(), 0, 0, 1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	private void initGL() {
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL14.GL_COLOR_SUM);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, canvas.getWidth(), canvas.getHeight(), 0, 0, 1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	private void updateViewer() {
+		if (newViewer == null) return;
+		
+		// get the old and new tileset
+		Tileset newTileset = Game.curCampaign.getTileset(newViewer.getArea().getTileset());
+		Tileset oldTileset = null;
+		if (viewer != null)
+			oldTileset = Game.curCampaign.getTileset(viewer.getArea().getTileset());
+		
+		// switch to the new viewer
+		viewer = newViewer;
+		newViewer = null;
+		
+		// load the tileset if needed
+		if (newTileset != oldTileset) {
+			// free the old tileset
+			if (oldTileset != null) oldTileset.freeTiles();
+			
+			newTileset.loadTiles();
+		}
+		
+		viewer.getArea().getTileGrid().cacheSprites();
 	}
 	
 	@Override public void run() {
@@ -92,6 +149,8 @@ public class OpenGLThread extends Thread {
 		}
 		Display.setVSyncEnabled(true);
 		
+		running = true;
+		
 		while (running) {
 			Game.textureLoader.update();
 			
@@ -99,7 +158,14 @@ public class OpenGLThread extends Thread {
 			
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 			
-			if (viewer != null) {
+			if (resize) {
+				resize();
+				resize = false;
+			}
+			
+			updateViewer();
+			
+			if (draw && viewer != null) {
 				viewer.draw();
 				viewer.handleInput();
 			}
