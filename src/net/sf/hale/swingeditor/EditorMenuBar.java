@@ -171,10 +171,6 @@ public class EditorMenuBar extends JMenuBar {
 				if (entity.getType() == Entity.Type.TRAP) ((Trap)entity).setSpotted(true);
 			}
 			
-			// load tileset
-			Game.curCampaign.getTileset(area.getTileset()).loadTiles();
-			area.getTileGrid().cacheSprites();
-			
 			AreaViewer viewer = new AreaViewer(area, frame.getOpenGLCanvas());
 			frame.setAreaViewer(viewer);
 		}

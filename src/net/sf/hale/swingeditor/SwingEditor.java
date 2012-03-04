@@ -21,6 +21,8 @@ package net.sf.hale.swingeditor;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -40,7 +42,7 @@ import net.sf.hale.util.JSEngineManager;
  *
  */
 
-public class SwingEditor extends JFrame {
+public class SwingEditor extends JFrame implements ComponentListener {
 	/**
 	 * The main entry point for the editor.  Any arguments are ignored
 	 * @param args
@@ -69,6 +71,7 @@ public class SwingEditor extends JFrame {
 	private OpenGLThread glThread;
 	
 	private SwingEditor() {
+		addComponentListener(this);
 		setSize(Game.config.getEditorResolutionX(), Game.config.getEditorResolutionY());
 		setTitle("Hale Campaign Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,6 +109,24 @@ public class SwingEditor extends JFrame {
 	 */
 	
 	public void setAreaViewer(AreaViewer viewer) {
-		glThread.setAreaViewer(viewer);
+		if (glThread != null)
+			glThread.setAreaViewer(viewer);
+	}
+
+	@Override public void componentHidden(ComponentEvent arg0) {
+		if (glThread != null)
+			glThread.setDrawingEnabled(false);
+	}
+
+	@Override public void componentMoved(ComponentEvent arg0) { }
+
+	@Override public void componentResized(ComponentEvent arg0) {
+		if (glThread != null)
+			glThread.canvasResized();
+	}
+
+	@Override public void componentShown(ComponentEvent arg0) {
+		if (glThread != null)
+			glThread.setDrawingEnabled(true);
 	}
 }
