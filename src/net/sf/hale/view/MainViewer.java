@@ -554,6 +554,7 @@ public class MainViewer extends DesktopArea {
 					break;
 				case Event.KEY_L:
 					logWindow.setVisible(!logWindow.isVisible());
+					break;
 				case Event.KEY_M:
 					miniMapWindow.setVisible(!miniMapWindow.isVisible());
 					break;
