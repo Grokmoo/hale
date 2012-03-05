@@ -51,10 +51,16 @@ public class XP {
 	
 	public int getPointsForLevel(int level) { return pointsForLevel.get(level); }
 	
-	public void assignEncounterXPAndGold(Encounter encounter) {
+	public void assignEncounterXPAndGold(Encounter encounter, int combatLength) {
 		float EC = (float)encounter.getChallenge() / Game.ruleset.getValue("EncounterChallengeFactor");
 		
-		int baseXP = (int) (EC * (float)Game.ruleset.getValue("EncounterXPFactor"));
+		long baseXP = (long) (EC * (float)Game.ruleset.getValue("EncounterXPFactor"));
+		
+		// modify xp based on encounter length
+		int lengthModifier = 10000 + Math.min(Game.ruleset.getValue("CombatLengthXPFactor") * combatLength,
+				Game.ruleset.getValue("CombatLengthXPMax"));
+		
+		baseXP = baseXP * lengthModifier / 10000;
 		
 		Currency reward = new Currency();
 		for (Creature c : encounter.getCreatures()) {
@@ -63,7 +69,7 @@ public class XP {
 		
 		Game.curCampaign.partyCurrency.add(reward);
 		
-		rewardXP(baseXP);
+		rewardXP((int)baseXP);
 		
 		Game.mainViewer.addMessage("green", "The party earned " + baseXP + " experience points and " + reward.shortString() + ".");
 	}
