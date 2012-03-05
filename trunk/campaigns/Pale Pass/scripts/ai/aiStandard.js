@@ -99,6 +99,7 @@ function tryActivateAbility(game, parent, target, slot, aiSet) {
 	if (condition.equals("TargetSelect")) {
 		// activate the ability;
 		targeter.performLeftClickAction();
+		game.sleepStandardDelay(4);
 		
 		// we maybe have enough AP to activate another ability
 		return { 'endTurn' : false };
@@ -112,6 +113,7 @@ function tryActivateAbility(game, parent, target, slot, aiSet) {
 		// targeter has specific clickable points, so choose the first one
 		targeter.setMousePosition(selectable.get(0));
         targeter.performLeftClickAction();
+		game.sleepStandardDelay(4);
 		
 		return { 'endTurn' : false };
 	}
