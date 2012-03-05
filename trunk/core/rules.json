@@ -1,4 +1,6 @@
 {
+    "MaximumPathLength" : 50,
+
 	"BaseActionPoints" : 10000,
 	
 	"OutsideCombatHealingFactor" : 7,
