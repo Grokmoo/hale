@@ -51,7 +51,7 @@ public class CampaignLoader extends SwingWorker<Void, Void> {
 		this.parent = parent;
 		
 		monitor = new ProgressMonitor(parent, "Loading Campaign " + campaignID,
-				"Loading Sprite Sheets", 0, 8);
+				"Loading Sprite Sheets", 0, 9);
 		monitor.setMillisToDecideToPopup(0);
 		monitor.setMillisToPopup(0);
 	}
@@ -90,6 +90,11 @@ public class CampaignLoader extends SwingWorker<Void, Void> {
 		
 		if (checkCanceled()) return null;
 		monitor.setProgress(8);
+		
+		EditorManager.loadAllAssets();
+		
+		if (checkCanceled()) return null;
+		monitor.setProgress(9);
 		
 		return null;
 	}

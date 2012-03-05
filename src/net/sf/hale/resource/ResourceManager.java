@@ -370,11 +370,28 @@ public class ResourceManager {
 	 * @return the package ID of the ResourcePackage containing the specified resource
 	 */
 	
-	public static String getPackageIDContainingResource(String path) {
+	public static String getPackageIDOfResource(String path) {
 		for (ResourcePackage resourcePackage : packages) {
 			if (resourcePackage.hasResource(path)) {
 				return resourcePackage.getType().toString();
 			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the package type containing the resource at the specified
+	 * path.  The package returned is for the package that will be used whenever the
+	 * ResourceManager retrieves the resource with the specified path.
+	 * 
+	 * @param path the ID String of the resource
+	 * @return the package of the ResourcePackage containing the specified resource
+	 */
+	
+	public static PackageType getPackageTypeOfResource(String path) {
+		for (ResourcePackage resourcePackage : packages) {
+			if (resourcePackage.hasResource(path)) return resourcePackage.getType();
 		}
 		
 		return null;
