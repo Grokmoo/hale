@@ -1,0 +1,10 @@
+name "Load Bearer"
+type "General"
+activateable false
+description "You can carry more gear than you could otherwise.  Your carrying weight limit is increased by 30 kg."
+
+addPrereq Stat Con 10
+
+icon "icons/loadBearer"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('WeightLimit', 'Stackable', 30000); parent.applyEffect(effect); }"

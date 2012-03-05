@@ -1,10 +1,10 @@
 name "Pack Mule"
 type "General"
 activateable false
-description "You can carry more gear than you could otherwise.  Your carrying weight limit is increased by 30 kg."
+description "Your carrying weight limit is increased by a further 40 kg."
 
 addPrereq Stat Con 12
-addPrereq Ability Athletic
+addPrereq Ability LoadBearer
 
 icon "icons/packMule"
 

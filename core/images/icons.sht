@@ -38,6 +38,7 @@ image longshot            11  1
 image criticalHitImmunity 12  1
 image cripplingShot       13  1
 image piercingShot        14  1
+image loadBearer          15  1
 
 image proficiencySmallSwords   0   2
 image proficiencyLargeSwords   1   2
