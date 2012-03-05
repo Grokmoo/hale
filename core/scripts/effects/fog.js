@@ -1,4 +1,4 @@
-function onTargetEnter(game, effect, target) {
+function onTargetEnter(game, target, effect) {
 	var parent = effect.getSlot().getParent();
 	
 	if (parent.getAbilities().has("DistractingFog")) {
@@ -89,7 +89,7 @@ function addDistractingFog(game, effect, target) {
 	target.applyEffect(targetEffect);
 }
 
-function onTargetExit(game, effect, target) {
+function onTargetExit(game, target, effect) {
 	var targetEffects = effect.getChildEffectsWithTarget(target);
 	
 	for (var i = 0; i < targetEffects.size(); i++) {
