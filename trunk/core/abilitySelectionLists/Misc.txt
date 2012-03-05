@@ -1,30 +1,32 @@
 name "General"
 
 add "Athletic"          0.0  0
-add "PackMule"          0.0  1
 
-add "QuickDraw"         1.0  0
-add "ReflexiveAttacks"  2.0  0
-add "FastActions"       1.5  1
+add "LoadBearer"        1.0  0
+add "PackMule"          1.0  1
 
-add "BlindFighting"     3.0  0
-add "CombatReady"       4.0  0
-add "CombatFinesse"     3.5  1
+add "QuickDraw"         2.0  0
+add "ReflexiveAttacks"  3.0  0
+add "FastActions"       2.5  1
 
-add "ToughBody"         5.0  0
-add "StrongSoul"        6.0  0
-add "LightningReflexes" 7.0  0
+add "BlindFighting"     4.0  0
+add "CombatReady"       5.0  0
+add "CombatFinesse"     4.5  1
 
-add "AbsorbBlows"       5.0  1
-add "EnergyResistance"  6.0  1
-add "Dodger"            7.0  1
+add "ToughBody"         6.0  0
+add "StrongSoul"        7.0  0
+add "LightningReflexes" 8.0  0
 
-connect 0.0 0.0 OneDown
+add "AbsorbBlows"       6.0  1
+add "EnergyResistance"  7.0  1
+add "Dodger"            8.0  1
 
-connect 1.5 1.0 TwoUp
+connect 1.0 0.0 OneDown
 
-connect 3.5 1.0 TwoUp
+connect 2.5 1.0 TwoUp
 
-connect 5.0 0.0 OneDown
+connect 4.5 1.0 TwoUp
+
 connect 6.0 0.0 OneDown
 connect 7.0 0.0 OneDown
+connect 8.0 0.0 OneDown
