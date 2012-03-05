@@ -1,0 +1,9 @@
+name "Intelligence Training I"
+type "General"
+description "You gain a permanent +1 bonus to Intelligence.
+activateable false
+
+icon "icons/trainIntelligence1"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('BaseInt', 'Stackable', 1); parent.applyEffect(effect); }"
+
+addPrereq Stat CreatureLevel 2

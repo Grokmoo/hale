@@ -262,7 +262,7 @@ public class PrereqList {
 		sb.append("<div style=\"font-family: vera-bold-blue; margin-top : 1em;\">Prereqs</div>");
 		
 		for (Stat stat : statPrereqs.keySet()) {
-			sb.append("<p><span style=\"font-family: purple;\">").append(stat.toString());
+			sb.append("<p><span style=\"font-family: purple;\">").append(stat.name);
 			sb.append("</span> ").append(statPrereqs.get(stat)).append("</p>");
 		}
 		

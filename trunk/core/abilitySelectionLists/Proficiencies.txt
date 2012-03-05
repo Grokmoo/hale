@@ -1,0 +1,31 @@
+name "Weapon & Armor Proficiencies"
+
+add ProficiencyLightArmor   0  0
+add ProficiencyMediumArmor  0  1
+add ProficiencyHeavyArmor   0  2
+
+add ProficiencyShields      1  0
+add ProficiencyTowerShields 1  1
+
+connect 0.0 0.0 OneDown
+connect 0.0 1.0 OneDown
+connect 1.0 0.0 OneDown
+
+add ProficiencySimpleWeapons 2.5 0
+add ProficiencySpears        3.5 0
+
+add ProficiencyHammers       2   1
+add ProficiencyBows          3   1
+add ProficiencySmallSwords   4   1
+
+add ProficiencyMaces         2   2
+add ProficiencyAxes          3   2
+add ProficiencyLargeSwords   4   2
+
+add ProficiencyFlail         2 3
+add ProficiencyWaraxe        3 3
+add ProficiencyBastardSword  4 3
+
+connect 2 2 OneDown
+connect 3 2 OneDown
+connect 4 2 OneDown

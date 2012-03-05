@@ -20,17 +20,20 @@
 package net.sf.hale.bonus;
 
 public enum Stat {
-	CreatureLevel, CasterLevel, LevelAttackBonus, LevelDamageBonus, MaxHP,
-	BaseStr, BaseDex, BaseCon, BaseInt, BaseWis, BaseCha,
+	CreatureLevel("Level"), CasterLevel("Caster Level"), LevelAttackBonus("Level Attack Bonus"),
+	LevelDamageBonus("Level Damage Bonus"), MaxHP("Maximum Hit Points"),
+	BaseStr("Strength"), BaseDex("Dexterity"), BaseCon("Constitution"), BaseInt("Intelligence"), BaseWis("Wisdom"), BaseCha("Charisma"),
 	Str("Strength"), Dex("Dexterity"), Con("Constitution"), Int("Intelligence"), Wis("Wisdom"), Cha("Charisma"),
-	MentalResistance, PhysicalResistance, ReflexResistance,
-	WeightLimit,
-	AttacksOfOpportunity,
-	ArmorClass, TouchArmorClass,
-	ShieldAttackPenalty, ArmorPenalty, MovementBonus, MovementCost,
-	InitiativeBonus,
-	AttackCost, MainHandAttackBonus, MainHandDamageBonus, OffHandAttackBonus, OffHandDamageBonus,
-	TouchAttackBonus;
+	MentalResistance("Mental Resistance"), PhysicalResistance("Physical Resistance"), ReflexResistance("Reflex Resistance"),
+	WeightLimit("Weight Limit"),
+	AttacksOfOpportunity("Attacks of Opportunity"),
+	ArmorClass("Armor Class"), TouchArmorClass("Armor Class to Touch"),
+	ShieldAttackPenalty("Shield Attack Penalty"), ArmorPenalty("Armor Penalty"),
+	MovementBonus("Movement Bonus"), MovementCost("Movement Cost"),
+	InitiativeBonus("Initiative Bonus"),
+	AttackCost("Attack Cost"), MainHandAttackBonus("Main Hand Attack Bonus"), MainHandDamageBonus("Main Hand Damage Bonus"),
+	OffHandAttackBonus("Off Hand Attack Bonus"), OffHandDamageBonus("Off Hand Damage Bonus"),
+	TouchAttackBonus("Touch Attack Bonus");
 	
 	private Stat() {
 		name = toString();
