@@ -19,6 +19,7 @@
 
 package net.sf.hale;
 
+import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Targeter;
 import net.sf.hale.defaultability.DefaultAbility;
 import net.sf.hale.defaultability.MouseActionList;
@@ -103,6 +104,7 @@ public class AreaListener {
 			}
 			
 			c.getEffects().endAllAnimations();
+			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
 				
 		} else if (!c.isPlayerSelectable() && c.getCurrentHP() <= -20) {
 			Game.mainViewer.addMessage("red", c.getName() + " is dead.");

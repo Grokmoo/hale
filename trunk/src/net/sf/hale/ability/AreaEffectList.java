@@ -179,14 +179,14 @@ public class AreaEffectList implements Saveable {
 		// check for creatures exiting
 		for (Creature creature : oldCreatures) {
 			if (!newCreatures.contains(creature)) {
-				aura.executeFunction(ScriptFunctionType.onTargetExit, aura, creature);
+				aura.executeFunction(ScriptFunctionType.onTargetExit, creature, aura);
 			}
 		}
 		
 		// check for creatures entering
 		for (Creature creature : newCreatures) {
 			if (!oldCreatures.contains(creature)) {
-				aura.executeFunction(ScriptFunctionType.onTargetEnter, aura, creature);
+				aura.executeFunction(ScriptFunctionType.onTargetEnter, creature, aura);
 			}
 		}
 		
@@ -242,7 +242,7 @@ public class AreaEffectList implements Saveable {
 			Creature creature = area.getEntities().getCreature(p.x, p.y);
 			
 			if (creature != null) {
-				effect.executeFunction(ScriptFunctionType.onTargetEnter, effect, creature);
+				effect.executeFunction(ScriptFunctionType.onTargetEnter, creature, effect);
 			}
 		}
 		

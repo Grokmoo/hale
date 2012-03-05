@@ -171,7 +171,7 @@ public class EditorMenuBar extends JMenuBar {
 				if (entity.getType() == Entity.Type.TRAP) ((Trap)entity).setSpotted(true);
 			}
 			
-			AreaViewer viewer = new AreaViewer(area, frame.getOpenGLCanvas());
+			AreaViewer viewer = new AreaViewer(area);
 			frame.setAreaViewer(viewer);
 		}
 	}

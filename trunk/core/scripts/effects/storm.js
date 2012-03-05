@@ -42,7 +42,7 @@ function checkLightning(game, effect, target) {
 	callback.start();
 }
 
-function onTargetEnter(game, effect, target) {
+function onTargetEnter(game, target, effect) {
 	var spell = effect.getSlot().getAbility()
 	var parent = effect.getSlot().getParent();
 	var casterLevel = parent.getCasterLevel();

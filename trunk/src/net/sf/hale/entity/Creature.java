@@ -999,14 +999,14 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		for (Effect effect : oldEffects) {
 			// dont run onExit scripts if this creature is the direct target (i.e. if the effect is an aura)
 			if (effect.getTarget() != this && !newEffects.contains(effect)) {
-				effect.executeFunction(ScriptFunctionType.onTargetExit, effect, this);
+				effect.executeFunction(ScriptFunctionType.onTargetExit, this, effect);
 			}
 		}
 		
 		for (Effect effect : newEffects) {
 			// dont run onEnter scripts if this creature is the direct target (i.e. if the effect is an aura)
 			if (effect.getTarget() != this && !oldEffects.contains(effect)) {
-				effect.executeFunction(ScriptFunctionType.onTargetEnter, effect, this);
+				effect.executeFunction(ScriptFunctionType.onTargetEnter, this, effect);
 			}
 		}
 		

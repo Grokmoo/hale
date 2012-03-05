@@ -19,8 +19,6 @@
 
 package net.sf.hale.swingeditor;
 
-import java.awt.Canvas;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -37,7 +35,6 @@ import net.sf.hale.util.Point;
  */
 
 public class AreaViewer implements AreaTileGrid.AreaRenderer {
-	private Canvas canvas;
 	private Area area;
 	
 	private int scrollX, scrollY;
@@ -45,11 +42,9 @@ public class AreaViewer implements AreaTileGrid.AreaRenderer {
 	/**
 	 * Creates a new Viewer for the specified Area
 	 * @param area
-	 * @param canvas the canvas that is being drawn on
 	 */
 	
-	public AreaViewer(Area area, Canvas canvas) {
-		this.canvas = canvas;
+	public AreaViewer(Area area) {
 		this.area = area;
 	}
 	

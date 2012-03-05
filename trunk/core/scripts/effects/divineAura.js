@@ -1,4 +1,4 @@
-function onTargetEnter(game, aura, target) {
+function onTargetEnter(game, target, aura) {
 	var slot = aura.getSlot();
 	var parent = slot.getParent();
 	var casterLevel = parent.getCasterLevel();
@@ -29,7 +29,7 @@ function onTargetEnter(game, aura, target) {
 	target.applyEffect(targetEffect);
 }
 
-function onTargetExit(game, aura, target) {
+function onTargetExit(game, target, aura) {
 	var targetEffect = aura.getChildEffectWithTarget(target);
    
 	target.removeEffect(targetEffect);
