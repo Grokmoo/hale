@@ -77,14 +77,16 @@ public class Effect extends Scriptable implements Saveable {
 		
 		if (childEffects.size() > 0) {
 			// store children
-			String[] childData = new String[childEffects.size()];
-			int i = 0;
+			
+			List<String> childData = new ArrayList<String>();
 			for (Effect effect : childEffects) {
-				childData[i] = SaveGameUtil.getRef(effect);
-				i++;
+				// don't save children with invalid targets
+				if (!effect.getTarget().isValidEffectTarget()) continue;
+				
+				childData.add(SaveGameUtil.getRef(effect));
 			}
 			
-			data.put("children", childData);
+			data.put("children", childData.toArray());
 		}
 		
 		if (slot != null) {
