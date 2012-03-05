@@ -234,6 +234,9 @@ public class PathFinder {
 			cur = next;
 		}
 		
+		if (path.size() > Game.ruleset.getValue("MaximumPathLength"))
+			return null;
+		
 		return path;
 	}
 	

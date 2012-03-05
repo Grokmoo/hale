@@ -120,6 +120,7 @@ public class AreaListener {
 			}
 			
 			c.getEffects().endAllAnimations();
+			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
 		}
 	}
 	
