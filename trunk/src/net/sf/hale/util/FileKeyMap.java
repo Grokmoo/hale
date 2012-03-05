@@ -69,7 +69,7 @@ public class FileKeyMap {
 	
 	public FileKeyMap(String resource) {
 		fileMap = new LinkedHashMap<String, LinkedList<LineKeyList>>();
-		filePath = "{" + resource + " in package " + ResourceManager.getPackageIDContainingResource(resource) + "}";
+		filePath = "{" + resource + " in package " + ResourceManager.getPackageIDOfResource(resource) + "}";
 		
 		try {
 			parseResource(ResourceManager.getScanner(resource), resource);

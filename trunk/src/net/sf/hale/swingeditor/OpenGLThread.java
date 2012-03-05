@@ -147,7 +147,6 @@ public class OpenGLThread extends Thread {
 		} catch (LWJGLException e) {
 			Logger.appendToErrorLog("Error creating canvas", e);
 		}
-		Display.setVSyncEnabled(true);
 		
 		running = true;
 		

@@ -51,6 +51,7 @@ public class EditorMenuBar extends JMenuBar {
 	
 	private JMenu areasMenu;
 	private JMenu openAreasMenu;
+	private JMenu editorsMenu;
 	
 	/**
 	 * Creates a new menu bar
@@ -116,6 +117,20 @@ public class EditorMenuBar extends JMenuBar {
 		openAreasMenu = new JMenu("Open");
 		openAreasMenu.setMnemonic(KeyEvent.VK_O);
 		areasMenu.add(openAreasMenu);
+		
+		// create editors menu
+		editorsMenu = new JMenu("Editors");
+		editorsMenu.setMnemonic(KeyEvent.VK_E);
+		editorsMenu.setEnabled(false);
+		add(editorsMenu);
+		
+		JMenuItem createEditorItem = new JMenuItem(new CreateEditorAction());
+		createEditorItem.setMnemonic(KeyEvent.VK_N);
+		editorsMenu.add(createEditorItem);
+		
+		JMenuItem closeEditorsItem = new JMenuItem(new CloseEditorsAction());
+		closeEditorsItem.setMnemonic(KeyEvent.VK_C);
+		editorsMenu.add(closeEditorsItem);
 	}
 	
 	/**
@@ -128,8 +143,10 @@ public class EditorMenuBar extends JMenuBar {
 		
 		if (Game.curCampaign == null) {
 			areasMenu.setEnabled(false);
+			editorsMenu.setEnabled(false);
 		} else {
 			areasMenu.setEnabled(true);
+			editorsMenu.setEnabled(true);
 			
 			// populate the list of areas
 			File areaDir = new File("campaigns/" + Game.curCampaign.getID() + "/areas");
@@ -140,6 +157,22 @@ public class EditorMenuBar extends JMenuBar {
 				JMenuItem item = new JMenuItem(new OpenAreaAction(ref));
 				openAreasMenu.add(item);
 			}
+		}
+	}
+	
+	private class CreateEditorAction extends AbstractAction {
+		private CreateEditorAction() { super("Create New"); }
+		
+		@Override public void actionPerformed(ActionEvent e) {
+			EditorManager.createNewEditor();
+		}
+	}
+	
+	private class CloseEditorsAction extends AbstractAction {
+		private CloseEditorsAction() { super("Close All"); }
+		
+		@Override public void actionPerformed(ActionEvent e) {
+			EditorManager.closeAllEditors();
 		}
 	}
 	
