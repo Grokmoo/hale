@@ -56,6 +56,8 @@ public class CombatRunner {
 	
 	private boolean combatModeInitiating = false;
 	
+	private int combatStartRound;
+	
 	public void checkForceCombatMode() {
 		if (forceCombatMode) {
 			if (!Game.isInTurnMode()) {
@@ -265,6 +267,7 @@ public class CombatRunner {
 			Game.mainViewer.addMessage("link", "Hostile creature spotted.  Combat initiated.");
 			Game.interfaceLocker.add( new InterfaceCombatLock(Game.curCampaign.party.getSelected(),
 					Game.config.getCombatDelay() * 6) );
+			combatStartRound = Game.curCampaign.getDate().getTotalRoundsElapsed();
 		}
 		
 		return aiActivated;
@@ -622,9 +625,11 @@ public class CombatRunner {
 			}
 		}
 		
+		int combatLength = Game.curCampaign.getDate().getTotalRoundsElapsed() - combatStartRound;
+		
 		for (Encounter encounter : Game.curCampaign.curArea.getEncounters()) {
 			if (encounter.isCompleted()) {
-				Game.ruleset.xp().assignEncounterXPAndGold(encounter);
+				Game.ruleset.xp().assignEncounterXPAndGold(encounter, combatLength);
 			}
 		}
 		

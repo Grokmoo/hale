@@ -65,6 +65,9 @@
 
 	"RecipeVisibleSkillThreshold" : 50,
 	
+	"CombatLengthXPFactor" : 250,
+	"CombatLengthXPMax" : 4000,
+	
 	"FemaleIcon" : "icons/female",
 	"MaleIcon"   : "icons/male",
 
