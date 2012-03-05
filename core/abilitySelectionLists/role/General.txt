@@ -1,7 +1,9 @@
 name "General"
 
-subList "Misc"                0.5 0.5
-subList "WeaponProficiencies" 0.5 3.0
-subList "ArmorProficiencies"  5.0 3.0
-subList "Skills"              5.0 6.5
-subList "SpellCasting"        0.5 6.5
+subList "Misc"                0.5  0.5
+
+subList "AttributeTraining"   0.5  3.0
+subList "Skills"              7.0  3.0
+
+subList "Proficiencies"       0.5  6.5
+subList "SpellCasting"        6.0 6.5

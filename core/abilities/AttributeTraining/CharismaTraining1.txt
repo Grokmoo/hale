@@ -1,0 +1,9 @@
+name "Charisma Training I"
+type "General"
+description "You gain a permanent +1 bonus to Charisma.
+activateable false
+
+icon "icons/trainCharisma1"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('BaseCha', 'Stackable', 1); parent.applyEffect(effect); }"
+
+addPrereq Stat CreatureLevel 2
