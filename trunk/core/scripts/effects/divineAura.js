@@ -32,8 +32,6 @@ function onTargetEnter(game, target, aura) {
 function onTargetExit(game, target, aura) {
 	var targetEffect = aura.getChildEffectWithTarget(target);
    
-    println("Exit for " + target.getID() + " for " + aura + " child " + targetEffect);
-   
 	target.removeEffect(targetEffect);
 	aura.removeChildEffect(targetEffect);
 }

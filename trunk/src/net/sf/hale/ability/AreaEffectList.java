@@ -63,9 +63,14 @@ public class AreaEffectList implements Saveable {
 		JSONOrderedObject[] effectsData = new JSONOrderedObject[effects.size()];
 		int i = 0;
 		for (Effect effect : effects.keySet()) {
-			effectsData[i] = new JSONOrderedObject();
-			
-			effectsData[i].put("ref", SaveGameUtil.getRef(effect));
+			if (effect.getTarget() == area) {
+				// save the effect if it is targeted on the area, otherwise save only a 
+				// reference
+				effectsData[i] = effect.save();
+			} else {
+				effectsData[i] = new JSONOrderedObject();
+				effectsData[i].put("ref", SaveGameUtil.getRef(effect));
+			}
 			
 			int j = 0;
 			JSONOrderedObject[] points = new JSONOrderedObject[effects.get(effect).size()];
@@ -88,15 +93,20 @@ public class AreaEffectList implements Saveable {
 			SimpleJSONObject entryObject = entry.getObject();
 			
 			Effect effect = null;
-			
 			try {
-				effect = refHandler.getEffect(entryObject.get("ref", null));
+
+				if (entryObject.containsKey("duration")) {
+					// the complete effect has been saved, so load it
+					effect = Effect.load(entryObject, refHandler, area);
+				} else {
+					// only a reference was saved
+					effect = refHandler.getEffect(entryObject.get("ref", null));
+				}
+
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error loading effect ", e);
+				continue;
 			}
-			
-			// if the effect failed to load
-			if (effect == null) continue;
 			
 			List<Point> points = new ArrayList<Point>();
 			for (SimpleJSONArrayEntry pointEntry : entryObject.getArray("points")) {
@@ -270,7 +280,7 @@ public class AreaEffectList implements Saveable {
 			Creature creature = area.getEntities().getCreature(p.x, p.y);
 			
 			if (creature != null)
-				effect.executeFunction(ScriptFunctionType.onTargetExit, effect, creature);
+				effect.executeFunction(ScriptFunctionType.onTargetExit, creature, effect);
 		}
 		
 		effects.remove(effect);
