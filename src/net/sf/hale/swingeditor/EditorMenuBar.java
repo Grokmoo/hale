@@ -30,6 +30,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import net.sf.hale.Area;
@@ -52,6 +53,8 @@ public class EditorMenuBar extends JMenuBar {
 	private JMenu areasMenu;
 	private JMenu openAreasMenu;
 	private JMenu editorsMenu;
+	
+	private JTextField logItem;
 	
 	/**
 	 * Creates a new menu bar
@@ -119,7 +122,7 @@ public class EditorMenuBar extends JMenuBar {
 		areasMenu.add(openAreasMenu);
 		
 		// create editors menu
-		editorsMenu = new JMenu("Editors");
+		editorsMenu = new JMenu("Windows");
 		editorsMenu.setMnemonic(KeyEvent.VK_E);
 		editorsMenu.setEnabled(false);
 		add(editorsMenu);
@@ -131,6 +134,25 @@ public class EditorMenuBar extends JMenuBar {
 		JMenuItem closeEditorsItem = new JMenuItem(new CloseEditorsAction());
 		closeEditorsItem.setMnemonic(KeyEvent.VK_C);
 		editorsMenu.add(closeEditorsItem);
+		
+		JMenuItem showLogViewerItem = new JMenuItem(new ShowLogViewerAction());
+		showLogViewerItem.setMnemonic(KeyEvent.VK_L);
+		editorsMenu.add(showLogViewerItem);
+		
+		logItem = new JTextField();
+		logItem.setEditable(false);
+		logItem.setHorizontalAlignment(JTextField.RIGHT);
+		logItem.setBorder(null);
+		add(logItem);
+	}
+	
+	/**
+	 * Sets the text that is displayed in the upper right hand corner of the screen (the most recent log entry)
+	 * @param text the log text to display
+	 */
+	
+	public void setLogText(String text) {
+		logItem.setText(text);
 	}
 	
 	/**
@@ -160,8 +182,16 @@ public class EditorMenuBar extends JMenuBar {
 		}
 	}
 	
+	private class ShowLogViewerAction extends AbstractAction {
+		private ShowLogViewerAction() { super("Show Log Viewer"); }
+		
+		@Override public void actionPerformed(ActionEvent e) {
+			EditorManager.showLogViewer();
+		}
+	}
+	
 	private class CreateEditorAction extends AbstractAction {
-		private CreateEditorAction() { super("Create New"); }
+		private CreateEditorAction() { super("Create New Editor"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			EditorManager.createNewEditor();
@@ -169,7 +199,7 @@ public class EditorMenuBar extends JMenuBar {
 	}
 	
 	private class CloseEditorsAction extends AbstractAction {
-		private CloseEditorsAction() { super("Close All"); }
+		private CloseEditorsAction() { super("Close All Editors"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
 			EditorManager.closeAllEditors();
@@ -204,8 +234,10 @@ public class EditorMenuBar extends JMenuBar {
 				if (entity.getType() == Entity.Type.TRAP) ((Trap)entity).setSpotted(true);
 			}
 			
-			AreaViewer viewer = new AreaViewer(area);
+			AreaRenderer viewer = new AreaRenderer(area);
 			frame.setAreaViewer(viewer);
+			
+			EditorManager.addLogEntry("Opened area: " + area.getID());
 		}
 	}
 	
@@ -239,6 +271,8 @@ public class EditorMenuBar extends JMenuBar {
 		@Override public void actionPerformed(ActionEvent e) {
 			CampaignLoader loader = new CampaignLoader(EditorMenuBar.this, campaignID);
 			loader.execute();
+			
+			EditorManager.addLogEntry("Opened campaign: " + campaignID);
 		}
 	}
 	

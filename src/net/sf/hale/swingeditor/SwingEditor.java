@@ -25,7 +25,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 
 import net.sf.hale.Config;
 import net.sf.hale.EntityManager;
@@ -62,10 +61,13 @@ public class SwingEditor extends JFrame implements ComponentListener {
 		
 		// create the editor frame
 		SwingEditor editor = new SwingEditor();
+		
+		EditorManager.initialize(editor);
+		
 		editor.setVisible(true);
 	}
-	
-	private JMenuBar menuBar;
+
+	private EditorMenuBar menuBar;
 
 	private Canvas canvas;
 	private OpenGLThread glThread;
@@ -95,6 +97,15 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	}
 	
 	/**
+	 * Shows the specified log entry in the upper right of the editor
+	 * @param entry the entry to add
+	 */
+	
+	public void setLogEntry(String entry) {
+		menuBar.setLogText(entry);
+	}
+	
+	/**
 	 * Returns the Canvas that the OpenGL context is drawing on
 	 * @return the OpenGL canvas
 	 */
@@ -108,7 +119,7 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	 * @param viewer
 	 */
 	
-	public void setAreaViewer(AreaViewer viewer) {
+	public void setAreaViewer(AreaRenderer viewer) {
 		if (glThread != null)
 			glThread.setAreaViewer(viewer);
 	}

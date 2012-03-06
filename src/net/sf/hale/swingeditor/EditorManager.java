@@ -20,6 +20,7 @@
 package net.sf.hale.swingeditor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.sf.hale.entity.Creature;
@@ -33,10 +34,57 @@ import net.sf.hale.entity.Item;
  */
 
 public class EditorManager {
+	private static SwingEditor editor;
+	
+	private static LogViewer logViewer;
+	private static List<String> logEntries;
+	
 	private static AssetModel<Item> itemsModel;
 	private static AssetModel<Creature> creaturesModel;
 	
-	private static List<AssetEditor> editors = new ArrayList<AssetEditor>();
+	private static List<AssetEditor> subEditors;
+	
+	/**
+	 * Initializes the EditorManager with the specified editor window
+	 * @param editor the editor window
+	 */
+	
+	public static void initialize(SwingEditor editor) {
+		EditorManager.editor = editor;
+		
+		EditorManager.logEntries = new ArrayList<String>();
+		EditorManager.subEditors = new ArrayList<AssetEditor>();
+		
+		addLogEntry("Created Campaign Editor");
+	}
+	
+	/**
+	 * Shows the log viewer
+	 */
+	
+	public static void showLogViewer() {
+		if (logViewer != null) {
+			logViewer.dispose();
+		}
+		
+		logViewer = new LogViewer(Collections.unmodifiableList(logEntries));
+		logViewer.setVisible(true);
+	}
+	
+	/**
+	 * Adds the specified log entry to the log.  The most recent log entry is always
+	 * displayed in the upper right corner of the main editor
+	 * @param entry
+	 */
+	
+	public static void addLogEntry(String entry) {
+		logEntries.add(entry);
+		
+		editor.setLogEntry(entry);
+		
+		if (logViewer != null)
+			logViewer.addLogEntry(entry);
+	}
 	
 	/**
 	 * Creates a new Empty editor
@@ -46,7 +94,7 @@ public class EditorManager {
 		AssetEditor editor = new AssetEditor();
 		editor.setVisible(true);
 		
-		editors.add(editor);
+		subEditors.add(editor);
 	}
 	
 	/**
@@ -54,11 +102,11 @@ public class EditorManager {
 	 */
 	
 	public static void closeAllEditors() {
-		for (AssetEditor editor : editors) {
+		for (AssetEditor editor : subEditors) {
 			editor.dispose();
 		}
 		
-		editors.clear();
+		subEditors.clear();
 	}
 	
 	/**
@@ -85,7 +133,7 @@ public class EditorManager {
 	 */
 	
 	public static void closeEditor(AssetEditor editor) {
-		editors.remove(editor);
+		subEditors.remove(editor);
 		editor.dispose();
 	}
 	
