@@ -59,7 +59,10 @@ public class CampaignLoader extends SwingWorker<Void, Void> {
 	@Override protected Void doInBackground() throws Exception {
 		monitor.setProgress(1);
 		
+		// parse spritesheets to determine sprite names and dimensions,
+		// but don't actually load them into texture memory
 		SpriteManager.loadSpriteSheets();
+		Game.textureLoader.clear();
 		
 		if (checkCanceled()) return null;
 		monitor.setNote("Loading Portraits");

@@ -195,6 +195,24 @@ public class SpriteManager {
 	}
 	
 	/**
+	 * Gets the full length resource ID for the specified image ID
+	 * @param imageID
+	 * @return the resource ID
+	 */
+	
+	public static String getResourceID(String imageID) {
+		if (getSprite(imageID, ResourceType.PNG) != null) {
+			return "images/" + imageID + ResourceType.PNG.getExtension();
+		} else if (getSprite(imageID, ResourceType.JPEG) != null) {
+			return "images/" + imageID + ResourceType.JPEG.getExtension();
+		} else if (getPortrait(imageID) != null) {
+			return "portraits/" + imageID + ResourceType.PNG.getExtension();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Returns the set of all the resource IDs for the Sprites contained in this SpriteManager.
 	 * Each Sprite can then be accessed via {@link #getImage(String)}.  Note that the returned
 	 * set is unmodifiable.

@@ -19,12 +19,25 @@
 
 package net.sf.hale.swingeditor;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
+import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.util.Logger;
 
 /**
  * A class for managing all of the separate editors currently in existance
@@ -43,6 +56,8 @@ public class EditorManager {
 	private static AssetModel<Creature> creaturesModel;
 	
 	private static List<AssetEditor> subEditors;
+	
+	private static Map<String, ImageIcon> itemIcons;
 	
 	/**
 	 * Initializes the EditorManager with the specified editor window
@@ -144,5 +159,45 @@ public class EditorManager {
 	public static void loadAllAssets() {
 		itemsModel = new AssetModel<Item>(AssetType.Items);
 		creaturesModel = new AssetModel<Creature>(AssetType.Creatures);
+		
+		// get sprites and sort them alphabetically
+		Set<String> sprites = SpriteManager.getSpriteIDs();
+		List<String> spritesList = new ArrayList<String>(sprites);
+		Collections.sort(spritesList);
+		
+		BufferedImage items = null;
+		try {
+			items = ImageIO.read(ResourceManager.getStream("images/items.png"));
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error loading items.png spritesheet");
+			e.printStackTrace();
+		}
+		
+		itemIcons = new LinkedHashMap<String, ImageIcon>();
+		
+		// go through the list of sprites and add them to the icon lists as needed
+		for (String s : spritesList) {
+			if (s.startsWith("images/items")) {
+				Sprite sprite = SpriteManager.getImage(s);
+				
+				int startX = (int)(items.getWidth() * sprite.getTexCoordStartX());
+				int startY = (int)(items.getHeight() * sprite.getTexCoordStartY());
+				int endX = (int)(items.getWidth() * sprite.getTexCoordEndX());
+				int endY = (int)(items.getHeight() * sprite.getTexCoordEndY());
+				
+				BufferedImage image = items.getSubimage(startX, startY, endX - startX, endY - startY);
+				
+				itemIcons.put(s, new ImageIcon(image));
+			}
+		}
+	}
+	
+	/**
+	 * Gets the list of all valid icon choices for items
+	 * @return the list of all valid icon choices
+	 */
+	
+	public static Map<String, ImageIcon> getItemIconChoices() {
+		return itemIcons;
 	}
 }
