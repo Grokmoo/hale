@@ -34,7 +34,7 @@ import net.sf.hale.util.Point;
  *
  */
 
-public class AreaViewer implements AreaTileGrid.AreaRenderer {
+public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	private Area area;
 	
 	private int scrollX, scrollY;
@@ -44,7 +44,7 @@ public class AreaViewer implements AreaTileGrid.AreaRenderer {
 	 * @param area
 	 */
 	
-	public AreaViewer(Area area) {
+	public AreaRenderer(Area area) {
 		this.area = area;
 	}
 	

@@ -38,8 +38,8 @@ import org.lwjgl.opengl.GL14;
  */
 
 public class OpenGLThread extends Thread {
-	private AreaViewer viewer;
-	private AreaViewer newViewer;
+	private AreaRenderer viewer;
+	private AreaRenderer newViewer;
 	
 	private Canvas canvas;
 	
@@ -64,7 +64,7 @@ public class OpenGLThread extends Thread {
 	 * @param viewer
 	 */
 	
-	public void setAreaViewer(AreaViewer viewer) {
+	public void setAreaViewer(AreaRenderer viewer) {
 		this.newViewer = viewer;
 	}
 	
