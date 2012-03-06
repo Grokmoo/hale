@@ -25,6 +25,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import net.sf.hale.Config;
 import net.sf.hale.EntityManager;
@@ -42,6 +43,8 @@ import net.sf.hale.util.JSEngineManager;
  */
 
 public class SwingEditor extends JFrame implements ComponentListener {
+	public static final String NewLine = System.getProperty("line.separator");
+	
 	/**
 	 * The main entry point for the editor.  Any arguments are ignored
 	 * @param args
@@ -59,12 +62,16 @@ public class SwingEditor extends JFrame implements ComponentListener {
 		
 		Game.ruleset = new Ruleset();
 		
-		// create the editor frame
-		SwingEditor editor = new SwingEditor();
-		
-		EditorManager.initialize(editor);
-		
-		editor.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override public void run() {
+				// create the editor frame
+				SwingEditor editor = new SwingEditor();
+				
+				EditorManager.initialize(editor);
+				
+				editor.setVisible(true);
+			}
+		});
 	}
 
 	private EditorMenuBar menuBar;

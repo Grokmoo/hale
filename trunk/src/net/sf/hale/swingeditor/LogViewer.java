@@ -32,8 +32,6 @@ import javax.swing.JTextArea;
  */
 
 public class LogViewer extends JFrame {
-	private String newLine;
-	
 	private JTextArea area;
 	
 	/**
@@ -41,8 +39,6 @@ public class LogViewer extends JFrame {
 	 */
 	
 	public LogViewer(List<String> logEntries) {
-		newLine = System.getProperty("line.separator");
-		
 		setSize(400, 300);
 		setTitle("Hale Campaign Editor Log Viewer");
 		
@@ -54,7 +50,7 @@ public class LogViewer extends JFrame {
 		
 		for (String entry : logEntries) {
 			area.append(entry);
-			area.append(newLine);
+			area.append(SwingEditor.NewLine);
 		}
 	}
 	
@@ -66,6 +62,6 @@ public class LogViewer extends JFrame {
 	
 	public void addLogEntry(String entry) {
 		area.append(entry);
-		area.append(newLine);
+		area.append(SwingEditor.NewLine);
 	}
 }

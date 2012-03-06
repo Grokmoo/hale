@@ -32,7 +32,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -51,8 +50,6 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 	
 	private JPanel subEditor;
 	private JPanel right;
-	
-	private JSplitPane mainPane;
 	
 	/**
 	 * Creates a new AssetEditor in the default editing mode
@@ -93,8 +90,8 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 		
 		right = new JPanel(new BorderLayout());
 		
-		mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right);
-		add(mainPane);
+		add(left, BorderLayout.WEST);
+		add(right, BorderLayout.CENTER);
 	}
 	
 	public void setMode(AssetModel<?> model) {
@@ -140,7 +137,6 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 		subEditor = listModel.getEntry(currentIndex).createAssetSubEditor();
 		
 		right.add(subEditor);
-		
-		mainPane.revalidate();
+		right.revalidate();
 	}
 }

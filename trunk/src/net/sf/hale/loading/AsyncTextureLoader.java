@@ -51,6 +51,17 @@ public class AsyncTextureLoader {
 	}
 	
 	/**
+	 * Clears this texture loader.  Any textures that have yet to be loaded will not be bound in
+	 * texture memory
+	 */
+	
+	public void clear() {
+		synchronized(loadLists) {
+			loadLists.clear();
+		}
+	}
+	
+	/**
 	 * This method should only be called by the main OpenGL context owning Thread.  Loads all
 	 * outstanding textures that have been specified by {@link #loadTexture(ByteBuffer, int, int, List)}
 	 */
