@@ -49,6 +49,7 @@ public class Role {
 	private final int level1HP;
 	private final int attackBonusPerLevel;
 	private final int damageBonusPerLevel;
+	private final int maxLevel;
 	
 	private final int[] casterLevels;
 	
@@ -95,6 +96,7 @@ public class Role {
 		level1HP = map.getValue("level1hp", 6);
 		hpPerLevel = map.getValue("hpperlevel", 2);
 		skillsPerLevel = map.getValue("skillpointsperlevel", 5);
+		maxLevel = map.getValue("maxlevel", 0);
 		
 		String castingAttString = map.getValue("spellcastingattribute", null);
 		spellCastingAttribute = castingAttString == null ? Stat.Wis : Stat.valueOf(castingAttString);
@@ -150,6 +152,8 @@ public class Role {
 		return Arrays.copyOf(defaultPlayerAttributeSelections, 6);
 	}
 	
+	public int getMaxLevel() { return maxLevel; }
+	
 	public int getLevel1HP() { return level1HP; }
 	
 	public int getCasterLevelAddedAtLevel(int level) { return casterLevels[level - 1]; }
@@ -185,6 +189,14 @@ public class Role {
 		else sb.append("Specialization");
 		sb.append("</div>");
 		
+		if (maxLevel != 0) {
+			sb.append("<div>");
+			sb.append("<span style=\"font-family: red\">");
+			sb.append(maxLevel);
+			sb.append("</span>");
+			sb.append(" Level Maximum");
+			sb.append("</div>");
+		}
 		
 		prereqs.appendDescription(sb);
 		
@@ -229,6 +241,11 @@ public class Role {
 		
 		if (baseRole && c.getRoles().getBaseRole() != null) {
 			if (c.getRoles().getBaseRole() != this) return false;
+		}
+		
+		if (maxLevel > 0) {
+			int curLevels = c.getRoles().getLevel(this);
+			if (curLevels >= maxLevel) return false;
 		}
 		
 		return true;

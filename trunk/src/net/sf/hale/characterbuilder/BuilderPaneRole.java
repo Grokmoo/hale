@@ -105,7 +105,7 @@ public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.
 		}
 		
 		// now add future selectable roles
-		for (Role role : getCharacter().getFutureSelectableRoles()) {
+		for (Role role : getCharacter().getFutureOrPastSelectableRoles()) {
 			RoleSelector selector = addSelector(role);
 			selector.setEnabled(false);
 		}

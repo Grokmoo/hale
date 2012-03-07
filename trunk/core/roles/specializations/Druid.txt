@@ -14,6 +14,8 @@ addPrereq Role Adept 8
 
 addPrereq Ability SelfSufficient
 
+maxLevel 10
+
 level 1 selectAbilityFromList Druid
 level 2 selectAbilityFromList Druid
 
@@ -24,7 +26,6 @@ level 7 selectAbilityFromList Druid
 level 8 selectAbilityFromList Druid
 
 level 10 selectAbilityFromList Druid
-level 11 selectAbilityFromList Druid
 
 level  1 addCasterLevel
 level  2 addCasterLevel
@@ -36,8 +37,4 @@ level  7 addCasterLevel
 level  8 addCasterLevel
 level  9 addCasterLevel
 level 10 addCasterLevel
-level 11 addCasterLevel
-level 12 addCasterLevel
-level 13 addCasterLevel
-level 14 addCasterLevel
-level 15 addCasterLevel
+
