@@ -46,7 +46,7 @@ import javax.swing.event.ListSelectionListener;
 public class AssetEditor extends JFrame implements ListSelectionListener {
 	private AssetModel<?> listModel;
 	private JList list;
-	private int currentIndex;
+	private int currentIndex = -1;
 	
 	private JPanel subEditor;
 	private JPanel right;
@@ -134,7 +134,7 @@ public class AssetEditor extends JFrame implements ListSelectionListener {
 			right.remove(subEditor);
 		}
 		
-		subEditor = listModel.getEntry(currentIndex).createAssetSubEditor();
+		subEditor = listModel.getEntry(currentIndex).createAssetSubEditor(this);
 		
 		right.add(subEditor);
 		right.revalidate();

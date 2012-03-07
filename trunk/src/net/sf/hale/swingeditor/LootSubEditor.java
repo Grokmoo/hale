@@ -19,42 +19,23 @@
 
 package net.sf.hale.swingeditor;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import net.sf.hale.entity.Creature;
 
 /**
- * A sub editor for editing creatures
+ * A SubEditor for editing the loot of a particular item or creature
  * @author Jared
  *
  */
 
-public class CreatureSubEditor extends JPanel {
+public class LootSubEditor extends SubEditorPanel {
 	/**
-	 * Creates a new SubEditor editing the specified creature
-	 * @param creature
+	 * Creates a new LootSubEditor
+	 * @param frame the parent frame
 	 */
 	
-	protected CreatureSubEditor(JFrame parent, Creature creature) {
-		super(new GridBagLayout());
-		
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 0;
-		
-		JLabel id = new JLabel("ID: " + creature.getID());
-		JLabel name = new JLabel("Name: " + creature.getName());
-		
-		add(id, c);
-		
-		c.gridy++;
-		
-		add(name, c);
+	public LootSubEditor(JFrame frame) {
+		super(frame);
 	}
+	
+	// TODO implement
 }

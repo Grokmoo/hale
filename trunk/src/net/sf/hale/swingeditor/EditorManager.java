@@ -32,11 +32,14 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import net.sf.hale.Game;
 import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Race;
+import net.sf.hale.rules.Ruleset;
 import net.sf.hale.util.Logger;
 
 /**
@@ -59,6 +62,8 @@ public class EditorManager {
 	
 	private static Map<String, BufferedImage> itemIcons;
 	private static Map<Item.ItemType, Map<String, BufferedImage>> subIcons;
+	private static Map<String, BufferedImage> projectileIcons;
+	private static Map<String, BufferedImage> doorIcons;
 	
 	/**
 	 * Initializes the EditorManager with the specified editor window
@@ -168,37 +173,82 @@ public class EditorManager {
 		
 		BufferedImage subItemsImage = null;
 		BufferedImage itemsImage = null;
+		BufferedImage doorsImage = null;
 		try {
 			itemsImage = ImageIO.read(ResourceManager.getStream("images/items.png"));
 			subItemsImage = ImageIO.read(ResourceManager.getStream("images/subIcons.png"));
+			doorsImage = ImageIO.read(ResourceManager.getStream("images/doors.png"));
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error loading items.png spritesheet");
 			e.printStackTrace();
 		}
 		
+		doorIcons = new LinkedHashMap<String, BufferedImage>();
 		itemIcons = new LinkedHashMap<String, BufferedImage>();
 		subIcons = new HashMap<Item.ItemType, Map<String, BufferedImage>>();
+		projectileIcons = new HashMap<String, BufferedImage>();
 		
 		// go through the list of sprites and add them to the icon lists as needed
-		for (String s : spritesList) {
-			if (s.startsWith("images/items/")) {
-				itemIcons.put(s, getImage(itemsImage, s));
-			} else if (s.startsWith("images/subIcons/")) {
-				String shortID = s.substring(16);
+		for (String longID : spritesList) {
+			if (longID.startsWith("images/items/")) {
+				itemIcons.put(longID, getImage(itemsImage, longID));
+			} else if (longID.startsWith("images/subIcons/")) {
+				String shortID = longID.substring(16);
+				shortID = shortID.substring(0, shortID.length() - 4);
 				
-				int index = shortID.indexOf('-');
-				if (index > 0) {
-					Item.ItemType type = Item.ItemType.valueOf(shortID.substring(0, index).toUpperCase());
-					
-					Map<String, BufferedImage> map = subIcons.get(type);
-					if (map == null) {
-						map = new LinkedHashMap<String, BufferedImage>();
-						subIcons.put(type, map);
-					}
-					
-					map.put(s, getImage(subItemsImage, s));
+				if (shortID.startsWith("projectile_")) {
+					projectileIcons.put(longID, getImage(subItemsImage, longID));
+				} else {
+					EditorManager.addSubIconImage(longID, shortID, subItemsImage);
 				}
+			} else if (longID.startsWith("images/doors/")) {
+				doorIcons.put(longID, getImage(doorsImage, longID));
 			}
+		}
+	}
+	
+	/*
+	 * Adds an image for the specified subIcon to the subIcons image map, but only
+	 * if it is valid
+	 */
+	
+	private static void addSubIconImage(String longID, String shortID, BufferedImage subItemsImage) {
+		// don't show off hand icons
+		if (shortID.endsWith("OffHandWeapon")) return;
+		
+		// don't show secondary icons
+		if (shortID.endsWith("Secondary")) return;
+		
+		// don't show gender specific icons
+		for (Ruleset.Gender gender : Ruleset.Gender.values()) {
+			String genderString = gender.toString();
+			
+			if (shortID.endsWith(genderString))  {
+				return;
+			}
+		}
+		
+		//don't show race specific icons
+		for (Race race : Game.ruleset.getAllRaces()) {
+			if (!race.isPlayerSelectable()) continue;
+			
+			if (shortID.endsWith(race.getID())) {
+				return;
+			}
+		}
+		
+		// sub icon is valid, so add it to the approprate set
+		int index = shortID.indexOf('-');
+		if (index > 0) {
+			Item.ItemType type = Item.ItemType.valueOf(shortID.substring(0, index).toUpperCase());
+			
+			Map<String, BufferedImage> map = subIcons.get(type);
+			if (map == null) {
+				map = new LinkedHashMap<String, BufferedImage>();
+				subIcons.put(type, map);
+			}
+			
+			map.put(longID, getImage(subItemsImage, longID));
 		}
 	}
 	
@@ -211,6 +261,24 @@ public class EditorManager {
 		int endY = (int)(spriteSheet.getHeight() * sprite.getTexCoordEndY());
 		
 		return spriteSheet.getSubimage(startX, startY, endX - startX, endY - startY);
+	}
+	
+	/**
+	 * Gets the set of all valid icon choices for doors
+	 * @return the set of valid door icon choices
+	 */
+	
+	public static Map<String, BufferedImage> getDoorIconChoices() {
+		return doorIcons;
+	}
+	
+	/**
+	 * Gets the set of all valid icon choices for a projectile icons
+	 * @return the set of valid projectile icon choices
+	 */
+	
+	public static Map<String, BufferedImage> getProjectileIconChoices() {
+		return projectileIcons;
 	}
 	
 	/**

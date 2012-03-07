@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataListener;
@@ -82,11 +83,12 @@ public class AssetModel<E> implements ListModel {
 		
 		/**
 		 * Creates a new Sub Editor to edit this entry's asset
+		 * @param parent the parent frame
 		 * @return the new sub editor
 		 */
 		
-		public JPanel createAssetSubEditor() {
-			return assetType.createSubEditor(assetID);
+		public JPanel createAssetSubEditor(JFrame parent) {
+			return assetType.createSubEditor(parent, assetID);
 		}
 	}
 	
