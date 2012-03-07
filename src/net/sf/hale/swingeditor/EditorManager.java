@@ -19,6 +19,7 @@
 
 package net.sf.hale.swingeditor;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,13 +30,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
 import net.sf.hale.resource.ResourceManager;
-import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.Logger;
 
@@ -57,7 +56,7 @@ public class EditorManager {
 	
 	private static List<AssetEditor> subEditors;
 	
-	private static Map<String, ImageIcon> itemIcons;
+	private static Map<String, BufferedImage> itemIcons;
 	
 	/**
 	 * Initializes the EditorManager with the specified editor window
@@ -173,7 +172,7 @@ public class EditorManager {
 			e.printStackTrace();
 		}
 		
-		itemIcons = new LinkedHashMap<String, ImageIcon>();
+		itemIcons = new LinkedHashMap<String, BufferedImage>();
 		
 		// go through the list of sprites and add them to the icon lists as needed
 		for (String s : spritesList) {
@@ -187,7 +186,7 @@ public class EditorManager {
 				
 				BufferedImage image = items.getSubimage(startX, startY, endX - startX, endY - startY);
 				
-				itemIcons.put(s, new ImageIcon(image));
+				itemIcons.put(s, image);
 			}
 		}
 	}
@@ -197,7 +196,43 @@ public class EditorManager {
 	 * @return the list of all valid icon choices
 	 */
 	
-	public static Map<String, ImageIcon> getItemIconChoices() {
+	public static Map<String, BufferedImage> getItemIconChoices() {
 		return itemIcons;
+	}
+	
+	/**
+	 * Creates a deep copy of the specified buffered image, with all
+	 * pixels multiplied by the specified color
+	 * @param in
+	 * @param color
+	 * @return the buffered image
+	 */
+	
+	public static BufferedImage copy(BufferedImage in, Color color) {
+		double r = color.getRed() / 255.0f;
+		double g = color.getGreen() / 255.0f;
+		double b = color.getBlue() / 255.0f;
+		double a = color.getAlpha() / 255.0f;
+		
+		BufferedImage out = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		
+		for (int x = 0; x < out.getWidth(); x++) {
+			for (int y = 0; y < out.getHeight(); y++) {
+				int argb = in.getRGB(x, y);
+				
+				Color cIn = new Color(argb, true);
+				
+				int rOut = Math.min( 255, Math.max(0, (int)(cIn.getRed() * r)) );
+				int gOut = Math.min( 255, Math.max(0, (int)(cIn.getGreen() * g)) );
+				int bOut = Math.min( 255, Math.max(0, (int)(cIn.getBlue() * b)) );
+				int aOut = Math.min( 255, Math.max(0, (int)(cIn.getAlpha() * a)) );
+				
+				Color cOut = new Color(rOut, gOut, bOut, aOut);
+				
+				out.setRGB(x, y, cOut.getRGB());
+			}
+		}
+		
+		return out;
 	}
 }
