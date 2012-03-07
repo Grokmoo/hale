@@ -1,6 +1,6 @@
 name "Plate Gloves"
 icon "items/Ac_Gloves06" "#ffffffff"
-subIcon "subIcons/gloves01" "#ffffffff"
+subIcon "subIcons/gloves-01" "#ffffffff"
 ingredient false
 quest false
 cursed false

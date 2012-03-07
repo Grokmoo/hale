@@ -39,7 +39,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-
 /**
  * A widget for selecting an image and optionally an associated color
  * @author Jared
@@ -56,6 +55,8 @@ public class ImageSelector extends JPanel {
 	
 	private Color currentColor;
 	private BufferedImage currentImage;
+	
+	private int gridWidth;
 	
 	/**
 	 * Creates a new ImageSelector choosing between the specified set of choices
@@ -111,6 +112,15 @@ public class ImageSelector extends JPanel {
 		chooseColor = new JButton(new ShowColorChooser());
 		add(chooseColor, c);
 		c.gridy++;
+	}
+	
+	/**
+	 * Sets the number of columns in the item selector popup
+	 * @param width
+	 */
+	
+	public void setGridColumns(int width) {
+		this.gridWidth = width;
 	}
 	
 	/**
@@ -179,8 +189,7 @@ public class ImageSelector extends JPanel {
 	private class ShowIconChooser extends AbstractAction {
 		@Override public void actionPerformed(ActionEvent evt) {
 			JPopupMenu menu = new JPopupMenu();
-			
-			JPanel content = new JPanel(new GridLayout(0, 8));
+			JPanel content = new JPanel(new GridLayout(0, gridWidth));
 			JScrollPane pane = new JScrollPane(content);
 			pane.setPreferredSize(new Dimension(600, 600));
 			pane.getVerticalScrollBar().setUnitIncrement(50);
@@ -195,6 +204,8 @@ public class ImageSelector extends JPanel {
 			}
 			
 			menu.show(iconButton, iconButton.getX(), iconButton.getY());
+			
+			menu.revalidate();
 		}
 	}
 	

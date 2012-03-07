@@ -1,6 +1,6 @@
 name "Handaxe"
 icon "items/W_Axe002" "#ffffffff"
-subIcon "subIcons/weapon_axe01" "#ffffffff"
+subIcon "subIcons/weapon-axe01" "#ffffffff"
 ingredient false
 quest false
 cursed false

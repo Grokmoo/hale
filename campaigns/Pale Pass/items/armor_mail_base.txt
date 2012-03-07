@@ -1,6 +1,6 @@
 name "Mail Armor"
 icon "items/A_Armor07" "#ffffffff"
-subIcon "subIcons/torso05" "#ffc2c4b5"
+subIcon "subIcons/armor-05" "#ffc2c4b5"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Scale Armor"
 icon "items/A_Armor04" "#ffffffff"
-subIcon "subIcons/torso05" "#ffffffff"
+subIcon "subIcons/armor-05" "#ffffffff"
 ingredient false
 quest false
 cursed false

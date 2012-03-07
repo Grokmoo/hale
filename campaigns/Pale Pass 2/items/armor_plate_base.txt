@@ -1,6 +1,6 @@
 name "Plate Armor"
 icon "items/A_Armor08" "#ffffffff"
-subIcon "subIcons/torso01" "#ffdae7c8"
+subIcon "subIcons/armor-01" "#ffdae7c8"
 ingredient false
 quest false
 cursed false

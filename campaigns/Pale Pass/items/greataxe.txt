@@ -1,6 +1,6 @@
 name "Greataxe"
 icon "items/W_Axe009" "#ffffffff"
-subIcon "subIcons/weapon_axe05" "#ffffffff"
+subIcon "subIcons/weapon-axe05" "#ffffffff"
 ingredient false
 quest false
 cursed false

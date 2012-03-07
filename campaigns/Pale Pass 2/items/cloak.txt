@@ -1,6 +1,6 @@
 name "Cloak"
 icon "items/A_Cloak01" "#ffb8ae46"
-subIcon "subIcons/cloak01" "#ffb8ae46"
+subIcon "subIcons/cloak-01" "#ffb8ae46"
 ingredient false
 quest false
 cursed false

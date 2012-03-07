@@ -1,7 +1,7 @@
 name "Arrow"
 icon "items/S_Bow15" "#ffffffff"
-subIcon "subIcons/quiver01" "#ffffffff"
-projectileIcon "subIcons/projectile-arrow01" "#ffffffff"
+subIcon "subIcons/ammo-01" "#ffffffff"
+projectileIcon "subIcons/projectile_arrow01" "#ffffffff"
 ingredient false
 quest false
 cursed false

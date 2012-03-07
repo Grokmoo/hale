@@ -1,6 +1,6 @@
 name "Leather Helmet"
 icon "items/C_Elm01" "#ffffffff"
-subIcon "subIcons/head_helmet03" "#ffffffff"
+subIcon "subIcons/helmet-03" "#ffffffff"
 ingredient false
 quest false
 cursed false

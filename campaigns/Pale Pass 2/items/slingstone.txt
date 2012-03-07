@@ -1,6 +1,6 @@
 name "Sling Stone"
 icon "items/S_Sling01" "#ffffffff"
-projectileIcon "subIcons/projectile-bullet01" "#ffffffff"
+projectileIcon "subIcons/projectile_bullet01" "#ffffffff"
 ingredient false
 quest false
 cursed false

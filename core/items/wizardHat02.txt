@@ -1,6 +1,6 @@
 name "Hat of Sparkling Mind"
 icon "items/C_Hat01" "#ffffffff"
-subIcon "subIcons/head_hat05" "#ffb39abf"
+subIcon "subIcons/helmet-05" "#ffb39abf"
 ingredient false
 quest false
 cursed false

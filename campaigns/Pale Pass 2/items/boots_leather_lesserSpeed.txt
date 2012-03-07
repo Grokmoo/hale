@@ -1,6 +1,6 @@
 name "Leather Boots of Speed"
 icon "items/A_Shoes02" "#ffffffff"
-subIcon "subIcons/boots03" "#ff93e178"
+subIcon "subIcons/boots-03" "#ff93e178"
 ingredient false
 quest false
 cursed false

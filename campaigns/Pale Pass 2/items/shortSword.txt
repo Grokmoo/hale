@@ -1,6 +1,6 @@
 name "Short Sword"
 icon "items/W_Sword001" "#ffffffff"
-subIcon "subIcons/weapon_sword02" "#ffffffff"
+subIcon "subIcons/weapon-sword02" "#ffffffff"
 ingredient false
 quest false
 cursed false

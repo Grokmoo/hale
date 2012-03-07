@@ -1,6 +1,6 @@
 name "Longsword"
 icon "items/W_Sword002" "#ffffffff"
-subIcon "subIcons/weapon_sword03" "#ffffffff"
+subIcon "subIcons/weapon-sword03" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Leather Gloves"
 icon "items/Ac_Gloves01" "#ffffffff"
-subIcon "subIcons/gloves02" "#ffffffff"
+subIcon "subIcons/gloves-02" "#ffffffff"
 ingredient false
 quest false
 cursed false

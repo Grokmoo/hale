@@ -1,6 +1,6 @@
 name "Mail Boots"
 icon "items/A_Shoes03" "#ffffffff"
-subIcon "subIcons/boots01" "#ffffffff"
+subIcon "subIcons/boots-01" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Hat of Intellect"
 icon "items/C_Hat02" "#ffffffff"
-subIcon "subIcons/head_hat05" "#ffffffff"
+subIcon "subIcons/helmet-05" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Greatsword"
 icon "items/W_Sword006" "#ffffffff"
-subIcon "subIcons/weapon_sword07" "#ffffffff"
+subIcon "subIcons/weapon-sword07" "#ffffffff"
 ingredient false
 quest false
 cursed false

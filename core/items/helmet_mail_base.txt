@@ -1,6 +1,6 @@
 name "Mail Helmet"
 icon "items/C_Elm02" "#ffffffff"
-subIcon "subIcons/head_helmet02" "#ffffffff"
+subIcon "subIcons/helmet-02" "#ffffffff"
 ingredient false
 quest false
 cursed false

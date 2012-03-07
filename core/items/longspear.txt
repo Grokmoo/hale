@@ -1,6 +1,6 @@
 name "Longspear"
 icon "items/W_Spear006" "#ffffffff"
-subIcon "subIcons/weapon_spear04" "#ffffffff"
+subIcon "subIcons/weapon-spear04" "#ffffffff"
 ingredient false
 quest false
 cursed false

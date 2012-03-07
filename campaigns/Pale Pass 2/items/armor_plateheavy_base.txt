@@ -1,6 +1,6 @@
 name "Heavy Plate Armor"
 icon "items/A_Armour02" "#ffffffff"
-subIcon "subIcons/torso06" "#ffffffff"
+subIcon "subIcons/armor-06" "#ffffffff"
 ingredient false
 quest false
 cursed false

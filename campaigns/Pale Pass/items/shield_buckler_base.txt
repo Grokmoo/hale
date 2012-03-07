@@ -1,6 +1,6 @@
 name "Buckler"
 icon "items/E_Metal01" "#ffffffff"
-subIcon "subIcons/shield_buckler01" "#ffffffff"
+subIcon "subIcons/shield-buckler01" "#ffffffff"
 ingredient false
 quest false
 cursed false

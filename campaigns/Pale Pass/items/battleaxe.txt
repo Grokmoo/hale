@@ -1,6 +1,6 @@
 name "Battleaxe"
 icon "items/W_Axe007" "#ffffffff"
-subIcon "subIcons/weapon_axe02" "#ffffffff"
+subIcon "subIcons/weapon-axe02" "#ffffffff"
 ingredient false
 quest false
 cursed false

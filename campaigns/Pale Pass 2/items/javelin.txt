@@ -1,7 +1,7 @@
 name "Javelin"
 icon "items/W_Spear001" "#ffffffff"
-subIcon "subIcons/weapon_spear03" "#ffffffff"
-projectileIcon "subIcons/projectile-javelin01" "#ffffffff"
+subIcon "subIcons/weapon-spear03" "#ffffffff"
+projectileIcon "subIcons/projectile_javelin01" "#ffffffff"
 ingredient false
 quest false
 cursed false

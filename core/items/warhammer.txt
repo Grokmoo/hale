@@ -1,6 +1,6 @@
 name "Warhammer"
 icon "items/W_Hammer01" "#ffffffff"
-subIcon "subIcons/weapon_warhammer01" "#ffffffff"
+subIcon "subIcons/weapon-warhammer01" "#ffffffff"
 ingredient false
 quest false
 cursed false

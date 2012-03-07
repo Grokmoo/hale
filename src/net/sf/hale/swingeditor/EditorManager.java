@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,7 @@ public class EditorManager {
 	private static List<AssetEditor> subEditors;
 	
 	private static Map<String, BufferedImage> itemIcons;
+	private static Map<Item.ItemType, Map<String, BufferedImage>> subIcons;
 	
 	/**
 	 * Initializes the EditorManager with the specified editor window
@@ -164,31 +166,51 @@ public class EditorManager {
 		List<String> spritesList = new ArrayList<String>(sprites);
 		Collections.sort(spritesList);
 		
-		BufferedImage items = null;
+		BufferedImage subItemsImage = null;
+		BufferedImage itemsImage = null;
 		try {
-			items = ImageIO.read(ResourceManager.getStream("images/items.png"));
+			itemsImage = ImageIO.read(ResourceManager.getStream("images/items.png"));
+			subItemsImage = ImageIO.read(ResourceManager.getStream("images/subIcons.png"));
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error loading items.png spritesheet");
 			e.printStackTrace();
 		}
 		
 		itemIcons = new LinkedHashMap<String, BufferedImage>();
+		subIcons = new HashMap<Item.ItemType, Map<String, BufferedImage>>();
 		
 		// go through the list of sprites and add them to the icon lists as needed
 		for (String s : spritesList) {
-			if (s.startsWith("images/items")) {
-				Sprite sprite = SpriteManager.getImage(s);
+			if (s.startsWith("images/items/")) {
+				itemIcons.put(s, getImage(itemsImage, s));
+			} else if (s.startsWith("images/subIcons/")) {
+				String shortID = s.substring(16);
 				
-				int startX = (int)(items.getWidth() * sprite.getTexCoordStartX());
-				int startY = (int)(items.getHeight() * sprite.getTexCoordStartY());
-				int endX = (int)(items.getWidth() * sprite.getTexCoordEndX());
-				int endY = (int)(items.getHeight() * sprite.getTexCoordEndY());
-				
-				BufferedImage image = items.getSubimage(startX, startY, endX - startX, endY - startY);
-				
-				itemIcons.put(s, image);
+				int index = shortID.indexOf('-');
+				if (index > 0) {
+					Item.ItemType type = Item.ItemType.valueOf(shortID.substring(0, index).toUpperCase());
+					
+					Map<String, BufferedImage> map = subIcons.get(type);
+					if (map == null) {
+						map = new LinkedHashMap<String, BufferedImage>();
+						subIcons.put(type, map);
+					}
+					
+					map.put(s, getImage(subItemsImage, s));
+				}
 			}
 		}
+	}
+	
+	private static BufferedImage getImage(BufferedImage spriteSheet, String resourceID) {
+		Sprite sprite = SpriteManager.getImage(resourceID);
+		
+		int startX = (int)(spriteSheet.getWidth() * sprite.getTexCoordStartX());
+		int startY = (int)(spriteSheet.getHeight() * sprite.getTexCoordStartY());
+		int endX = (int)(spriteSheet.getWidth() * sprite.getTexCoordEndX());
+		int endY = (int)(spriteSheet.getHeight() * sprite.getTexCoordEndY());
+		
+		return spriteSheet.getSubimage(startX, startY, endX - startX, endY - startY);
 	}
 	
 	/**
@@ -198,6 +220,17 @@ public class EditorManager {
 	
 	public static Map<String, BufferedImage> getItemIconChoices() {
 		return itemIcons;
+	}
+	
+	/**
+	 * Gets the list of valid sub icon choices for the specified
+	 * item type
+	 * @param type
+	 * @return the list of valid icon choices
+	 */
+	
+	public static Map<String, BufferedImage> getSubIconChoices(Item.ItemType type) {
+		return subIcons.get(type);
 	}
 	
 	/**
