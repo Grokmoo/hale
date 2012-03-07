@@ -657,13 +657,13 @@ public class Buildable {
 	
 	/**
 	 * Returns a list of roles which this creature may be able to select in the 
-	 * future, based on its base role.  These roles cannot currently be selected,
-	 * however
+	 * future, based on its base role, or roles which the creature was previously able
+	 * to select but can no longer, due to max level.  These roles cannot currently be selected.
 	 * @return a list of all roles that may be selected in the future based on
 	 * this creature's base role
 	 */
 	
-	public List<Role> getFutureSelectableRoles() {
+	public List<Role> getFutureOrPastSelectableRoles() {
 		List<Role> roles = new ArrayList<Role>();
 		
 		for (Role role : Game.ruleset.getAllRoles()) {
