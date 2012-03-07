@@ -10,7 +10,6 @@ encounter "skeletons_lvl09" 5 25
 encounter "skeletons_lvl09" 20 4
 encounter "skeletons_lvl09" 12 9
 
-item 1 "ruraldoor_SE_unlockable" 28 10
 item 1 "ruraldoor_SE" 13 32
 item 1 "ruraldoor_SW" 18 8
 item 1 "ruraldoor_SE" 8 7
@@ -20,6 +19,10 @@ item 1 "chest_level10" 3 16
 item 1 "armorstand_level10" 24 4
 item 1 "chest_level10" 25 4
 item 1 "armorstand_level10fine" 35 36
+item 1 "flameTrap" 22 6
+item 1 "flameTrap" 9 27
+item 1 "freezeTrap" 17 8
+item 1 "ruraldoor_SE" 28 10
 
 tile base 39 39 base/stone1
 tile base 38 39 base/stone3

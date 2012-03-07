@@ -1,0 +1,14 @@
+icon "transition"
+twoWay true
+activated true
+location "Ancient Tomb"
+from "Ancient Tomb" 22 38
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addFromPosition 3 -2
+addFromPosition 2 -2
+addFromPosition 2 -1
+addFromPosition 1 -2
