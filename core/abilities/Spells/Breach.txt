@@ -1,6 +1,6 @@
 name "Breach"
 type "Alteration"
-description "Breach is a powerful assault against the defenses of an enemy spellcaster or magical creature.  The caster selects a single target up to 50 feet away.  Up to one point per caster level of spell resistance on that creature is negated for 5 to 10 rounds.  In addition, one of the following defensive spells is removed from the target or its armor: Harden Armor, Absorb Energy, Deflect Projectiles, Chameleon, Shield, Fortify Health, or Ward.  If the target has more than one of these defensive spells active, one is chosen randomly.  Note that unlike other targeted spells, this spell ignores the target's concealment."
+description "Breach is a powerful assault against the defenses of an enemy spellcaster or magical creature.  The caster selects a single target up to 50 feet away.  Up to one point per caster level of spell resistance on that creature is negated for 5 to 10 rounds.  In addition, one of the following defensive spells is removed from the target or its armor: Harden Armor, Absorb Energy, Deflect Projectiles, Chameleon, Layer of Bark, Shield, Fortify Health, or Ward.  If the target has more than one of these defensive spells active, one is chosen randomly.  Note that unlike other targeted spells, this spell ignores the target's concealment."
 activateable true
 fixed true
 cooldown 10

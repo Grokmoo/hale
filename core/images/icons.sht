@@ -226,19 +226,22 @@ image masterBows            13 12
 image powerfulBlows         14 12
 image trainWisdom2          15 12
 
-image massCrush          0 13
-image improvedSummon     1 13
-image root               2 13
+image massCrush             0 13
+image improvedSummon        1 13
+image root                  2 13
+image layerOfBark           3 13
+image monstrousRegeneration 4 13
+image improvedChameleon     5 13
 
-image cripplingBackstab  7 13
-image backstabMastery    8 13
-image dualWieldMastery   9 13
-image whirlwindAttack   10 13
-image preciseShot       11 13
-image ranger            12 13
-image paladin           13 13
-image berserker         14 13
-image trainCharisma2    15 13
+image cripplingBackstab     7 13
+image backstabMastery       8 13
+image dualWieldMastery      9 13
+image whirlwindAttack      10 13
+image preciseShot          11 13
+image ranger               12 13
+image paladin              13 13
+image berserker            14 13
+image trainCharisma2       15 13
 
 image assassin           7 14
 image duelist            8 14

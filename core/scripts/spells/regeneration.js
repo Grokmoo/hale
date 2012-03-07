@@ -57,7 +57,13 @@ function regeneration(game, targeter) {
 }
 
 function applyEffect(game, targeter, target, spell, duration) {
-	var healingLeft = game.dice().d8(targeter.getParent().getCasterLevel());
+	var parent = targeter.getParent();
+
+	if (parent.getAbilities().has("MonstrousRegeneration")) {
+		var healingLeft = game.dice().d12(parent.getCasterLevel());
+	} else {
+		var healingLeft = game.dice().d8(parent.getCasterLevel());
+	}
 	
 	var effect = targeter.getSlot().createEffect("effects/regeneration");
 	effect.setDuration(duration);

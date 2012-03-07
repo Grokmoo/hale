@@ -1,0 +1,51 @@
+name "Druid"
+
+add "Summon" 0.5 1
+add "SummonElemental" 0 3
+add "ImprovedSummon"  1 3
+
+connect 0.5 1 TwoDown
+connect 0 2 OneDown
+connect 0 2 Through
+connect 1 2 OneDown
+connect 1 2 Through
+
+add "Tanglefoot"    3.0 0
+add "CrushingVines" 2.0 1
+add "DeadlyVines"   3.0 3
+add "Root"          4.0 4
+
+connect 3.0 0 ThreeDown
+connect 3.0 1 Through
+connect 3.0 1 OneDown
+connect 3.0 2 Through
+connect 3.0 2 OneDown
+connect 4.0 1 Through
+connect 4.0 1 OneDown
+connect 4.0 2 Through
+connect 4.0 2 OneDown
+connect 4.0 3 Through
+connect 4.0 3 OneDown
+
+add "Chameleon" 5.5 1
+add "MassChameleon" 5.0 3
+add "ImprovedChameleon" 6.0 3
+
+connect 5.5 1 TwoDown
+connect 5.0 2 Through
+connect 5.0 2 OneDown
+connect 6.0 2 Through
+connect 6.0 2 OneDown
+
+add "Cure"          7.0 0
+add "Regeneration"  7.0 2
+add "MonstrousRegeneration" 7.0 4
+
+connect 7 0 OneDown
+connect 7 1 Through
+connect 7 1 OneDown
+connect 7 2 OneDown
+connect 7 3 Through
+connect 7 3 OneDown
+
+add "LayerOfBark" 8.0 3

@@ -54,7 +54,12 @@ function applyEffect(game, targeter, target, duration) {
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
-	effect.getBonuses().addBonus('Concealment', 25 + casterLevel);
+	
+	if (parent.getAbilities().has("ImprovedChameleon")) {
+		effect.getBonuses().addBonus('Concealment', 35 + 2 * casterLevel);
+	} else {
+		effect.getBonuses().addBonus('Concealment', 25 + casterLevel);
+	}
 	
 	var anim = game.createAnimation("particles/circle33", 2.0);
 	anim.setDurationInfinite();

@@ -1,6 +1,6 @@
 name "Plate Helmet"
 icon "items/C_Elm03" "#ffffffff"
-subIcon "subIcons/helmet-05" "#ffffffff"
+subIcon "subIcons/helmet-06" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -3,13 +3,13 @@ type "Druid Abilities"
 description "Powerful limbs spring forth from the ground and envelope you, granting you great strength and defensive power, but affixing you in your current position for the duration of the spell.  You gain a 4 plus one per 4 caster levels bonus to Strength and Constitution, and a 20 plus caster level bonus to Attack and Armor Class for the duration of the spell.  You gain damage reduction of 10 points plus one per 4 caster levels against all physical damage, and 50% immunity to Cold, Electrical, and Acid damage.  However, you are immobilized and thus cannot cast most other spells for the duration of the spell.  The effect lasts for 5 to 10 rounds."
 activateable true
 fixed true
-cooldown 11
+cooldown 12
 
 icon "icons/root"
 scriptFile "spells/root"
 
 spell true
-spellLevel 4
+spellLevel 5
 verbalComponent true
 somaticComponent true
 spellResistance false
@@ -19,8 +19,9 @@ actionPointCost 6000
 actionType Buff
 groupType Single
 rangeType Personal
-aiPower 40
+aiPower 50
 
-addPrereq Stat CasterLevel 10
+addPrereq Stat CasterLevel 13
+addPrereq Role Druid 4
 
 addPrereq Ability Tanglefoot

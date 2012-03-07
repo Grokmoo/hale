@@ -62,7 +62,7 @@ function breachDefense(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	
 	// go through the spells in a random order until we find one that is in effect
-	var spellsToRemove = shuffle( [ "HardenArmor", "AbsorbEnergy", "DeflectProjectiles", "Shield", "Chameleon", "Ward", "FortifyHealth" ] );
+	var spellsToRemove = shuffle( [ "HardenArmor", "AbsorbEnergy", "DeflectProjectiles", "Shield", "Chameleon", "Ward", "FortifyHealth", "LayerOfBark" ] );
 	
 	for (var i = 0; i < spellsToRemove.length; i++) {
 		var spellID = spellsToRemove[i];
