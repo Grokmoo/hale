@@ -93,7 +93,7 @@ image "shield-towershield01"    3  5
 image "helmet-02"               4  5
 image "helmet-03"               5  5
 image "helmet-04"               6  5
-image "helmet-05"               7  5
+image "helmet-06"               7  5
 image "helmet-05"               8  5
 
 image "shield-buckler01Secondary"        0  6
@@ -103,7 +103,7 @@ image "shield-towershield01Secondary"    3  6
 image "helmet-02Secondary"               4  6
 image "helmet-03Secondary"               5  6
 image "helmet-04Secondary"               6  6
-image "helmet-05Secondary"               7  6
+image "helmet-06Secondary"               7  6
 image "helmet-05Secondary"               8  6
 
 image "boots-01"     0  7

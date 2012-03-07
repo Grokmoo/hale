@@ -25,3 +25,5 @@ addPrereq Ability Cure
 addPrereq Stat CasterLevel 4
 
 upgrade MassRegeneration "With Mass Regeneration, all allies within 20 feet are now affected."
+
+upgrade MonstrousRegeneration" With Monstrous Regeneration, the total hit points healed is increased to one to twelve hit points per caster level."

@@ -1,0 +1,17 @@
+name "Monstrous Regeneration"
+type "Druid Abilities"
+description "Your Regeneration ability is considerably improved.  Affected creatures now regenerate health so quickly as to come back from the brink of death in just seconds.  The number of hit points healed in total is increased to one to twelve per caster level."
+activateable false
+
+icon "icons/monstrousRegeneration"
+
+spellLevel 5
+actionType Heal
+groupType Single
+rangeType Touch
+aiPower 50
+
+addPrereq Ability Regeneration
+
+addPrereq Stat CasterLevel 13
+addPrereq Role Druid 4
