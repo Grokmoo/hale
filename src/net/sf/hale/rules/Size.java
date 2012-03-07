@@ -27,6 +27,12 @@ public class Size {
 	private int size;
 	private int modifier;
 	
+	public static Size[] values() {
+		get(names[0]);
+		
+		return sizes;
+	}
+	
 	public static Size get(String name) {
 		if (sizes[0] == null) {
 			for (int i = 0; i < sizes.length; i++) {

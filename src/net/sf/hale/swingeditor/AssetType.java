@@ -19,6 +19,7 @@
 
 package net.sf.hale.swingeditor;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import net.sf.hale.Game;
@@ -46,12 +47,13 @@ public enum AssetType {
 	
 	/**
 	 * Creates and returns a new sub editor for the specified asset
+	 * @param parent the parent frame
 	 * @param assetID the ID of the asset to edit
 	 * @return a new sub editor for the asset
 	 */
 	
-	public JPanel createSubEditor(String assetID) {
-		return callback.getSubEditor(assetID);
+	public JPanel createSubEditor(JFrame parent, String assetID) {
+		return callback.getSubEditor(parent, assetID);
 	}
 	
 	/**
@@ -91,8 +93,8 @@ public enum AssetType {
 			return Game.entityManager.getItem(assetID);
 		}
 
-		@Override public JPanel getSubEditor(String assetID) {
-			return new ItemSubEditor(getAsset(assetID));
+		@Override public JPanel getSubEditor(JFrame parent, String assetID) {
+			return new ItemSubEditor(parent, getAsset(assetID));
 		}
 	}
 	
@@ -105,8 +107,8 @@ public enum AssetType {
 			return Game.entityManager.getCreature(assetID);
 		}
 
-		@Override public JPanel getSubEditor(String assetID) {
-			return new CreatureSubEditor(getAsset(assetID));
+		@Override public JPanel getSubEditor(JFrame parent, String assetID) {
+			return new CreatureSubEditor(parent, getAsset(assetID));
 		}
 	}
 	
@@ -115,6 +117,6 @@ public enum AssetType {
 		
 		public Object getAsset(String assetID);
 		
-		public JPanel getSubEditor(String assetID);
+		public JPanel getSubEditor(JFrame parent, String assetID);
 	}
 }

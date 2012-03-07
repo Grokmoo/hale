@@ -1,5 +1,6 @@
 # The format of the values in this sheet is very specific
 # All item sub icons must start with an itemtype followed by a dash
+# all projectile icons must start with "projectile_"
 # All other sub icons must not contain a dash
 
 Spritesheet "subIcons"
