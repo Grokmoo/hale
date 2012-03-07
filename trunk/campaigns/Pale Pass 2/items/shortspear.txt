@@ -1,6 +1,6 @@
 name "Short Spear"
 icon "items/W_Spear003" "#ffffffff"
-subIcon "subIcons/weapon_spear02" "#ffffffff"
+subIcon "subIcons/weapon-spear02" "#ffffffff"
 ingredient false
 quest false
 cursed false

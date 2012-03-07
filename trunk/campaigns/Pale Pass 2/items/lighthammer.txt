@@ -1,6 +1,6 @@
 name "Light Hammer"
 icon "items/W_Mace003" "#ffffffff"
-subIcon "subIcons/weapon_light-hammer01" "#ffffffff"
+subIcon "subIcons/weapon-light-hammer01" "#ffffffff"
 ingredient false
 quest false
 cursed false

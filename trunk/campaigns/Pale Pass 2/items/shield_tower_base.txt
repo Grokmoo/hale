@@ -1,6 +1,6 @@
 name "Tower Shield"
 icon "items/E_Wood04" "#ffffffff"
-subIcon "subIcons/shield_towershield01" "#ffffffff"
+subIcon "subIcons/shield-towershield01" "#ffffffff"
 ingredient false
 quest false
 cursed false

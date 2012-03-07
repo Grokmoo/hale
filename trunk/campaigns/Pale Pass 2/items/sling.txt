@@ -1,6 +1,6 @@
 name "Sling"
 icon "items/W_Sling01" "#ffffffff"
-subIcon "subIcons/weapon_sling01" "#ffffffff"
+subIcon "subIcons/weapon-sling01" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Heavy Shield"
 icon "items/E_Wood03" "#ffffffff"
-subIcon "subIcons/shield_largeshield01" "#ffffffff"
+subIcon "subIcons/shield-largeshield01" "#ffffffff"
 ingredient false
 quest false
 cursed false

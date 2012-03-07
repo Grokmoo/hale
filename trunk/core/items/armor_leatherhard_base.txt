@@ -1,6 +1,6 @@
 name "Hardened Leather Armor"
 icon "items/A_Armour01" "#ffffffff"
-subIcon "subIcons/torso07" "#ffffffff"
+subIcon "subIcons/armor-07" "#ffffffff"
 ingredient false
 quest false
 cursed false

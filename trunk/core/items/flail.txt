@@ -1,6 +1,6 @@
 name "Flail"
 icon "items/W_Mace005" "#ffffffff"
-subIcon "subIcons/weapon_flail01" "#ffffffff"
+subIcon "subIcons/weapon-flail01" "#ffffffff"
 ingredient false
 quest false
 cursed false

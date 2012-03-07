@@ -1,6 +1,6 @@
 name "Club"
 icon "items/W_Mace001" "#ffffffff"
-subIcon "subIcons/weapon_club01" "#ffffffff"
+subIcon "subIcons/weapon-club01" "#ffffffff"
 ingredient false
 quest false
 cursed false

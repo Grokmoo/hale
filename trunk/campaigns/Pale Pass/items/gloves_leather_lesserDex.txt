@@ -1,6 +1,6 @@
 name "Leather Gloves of Dexterity"
 icon "items/Ac_Gloves01" "#ffdf7a7a"
-subIcon "subIcons/gloves02" "#ffdf7a7a"
+subIcon "subIcons/gloves-02" "#ffdf7a7a"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Plate Boots"
 icon "items/A_Shoes05" "#ffffffff"
-subIcon "subIcons/boots06" "#ffffffff"
+subIcon "subIcons/boots-06" "#ffffffff"
 ingredient false
 quest false
 cursed false

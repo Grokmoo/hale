@@ -1,6 +1,6 @@
 name "Maul"
 icon "items/W_Mace013" "#ffffffff"
-subIcon "subIcons/weapon_maul01" "#ffffffff"
+subIcon "subIcons/weapon-maul01" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -22,6 +22,8 @@ package net.sf.hale.swingeditor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.util.Map;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -36,6 +38,7 @@ import javax.swing.SpinnerNumberModel;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Enchantment;
+import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Item;
 import net.sf.hale.resource.SpriteManager;
 
@@ -129,10 +132,24 @@ public class ItemSubEditor extends JPanel {
 		JPanel appearanceTab = new JPanel();
 		tabs.addTab("Appearance", appearanceTab);
 		
-		ImageSelector icon = new ImageSelector(SpriteManager.getResourceID(item.getIcon()), EditorManager.getItemIconChoices());
+		ImageSelector icon = new ImageSelector(SpriteManager.getResourceID(item.getIcon()),
+				EditorManager.getItemIconChoices());
 		icon.setTitle("Icon");
+		icon.setGridColumns(7);
 		icon.setDefaultColor(item.getIconColor());
 		appearanceTab.add(icon);
+		
+		if (item.getType() == Entity.Type.ITEM) {
+			Map<String, BufferedImage> choices = EditorManager.getSubIconChoices(item.getItemType());
+			
+			if (choices != null) {
+				ImageSelector subIcon = new ImageSelector(SpriteManager.getResourceID(item.getSubIcon()), choices);
+				subIcon.setTitle("Sub Icon");
+				subIcon.setDefaultColor(item.getSubIconColor());
+				subIcon.setGridColumns(7);
+				appearanceTab.add(subIcon);
+			}
+		}
 		
 		// add script tab
 		JPanel scriptTab = new JPanel(new GridBagLayout());

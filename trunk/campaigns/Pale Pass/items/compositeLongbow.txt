@@ -1,6 +1,6 @@
 name "Composite Longbow"
 icon "items/W_Bow03" "#ffffffff"
-subIcon "subIcons/weapon_bow02" "#ffffffff"
+subIcon "subIcons/weapon-bow02" "#ffffffff"
 ingredient false
 quest false
 cursed false

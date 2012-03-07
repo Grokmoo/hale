@@ -1,6 +1,6 @@
 name "Clothes"
 icon "items/A_Clothing01" "#ffffffff"
-subIcon "subIcons/clothes01" "#ffffffff"
+subIcon "subIcons/armor-11" "#ffffffff"
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,6 @@
 name "Mail Gloves"
 icon "items/Ac_Gloves03" "#ffffffff"
-subIcon "subIcons/gloves03" "#ffffffff"
+subIcon "subIcons/gloves-03" "#ffffffff"
 ingredient false
 quest false
 cursed false

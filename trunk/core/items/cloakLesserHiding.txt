@@ -1,6 +1,6 @@
 name "Cloak of Lesser Hiding"
 icon "items/A_Cloak01" "#ff528eac"
-subIcon "subIcons/cloak01" "#ff528eac"
+subIcon "subIcons/cloak-01" "#ff528eac"
 ingredient false
 quest false
 cursed false

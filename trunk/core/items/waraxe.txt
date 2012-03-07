@@ -1,6 +1,6 @@
 name "Waraxe"
 icon "items/W_Axe014" "#ffffffff"
-subIcon "subIcons/weapon_axe03" "#ffffffff"
+subIcon "subIcons/weapon-axe03" "#ffffffff"
 ingredient false
 quest false
 cursed false

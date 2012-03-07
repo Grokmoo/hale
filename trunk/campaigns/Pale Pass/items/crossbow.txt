@@ -1,6 +1,6 @@
 name "Crossbow"
 icon "items/W_XBow01" "#ffffffff"
-subIcon "subIcons/weapon_crossbow01" "#ffffffff"
+subIcon "subIcons/weapon-crossbow01" "#ffffffff"
 ingredient false
 quest false
 cursed false

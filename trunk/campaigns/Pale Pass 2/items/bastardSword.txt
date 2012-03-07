@@ -1,6 +1,6 @@
 name "Bastard Sword"
 icon "items/W_Sword004" "#ffffffff"
-subIcon "subIcons/weapon_sword05" "#ffffffff"
+subIcon "subIcons/weapon-sword05" "#ffffffff"
 ingredient false
 quest false
 cursed false

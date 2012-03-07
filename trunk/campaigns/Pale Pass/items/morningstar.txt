@@ -1,6 +1,6 @@
 name "Morningstar"
 icon "items/W_Mace004" "#ffffffff"
-subIcon "subIcons/weapon_mace01" "#ffffffff"
+subIcon "subIcons/weapon-mace01" "#ffffffff"
 ingredient false
 quest false
 cursed false

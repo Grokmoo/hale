@@ -1,6 +1,6 @@
 name "Light Shield"
 icon "items/E_Wood02" "#ffffffff"
-subIcon "subIcons/shield_smallshield01" "#ffffffff"
+subIcon "subIcons/shield-smallshield01" "#ffffffff"
 ingredient false
 quest false
 cursed false

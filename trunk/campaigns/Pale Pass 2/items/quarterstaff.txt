@@ -1,6 +1,6 @@
 name "Quarterstaff"
 icon "items/W_Staff01" "#ffffffff"
-subIcon "subIcons/weapon_quarterstaff01" "#ffffffff"
+subIcon "subIcons/weapon-quarterstaff01" "#ffffffff"
 ingredient false
 quest false
 cursed false

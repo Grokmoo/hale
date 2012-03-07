@@ -1,6 +1,6 @@
 name "Leather Armor"
 icon "items/A_Clothing02" "#ffffffff"
-subIcon "subIcons/torso04" "#ffffffff"
+subIcon "subIcons/armor-04" "#ffffffff"
 ingredient false
 quest false
 cursed false

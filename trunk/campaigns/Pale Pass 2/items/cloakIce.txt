@@ -1,6 +1,6 @@
 name "Cloak of the Ice Mage"
 icon "items/A_Cloak01" "#ffadb3f1"
-subIcon "subIcons/cloak01" "#ffadb3f1"
+subIcon "subIcons/cloak-01" "#ffadb3f1"
 ingredient false
 quest false
 cursed false
