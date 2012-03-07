@@ -126,13 +126,13 @@ public class ItemSubEditor extends JPanel {
 		add(tabs, c);
 		
 		// add appearance tab
-		JPanel appearanceTab = new JPanel(new GridBagLayout());
+		JPanel appearanceTab = new JPanel();
 		tabs.addTab("Appearance", appearanceTab);
 		
-		c.gridy = 0;
 		ImageSelector icon = new ImageSelector(SpriteManager.getResourceID(item.getIcon()), EditorManager.getItemIconChoices());
-		icon.setMaximumRowCount(15);
-		addRow("Icon", icon, appearanceTab, false);
+		icon.setTitle("Icon");
+		icon.setDefaultColor(item.getIconColor());
+		appearanceTab.add(icon);
 		
 		// add script tab
 		JPanel scriptTab = new JPanel(new GridBagLayout());

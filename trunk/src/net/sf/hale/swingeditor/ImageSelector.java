@@ -19,19 +19,26 @@
 
 package net.sf.hale.swingeditor;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 
 /**
  * A widget for selecting an image and optionally an associated color
@@ -41,9 +48,14 @@ import javax.swing.ListCellRenderer;
 
 public class ImageSelector extends JPanel {
 	private List<String> choices;
-	private List<ImageIcon> icons;
+	private List<BufferedImage> icons;
 	
-	private JComboBox selector;
+	private JLabel title;
+	private IconButton iconButton;
+	private JButton chooseColor;
+	
+	private Color currentColor;
+	private BufferedImage currentImage;
 	
 	/**
 	 * Creates a new ImageSelector choosing between the specified set of choices
@@ -52,11 +64,15 @@ public class ImageSelector extends JPanel {
 	 * @param choicesMap the choices
 	 */
 	
-	public ImageSelector(String defaultChoice, Map<String, ImageIcon> choicesMap) {
-		super(new BorderLayout());
+	public ImageSelector(String defaultChoice, Map<String, BufferedImage> choicesMap) {
+		super(new GridBagLayout());
+		
+		currentColor = Color.white;
+		
+		GridBagConstraints c = new GridBagConstraints();
 		
 		this.choices = new ArrayList<String>();
-		this.icons = new ArrayList<ImageIcon>();
+		this.icons = new ArrayList<BufferedImage>();
 		
 		Iterator<String> iter = choicesMap.keySet().iterator();
 		
@@ -74,48 +90,144 @@ public class ImageSelector extends JPanel {
 				initialIndex = i;
 		}
 		
-		selector = new JComboBox(intArray);
-		selector.setSelectedIndex(initialIndex);
-		selector.setRenderer(new SelectorRenderer());
-		add(selector, BorderLayout.CENTER);
+		c.gridwidth = 2;
+		c.gridy = 0;
+		c.gridx = GridBagConstraints.REMAINDER;
+		title = new JLabel();
+		title.setFont(title.getFont().deriveFont(18.0f));
+		add(title, c);
+		c.gridy++;
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		iconButton = new IconButton(new ShowIconChooser());
+		if (initialIndex != -1) {
+			currentImage = icons.get(initialIndex);
+			iconButton.setImageToCurrentImage();
+		}
+		add(iconButton, c);
+		c.gridy++;
+		
+		chooseColor = new JButton(new ShowColorChooser());
+		add(chooseColor, c);
+		c.gridy++;
 	}
 	
 	/**
-	 * Sets the maximum number of rows that will be shown at once in this popup
-	 * @param count
+	 * Sets the color that is initially set for this ImageSelector
+	 * @param color
 	 */
 	
-	public void setMaximumRowCount(int count) {
-		selector.setMaximumRowCount(count);
+	public void setDefaultColor(de.matthiasmann.twl.Color color) {
+		this.currentColor = new Color(color.toARGB(), true);
+		
+		chooseColor.setBackground(currentColor);
+		iconButton.setImageToCurrentImage();
 	}
 	
-	private class SelectorRenderer extends JLabel implements ListCellRenderer {
-		private SelectorRenderer() {
-			setOpaque(true);
-			setHorizontalAlignment(CENTER);
-			setVerticalAlignment(CENTER);
+	/**
+	 * Sets the color that is initially set for this ImageSelector
+	 * @param color
+	 */
+	
+	public void setDefaultColor(Color color) {
+		this.currentColor = color;
+		iconButton.setImageToCurrentImage();
+	}
+	
+	/**
+	 * Sets whether this image selector allows the user to also select an
+	 * associated color
+	 * @param show
+	 */
+	
+	public void setShowColorChooser(boolean show) {
+		chooseColor.setVisible(show);
+	}
+	
+	/**
+	 * Sets the title of this ImageSelector, which is shown at the top of the widget
+	 * @param title
+	 */
+	
+	public void setTitle(String title) {
+		this.title.setText(title);
+	}
+	
+	private class IconButton extends JButton {
+		private BufferedImage image;
+		
+		private IconButton(AbstractAction action) {
+			super(action);
 		}
-
-		@Override public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
+		
+		private IconButton(AbstractAction action, BufferedImage image) {
+			super(action);
 			
-			if (isSelected) {
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
-			} else {
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
+			setIcon(new ImageIcon(image));
+			
+			this.image = image;
+		}
+		
+		private void setImageToCurrentImage() {
+			image = EditorManager.copy(currentImage, currentColor);
+			
+			setIcon(new ImageIcon(image));
+		}
+	}
+	
+	private class ShowIconChooser extends AbstractAction {
+		@Override public void actionPerformed(ActionEvent evt) {
+			JPopupMenu menu = new JPopupMenu();
+			
+			JPanel content = new JPanel(new GridLayout(0, 8));
+			JScrollPane pane = new JScrollPane(content);
+			pane.setPreferredSize(new Dimension(600, 600));
+			pane.getVerticalScrollBar().setUnitIncrement(50);
+			menu.add(pane);
+			
+			SelectColor select = new SelectColor(menu);
+			
+			for (BufferedImage image : icons) {
+				IconButton b = new IconButton(select, image);
+				b.setBackground(Color.WHITE);
+				content.add(b);
 			}
 			
-			if (value == null) {
-				setIcon(null);
-			} else {
-				int selectedIndex = ((Integer)value).intValue();
+			menu.show(iconButton, iconButton.getX(), iconButton.getY());
+		}
+	}
+	
+	private class SelectColor extends AbstractAction {
+		private JPopupMenu menu;
+		
+		private SelectColor(JPopupMenu menu) {
+			this.menu = menu;
+		}
+		
+		@Override public void actionPerformed(ActionEvent evt) {
+			IconButton b = (IconButton)evt.getSource();
 			
-				setIcon(icons.get(selectedIndex));
+			currentImage = b.image;
+			
+			menu.setVisible(false);
+			
+			iconButton.setImageToCurrentImage();
+		}
+	}
+	
+	private class ShowColorChooser extends AbstractAction {
+		private ShowColorChooser() { super("Choose Color"); }
+		
+		@Override public void actionPerformed(ActionEvent evt) {
+			Color color = JColorChooser.showDialog(ImageSelector.this, "Choose a Color", currentColor);
+			
+			if (color != null) {
+				currentColor = color;
 			}
-				
-			return this;
+			
+			chooseColor.setBackground(currentColor);
+			iconButton.setImageToCurrentImage();
 		}
 	}
 }
