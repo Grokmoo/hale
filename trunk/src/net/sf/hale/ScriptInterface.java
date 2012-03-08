@@ -276,6 +276,9 @@ public class ScriptInterface {
 		} catch (InterruptedException e) {
 			// the attack was interrupted and did not take place
 			result = false;
+		} catch (Exception e) {
+			Logger.appendToErrorLog("Error executing standard attack", e);
+			return false;
 		}
 		
 		return result;
