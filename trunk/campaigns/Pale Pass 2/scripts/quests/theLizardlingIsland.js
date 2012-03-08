@@ -8,13 +8,13 @@ function startQuest(game) {
 }
 
 function questComplete(game) {
-	var quest = game.getQuestEntry("The Lizardling Island");
-	
-	quest.setCurrentSubEntriesCompleted();
-	
-	var entry = quest.createSubEntry("Quest Complete");
-	
-	entry.addText("You killed the sea serpents and claimed your prize, a powerful ring.");
-	
-	quest.setCompleted();
+    var quest = game.getQuestEntry("The Lizardling Island");
+    
+    quest.setCurrentSubEntriesCompleted();
+    
+    var entry = quest.createSubEntry("Quest Complete");
+    
+    entry.addText("You killed the sea serpents and claimed your prize, a powerful ring.");
+    
+    quest.setCompleted();
 }

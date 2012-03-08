@@ -9,10 +9,15 @@ creature "skeleton05" 0 2
 creature "skeleton06" 1 1
 creature "skeleton07" 2 1
 creature "skeleton08" -1 1
-creature "skeleton" -2 -1
 creature "skeleton02" 0 -2
 creature "skeleton02" -2 0
 creature "skeleton03" -1 -1
 creature "skeleton03" 0 -1
 creature "skeleton04" 1 -2
 creature "skeleton04" 1 -1
+creature "skeleton" -2 -1
+creature "skeleton" -1 -2
+creature "ghoul" -2 1
+creature "ghoul" -1 0
+creature "ghoul" 0 0
+creature "ghoul" 0 1

@@ -1,0 +1,11 @@
+playerCharacter false
+
+name "Statue"
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+role "Commoner" 1
+attributes 10 10 10 10 10 10
+conversation "conversations/ancientTombWillSpirit"
+
