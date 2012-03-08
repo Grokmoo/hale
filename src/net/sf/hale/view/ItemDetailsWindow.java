@@ -22,11 +22,13 @@ package net.sf.hale.view;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.Recipe;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.entity.Enchantment;
 import net.sf.hale.entity.EntityViewer;
 import net.sf.hale.entity.Item;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Skill;
 import net.sf.hale.util.StringUtil;
 import net.sf.hale.widgets.IconViewer;
 
@@ -48,6 +50,8 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 	private Item item;
 	private HTMLTextAreaModel textAreaModel;
+	
+	private String staticDescriptionTop, staticDescriptionBottom;
 	
 	/**
 	 * Create a new ItemDetailsWindow that shows the details for
@@ -104,6 +108,10 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 		layout.setHorizontalGroup(mainGroupH);
 		layout.setVerticalGroup(mainGroupV);
 		
+		// build the unchanging part of the text area content
+		buildStaticDescriptionTop();
+		buildStaticDescriptionBottom();
+		
 		entityUpdated();
 	}
 	
@@ -127,7 +135,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 		item.removeViewer(this);
 	}
 	
-	private String getTextAreaContent(Item item) {
+	private void buildStaticDescriptionTop() {
 		StringBuilder sb = new StringBuilder();
 		
 		this.appendItemTypeString(item, sb);
@@ -147,6 +155,52 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 			break;
 		}
 		
+		staticDescriptionTop = sb.toString();
+	}
+	
+	private void buildStaticDescriptionBottom() {
+		StringBuilder sb = new StringBuilder();
+		
+		if (!item.getDescription().equals(Game.ruleset.getString("TempContainerDescription"))) {
+			sb.append("<div style=\"margin-top: 1em;\">");
+			sb.append(item.getDescription());
+			sb.append("</div>");
+		}
+		
+		if (item.isIngredient()) {
+			for (Skill skill : Game.ruleset.getAllSkills()) {
+				boolean skillSectionStarted = false;
+
+				for (String recipeID : Game.curCampaign.getRecipeIDsForSkill(skill)) {
+
+					Recipe recipe = Game.curCampaign.getRecipe(recipeID);
+
+					if (!recipe.hasIngredient(item.getID())) continue;
+
+					if (!skillSectionStarted) {
+						sb.append("<div style=\"font-family: vera-bold; margin-top: 1em;\">");
+						sb.append(skill.getName());
+						sb.append(" Recipes");
+						skillSectionStarted = true;
+					}
+
+					sb.append("<div style=\"font-family: green\">");
+					sb.append(recipe.getName());
+					sb.append("</div>");
+
+				}
+
+				if (skillSectionStarted)
+					sb.append("</div>");
+			}
+		}
+		
+		staticDescriptionBottom = sb.toString();
+	}
+	
+	private String getTextAreaContent(Item item) {
+		StringBuilder sb = new StringBuilder(staticDescriptionTop);
+		
 		synchronized(item.getEffects()) {
 			for (Effect effect : item.getEffects()) {
 				effect.appendDescription(sb);
@@ -163,11 +217,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 			sb.append("</div>");
 		}
 		
-		if (!item.getDescription().equals(Game.ruleset.getString("TempContainerDescription"))) {
-			sb.append("<div style=\"margin-top: 1em;\">");
-			sb.append(item.getDescription());
-			sb.append("</div>");
-		}
+		sb.append(staticDescriptionBottom);
 		
 		return sb.toString();
 	}
