@@ -104,6 +104,14 @@ public class Logger {
 		exception.printStackTrace(out);
 		out.println();
 		
+		// print the causes recursively
+		Throwable currentException = exception;
+		while ((currentException = currentException.getCause()) != null) {
+			out.println("Caused by");
+			currentException.printStackTrace(out);
+			out.println();
+		}
+		
 		out.close();
 	}
 	
