@@ -131,8 +131,6 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		this.quickbar = quickbar;
 		this.quickbarIndex = index;
 		
-		
-		
 		if (slot == null) {
 			if (this.getTooltipContent() != emptyTooltip)
 				this.setTooltipContent(emptyTooltip);

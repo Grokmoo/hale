@@ -52,7 +52,7 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class AbilityActivateSlot implements QuickbarSlot {
+public class AbilityActivateSlot extends QuickbarSlot {
 	private final String abilityID;
 	private final String abilityIcon;
 	private final String abilityName;
@@ -94,7 +94,7 @@ public class AbilityActivateSlot implements QuickbarSlot {
 		else return "";
 	}
 
-	@Override public boolean isActivateable() {
+	@Override public boolean isChildActivateable() {
 		Ability ability = Game.ruleset.getAbility(abilityID);
 		
 		for (AbilitySlot slot : parent.getAbilities().getSlotsWithReadiedAbility(ability)) {
@@ -104,7 +104,7 @@ public class AbilityActivateSlot implements QuickbarSlot {
 		return false;
 	}
 
-	@Override public void activate() {
+	@Override public void childActivate() {
 		AbilitySlot slot = getBestSlot();
 		if (slot == null) return;
 		

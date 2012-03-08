@@ -39,7 +39,7 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class ItemEquipSlot implements QuickbarSlot {
+public class ItemEquipSlot extends QuickbarSlot {
 	private Item item;
 	private Item secondaryItem;
 	private Creature parent;
@@ -185,7 +185,7 @@ public class ItemEquipSlot implements QuickbarSlot {
 		}
 	}
 
-	@Override public boolean isActivateable() {
+	@Override public boolean isChildActivateable() {
 		if (parent.getInventory().hasEquippedItem(item) && item.isCursed())
 			return false;
 		
@@ -198,7 +198,7 @@ public class ItemEquipSlot implements QuickbarSlot {
 		return parent.getInventory().canEquip(item);
 	}
 
-	@Override public void activate() {
+	@Override public void childActivate() {
 		if (!parent.getInventory().canEquip(item)) return;
 		
 		if (!parent.getInventory().canUnequipCurrentItemInSlot(item, 0)) return;

@@ -21,6 +21,7 @@ package net.sf.hale.quickbar;
 
 import de.matthiasmann.twl.Color;
 
+import net.sf.hale.Game;
 import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.loading.Saveable;
@@ -34,7 +35,7 @@ import net.sf.hale.loading.Saveable;
  *
  */
 
-public interface QuickbarSlot extends Saveable {
+public abstract class QuickbarSlot implements Saveable {
 	/**
 	 * Returns the Sprite that should be displayed by the viewer for this
 	 * QuickbarSlot.
@@ -42,7 +43,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the Sprite associated with this QuickbarSlot
 	 */
 	
-	public Sprite getSprite();
+	public abstract Sprite getSprite();
 	
 	/**
 	 * Returns the Color that the specified Sprite should be drawn by the
@@ -51,7 +52,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the Color for the associated Sprite
 	 */
 	
-	public Color getSpriteColor();
+	public abstract Color getSpriteColor();
 	
 	/**
 	 * Returns the secondary Sprite that should be displayed by the viewer for this
@@ -60,7 +61,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the secondary Sprite
 	 */
 	
-	public Sprite getSecondarySprite();
+	public abstract Sprite getSecondarySprite();
 	
 	/**
 	 * Returns the color that the secondary sprite should be drawn by the viewer for
@@ -69,7 +70,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the Color for the secondary Sprite.
 	 */
 	
-	public Color getSecondarySpriteColor();
+	public abstract Color getSecondarySpriteColor();
 	
 	/**
 	 * Returns the text that will be displayed on the left side of the
@@ -78,7 +79,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the label text
 	 */
 	
-	public String getLabelText();
+	public abstract String getLabelText();
 	
 	/**
 	 * Returns the text that will displayed as a tooltip for the QuickbarSlotButton
@@ -86,7 +87,7 @@ public interface QuickbarSlot extends Saveable {
 	 * @return the tooltip text
 	 */
 	
-	public String getTooltipText();
+	public abstract String getTooltipText();
 	
 	/**
 	 * Returns true if this QuickbarSlot is currently activateable.  This is
@@ -95,14 +96,39 @@ public interface QuickbarSlot extends Saveable {
 	 * @return true if and only if this QuickbarSlot is currently activateable.
 	 */
 	
-	public boolean isActivateable();
+	public final boolean isActivateable() {
+		if (Game.areaListener.getTargeterManager().isInTargetMode()) return false;
+		
+		return isChildActivateable();
+	}
+	
+	/**
+	 * This method is called by {@link #isActivateable()} if the quickbar slot meets
+	 * some basic, general activateablity constraints.  It must be overridden by
+	 * quickbar slot children.
+	 * @return whether the slot is activateable
+	 */
+	
+	protected abstract boolean isChildActivateable();
 	
 	/**
 	 * Activates this QuickbarSlot and performs some action, such as equipping an
-	 * item, using an item, or activating an ability.
+	 * item, using an item, or activating an ability.  If the slot is not currently
+	 * activateable, performs no action
 	 */
 	
-	public void activate();
+	public final void activate() {
+		if (Game.areaListener.getTargeterManager().isInTargetMode()) return;
+		
+		childActivate();
+	}
+	
+	/**
+	 * Called by {@link #activate()} if the slot meets general activateability
+	 * criterion.  This method must be overridden by child slots.
+	 */
+	
+	protected abstract void childActivate();
 	
 	/**
 	 * Creates the right click menu for this QuickbarSlot and adds the set of
@@ -110,14 +136,14 @@ public interface QuickbarSlot extends Saveable {
 	 * @param parent the parent Widget creating the right click menu
 	 */
 	
-	public void createRightClickMenu(QuickbarSlotButton parent);
+	public abstract void createRightClickMenu(QuickbarSlotButton parent);
 	
 	/**
 	 * Returns a String that is used to save this quickbar slot to a character file
 	 * @return the String used to save the quickbar slot
 	 */
 	
-	public String getSaveDescription();
+	public abstract String getSaveDescription();
 	
 	/**
 	 * Returns a new QuickbarSlot that is a copy of this slot
@@ -125,5 +151,5 @@ public interface QuickbarSlot extends Saveable {
 	 * @return a new QuickbarSlot
 	 */
 	
-	public QuickbarSlot getCopy(Creature parent);
+	public abstract QuickbarSlot getCopy(Creature parent);
 }

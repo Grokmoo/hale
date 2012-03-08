@@ -109,6 +109,17 @@ public class RightClickMenu extends PopupWindow {
 	}
 	
 	/**
+	 * Disables all buttons currently in the right click menu.  This does not have any
+	 * effect on buttons added to the menu after this call
+	 */
+	
+	public void disableAllButtons() {
+		for (RightClickMenuLevel level : levels) {
+			level.disableAllButtons();
+		}
+	}
+	
+	/**
 	 * Adds the specified button as a menu option to the current
 	 * top most (most recently added) menu level
 	 * @param button the button to add

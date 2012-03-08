@@ -144,6 +144,17 @@ public class RightClickMenuLevel extends Widget {
 	}
 	
 	/**
+	 * Disables all buttons currently in this menu level.  This does not
+	 * have any effect on buttons added after this call
+	 */
+	
+	public void disableAllButtons() {
+		for (Button button : buttons) {
+			button.setEnabled(false);
+		}
+	}
+	
+	/**
 	 * Adds the specified button to this Menu Level.  It is added at the bottom
 	 * of all existing buttons
 	 * @param button the button to add

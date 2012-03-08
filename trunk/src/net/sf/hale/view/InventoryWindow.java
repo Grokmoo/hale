@@ -234,6 +234,10 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		}
 		menu.addButton(button);
 		
+		// disable all actions except view details if the targeter is enabled or interface locked
+		if (Game.interfaceLocker.locked() || Game.areaListener.getTargeterManager().isInTargetMode())
+			menu.disableAllButtons();
+
 		Button details = new Button("View Details");
 		details.addCallback(callbackFactory.getDetailsCallback(item, x, y));
 		menu.addButton(details);
