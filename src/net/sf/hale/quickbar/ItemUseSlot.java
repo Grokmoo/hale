@@ -37,7 +37,7 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class ItemUseSlot implements QuickbarSlot {
+public class ItemUseSlot extends QuickbarSlot {
 	private Item item;
 	private Creature parent;
 	
@@ -80,11 +80,11 @@ public class ItemUseSlot implements QuickbarSlot {
 		return Integer.toString(quantity);
 	}
 
-	@Override public boolean isActivateable() {
+	@Override public boolean isChildActivateable() {
 		return parent.getTimer().canPerformAction(item.getUseAPCost());
 	}
 
-	@Override public void activate() {
+	@Override public void childActivate() {
 		if (item.canUse(parent) && parent.getInventory().getQuantity(item) > 0) {
 			parent.getInventory().getCallbackFactory().getUseCallback(item).run();
 		}
