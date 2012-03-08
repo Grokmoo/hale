@@ -70,6 +70,10 @@ public class Recipe implements Referenceable {
 		
 	}
 	
+	public boolean hasIngredient(String itemID) {
+		return ingredients.containsItem(itemID);
+	}
+	
 	public String getDescription() { return description; }
 	public void setDescription(String description) { this.description = description; }
 	public String getName() { return name; }
