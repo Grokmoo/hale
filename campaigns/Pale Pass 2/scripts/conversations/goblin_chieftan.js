@@ -78,6 +78,10 @@ function convo06(game, parent, target, conversation) {
 
     conversation.addText("There are three pieces you must collect.  One is with the lizard people, who live in a great underground lake to the northeast.  Another is with the deep dwarves, who live to the north of the forest.  Finally, I believe one piece is still in its original resting place - a great tomb to the northwest.");
     
+	game.runExternalScript("quests/theLizardlingKey", "startQuest");
+	game.runExternalScript("quests/theTombKey", "startQuest");
+	game.runExternalScript("quests/theDwarvenKey", "startQuest");
+	
     addConvoGateQuest(game, parent, target, conversation);
 }
 

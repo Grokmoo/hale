@@ -119,7 +119,15 @@ function convo09b(game, parent, target, conversation) {
 }
 
 function convo10(game, parent, target, conversation) {
+    conversation.addText("That, I do not know.  I believe however, that you may be the only one left who can stop him.")
     
+    conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "convo11");
+}
+
+function convo11(game, parent, target, conversation) {
+    conversation.addText("You must stop him to save yourself.  Go now.  You can tell the guardian that you have completed the Trial of Will.");
+    
+    conversation.addResponse("Thank you.  Farewell.", "onExit");
 }
 
 
@@ -127,6 +135,8 @@ function onExit(game, parent, talker, conversation) {
     parent.put("alreadyTalked", true);
     
     game.put("trialOfWillComplete", true);
+    
+    game.runExternalScript("quests/theMaster", "learnOfMaster");
     
     conversation.exit();
 }

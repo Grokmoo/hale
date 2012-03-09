@@ -8,3 +8,5 @@ value "0 CP" 1
 weight 0
 itemType "ITEM"
 quality "Good"
+script "items/lizardlingKeyFragment"
+useButtonText ""

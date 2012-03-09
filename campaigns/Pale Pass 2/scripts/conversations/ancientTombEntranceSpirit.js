@@ -1,5 +1,16 @@
 function startConversation(game, parent, target, conversation) {
-    if (parent.get("alreadyTalked") != null) {
+    if (parent.get("convoComplete")) {
+        conversation.addString("<div style=\"font-family: blue\">");
+        conversation.addString("The skeletal guardian looks at you but does not speak.");
+        conversation.addString("</div>");
+        
+        conversation.addResponse("<span style=\"font-family: red\">Leave</span>", "onExit");
+        
+    } else if (game.get("trialOfWillComplete") != null && game.get("trialOfBodyComplete") != null) {
+        conversation.addText("You have completed the trials, mortal.  The door behind me leads to your prize.");
+        
+        conversation.addResponse("Farewell.", "onExitTrialsComplete");
+    } else if (parent.get("alreadyTalked") != null) {
         conversation.addText("Hello again mortal.");
         
         conversation.addResponse("Tell me more about the trials in this tomb.", "trials01");
@@ -35,10 +46,12 @@ function convo04(game, parent, target, conversation) {
 }
 
 function convo05(game, parent, target, conversation) {
-    conversation.addText("There are two trials in this tomb built to test you.  Only one of the chosen blood may complete the trials and unlock the door behind me.");
+    conversation.addText("There are two trials in this tomb built to test you: The Trial of Mind, and the Trial of Body.  Only one of the chosen blood may complete the trials and unlock the door behind me.");
     
     parent.put("alreadyTalked", true);
     
+	game.runExternalScript("quests/theTombKey", "trialsStarted");
+	
     conversation.addResponse("Tell me more about the trials.", "trials01");
     conversation.addResponse("I will complete the trials and return.  Farewell.", "onExit");
     conversation.addResponse("I am not sure about any of this, but it seems to be the only way forward.  Farewell.", "onExit");
@@ -68,4 +81,13 @@ function trialBody(game, parent, target, conversation) {
 
 function onExit(game, parent, talker, conversation) {
     conversation.exit();
+}
+
+function onExitTrialsComplete(game, parent, talker, conversation) {
+    conversation.exit();
+    game.currentArea().getEntityWithID("ruraldoor_SE_unlockable").unlock();
+    
+	game.runExternalScript("quests/theTombKey", "trialsComplete");
+	
+    parent.put("convoComplete", true);
 }
