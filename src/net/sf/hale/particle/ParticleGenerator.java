@@ -321,6 +321,7 @@ public class ParticleGenerator implements Animated {
 		this.drawingMode = DrawingMode.AboveEntities;
 		
 		this.particleSprite = SpriteManager.getSprite(particleSprite);
+		
 		this.spriteRef = particleSprite;
 		
 		this.numParticles = numParticles;

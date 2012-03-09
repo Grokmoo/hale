@@ -288,13 +288,16 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	/**
 	 * Adds the specified Effect to this EntityEffectSet
 	 * @param effect the Effect to add
+	 * @param positionValid if true, then auras can be added to the area, if false
+	 * then auras will not be added to the area
 	 */
 	
-	public synchronized void add(Effect effect) {
+	public synchronized void add(Effect effect, boolean positionValid) {
 		if (effect instanceof Aura) {
 			Aura aura = (Aura)effect;
 			auras.add(aura);
-			Game.curCampaign.curArea.applyEffect(aura, aura.getCurrentAffectedPoints());
+			if (positionValid)
+				Game.curCampaign.curArea.applyEffect(aura, aura.getCurrentAffectedPoints());
 		}
 		
 		if (effect.getNumberOfScriptFunctionTypes() == 0)

@@ -1,0 +1,10 @@
+name "Paladin"
+
+add CharismaTraining1 0 0
+add CharismaTraining2 0 1
+add CharismaTraining3 0 2
+
+connect 0 0 OneDown
+connect 0 1 OneDown
+
+add HolyAura 1 0

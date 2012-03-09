@@ -354,7 +354,7 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 		
 		effect.startAnimations();
 		
-		this.effects.add(effect);
+		this.effects.add(effect, position.valid);
 	}
 	
 	@Override public int getSpellResistance() { return 0; }
@@ -389,6 +389,10 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 		this.position.valid = position.valid;
 		
 		return returnValue;
+	}
+	
+	public void invalidatePosition() {
+		this.position.valid = false;
 	}
 	
 	public boolean setPosition(int x, int y) {

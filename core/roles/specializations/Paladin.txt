@@ -15,5 +15,8 @@ addPrereq Role Priest 7
 
 addPrereq Skill Speech 30
 
-addPrereq Ability StrongSoul
-addPrereq Ability ToughBody
+level 1 selectAbilityFromList Paladin
+level 3 selectAbilityFromList Paladin
+level 5 selectAbilityFromList Paladin
+level 7 selectAbilityFromList Paladin
+level 9 selectAbilityFromList Paladin
