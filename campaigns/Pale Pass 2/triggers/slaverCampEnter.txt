@@ -1,0 +1,3 @@
+area "Slaver Camp"
+script "triggers/slaverCampEnter"
+addPoints

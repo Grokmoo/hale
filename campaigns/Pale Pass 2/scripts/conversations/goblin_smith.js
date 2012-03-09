@@ -1,15 +1,28 @@
 
 function startConversation(game, parent, target, conversation) {
 
-	if (game.get("slaverQuestStarted") != null) {
-		conversation.addText("Please find my sons.");
-	} else {
-	    conversation.addText("Trade, surfacer?");
-	}
+    if (game.get("slaverQuestStarted") != null && game.get("slaverQuestFinished") != null) {
+        conversation.addText("Thank you surfacer, for finding my sons!");
+        
+        if (parent.get("agreedToPay") != null && parent.get("rewardGiven") == null) {
+            conversation.addText("I don't have much, but I give you what I can, 10 gold, as promised.");
+            
+            parent.put("rewardGiven", true);
+            game.getPartyCurrency().addPP(1);
+			game.addMessage("blue", "The party has gained 10 GP.");
+        }
+        
+        game.runExternalScript("quests/dwarvenSlavers", "endQuest");
+        
+    } else if (game.get("slaverQuestStarted") != null) {
+        conversation.addText("Please find my sons.");
+    } else {
+        conversation.addText("Trade, surfacer?");
+    }
 
     conversation.addResponse("<span style=\"font-family: red\">Barter</span>", "trade");
     
-    if (game.get("slaverQuestStarted") == null) {
+    if (game.get("slaverQuestStarted") == null && game.get("slaverQuestFinished") == null) {
         conversation.addResponse("Do you know of any work around here?", "askWork");
     }
     
@@ -43,7 +56,7 @@ function askWork3(game, parent, target, conversation) {
 function askWork4a(game, parent, target, conversation) {
     conversation.addText("It north, at the other end of the mushroom forest.  I mark your map.");
     
-	game.put("slaverQuestStarted", true);
+    game.put("slaverQuestStarted", true);
     game.revealWorldMapLocation("Mushroom Forest");
     
     game.runExternalScript("quests/dwarvenSlavers", "startQuest");

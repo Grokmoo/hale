@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Dwarven City" 25 48
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addFromPosition 1 -3
+addFromPosition 0 -2
+addFromPosition 1 -2
+addFromPosition 0 -1
