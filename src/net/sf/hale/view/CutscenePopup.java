@@ -101,6 +101,8 @@ public class CutscenePopup extends PopupWindow {
 			DelayedScriptCallback cb = new DelayedScriptCallback(scriptable, func);
 			cb.run();
 		}
+		
+		Game.areaViewer.fadeIn();
 	}
 	
 	private class Content extends Widget {

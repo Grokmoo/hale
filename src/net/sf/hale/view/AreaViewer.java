@@ -117,6 +117,14 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	}
 	
 	/**
+	 * Causes this viewer to fade in, with the fade start time set to the current time
+	 */
+	
+	public void fadeIn() {
+		fadeInTime = System.currentTimeMillis();
+	}
+	
+	/**
 	 * Returns the Area currently being viewed by this AreaViewer
 	 * @return the Area currently being viewed by this AreaViewer
 	 */
