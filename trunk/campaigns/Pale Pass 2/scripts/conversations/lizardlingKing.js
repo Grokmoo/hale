@@ -68,7 +68,7 @@ function convo04a(game, parent, target, conversation) {
 function convo05(game, parent, target, conversation) {
 	conversation.addText("Very well.  My people within the lake will no longer attack you.  I cannot guarantee your safety further abroad, though.");
 	
-	game.runExternalScript("quests/theLizardlingIsland", "startQuest");
+	game.runExternalScript("quests/theLizardlingKey", "talkKing");
 	game.put("lizardlingQuestStarted", true);
 	
 	conversation.addResponse("I will return when I have cleared the island.", "onExit");
@@ -93,7 +93,7 @@ function askReward(game, parent, target, conversation) {
 	game.addMessage(target.getName() + " was given a Ring of Greater Protection.");
 	
 	game.put("kingSerpentRewardGiven", true);
-	game.runExternalScript("quests/theLizardlingIsland", "questComplete");
+	game.runExternalScript("quests/theLizardlingKey", "questComplete");
 	
 	conversation.addResponse("Thank you.  Farewell.", "onExit");
 }

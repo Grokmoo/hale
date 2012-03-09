@@ -28,3 +28,15 @@ function startGate(game) {
     
     entry.addText("The goblin chieftan has told you of a gate to the surface to the south of the goblin city.  However, in order to use the gate you will need to locate three pieces of a key.  The pieces may be found by journeying beyond the mushroom forest to the north of the goblin city.");
 }
+
+function learnOfMaster(game) {
+    var quest = game.getQuestEntry("The Master");
+    
+    if (quest.hasSubEntry("The Nature of the Master")) return;
+    
+    quest.setCurrentSubEntriesCompleted();
+    
+    var entry = quest.createSubEntry("The Nature of the Master");
+    
+    entry.addText("In an Ancient Tomb, you discovered the reason why the Master seeks to kill you.  You are a descendant of one of an ancient order of mages, and hold a piece of the Master's power inside of you.  You must either find a way to defeat or destroy him, or be killed yourself.");
+}

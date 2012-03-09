@@ -100,6 +100,14 @@ public class ScriptInterface {
 		Game.mainViewer.addMessage(font, text);
 	}
 	
+	public static void addEncounterToArea(Encounter encounter, int x, int y) {
+		encounter.addToArea(Game.curCampaign.curArea, x, y);
+		
+		Game.curCampaign.curArea.setEntityVisibility();
+		
+		Game.areaListener.getCombatRunner().checkAIActivation();
+	}
+	
 	public static void addItemToArea(Item item, Point position) {
 		item.setPosition(position.x, position.y);
 		Game.curCampaign.curArea.addItem(item);

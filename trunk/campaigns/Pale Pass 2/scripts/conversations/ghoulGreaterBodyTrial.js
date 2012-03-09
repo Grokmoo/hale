@@ -8,7 +8,7 @@ function startConversation(game, parent, target, conversation) {
     conversation.addString("It has three disfigured heads, and a gigantic mouth filled with teeth where its stomach should be.");
     conversation.addString("</div>");
     
-    conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "convo1");
+    conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "convo01");
 }
 
 function convo01(game, parent, target, conversation) {

@@ -73,6 +73,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	
 	private DelayedScroll delayedScroll;
 	private ScreenShake screenShake;
+	private long fadeInTime;
 	
 	/**
 	 * Creates a new AreaViewer viewing the specified Area.
@@ -87,6 +88,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		this.maxScroll = new Point(0, 0);
 		this.minScroll = new Point(0, 0);
 		this.area = area;
+		
+		fadeInTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -109,6 +112,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		// load tileset
 		Game.curCampaign.getTileset(area.getTileset()).loadTiles();
 		area.getTileGrid().cacheSprites();
+		
+		fadeInTime = System.currentTimeMillis();
 	}
 	
 	/**
@@ -200,6 +205,26 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 			GL11.glVertex2i(Game.config.getResolutionX(), Game.config.getResolutionY());
 			GL11.glVertex2i(0, Game.config.getResolutionY());
 		GL11.glEnd();
+		
+		// do a fade in if needed
+		if (fadeInTime != 0) {
+			long curTime = System.currentTimeMillis();
+
+			float fadeAlpha = Math.min(1.0f, 1.3f - (curTime - fadeInTime) / 1500.0f);
+
+			if (fadeAlpha > 0.0f) {
+				GL11.glColor4f(0.0f, 0.0f, 0.0f, fadeAlpha);
+
+				GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2i(getX(), getY());
+				GL11.glVertex2i(getX(), getBottom());
+				GL11.glVertex2i(getRight(), getBottom());
+				GL11.glVertex2i(getRight(), getY());
+				GL11.glEnd();
+			} else {
+				fadeInTime = 0;
+			}
+		}
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}

@@ -1,6 +1,6 @@
 playerCharacter false
 
-name "Skeleton"
+name "Skeleton Guardian"
 icon "creatures/skeleton02" "#ffffffff"
 portrait "Human/cavalier"
 
