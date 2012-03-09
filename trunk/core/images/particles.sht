@@ -21,3 +21,5 @@ image circle9      101   21     9    9
 image arrow        113   21    15   24
 
 image arrowsmall     0   59    10   16
+
+image halo         0   75    200 200

@@ -545,6 +545,8 @@ public class Buildable {
 	public Creature getWorkingCopy() {
 		Creature workingCopy = new Creature(creature);
 		
+		workingCopy.invalidatePosition();
+		
 		if (newCharacter) {
 			if (selectedRace != null) {
 				workingCopy.setRace(selectedRace);
