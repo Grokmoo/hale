@@ -28,6 +28,7 @@ encounter "skeletons_lvl09" 31 22
 encounter "skeletons_lvl09" 41 13
 encounter "skeletons_lvl09" 22 9
 encounter "skeletons_lvl09" 7 8
+encounter "mushroomForestSlaverWall" 34 2
 
 item 1 "chest_weapon_level10" 16 15
 item 1 "spikeTrap" 70 10

@@ -1,0 +1,12 @@
+playerCharacter false
+
+name "Goblin Slave Leader"
+icon "creatures/goblin02" "#fffbebc1"
+gender "Male"
+race "Goblin"
+immortal true
+unspentSkillPoints 0
+role "Commoner" 6
+attributes 10 10 10 10 10 10
+conversation "conversations/goblinSlaveLeader"
+

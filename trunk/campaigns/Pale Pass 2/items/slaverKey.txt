@@ -1,0 +1,10 @@
+name "Slaver Key"
+icon "items/I_Key04" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This is the key to the slave pen in the Dwarven Slaver's Camp."
+value "0 CP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

@@ -1,6 +1,6 @@
 icon "transition"
 twoWay true
-activated true
+activated false
 from "Mushroom Forest" 35 2
 to "Slaver Camp" 5 38
 addToPosition 0 -2

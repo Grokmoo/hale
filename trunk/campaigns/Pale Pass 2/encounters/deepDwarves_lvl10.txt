@@ -1,0 +1,16 @@
+size 2
+faction "Hostile"
+challenge 90
+randomize true
+numRandomCreatures 4 6
+respawn true
+respawnHours 24
+creature "deepDwarf" -1 -2
+creature "deepDwarf02" 0 -2
+creature "deepDwarf03" -2 -1
+creature "deepDwarf04" -1 -1
+creature "deepDwarf05" 0 -1
+creature "deepDwarfRanged" 1 -2
+creature "deepDwarf02Ranged" 2 -1
+creature "deepDwarf03Ranged" 1 -1
+creature "deepDwarf01Priest" 0 0

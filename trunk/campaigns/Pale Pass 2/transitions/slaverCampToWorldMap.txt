@@ -1,0 +1,9 @@
+icon "transition"
+twoWay false
+activated true
+from "Slaver Camp" 9 1
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
