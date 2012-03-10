@@ -50,8 +50,8 @@ function convo05(game, parent, target, conversation) {
     
     parent.put("alreadyTalked", true);
     
-	game.runExternalScript("quests/theTombKey", "trialsStarted");
-	
+    game.runExternalScript("quests/theTombKey", "trialsStarted");
+    
     conversation.addResponse("Tell me more about the trials.", "trials01");
     conversation.addResponse("I will complete the trials and return.  Farewell.", "onExit");
     conversation.addResponse("I am not sure about any of this, but it seems to be the only way forward.  Farewell.", "onExit");
@@ -87,7 +87,7 @@ function onExitTrialsComplete(game, parent, talker, conversation) {
     conversation.exit();
     game.currentArea().getEntityWithID("ruraldoor_SE_unlockable").unlock();
     
-	game.runExternalScript("quests/theTombKey", "trialsComplete");
-	
+    game.runExternalScript("quests/theTombKey", "trialsComplete");
+    
     parent.put("convoComplete", true);
 }

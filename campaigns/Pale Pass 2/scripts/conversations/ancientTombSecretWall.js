@@ -1,5 +1,5 @@
 function startConversation(game, parent, target, conversation) {
-    if (game.get("dwarvenSlaversTryEntrance") != null && parent.get("secretFound") == null) {
+    if (parent.get("secretFound") == null) {
     
         conversation.addString("<div style=\"font-family: blue; margin-top: 1em\">");
         conversation.addString("There is something odd about this section of wall.");
@@ -19,10 +19,10 @@ function startConversation(game, parent, target, conversation) {
 function examine(game, parent, talker, conversation) {
     var check = game.campaign().getBestPartySkillModifier("Search");
     
-    if (check > 40) {
+    if (check > 45) {
         parent.put("secretFound", true);
         
-        game.activateTransition("mushroomForestToSlaverCampRear");
+        game.activateTransition("ancientTombToSecretTomb");
         
         conversation.addString("<div style=\"font-family: blue; margin-top: 1em\">");
         conversation.addString("You discover a hidden passageway!");
@@ -37,5 +37,5 @@ function examine(game, parent, talker, conversation) {
 }
 
 function onExit(game, parent, talker, conversation) {
-    conversation.exit()
+    conversation.exit();
 }
