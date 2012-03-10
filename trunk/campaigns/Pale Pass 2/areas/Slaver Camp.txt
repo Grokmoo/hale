@@ -21,6 +21,11 @@ item 1 "armorstand_level10" 37 31
 item 1 "chest_level05" 11 25
 item 1 "chest_level05" 11 27
 item 1 "chest_level10" 26 12
+item 1 "freezeTrap" 12 6
+item 1 "rockTrap" 25 32
+item 1 "rockTrap" 29 32
+item 1 "spikeTrap" 25 19
+item 1 "lightningTrap" 26 20
 
 tile 0 49 39 layer0/chasm
 tile 0 48 39 layer0/chasm
