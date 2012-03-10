@@ -10,8 +10,4 @@ function onAreaExit(game, area, transition) {
         game.currentArea().removeEntity(e2);
         game.currentArea().removeEntity(e3);
     }
-    
-    if (transition.getID().equals("slaverCampToWorldMap")) {
-        game.revealWorldMapLocation("Dwarven City");
-    }
 }

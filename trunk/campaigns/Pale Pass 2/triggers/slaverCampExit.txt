@@ -1,0 +1,3 @@
+area "Slaver Camp"
+script "triggers/slaverCampExit"
+addPoints   8 2   9 2   10 2
