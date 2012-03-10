@@ -10,6 +10,7 @@ role "Monster" 10
 attributes 17 19 17 1 10 10
 script "ai/aiStandard"
 level 1 addAbility "SlashingImmunity50"
+level 1 addAbility "ColdImmunity100"
 level 1 addAbility "PiercingImmunity50"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "NaturalArmor10"
