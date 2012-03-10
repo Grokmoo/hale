@@ -1,9 +1,14 @@
 icon "transition"
-twoWay false
+twoWay true
 activated true
+location "Mushroom Forest"
 from "Slaver Camp" 9 1
 to "World Map" 0 0
 addToPosition 0 0
 addToPosition 0 0
 addToPosition 0 0
 addToPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0
+addFromPosition 0 0

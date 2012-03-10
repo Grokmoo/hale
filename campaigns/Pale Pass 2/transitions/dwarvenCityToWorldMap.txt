@@ -1,6 +1,7 @@
 icon "transition"
 twoWay true
 activated true
+location "Dwarven City"
 from "Dwarven City" 25 48
 to "World Map" 0 0
 addToPosition 0 0
