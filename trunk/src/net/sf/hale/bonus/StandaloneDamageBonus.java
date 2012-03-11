@@ -66,8 +66,12 @@ public class StandaloneDamageBonus extends IntBonus {
 		sb.append("Damage Bonus ");
 		sb.append("<span style=\"font-family: red\">");
 		sb.append(minDamage);
-		sb.append("</span> to <span style=\"font-family: red\">");
-		sb.append(maxDamage);
+		
+		if (minDamage != maxDamage) {
+			sb.append("</span> to <span style=\"font-family: red\">");
+			sb.append(maxDamage);
+		}
+		
 		sb.append("</span> ");
 		sb.append(damageType);
 	}

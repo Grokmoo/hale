@@ -5,6 +5,8 @@ activateable true
 fixed true
 cooldown 5
 
+actionPointCost 6000
+
 icon "icons/aid"
 scriptFile "abilities/aid"
 

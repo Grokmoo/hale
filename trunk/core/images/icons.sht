@@ -246,6 +246,7 @@ image trainCharisma2       15 13
 image positiveEnergy     0 14
 image personalMagnetism  1 14
 image aid                2 14
+image smite              3 14
 
 image assassin           7 14
 image duelist            8 14
