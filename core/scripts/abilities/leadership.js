@@ -1,5 +1,5 @@
 function onActivate(game, slot) {
-	var effect = slot.createAura("effects/holyAura");
+	var effect = slot.createAura("effects/leadership");
 	effect.setAuraMaxRadius(4);
 	effect.setTitle(slot.getAbility().getName());
 	

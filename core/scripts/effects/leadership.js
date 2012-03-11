@@ -1,12 +1,15 @@
 function onTargetEnter(game, target, aura) {
-	createEffect(aura, target);
+	createEffect(aura, target, false);
 }
 
-function createEffect(aura, target) {
+function createEffect(aura, target, roundElapsed) {
 	var slot = aura.getSlot();
 	var parent = slot.getParent();
 	
 	var chaBonus = (parent.stats().getCha() - 10) * 2;
+	if (parent.getAbilities().has("PersonalMagnetism"))
+		chaBonus = chaBonus * 2;
+	
 	var lvlBonus = parent.getRoles().getLevel("Paladin");
 	
 	var amount = 10 + chaBonus + lvlBonus;
@@ -15,9 +18,20 @@ function createEffect(aura, target) {
 	targetEffect.setTitle(slot.getAbility().getName());
 	aura.addChildEffect(targetEffect);
 	
-	targetEffect.getBonuses().addBonus('MentalResistance', 'Morale', amount);
-	targetEffect.getBonuses().addBonus('PhysicalResistance', 'Morale', amount);
-	targetEffect.getBonuses().addBonus('ReflexResistance', 'Morale', amount);
+	if (parent.getFaction().isFriendly(target)) {
+		targetEffect.getBonuses().addBonus('Attack', amount);
+		targetEffect.getBonuses().addBonus('SpellFailure', amount);
+		targetEffect.getBonuses().addBonus('ConcealmentIgnoring', amount);
+		
+		if (parent.getAbilities().has("PositiveEnergy")) {
+			targetEffect.getBonuses().addAttackBonusVsRacialType("Undead", amount);
+			targetEffect.getBonuses().addDamageBonusVsRacialType("Undead", 2 * amount);
+			
+			if (roundElapsed) {
+				target.healDamage(chaBonus);
+			}
+		}
+	}
 	
 	targetEffect.setDuration(1);
 	
@@ -40,6 +54,6 @@ function onRoundElapsed(game, aura) {
 		target.removeEffect(targetEffect);
 		aura.removeChildEffect(targetEffect);
 		
-		createEffect(aura, target);
+		createEffect(aura, target, true);
 	}
 }

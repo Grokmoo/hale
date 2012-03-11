@@ -75,6 +75,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	
 	public AbilitySelectorButton(Ability ability, HoverHolder widgetToAddHoverTo) {
 		this.ability = ability;
+		
 		this.sprite = SpriteManager.getSprite(ability.getIcon());
 		
 		this.widgetToAddHoverTo = widgetToAddHoverTo;

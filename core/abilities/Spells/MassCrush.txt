@@ -11,3 +11,6 @@ actionType Damage
 groupType Multiple
 rangeType Short
 aiPower 40
+
+addPrereq Stat CasterLevel 10
+addPrereq Ability Crush

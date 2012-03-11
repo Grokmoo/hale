@@ -1,0 +1,13 @@
+name "Aid"
+type "Paladin Abilities"
+description "The Paladin selects a single ally within 5 feet.  For the next 2 rounds, neither the Paladin nor the target may move.  However, the target gains a Deflection bonus of 4 points per point of Charisma above 10 plus 4 points per Paladin level to Armor Class, Melee Spell Success, and Attack, as well Critical Hit Immunity."
+activateable true
+fixed true
+cooldown 5
+
+icon "icons/aid"
+scriptFile "abilities/aid"
+
+actionType Buff
+groupType Single
+rangeType Touch

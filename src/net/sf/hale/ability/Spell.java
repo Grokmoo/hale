@@ -193,10 +193,6 @@ public class Spell extends Ability {
 			// add the spell failure from armor
 			int armorFailure = parent.stats().get(Stat.ArmorPenalty) - parent.stats().get(Bonus.Type.ArmorSpellFailure);
 			failure += Math.max(0, armorFailure);
-			
-			if (parent.isImmobilized()) {
-				return 100;
-			}
 		}
 		
 		// determine the failure due to threatening creatures
@@ -252,11 +248,6 @@ public class Spell extends Ability {
 			// add the spell failure from armor
 			int armorFailure = parent.stats().get(Stat.ArmorPenalty) - parent.stats().get(Bonus.Type.ArmorSpellFailure);
 			failure += Math.max(0, armorFailure);
-			
-			if (parent.isImmobilized()) {
-				Game.mainViewer.addMessage("red", parent.getName() + " failed to cast " + getName() + " due to immobilization.");
-				return false;
-			}
 		}
 		
 		// determine the failure due to threatening creatures

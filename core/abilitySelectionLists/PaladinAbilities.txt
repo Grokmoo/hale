@@ -7,4 +7,10 @@ add CharismaTraining3 0 2
 connect 0 0 OneDown
 connect 0 1 OneDown
 
-add HolyAura 1 0
+add Leadership 1.5 0
+add PositiveEnergy 2 1
+add PersonalMagnetism 1 1
+
+add Aid 3 0
+
+connect 1.5 0 TwoDown

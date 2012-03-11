@@ -1,4 +1,4 @@
-name "Constitution Training II"
+name "Constitution Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Constitution.
 activateable false

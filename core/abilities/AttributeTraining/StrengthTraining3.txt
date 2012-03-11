@@ -1,4 +1,4 @@
-name "Strength Training II"
+name "Strength Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Strength."
 activateable false

@@ -1,4 +1,4 @@
-name "Dexterity Training II"
+name "Dexterity Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Dexterity.
 activateable false
