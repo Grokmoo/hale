@@ -6,4 +6,5 @@ activateable false
 icon "icons/personalMagnetism"
 
 addPrereq Ability Leadership
-addPrereq Role Paladin 3
+addPrereq Ability CharismaTraining1
+addPrereq Role Paladin 5

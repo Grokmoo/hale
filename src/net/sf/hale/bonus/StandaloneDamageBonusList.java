@@ -63,7 +63,11 @@ public class StandaloneDamageBonusList {
 		if (bonuses == null) return damage;
 		
 		for (StandaloneDamageBonus bonus : bonuses) {
-			int randDamage = Game.dice.rand(bonus.getMinDamage(), bonus.getMaxDamage());
+			int randDamage;
+			if (bonus.getMinDamage() == bonus.getMaxDamage())
+				randDamage = bonus.getMinDamage();
+			else
+				randDamage = Game.dice.rand(bonus.getMinDamage(), bonus.getMaxDamage());
 			
 			damage.add(Game.ruleset.getDamageType(bonus.getDamageType()), randDamage);
 		}
