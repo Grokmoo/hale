@@ -1,4 +1,4 @@
-name "Charisma Training II"
+name "Charisma Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Charisma.
 activateable false

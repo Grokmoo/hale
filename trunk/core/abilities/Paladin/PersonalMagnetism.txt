@@ -1,0 +1,9 @@
+name "Personal Magnetism"
+type "Paladin Abilities"
+description "Your bonus to Charisma is treated as double its actual value for the purposes of all Paladin abilities."
+activateable false
+
+icon "icons/personalMagnetism"
+
+addPrereq Ability Leadership
+addPrereq Role Paladin 3

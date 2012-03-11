@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.rules.Race;
@@ -64,6 +65,8 @@ public class UniqueCharacter implements Iterable<Creature> {
 		this.name = creature.getName();
 		this.gender = creature.getGender();
 		this.race = creature.getRace();
+		
+		setMinMaxLevel();
 	}
 	
 	/**
@@ -76,15 +79,14 @@ public class UniqueCharacter implements Iterable<Creature> {
 	}
 	
 	/**
-	 * Sets the minimum and maximum level for valid creatures in this unique character.
+	 * Sets the minimum and maximum level for valid creatures in this unique character based on the current
+	 * campaign rules
 	 * Note that this constraint does not prevent creatures from being added.
-	 * @param min the minimum level constraint
-	 * @param max the maximum level constraint
 	 */
 	
-	public void setMinMaxLevel(int min, int max) {
-		this.minLevel = min;
-		this.maxLevel = max;
+	public void setMinMaxLevel() {
+		this.minLevel = Game.curCampaign.getMinStartingLevel();
+		this.maxLevel = Game.curCampaign.getMaxStartingLevel();
 	}
 	
 	/**
@@ -98,6 +100,15 @@ public class UniqueCharacter implements Iterable<Creature> {
 		int level = creature.getRoles().getTotalLevel();
 		
 		return level >= this.minLevel && level <= this.maxLevel;
+	}
+	
+	/**
+	 * Returns the first creature in this uniqueCharacter
+	 * @return the first creature in this uniqueCharacter
+	 */
+	
+	public Creature getFirstCreature() {
+		return creatures.get(0);
 	}
 	
 	/**

@@ -91,7 +91,7 @@ public class CharacterSelector extends Widget {
 		
 		this.character = character;
 		this.creature = character.getBestCreature();
-		
+
 		characterMeetsLevelRequirements = creature != null;
 		// use the first creature if none meet the requirements
 		if (creature == null) {
@@ -163,7 +163,7 @@ public class CharacterSelector extends Widget {
 			if (deleteButton != null) removeChild(deleteButton);
 			
 			if (character.size() <= 1) {
-				deleteButton = new DeleteButton(character.getBestCreature(), null);
+				deleteButton = new DeleteButton(character.getFirstCreature(), null);
 				add(deleteButton);
 			}
 		}

@@ -244,7 +244,6 @@ public class PartyFormationWindow extends Widget {
 			// if the creature didn't match any of the existing ones, create a new one
 			if (!creatureAdded) {
 				UniqueCharacter uc = new UniqueCharacter(creature);
-				uc.setMinMaxLevel(Game.curCampaign.getMinStartingLevel(), Game.curCampaign.getMaxStartingLevel());
 				
 				characters.add(uc);
 			}

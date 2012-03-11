@@ -1,4 +1,4 @@
-name "Wisdom Training II"
+name "Wisdom Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Wisdom.
 activateable false

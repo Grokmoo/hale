@@ -1,4 +1,4 @@
-name "Intelligence Training II"
+name "Intelligence Training III"
 type "General"
 description "You gain an additional permanent +1 bonus to Intelligence.
 activateable false
