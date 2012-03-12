@@ -39,3 +39,7 @@ level 11 selectAbilityFromList General
 level 14 selectAbilityFromList General
 level 17 selectAbilityFromList General
 level 20 selectAbilityFromList General
+level 23 selectAbilityFromList General
+level 26 selectAbilityFromList General
+level 29 selectAbilityFromList General
+level 32 selectAbilityFromList General
