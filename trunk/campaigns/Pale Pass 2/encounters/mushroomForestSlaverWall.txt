@@ -1,4 +1,4 @@
 size 0
-faction "Neutral"
+faction "Object"
 challenge 0
 creature "mushroomForestSlaverWall" 0 0

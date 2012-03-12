@@ -1,0 +1,11 @@
+name "Dwarven Key Fragment"
+icon "items/I_Map" "#ff989fea"
+ingredient false
+quest true
+cursed false
+description "The fragment of the gate key that was held by the Deep Dwarves."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+useButtonText ""

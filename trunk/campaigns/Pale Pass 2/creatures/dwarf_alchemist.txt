@@ -1,0 +1,24 @@
+playerCharacter false
+
+name "Deep Dwarf Alchemist"
+portrait "Dwarf/fighter-dark"
+
+gender "Male"
+race "Dwarf"
+immortal true
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair014" "#ff5c87a2"
+beardicon "subIcons/beard007" "#ff5c87a2"
+skincolor "#ff5a4739"
+clothingcolor "#ffb3b86b"
+xp 4400
+role "Commoner" 8
+attributes 10 9 12 11 9 9
+script "ai/aiStandard"
+conversation "conversations/dwarf_alchemist"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 50 100
+equip "armor_clothes" Good
+addloot "LootLevel5" 50 PER_LIST

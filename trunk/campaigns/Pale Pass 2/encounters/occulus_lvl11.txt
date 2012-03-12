@@ -1,0 +1,4 @@
+size 0
+faction "Hostile"
+challenge 100
+creature "occulus" 0 0

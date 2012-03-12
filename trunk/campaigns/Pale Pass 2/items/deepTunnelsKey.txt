@@ -1,0 +1,10 @@
+name "Key"
+icon "items/I_Key05" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This key was found in the deep tunnels and likely opens a door somewhere in that area."
+value "0 CP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

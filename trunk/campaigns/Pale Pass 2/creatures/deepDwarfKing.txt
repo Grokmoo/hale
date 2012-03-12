@@ -1,0 +1,28 @@
+playerCharacter false
+
+name "Deep Dwarven King"
+portrait "Dwarf/dragonguard-dark"
+
+gender "Male"
+race "Dwarf"
+immortal true
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair016" "#ff5c87a2"
+beardicon "subIcons/beard006" "#ff5c87a2"
+skincolor "#ff433f22"
+clothingcolor "#ffff0000"
+xp 4400
+role "Warrior" 12
+attributes 15 11 13 14 13 12
+script "ai/aiStandard"
+conversation "conversations/dwarvenKing"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 50 100
+equip "armor_plateheavy_base" Good
+equip "gloves_plate_base" Good
+equip "cloak" Good
+equip "boots_plate_base" Good
+additem "greataxe" 1 Good
+addloot "LootLevel5" 50 PER_LIST

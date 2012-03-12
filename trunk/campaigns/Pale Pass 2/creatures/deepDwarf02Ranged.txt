@@ -20,5 +20,5 @@ equip "crossbow" Fine
 equip "armor_leatherhard_base" Good
 equip "boots_leather_base" Fine
 equip "bolt" Good
-additem "bolt" 94 Good
+additem "bolt" 93 Good
 addloot "LootLevel5" 50 PER_LIST
