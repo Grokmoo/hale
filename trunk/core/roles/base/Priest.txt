@@ -30,7 +30,6 @@ level 25 selectAbilityFromList Priest
 level 26 selectAbilityFromList Priest
 level 28 selectAbilityFromList Priest
 level 29 selectAbilityFromList Priest
-level 31 selectAbilityFromList Priest
 
 level 1 addAbility ProficiencyLightArmor
 level 1 addAbility ProficiencyMediumArmor

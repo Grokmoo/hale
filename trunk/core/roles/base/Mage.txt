@@ -41,7 +41,6 @@ level 26 selectAbilityFromList "Mage"
 level 27 selectAbilityFromList "Mage"
 level 28 selectAbilityFromList "Mage"
 level 29 selectAbilityFromList "Mage"
-level 30 selectAbilityFromList "Mage"
 
 spellCastingAttribute Int
 
