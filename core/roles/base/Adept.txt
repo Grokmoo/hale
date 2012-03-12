@@ -25,7 +25,6 @@ level 23 selectAbilityFromList Adept
 level 25 selectAbilityFromList Adept
 level 27 selectAbilityFromList Adept
 level 29 selectAbilityFromList Adept
-level 31 selectAbilityFromList Adept
 
 level 1 addAbility ProficiencyLightArmor
 level 1 addAbility ProficiencyShields

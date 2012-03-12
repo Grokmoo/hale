@@ -36,4 +36,3 @@ level 23 selectAbilityFromList Rogue
 level 25 selectAbilityFromList Rogue
 level 27 selectAbilityFromList Rogue
 level 29 selectAbilityFromList Rogue
-level 31 selectAbilityFromList Rogue

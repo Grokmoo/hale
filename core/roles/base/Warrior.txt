@@ -46,4 +46,3 @@ level 25 selectAbilityFromList Warrior
 level 26 selectAbilityFromList Warrior
 level 28 selectAbilityFromList Warrior
 level 29 selectAbilityFromList Warrior
-level 31 selectAbilityFromList Warrior
