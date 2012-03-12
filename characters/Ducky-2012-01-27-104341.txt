@@ -2,7 +2,7 @@ pregenerated true
 playerCharacter true
 faction "Player"
 name "Ducky"
-portrait "Elf/druid"
+portrait "Elf/druid-red"
 
 gender "Female"
 race "Elf"

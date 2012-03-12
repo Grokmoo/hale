@@ -9,7 +9,7 @@ function startConversation(game, parent, target, conversation) {
             
             parent.put("rewardGiven", true);
             game.getPartyCurrency().addPP(1);
-			game.addMessage("blue", "The party has gained 10 GP.");
+            game.addMessage("blue", "The party has gained 10 GP.");
         }
         
         game.runExternalScript("quests/dwarvenSlavers", "endQuest");

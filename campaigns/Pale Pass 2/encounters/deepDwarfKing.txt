@@ -1,0 +1,8 @@
+size 3
+faction "Neutral"
+challenge 0
+creature "deepDwarf" -3 0
+creature "deepDwarf" 1 2
+creature "deepDwarf01Priest" -1 -3
+creature "deepDwarf03Ranged" 3 -1
+creature "deepDwarfKing" 0 -1

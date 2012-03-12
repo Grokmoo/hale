@@ -1,0 +1,21 @@
+playerCharacter false
+
+name "Deep Dwarf"
+gender "Male"
+race "Dwarf"
+immortal true
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair015" "#ff5c87a2"
+beardicon "subIcons/beard005" "#ff5c87a2"
+skincolor "#ffad9b76"
+clothingcolor "#ffff0000"
+xp 4400
+role "Commoner" 8
+attributes 10 9 12 11 9 9
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 50 100
+equip "armor_clothes" Good
+addloot "LootLevel5" 50 PER_LIST

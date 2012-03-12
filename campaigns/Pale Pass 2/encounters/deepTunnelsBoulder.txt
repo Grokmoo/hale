@@ -1,4 +1,4 @@
 size 0
 faction "Object"
 challenge 0
-creature "ancientTombWillSpirit" 0 0
+creature "deepTunnelsBoulder" 0 0
