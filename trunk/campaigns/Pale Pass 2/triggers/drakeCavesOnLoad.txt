@@ -1,0 +1,3 @@
+area "Drake Caves"
+script "triggers/drakeCavesOnLoad"
+addPoints

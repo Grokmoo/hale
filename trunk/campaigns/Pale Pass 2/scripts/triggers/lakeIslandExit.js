@@ -1,6 +1,6 @@
 
 function onPlayerEnter(game, player, trigger) {
-	if (game.get("kingSerpentKilled") != null) return;
+    if (game.get("kingSerpentKilled") != null) return;
 
 
     var creature = game.currentArea().getEntityWithID("kingSerpent");

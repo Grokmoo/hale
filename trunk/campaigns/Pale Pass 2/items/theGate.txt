@@ -1,0 +1,19 @@
+name "The Gate"
+icon "doors/rural_gate-sw" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "This is the gate leading to the surface."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+door true
+doorTransparent "false"
+openicon "doors/rural_gate-sw-open"
+lock 0
+key "gateKey"
+keyRequired true
+removeKeyOnUnlock true
+script "items/theGate"
+useButtonText ""

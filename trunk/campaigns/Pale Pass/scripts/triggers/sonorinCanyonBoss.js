@@ -15,11 +15,7 @@ function fightConcluded(game) {
     var popup = game.showCampaignConclusionPopup();
     popup.addText("<div style=\"font-family: vera;\">");
 	popup.addText("Congratulations, you have completed Chapter 1 of the Pale Pass campaign.");
-	popup.addText("  You can export your characters now if you wish and continue on with the next chapter.");
-	popup.addText("</div>");
-	
-	popup.addText("<div style=\"font-family: vera; margin-top: 1em;\">");
-	popup.addText("Thanks for playing!");
+	popup.addText("  You may export your characters now if you wish and continue on with the next chapter.");
 	popup.addText("</div>");
 	
 	popup.setNextCampaign("Pale Pass 2", "Continue to Chapter 2");

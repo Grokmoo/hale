@@ -1,0 +1,22 @@
+playerCharacter false
+
+name "Drake Fire Mage"
+icon "creatures/drake04" "#ffffffff"
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Mage" 12
+attributes 16 13 15 16 10 10
+script "ai/aiStandard"
+addSkillRanks "Search" 40
+level 1 addAbility "Shield"
+level 1 addAbility "ElementalShield"
+level 1 addAbility "FlamingFingers"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Fireball"
+level 1 addAbility "Deafen"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 80 140

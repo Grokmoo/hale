@@ -1,0 +1,10 @@
+icon "transition"
+twoWay false
+activated true
+location "Drake Caves"
+from "Deep Drake Caves" 48 10
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0

@@ -1,0 +1,17 @@
+playerCharacter false
+
+name "Drake Champion"
+icon "creatures/drake06" "#ffffffff"
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Warrior" 13
+attributes 20 12 15 8 10 10
+script "ai/aiStandard"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 80 140
+equip "unarmedClaw" Fine
+equip "armor_mail_base" Good

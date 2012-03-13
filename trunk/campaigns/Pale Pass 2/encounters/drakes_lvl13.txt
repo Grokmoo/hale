@@ -1,0 +1,14 @@
+size 2
+faction "Hostile"
+challenge 100
+randomize true
+numRandomCreatures 3 4
+respawn true
+respawnHours 24
+creature "drakeWarrior" -2 -1
+creature "drakeWarrior" -1 -2
+creature "drakeWarrior02" 0 -2
+creature "drakeWarrior02" -2 0
+creature "drakePriest" 1 0
+creature "drakeFireMage" 1 -1
+creature "drakeFireMage02" 2 0

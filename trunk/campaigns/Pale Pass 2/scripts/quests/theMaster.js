@@ -40,3 +40,27 @@ function learnOfMaster(game) {
     
     entry.addText("In an Ancient Tomb, you discovered the reason why the Master seeks to kill you.  You are a descendant of one of an ancient order of mages, and hold a piece of the Master's power inside of you.  You must either find a way to defeat or destroy him, or be killed yourself.");
 }
+
+function fragmentsObtained(game) {
+    var quest = game.getQuestEntry("The Master");
+    
+    if (quest.hasSubEntry("Fragments Obtained")) return;
+    
+    quest.setCurrentSubEntriesCompleted();
+    
+    var entry = quest.createSubEntry("Fragments Obtained");
+    
+    entry.addText("You have finally collected all three key fragments.  Now, you must return to the goblin chieftan, who possesses the fourth and final fragment.");
+}
+
+function keyComplete(game) {
+    var quest = game.getQuestEntry("The Master");
+    
+    if (quest.hasSubEntry("Travel to the Gate")) return;
+    
+    quest.setCurrentSubEntriesCompleted();
+    
+    var entry = quest.createSubEntry("Travel to the Gate");
+    
+    entry.addText("You have the completed key in your possession.  You must travel to the Gate and return to the surface.  In order to reach the gate, you will need to pass through the lair of the fire drakes.");
+}

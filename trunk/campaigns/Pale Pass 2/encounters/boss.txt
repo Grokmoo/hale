@@ -1,0 +1,8 @@
+size 2
+faction "Neutral"
+challenge 140
+creature "boss_01" -1 0
+creature "boss_02" -2 0
+creature "boss_05" 0 1
+creature "boss_03" -1 -2
+creature "boss_04" 2 0

@@ -1,0 +1,22 @@
+playerCharacter false
+
+name "Drake Priest"
+icon "creatures/drake09" "#ffffffff"
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Priest" 12
+attributes 16 10 14 10 15 10
+script "ai/aiStandard"
+level 1 addAbility "Enfeeble"
+level 1 addAbility "Curse"
+level 1 addAbility "Resistance"
+level 1 addAbility "MassCurse"
+level 1 addAbility "DivineLuck"
+level 1 addAbility "Haste"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 80 140
+equip "armor_mail_base" Good

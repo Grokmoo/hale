@@ -1,0 +1,25 @@
+playerCharacter false
+
+name "Drake Arch Mage"
+icon "creatures/drake03" "#ffffffff"
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Mage" 15
+attributes 17 13 16 17 10 10
+script "ai/aiStandard"
+addSkillRanks "Search" 50
+level 1 addAbility "Shield"
+level 1 addAbility "ElementalShield"
+level 1 addAbility "FlamingFingers"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Fireball"
+level 1 addAbility "Meteor"
+level 1 addAbility "AbsorbEnergy"
+level 1 addAbility "ResistSpells"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 80 140
+equip "unarmedClaw" Fine

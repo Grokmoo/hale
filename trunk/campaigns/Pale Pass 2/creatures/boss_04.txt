@@ -1,0 +1,26 @@
+playerCharacter false
+
+name "Zenlel"
+gender "Male"
+race "Elf"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair006" "#ff93733e"
+
+skincolor "#ffd0b891"
+clothingcolor "#ffffffff"
+xp 25400
+role "Warrior" 15
+attributes 12 20 14 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "PreciseShot"
+level 1 addAbility "CripplingShot"
+level 1 addAbility "PointBlankShot"
+level 1 addAbility "MultiShot"
+level 1 addAbility "Longshot"
+
+equip "compositeLongbow" Fine
+equip "armor_leatherhard_base" Good
+equip "gloves_leather_lesserDex" Fine
+equip "boots_leather_lesserSpeed" Fine
+equip "ringLesserColdResistance" Good
