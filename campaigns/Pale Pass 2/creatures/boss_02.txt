@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Arle"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair001" "#ffffffff"
+beardicon "subIcons/beard002" "#ffb59541"
+skincolor "#ffbe7238"
+clothingcolor "#ff47b145"
+xp 25400
+role "Warrior" 15
+attributes 18 12 16 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "MightyBlow"
+
+currencyReward 80 180
+equip "greatsword" Fine
+equip "armor_plate_base" Fine
+equip "gloves_plate_base" Fine
+equip "boots_plate_base" Fine
+equip "ringLesserColdResistance" Good

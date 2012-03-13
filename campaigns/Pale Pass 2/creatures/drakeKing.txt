@@ -1,0 +1,21 @@
+playerCharacter false
+
+name "Drake King"
+icon "creatures/drake02" "#ffffffff"
+portrait "Monster/inferno"
+
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Warrior" 15
+attributes 22 10 18 12 10 10
+script "ai/aiStandard"
+conversation "conversations/drakeKing"
+addSkillRanks "Search" 40
+level 1 addAbility "FireImmunity100"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 90 160
+equip "unarmedClaw" Superb
+equip "armor_mail_base" Good

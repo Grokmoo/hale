@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Marle"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair002" "#ffc6aa7a"
+beardicon "subIcons/beard001" "#ffb59541"
+skincolor "#ffd0b891"
+clothingcolor "#ff47b145"
+xp 25400
+role "Warrior" 15
+attributes 19 11 16 10 10 10
+script "ai/aiStandard"
+level 1 addAbility "MightyBlow"
+
+currencyReward 80 180
+equip "greataxe" Good
+equip "armor_plate_base" Fine
+equip "gloves_plate_base" Fine
+equip "boots_plate_base" Fine
+equip "ringLesserColdResistance" Good

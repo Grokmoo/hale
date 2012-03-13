@@ -13,7 +13,7 @@ function startConvo(game, player) {
     game.sleep(2000);
     
     var target = game.currentArea().getEntityWithID("lizardlingKing");
-	
+    
     game.setFactionRelationship("Player", "Lizardlings", "Friendly");
     target.getEncounter().setCreatureFaction("Lizardlings");
     

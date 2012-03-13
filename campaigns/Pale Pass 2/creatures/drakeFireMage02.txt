@@ -1,0 +1,25 @@
+playerCharacter false
+
+name "Drake Fire Mage"
+icon "creatures/drake08" "#ffffffff"
+gender "Male"
+race "Drake"
+unspentSkillPoints 0
+xp 10300
+role "Mage" 12
+attributes 18 13 14 15 10 10
+script "ai/aiStandard"
+addSkillRanks "Search" 40
+level 1 addAbility "Shield"
+level 1 addAbility "ElementalShield"
+level 1 addAbility "FlamingFingers"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Fireball"
+level 1 addAbility "Chameleon"
+level 1 addAbility "HardenArmor"
+level 1 addAbility "ResistWeapons"
+level 1 addAbility "MassChameleon"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "NaturalArmor20"
+
+currencyReward 80 140

@@ -2,7 +2,11 @@
 function startConversation(game, parent, target, conversation) {
     conversation.addText("Hello again surfacer.");
 
-    if (game.get("gateQuestStarted") == null) {
+    if (parent.get("keyComplete") != null) {
+        conversation.addResponse("Farewell.", "onExit");
+    } else if (game.get("fragmentsObtained") == 3) {
+        conversation.addResponse("We have found all three key fragments.", "frag01");
+    } else if (game.get("gateQuestStarted") == null) {
         conversation.addResponse("You said you could help me return to the surface.", "convo02");
         conversation.addResponse("Farewell.", "onExit");
     } else {
@@ -11,6 +15,93 @@ function startConversation(game, parent, target, conversation) {
 }
 
 function onExit(game, parent, target, conversation) {
+    conversation.exit();
+}
+
+function frag01(game, parent, target, conversation) {
+    conversation.addText("You have?  Give them here then, and I will complete the key for you.");
+    
+    conversation.addResponse("<span style=\"font-family: red\">Give him the fragments</span>", "frag02");
+    conversation.addResponse("How do I know I can trust you?", "frag01a");
+}
+
+function frag01a(game, parent, target, conversation) {
+    conversation.addText("You've come this far, haven't you?  Give me the fragments and I can assemble the key.");
+    
+    conversation.addResponse("<span style=\"font-family: red\">Give him the fragments</span>", "frag02");
+    conversation.addResponse("Not now.  Farewell.", "onExit");
+}
+
+function frag02(game, parent, target, conversation) {
+    game.getParty().removeItem("lizardlingKeyFragment");
+    game.getParty().removeItem("tombKeyFragment");
+    game.getParty().removeItem("dwarvenKeyFragment");
+    
+    conversation.addString("<div style=\"font-family: blue\">");
+    conversation.addString("He takes the three fragments from you eagerly, and then produces an additional fourth fragment from his pockets.");
+    conversation.addString("</div>");
+    
+    conversation.addResponse("You had it on you the whole time?", "frag02a");
+    conversation.addResponse("<span style=\"font-family: red\">Watch silently</span>", "frag03");
+}
+
+function frag02a(game, parent, target, conversation) {
+    conversation.addText("Yes, where else would I keep it?  Now do you want me to assemble it, or not?");
+    
+    conversation.addResponse("Yes, assemble it.", "frag03");
+}
+
+function frag03(game, parent, target, conversation) {
+    conversation.addString("<div style=\"font-family: blue\">");
+    conversation.addString("His fingers weave an intricate pattern, and the fragments begin to dance in his hands.");
+    conversation.addString("</div>");
+    
+    conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "frag04");
+}
+
+function frag04(game, parent, target, conversation) {
+    conversation.addString("<div style=\"font-family: blue\">");
+    conversation.addString("In just a few moments, the keys seem to find their match and come together.");
+    conversation.addString("</div>");
+    
+    conversation.addString("<div style=\"font-family: blue\">");
+    conversation.addString("The Chieftan offers the now completed key up to you.");
+    conversation.addString("</div>");
+    
+    conversation.addResponse("<span style=\"font-family: red\">Take it</span>", "frag05");
+}
+
+function frag05(game, parent, target, conversation) {
+    target.getInventory().addItem("gateKey", 1, "Good");
+    game.addMessage(target.getName() + " was given the Gate Key.");
+    
+    conversation.addString("<div style=\"font-family: blue\">");
+    conversation.addString("The key is solid in your hands.  It glows ever slow slightly with a mystical aura.");
+    conversation.addString("</div>");
+    
+    conversation.addResponse("So now, we can return to the surface?", "frag06");
+}
+
+function frag06(game, parent, target, conversation) {
+    conversation.addText("Yes.  However, there is one small matter.  In order to reach the gate, you must travel through the domain of the fire drakes.");
+    
+    conversation.addText("They are powerful and cruel.  They will attack you on sight.");
+    
+    conversation.addResponse("If that is the only way, then I will go.", "frag07");
+}
+
+function frag07(game, parent, target, conversation) {
+    conversation.addText("Then I wish you luck surfacer.  I will mark the way on your map.");
+    
+    conversation.addResponse("Thank you.  Farewell.", "fragExit");
+}
+
+function fragExit(game, parent, target, conversation) {
+    game.revealWorldMapLocation("Drake Caves");
+    
+    parent.put("keyComplete", true);
+    game.runExternalScript("quests/theMaster", "keyComplete");
+    
     conversation.exit();
 }
 

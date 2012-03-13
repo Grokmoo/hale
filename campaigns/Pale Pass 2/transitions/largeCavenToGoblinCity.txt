@@ -1,6 +1,6 @@
 icon "transition"
 twoWay true
-activated true
+activated false
 from "Large Cavern" 7 1
 to "Goblin City" 17 14
 addToPosition -2 1

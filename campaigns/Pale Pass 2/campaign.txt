@@ -15,8 +15,8 @@ addLocation "Mushroom Forest" "mushroomForestToWorldMap" "worldmap/mushrooms-til
 addLocation "Dwarven City" "dwarvenCityToWorldMap" "worldmap/castle" 150 15
 addLocation "Ancient Tomb" "ancientTombToWorldMap" "worldmap/temple1" 45 125
 addLocation "Underground Lake" "undergroundLakeToWorldMap" "worldmap/lake1" 490 110
-addLocation "Drake Caves" "null" "worldmap/dwarven" 300 440
-addLocation "The Gate" "null" "worldmap/drake4" 470 460
+addLocation "Drake Caves" "drakeCavesToWorldMap" "worldmap/dwarven" 300 440
+addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 470 460
 addLocation "Slaver Camp" "slaverCampToWorldMap" "worldmap/tent-ruin-1" 265 120
 addLocation "Deep Tunnels" "deepTunnelsToWorldMap" "worldmap/dwarven-doors-closed" 90 340
 setTravelTime "Goblin City" "Mushroom Forest" 6

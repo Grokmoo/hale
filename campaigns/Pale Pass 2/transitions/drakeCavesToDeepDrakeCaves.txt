@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Drake Caves" 28 78
+to "Deep Drake Caves" 1 3
+addToPosition 2 1
+addToPosition 2 0
+addToPosition 1 0
+addToPosition 0 0
+addFromPosition -2 -1
+addFromPosition -2 0
+addFromPosition -1 -1
+addFromPosition 0 0

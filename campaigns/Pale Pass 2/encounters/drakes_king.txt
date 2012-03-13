@@ -1,0 +1,8 @@
+size 2
+faction "Neutral"
+challenge 150
+creature "drakeKing" 0 0
+creature "drakeArchMage" -1 1
+creature "drakePriest" 2 0
+creature "drakeChampion" -2 -1
+creature "drakeChampion" 0 -2

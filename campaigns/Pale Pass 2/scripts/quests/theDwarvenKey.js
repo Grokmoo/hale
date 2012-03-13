@@ -29,15 +29,23 @@ function axeRetrieved(game) {
 }
 
 function questComplete(game) {
-	var quest = game.getQuestEntry("The Dwarven Key");
-	
-	if (quest.isCompleted()) return;
-	
-	quest.setCurrentSubEntriesCompleted();
+    var quest = game.getQuestEntry("The Dwarven Key");
+    
+    if (quest.isCompleted()) return;
+    
+    quest.setCurrentSubEntriesCompleted();
     
     var entry = quest.createSubEntry("Quest Complete");
     
     entry.addText("You retrieved the axe and in return recieved the key fragment from the dwarven king.");
     
     quest.setCompleted();
+    
+    var fragmentsObtained = game.get("fragmentsObtained");
+    if (fragmentsObtained == null) fragmentsObtained = 1;
+    else fragmentsObtained++;
+    
+    game.put("fragmentsObtained", fragmentsObtained);
+    
+    if (fragmentsObtained == 3) game.runExternalScript("quests/theMaster", "fragmentsObtained");
 }

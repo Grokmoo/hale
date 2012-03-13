@@ -207,7 +207,7 @@ public class EncounterEditor extends EditorWindow implements Updateable, PopupCa
 		
 		challengeLabel = new Label("Challenge");
 		
-		challengeAdjuster = new ValueAdjusterInt(new SimpleIntegerModel(0, 100, 0));
+		challengeAdjuster = new ValueAdjusterInt(new SimpleIntegerModel(0, 500, 0));
 		challengeAdjuster.getModel().addCallback(new Runnable() {
 			@Override public void run() {
 				selectedEncounter.setChallenge(challengeAdjuster.getValue());

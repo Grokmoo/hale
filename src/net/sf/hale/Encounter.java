@@ -190,7 +190,11 @@ public class Encounter implements Referenceable, Saveable {
 		this.lastSpawnRounds = Game.curCampaign.getDate().getTotalRoundsElapsed();
 		
 		if (this.randomize) {
-			int numCreatures = Game.dice.rand(minRandomCreatures, maxRandomCreatures);
+			int numCreatures;
+			if (minRandomCreatures == maxRandomCreatures)
+				numCreatures = minRandomCreatures;
+			else
+				numCreatures = Game.dice.rand(minRandomCreatures, maxRandomCreatures);
 
 			int max = this.baseCreatures.size() - 1;
 			for (int index = 0; index < numCreatures; index++) {

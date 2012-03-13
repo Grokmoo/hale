@@ -1,0 +1,3 @@
+area "Deep Drake Caves"
+script "triggers/drakeKingSight"
+addPoints   26 5   28 4   27 4   29 3
