@@ -558,6 +558,9 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		
 		updateViewers();
 		
+		if (this.getCurrentHP() > 0)
+			dying = false;
+		
 		return returnValue;
 	}
 	
