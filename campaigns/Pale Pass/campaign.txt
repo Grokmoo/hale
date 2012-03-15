@@ -3,7 +3,7 @@ startArea "The Road to Fareach"
 minPartySize 2
 maxPartySize 4
 minStartingLevel 1
-maxStartingLevel 15
+maxStartingLevel 4
 roundsPerMinute 10
 minutesPerHour 60
 hoursPerDay 24
