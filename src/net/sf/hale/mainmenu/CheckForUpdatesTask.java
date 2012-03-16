@@ -19,9 +19,9 @@
 
 package net.sf.hale.mainmenu;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -29,7 +29,7 @@ import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 
 /**
- * A thread that runs, checking for and applying updates
+ * A thread that checks for available updates
  * @author Jared
  *
  */
@@ -41,7 +41,9 @@ public class CheckForUpdatesTask extends Thread {
 	
 	private volatile boolean hasFoundUpdates;
 	
-	private BufferedInputStream in;
+	private InputStream in;
+	
+	private UpdateInfo updateInfo;
 	
 	/**
 	 * Returns a string description of any error this task has encountered, or null if
@@ -51,6 +53,16 @@ public class CheckForUpdatesTask extends Thread {
 	
 	public String getError() {
 		return error;
+	}
+	
+	/**
+	 * Gets the information pertaining to the update to be downloaded
+	 * from the server
+	 * @return
+	 */
+	
+	public UpdateInfo getUpdateInfo() {
+		return updateInfo;
 	}
 	
 	/**
@@ -82,10 +94,9 @@ public class CheckForUpdatesTask extends Thread {
 	}
 	
 	@Override public void run() {
-		String serverVersion = null;
 		in = null;
 		try {
-			in = new BufferedInputStream(new URL("http://www.halegame.com/version.txt").openStream());
+			in = new URL("http://www.halegame.com/version.txt").openStream();
 			
 			// check if the user has canceled
 			if (canceled) {
@@ -94,9 +105,16 @@ public class CheckForUpdatesTask extends Thread {
 			}
 			
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			serverVersion = reader.readLine();
+			String serverVersion = reader.readLine();
+			String downloadFile = reader.readLine();
+			String targetName = reader.readLine();
+			int fileSize = Integer.parseInt(reader.readLine());
+			String md5Hash = reader.readLine();
+			
+			updateInfo = new UpdateInfo(serverVersion, downloadFile, targetName, fileSize, md5Hash);
 			
 		} catch (Exception e) {
+			Logger.appendToErrorLog("Error checking for updates", e);
 			error = "Error connecting to update server!";
 			closeStream();
 			return;
@@ -112,7 +130,8 @@ public class CheckForUpdatesTask extends Thread {
 		try {
 			localVersion = FileUtil.readFileAsString("docs/version.txt");
 			
-		} catch (IOException e1) {
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error checking for updates", e);
 			error = "Error getting local version!";
 			closeStream();
 			return;
@@ -124,12 +143,36 @@ public class CheckForUpdatesTask extends Thread {
 			return;
 		}
 		
-		if (localVersion.equals(serverVersion)) {
+		if (localVersion.equals("svn")) {
+			error = "You must update using \"svn update\".";
+		} else if (localVersion.equals(updateInfo.version)) {
 			error = "Hale is up to date.";
-			closeStream();
 		} else {
 			hasFoundUpdates = true;
-			closeStream();
+		}
+		
+		closeStream();
+	}
+	
+	/**
+	 * A class containing information pertaining to an update
+	 * @author Jared
+	 *
+	 */
+
+	public static class UpdateInfo {
+		public final String version;
+		public final String URL;
+		public final String targetName;
+		public final int fileSize;
+		public final String md5Sum;
+		
+		private UpdateInfo(String version, String URL, String targetName, int fileSize, String md5Sum) {
+			this.version = version;
+			this.URL = URL;
+			this.targetName = targetName;
+			this.fileSize = fileSize;
+			this.md5Sum = md5Sum;
 		}
 	}
 }

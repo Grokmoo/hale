@@ -20,6 +20,8 @@
 package net.sf.hale;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -479,5 +481,79 @@ public class Game {
 
 		Game.campaignEditor = new CampaignEditor(path);
 		Game.campaignEditor.mainLoop();
+	}
+	
+	/** 
+	 * Sun property pointing the main class and its arguments. 
+	 * Might not be defined on non Hotspot VM implementations.
+	 */
+	public static final String MAIN_COMMAND = "net.sf.hale.Game";
+
+	/**
+	 * Restarts the current Java application using the same exact command that was used to start
+	 * the current instance
+	 * @param runBeforeRestart some custom code to be run before restarting, or null if
+	 * nothing should be run before restart
+	 * @throws IOException
+	 */
+	
+	public static void restartApplication(Runnable runBeforeRestart) throws IOException {
+		try {
+			// java binary
+			String java = System.getProperty("java.home") + "/bin/java";
+			// vm arguments
+			List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+			StringBuffer vmArgsOneLine = new StringBuffer();
+			for (String arg : vmArguments) {
+				// if it's the agent argument : we ignore it otherwise the
+				// address of the old application and the new one will be in conflict
+				if (!arg.contains("-agentlib")) {
+					vmArgsOneLine.append(arg);
+					vmArgsOneLine.append(" ");
+				}
+			}
+			// init the command to execute, add the vm args
+			final StringBuffer cmd = new StringBuffer("\"" + java + "\" " + vmArgsOneLine);
+
+			// program main and program arguments
+			String[] mainCommand = MAIN_COMMAND.split(" ");
+			
+			// program main is a jar
+			if (mainCommand[0].endsWith(".jar")) {
+				// if it's a jar, add -jar mainJar
+				cmd.append("-jar " + new File(mainCommand[0]).getPath());
+			} else {
+				// else it's a .class, add the classpath and mainClass
+				cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
+			}
+			
+			// finally add program arguments
+			for (int i = 1; i < mainCommand.length; i++) {
+				cmd.append(" ");
+				cmd.append(mainCommand[i]);
+			}
+			
+			// execute the command in a shutdown hook, to be sure that all the
+			// resources have been disposed before restarting the application
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					try {
+						Runtime.getRuntime().exec(cmd.toString());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
+			// execute the callback
+			if (runBeforeRestart!= null) {
+				runBeforeRestart.run();
+			}
+			
+			System.exit(0);
+		} catch (Exception e) {
+			throw new IOException("Error while trying to restart the application", e);
+		}
 	}
 }

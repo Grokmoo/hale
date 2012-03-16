@@ -104,7 +104,9 @@ public class CheckForUpdatesPopup extends PopupWindow {
 		
 		if (updateTask.hasFoundUpdates()) {
 			mainMenu.hidePopup(CheckForUpdatesPopup.this);
-			// show updater popup
+			
+			showUpdatePopup(updateTask.getUpdateInfo());
+			
 		} else if (!errorOccurred) {
 			String errorText = updateTask.getError();
 			
@@ -112,11 +114,23 @@ public class CheckForUpdatesPopup extends PopupWindow {
 				errorOccurred = true;
 				content.error.setText(errorText);
 				
-				CheckForUpdatesPopup.this.invalidateLayout();
-				CheckForUpdatesPopup.this.adjustSize();
-				
 				content.cancel.setText("OK");
+				
+				adjustSize();
 			}
 		}
+	}
+	
+	private void showUpdatePopup(CheckForUpdatesTask.UpdateInfo updateInfo) {
+		ConfirmationPopup popup = new ConfirmationPopup(mainMenu);
+		popup.setTitleText("A new version (" + updateInfo.version + ") has been found.  Update?");
+		popup.addCallback(new Runnable() {
+			@Override public void run() {
+				UpdatePopup updatePopup = new UpdatePopup(mainMenu, updateTask.getUpdateInfo());
+				mainMenu.showPopup(updatePopup);
+			}
+		});
+		
+		mainMenu.showPopup(popup);
 	}
 }
