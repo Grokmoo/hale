@@ -19,10 +19,11 @@
 
 package net.sf.hale.mainmenu;
 
+import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PopupWindow;
-import de.matthiasmann.twl.Widget;
 
 /**
  * A popup window that starts an update process and displays the status to the user
@@ -30,25 +31,56 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class UpdatePopup extends PopupWindow {
+public class CheckForUpdatesPopup extends PopupWindow {
 	private Content content;
+	private MainMenu mainMenu;
 	
-	public UpdatePopup(Widget parent) {
+	private boolean errorOccurred;
+	
+	private CheckForUpdatesTask updateTask;
+	
+	/**
+	 * Creates a new UpdatePopup
+	 * @param parent
+	 */
+	
+	public CheckForUpdatesPopup(MainMenu parent) {
 		super(parent);
+		
+		this.mainMenu = parent;
+		
+		errorOccurred = false;
 		
 		content = new Content();
 		add(content);
 		
 		setCloseOnClickedOutside(false);
 		setCloseOnEscape(false);
+		
+		updateTask = new CheckForUpdatesTask();
+		updateTask.start();
 	}
 	
 	private class Content extends DialogLayout {
 		private Label title;
+		private Label error;
+		private Button cancel;
 		
 		private Content() {
 			title = new Label("Checking for updates...");
 			title.setTheme("titlelabel");
+			
+			error = new Label();
+			error.setTheme("errorlabel");
+			
+			cancel = new Button();
+			cancel.addCallback(new Runnable() {
+				@Override public void run() {
+					updateTask.cancel();
+					CheckForUpdatesPopup.this.closePopup();
+				}
+			});
+			cancel.setTheme("cancelbutton");
 			
 			Group mainH = createParallelGroup();
 			Group mainV = createSequentialGroup();
@@ -56,8 +88,35 @@ public class UpdatePopup extends PopupWindow {
 			mainH.addWidget(title);
 			mainV.addWidget(title);
 			
+			mainH.addWidget(error);
+			mainV.addWidget(error);
+			
+			mainH.addWidget(cancel);
+			mainV.addWidget(cancel);
+			
 			setHorizontalGroup(mainH);
 			setVerticalGroup(mainV);
+		}
+	}
+	
+	@Override protected void paint(GUI gui) {
+		super.paint(gui);
+		
+		if (updateTask.hasFoundUpdates()) {
+			mainMenu.hidePopup(CheckForUpdatesPopup.this);
+			// show updater popup
+		} else if (!errorOccurred) {
+			String errorText = updateTask.getError();
+			
+			if (errorText != null) {
+				errorOccurred = true;
+				content.error.setText(errorText);
+				
+				CheckForUpdatesPopup.this.invalidateLayout();
+				CheckForUpdatesPopup.this.adjustSize();
+				
+				content.cancel.setText("OK");
+			}
 		}
 	}
 }
