@@ -21,6 +21,8 @@ package net.sf.hale.mainmenu;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.sf.hale.Campaign;
 import net.sf.hale.Game;
@@ -40,6 +42,7 @@ import org.lwjgl.opengl.GL11;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 
@@ -87,6 +90,9 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 	private final Button exitButton;
 	
 	private final Label versionLabel;
+	
+	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
+	private final List<PopupWindow> popupsToHide = new ArrayList<PopupWindow>();
 	
 	/**
 	 * Create a new MainMenu, with buttons for choosing campaign, loading games,
@@ -155,8 +161,8 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         updateButton.setTheme("updatebutton");
         updateButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		//UpdatePopup popup = new UpdatePopup(MainMenu.this);
-        		//popup.openPopupCentered();
+        		CheckForUpdatesPopup popup = new CheckForUpdatesPopup(MainMenu.this);
+        		popup.openPopupCentered();
         	}
         });
         this.add(updateButton);
@@ -192,6 +198,28 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         // load last open campaign from file if it exists
         String campaignID = this.getLastOpenCampaign();
         if (campaignID != null) this.loadCampaign(campaignID);
+	}
+	
+	/**
+	 * Hides the specified popup the next time the GUI updates
+	 * @param popup
+	 */
+	
+	public void hidePopup(PopupWindow popup) {
+		synchronized(popupsToHide) {
+			popupsToHide.add(popup);
+		}
+	}
+	
+	/**
+	 * Shows the specified popup the next time the GUI updates
+	 * @param popup
+	 */
+	
+	public void showPopup(PopupWindow popup) {
+		synchronized(popupsToShow) {
+			popupsToShow.add(popup);
+		}
 	}
 	
 	/**
@@ -259,6 +287,24 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth(), getInnerBottom() - versionLabel.getHeight());
 	}
 	
+	private void handlePopups() {
+		synchronized(popupsToShow) {
+			for (PopupWindow p : popupsToShow) {
+				p.openPopupCentered();
+			}
+			
+			popupsToShow.clear();
+		}
+		
+		synchronized(popupsToHide) {
+			for (PopupWindow p : popupsToHide) {
+				p.closePopup();
+			}
+			
+			popupsToHide.clear();
+		}
+	}
+	
 	/**
 	 * This function is called after creating the MainMenu.  Runs the main display
 	 * loop for the menu until the user either starts or loads a game, launches the
@@ -280,6 +326,8 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 					menuRunning = false;
 				}
 			}
+			
+			handlePopups();
 			
 			Game.textureLoader.update();
 			
