@@ -81,6 +81,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 	private final Button newGameButton;
 	private final Button loadGameButton;
 	private final Button editorButton;
+	private final Button updateButton;
 	private final Button optionsButton;
 	
 	private final Button exitButton;
@@ -150,6 +151,16 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         });
         this.add(editorButton);
         
+        updateButton = new Button();
+        updateButton.setTheme("updatebutton");
+        updateButton.addCallback(new Runnable() {
+        	@Override public void run() {
+        		//UpdatePopup popup = new UpdatePopup(MainMenu.this);
+        		//popup.openPopupCentered();
+        	}
+        });
+        this.add(updateButton);
+        
         optionsButton = new Button();
         optionsButton.setTheme("optionsbutton");
         optionsButton.addCallback(new Runnable() {
@@ -195,6 +206,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setVisible(visible);
 		loadGameButton.setVisible(visible);
 		editorButton.setVisible(visible);
+		updateButton.setVisible(visible);
 		optionsButton.setVisible(visible);
 		exitButton.setVisible(visible);
 	}
@@ -222,12 +234,13 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setSize(newGameButton.getPreferredWidth(), newGameButton.getPreferredHeight());
 		loadGameButton.setSize(loadGameButton.getPreferredWidth(), loadGameButton.getPreferredHeight());
 		editorButton.setSize(editorButton.getPreferredWidth(), editorButton.getPreferredHeight());
+		updateButton.setSize(updateButton.getPreferredWidth(), updateButton.getPreferredHeight());
 		optionsButton.setSize(optionsButton.getPreferredWidth(), optionsButton.getPreferredHeight());
 		exitButton.setSize(exitButton.getPreferredWidth(), exitButton.getPreferredHeight());
 		
 		int buttonHeight = campaignButton.getHeight() + newGameButton.getHeight() +
-			loadGameButton.getHeight() + editorButton.getHeight() + optionsButton.getHeight() +
-			exitButton.getHeight() + 5 * buttonGap;
+			loadGameButton.getHeight() + editorButton.getHeight() + updateButton.getHeight() +
+			optionsButton.getHeight() + exitButton.getHeight() + 6 * buttonGap;
 		
 		int buttonY = (Game.config.getResolutionY() - buttonHeight) / 2;
 		
@@ -235,7 +248,8 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setPosition((resX - newGameButton.getWidth()) / 2, campaignButton.getBottom() + buttonGap);
 		loadGameButton.setPosition((resX - loadGameButton.getWidth()) / 2, newGameButton.getBottom() + buttonGap);
 		editorButton.setPosition((resX - editorButton.getWidth()) / 2, loadGameButton.getBottom() + buttonGap);
-		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
+		updateButton.setPosition((resX - updateButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
+		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, updateButton.getBottom() + buttonGap);
 		exitButton.setPosition((resX - exitButton.getWidth()) / 2, optionsButton.getBottom() + buttonGap);
 		
 		campaignLabel.setSize(campaignLabel.getPreferredWidth(), campaignLabel.getPreferredHeight());
