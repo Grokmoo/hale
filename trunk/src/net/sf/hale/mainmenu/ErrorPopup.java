@@ -37,6 +37,7 @@ import de.matthiasmann.twl.Widget;
 public class ErrorPopup extends PopupWindow {
 	private Content content;
 	private List<String> messages;
+	private Runnable callback;
 	
 	/**
 	 * Create a new ErrorPopup with the specified parent widget
@@ -47,12 +48,22 @@ public class ErrorPopup extends PopupWindow {
 	public ErrorPopup(Widget parent, List<String> messages) {
 		super(parent);
 		this.setCloseOnClickedOutside(false);
+		this.setCloseOnEscape(false);
 
 		this.messages = new ArrayList<String>();
 		this.messages.addAll(messages);
 		
 		content = new Content();
 		this.add(content);
+	}
+	
+	/**
+	 * Sets a callback that is run when this popup is closed by the user clicking "ok"
+	 * @param callback
+	 */
+	
+	public void setCallback(Runnable callback) {
+		this.callback = callback;
 	}
 	
 	private class Content extends Widget {
@@ -69,6 +80,8 @@ public class ErrorPopup extends PopupWindow {
 			accept.setTheme("acceptbutton");
 			accept.addCallback(new Runnable() {
 				@Override public void run() {
+					if (callback != null) callback.run();
+					
 					closePopup();
 				}
 			});
