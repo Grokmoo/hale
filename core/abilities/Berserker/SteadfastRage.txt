@@ -1,0 +1,10 @@
+name "Steadfast Rage"
+type "Berserker Abilities"
+description "You no longer suffer the effects of exhaustion after your Rage."
+
+activateable false
+
+icon "icons/steadfastRage"
+
+addPrereq Ability Rage
+addPrereq Role Berserker 5

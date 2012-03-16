@@ -247,7 +247,9 @@ image positiveEnergy     0 14
 image personalMagnetism  1 14
 image aid                2 14
 image smite              3 14
-
+image rage               4 14
+image unstoppableRage    5 14
+image improvedRage       6 14
 image assassin           7 14
 image duelist            8 14
 image mechanist          9 14
@@ -257,6 +259,11 @@ image elementalist      12 14
 image warWizard         13 14
 image illusionist       14 14
 image trainStrength3    15 14
+
+image steadfastRage       0 15
+image epicRage            1 15
+image bruiser             2 15
+
 
 image trainDexterity3     7 15
 image trainConstitution3  8 15

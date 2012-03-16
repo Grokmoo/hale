@@ -1,0 +1,9 @@
+name "Improved Rage"
+type "Berserker Abilities"
+description "Your Rage ability becomes more powerful.  Your bonus to Strength increases to +6.  Furthermore, your Rage lasts for an additional 2 rounds."
+activateable false
+
+icon "icons/improvedRage"
+
+addPrereq Ability Rage
+addPrereq Role Berserker 3

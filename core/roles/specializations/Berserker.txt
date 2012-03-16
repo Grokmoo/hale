@@ -10,7 +10,12 @@ skillPointsPerLevel 5
 
 HPPerLevel 5
 
-addPrereq Role Warrior 10
+addPrereq Role Warrior 8
 
-addPrereq Ability PowerfulBlows
-addPrereq Ability ChargeAttack
+addPrereq Ability ForcefulBlows
+
+level 1 selectAbilityFromList Berserker
+level 3 selectAbilityFromList Berserker
+level 5 selectAbilityFromList Berserker
+level 7 selectAbilityFromList Berserker
+level 9 selectAbilityFromList Berserker
