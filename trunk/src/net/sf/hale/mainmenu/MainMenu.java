@@ -159,10 +159,10 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         
         updateButton = new Button();
         updateButton.setTheme("updatebutton");
+        updateButton.setEnabled(false);
         updateButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		CheckForUpdatesPopup popup = new CheckForUpdatesPopup(MainMenu.this);
-        		popup.openPopupCentered();
+        		// TODO implement
         	}
         });
         this.add(updateButton);
