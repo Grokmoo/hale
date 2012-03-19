@@ -195,58 +195,6 @@
 		<theme name="errorlabel" ref="labelred"/>
 	</theme>
 	
-	<theme name="updatepopup" ref="iconbuttongrey">
-		<theme name="content" ref="dialoglayout">
-			<param name="border"><border>10</border></param>
-			<param name="defaultGap"><dimension>15,15</dimension></param>
-			<param name="largeGap"><dimension>30,30</dimension></param>
-			
-			<theme name="titlelabel" ref="labelbigblack">
-				<param name="minWidth"><int>380</int></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-			</theme>
-			
-			<theme name="errorlabel" ref="labelbigred">
-				<param name="minWidth"><int>380</int></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-			</theme>
-			
-			<theme name="tasklabel" ref="labelblack"/>
-			
-			<theme name="progressbar" ref="progressbar"/>
-			
-			<theme name="cancelbutton" ref="mainmenubutton">
-				<param name="text"><string>Cancel</string></param>
-				<param name="minWidth"><int>120</int></param>
-				<param name="minHeight"><int>30</int></param>
-			</theme>		
-		</theme>
-	</theme>
-	
-	<theme name="checkforupdatespopup" ref="iconbuttongrey">
-		<theme name="content" ref="dialoglayout">
-			<param name="border"><border>10</border></param>
-			<param name="defaultGap"><dimension>15,15</dimension></param>
-			<param name="largeGap"><dimension>30,30</dimension></param>
-			
-			<theme name="titlelabel" ref="labelbigblack">
-				<param name="minWidth"><int>380</int></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-			</theme>
-			
-			<theme name="errorlabel" ref="labelbigred">
-				<param name="minWidth"><int>380</int></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-			</theme>
-			
-			<theme name="cancelbutton" ref="mainmenubutton">
-				<param name="text"><string>Cancel</string></param>
-				<param name="minWidth"><int>120</int></param>
-				<param name="minHeight"><int>30</int></param>
-			</theme>
-		</theme>
-	</theme>
-	
 	<theme name="optionspopup" ref="iconbuttongrey">
 		<theme name="content" ref="dialoglayout">
 			<param name="border"><border>10</border></param>
@@ -590,7 +538,6 @@
 			<param name="text"><string>Exit</string></param>
 		</theme>
 		
-		<theme name="checkforupdatespopup" ref="checkforupdatespopup"/>
 		<theme name="loadgamepopup" ref="loadgamepopup"/>
 		<theme name="newgamewindow" ref="newgamewindow"/>
 		<theme name="partyformationwindow" ref="partyformationwindow"/>
