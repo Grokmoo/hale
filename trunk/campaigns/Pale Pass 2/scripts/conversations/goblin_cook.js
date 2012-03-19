@@ -44,13 +44,13 @@ function done03(game, parent, target, conversation) {
 function done04(game, parent, target, conversation) {
     // only allow one chance to perform the conversation check
     if (parent.get("paymentAmount") == null) {
-        var check = game.campaign().getBestPartySkillCheck("Speech");
+        var check = game.campaign().getBestPartySkillRanks("Speech");
         
-        if (check > 140) {
+        if (check > 60) {
             parent.put("paymentAmount", 5);
-        } else if (check > 120) {
+        } else if (check > 40) {
             parent.put("paymentAmount", 3);
-        } else if (check > 100) {
+        } else if (check > 20) {
             parent.put("paymentAmount", 2);
         } else {
             parent.put("paymentAmount", 1);
