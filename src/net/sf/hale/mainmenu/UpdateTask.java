@@ -20,9 +20,11 @@
 package net.sf.hale.mainmenu;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URL;
 
+import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 
 /**
@@ -54,7 +56,8 @@ public class UpdateTask extends Thread {
 	public UpdateTask(CheckForUpdatesTask.UpdateInfo updateInfo) {
 		this.updateInfo = updateInfo;
 		
-		updateProgress();
+		taskText = "Checking for update";
+		progress = 0.0f;
 	}
 	
 	/**
@@ -97,17 +100,18 @@ public class UpdateTask extends Thread {
 		return taskText;
 	}
 	
-	private void updateProgress() {
+	private void updateProgressDownload() {
+		// the download is considered to be the first half of the update process
 		taskText = "Downloading (" + (bytesDownloaded / 1024) + " KB / " + (updateInfo.fileSize / 1024) + " KB)";
-		progress = ((float)bytesDownloaded) / ((float)updateInfo.fileSize);
+		progress = 0.5f * ((float)bytesDownloaded) / ((float)updateInfo.fileSize);
 	}
 	
-	@Override public void run() {
+	private void downloadUpdateFile(File updateFile) {
 		BufferedInputStream in = null;
 		FileOutputStream fout = null;
 		try {
 			in = new BufferedInputStream(new URL(updateInfo.URL).openStream());
-			fout = new FileOutputStream(updateInfo.targetName);
+			fout = new FileOutputStream(updateFile);
 			
 			byte[] buffer = new byte[2048];
 			int count;
@@ -120,7 +124,7 @@ public class UpdateTask extends Thread {
 				// update the progress description
 				bytesDownloaded += count;
 				
-				updateProgress();
+				updateProgressDownload();
 			}
 			
 		} catch (Exception e) {
@@ -138,7 +142,39 @@ public class UpdateTask extends Thread {
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error closing stream while updating", e);
 		}
+	}
+	
+	@Override public void run() {
+		// create the updates directory if it does not already exist
+		File updatesDir = new File("updates");
+		if (!updatesDir.isDirectory())
+			updatesDir.mkdir();
 		
-		done = true;
+		File updateFile = new File("updates" + File.separatorChar + updateInfo.targetName);
+		if (updateFile.isFile()) {
+			// if the file exists, then check to see if the hashcode matches the server update
+			String localMD5 = FileUtil.getMD5Sum(updateFile);
+			
+			if (localMD5.equals(updateInfo.md5Sum.toUpperCase())) {
+				// if the hashcodes match, we already have the file, so no need to download
+			} else {
+				// the update does not match, so it is probably corrupted.  delete it and try again
+				updateFile.delete();
+				downloadUpdateFile(updateFile);
+			}
+		} else {
+			// the file does not exist, so download it
+			downloadUpdateFile(updateFile);
+		}
+		
+		if (canceled || error != null)
+			return;
+		
+		// we should now have the update file downloaded
+		taskText = "Applying Update";
+		progress = 0.5f;
+		
+		
+		//done = true;
 	}
 }

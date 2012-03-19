@@ -256,6 +256,21 @@ public class FileUtil {
 	}
 	
 	/**
+	 * Gets the first half of the MD5Sum for the file at the specified location
+	 * @param file the file at the location
+	 * @return the MD5Sum for the specified file
+	 */
+	
+	public static String getHalfMD5Sum(File file) {
+		String md5 = getMD5Sum(file);
+		
+		if (md5.length() == 24)
+			return md5.substring(0, 12);
+		else
+			return md5;
+	}
+	
+	/**
 	 * Gets the MD5Sum for the file at the specified location
 	 * @param file the file at the location
 	 * @return the MD5Sum for the specified file
@@ -306,6 +321,6 @@ public class FileUtil {
 			hex.append(HEXES.charAt((b & 0x0F)));
 		}
 		
-		return hex.substring(0, 12);
+		return hex.toString();
 	}
 }
