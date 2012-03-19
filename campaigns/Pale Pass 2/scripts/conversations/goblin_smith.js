@@ -67,9 +67,9 @@ function askWork4a(game, parent, target, conversation) {
 }
 
 function askWork4b(game, parent, target, conversation) {
-    var check = game.campaign().getBestPartySkillCheck("Speech");
+    var check = game.campaign().getBestPartySkillRanks("Speech");
     
-    if (check > 80) {
+    if (check > 30) {
         parent.put("agreedToPay", true);
         
         conversation.addText("I give you everything I have if you find them!");
