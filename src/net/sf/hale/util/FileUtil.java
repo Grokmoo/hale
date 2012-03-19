@@ -43,6 +43,7 @@ import java.util.zip.ZipOutputStream;
  */
 
 public class FileUtil {
+	
 	/**
 	 * Extracts the Zip file at the specified location to the destination directory
 	 * @param destination the path to the destination top level directory

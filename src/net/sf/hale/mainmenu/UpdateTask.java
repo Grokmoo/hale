@@ -20,9 +20,14 @@
 package net.sf.hale.mainmenu;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
@@ -35,6 +40,9 @@ import net.sf.hale.util.Logger;
 
 public class UpdateTask extends Thread {
 	private final CheckForUpdatesTask.UpdateInfo updateInfo;
+	
+	private long totalBytesToExtract;
+	private long bytesExtracted;
 	
 	private int bytesDownloaded;
 	
@@ -144,6 +152,71 @@ public class UpdateTask extends Thread {
 		}
 	}
 	
+	private long computeExtractedSize(File zipFile) throws IOException {
+		long totalSize = 0l;
+		
+		ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+		
+		ZipEntry entry;
+		while ( (entry = in.getNextEntry()) != null ) {
+			long size = entry.getSize();
+			
+			if (size != -1) {
+				totalSize += size;
+			}
+		}
+		
+		return totalSize;
+	}
+	
+	private void extractUpdateZipFile(File zipFile) throws IOException {
+		int bufferSize = 2048;
+		byte[] buffer = new byte[bufferSize];
+		
+		ZipInputStream in = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile)));
+		
+		ZipEntry entry;
+		while ( (entry = in.getNextEntry()) != null ) {
+			
+			updateProgressExtract();
+			
+			if (canceled)
+				break;
+			
+			// don't extract the top level directory
+			if (entry.getName().equals("hale/")) continue;
+			
+			String outputPath = FileUtil.getRelativePath("hale", entry.getName());
+			File entryOut = new File(outputPath);
+			
+			System.out.println(outputPath);
+			
+			if (entry.isDirectory()) {
+				entryOut.mkdirs();
+			} else {
+				int count = 0;
+
+				BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(entryOut), bufferSize);
+				
+				while ( (count = in.read(buffer, 0, bufferSize)) > 0 ) {
+					out.write(buffer, 0, count);
+				}
+				out.flush();
+				out.close();
+				
+				bytesExtracted += count;
+			}
+		}
+		
+		in.close();
+	}
+	
+	private void updateProgressExtract() {
+		// the download is considered to be the first half of the update process
+		taskText = "Extracting (" + (bytesExtracted / 1024) + " KB / " + (totalBytesToExtract / 1024) + " KB)";
+		progress = 0.5f + 0.5f * ((float)bytesExtracted) / ((float)totalBytesToExtract);
+	}
+	
 	@Override public void run() {
 		// create the updates directory if it does not already exist
 		File updatesDir = new File("updates");
@@ -167,6 +240,7 @@ public class UpdateTask extends Thread {
 			downloadUpdateFile(updateFile);
 		}
 		
+		// check for cancelation
 		if (canceled || error != null)
 			return;
 		
@@ -174,7 +248,33 @@ public class UpdateTask extends Thread {
 		taskText = "Applying Update";
 		progress = 0.5f;
 		
+		// figure out how many bytes we need to extract
+		try {
+			totalBytesToExtract = computeExtractedSize(updateFile);
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error computing extraction size", e);
+			error = "Error applying update!";
+		}
+		bytesExtracted = 0l;
 		
-		//done = true;
+		updateProgressExtract();
+		
+		// check for cancelation
+		if (canceled || error != null)
+			return;
+		
+		// now apply the update
+		try {
+			extractUpdateZipFile(updateFile);
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error applying update", e);
+			error = "Error applying update!";
+		}
+		
+		// check for cancelation
+		if (canceled || error != null)
+			return;
+
+		done = true;
 	}
 }
