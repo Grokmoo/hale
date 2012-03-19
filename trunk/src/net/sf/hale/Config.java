@@ -195,7 +195,14 @@ public class Config {
 	 */
 	
 	public Config() {
-		FileKeyMap map = new FileKeyMap(new File("config.txt"));
+		File configFile = new File("config.txt");
+		
+		// create the config file if it does not already exist
+		if (!configFile.isFile()) {
+			createConfigFile();
+		}
+		
+		FileKeyMap map = new FileKeyMap(configFile);
 		
 		resolutionX = map.getValue("resolutionx", 800);
 		resolutionY = map.getValue("resolutiony", 600);
@@ -223,7 +230,15 @@ public class Config {
 		
 		map.checkUnusedKeys();
 		
-		versionID = FileUtil.getMD5Sum(new File("hale.jar"));
+		versionID = FileUtil.getHalfMD5Sum(new File("hale.jar"));
+	}
+	
+	private void createConfigFile() {
+		try {
+			FileUtil.copyFile(new File("docs/defaultConfig.txt"), new File("config.txt"));
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error creating configuration file.", e);
+		}
 	}
 	
 	/**
