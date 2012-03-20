@@ -511,6 +511,26 @@ public class AbilitySlot implements Saveable {
 	}
 	
 	/**
+	 * Cancels and immediately ends all Aura effects active for this ability slot
+	 */
+	
+	public void cancelAllAuras() {
+		int size = activeEffects.size();
+		
+		for (int i = 0; i < size; i++) {
+			Effect effect = activeEffects.get(i);
+			
+			if (! (effect instanceof Aura)) continue;
+			
+			effect.getTarget().removeEffect(effect);
+			activeEffects.remove(i);
+			
+			i--;
+			size--;
+		}
+	}
+	
+	/**
 	 * Creates a new Effect with the creator set to the parent of this AbilitySlot,
 	 * registers the Effect with this AbilitySlot so that it is removed when appropriate,
 	 * and returns the new Effect.

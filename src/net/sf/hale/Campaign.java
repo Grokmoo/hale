@@ -607,6 +607,10 @@ public class Campaign {
 		Creature c = Game.curCampaign.party.getSelected();
 		
 		for (Creature p : Game.curCampaign.party) {
+			p.getAbilities().cancelAllAuras();
+		}
+		
+		for (Creature p : Game.curCampaign.party) {
 			curArea.getEntities().removeEntity(p);
 		}
 		
