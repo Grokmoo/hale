@@ -21,10 +21,12 @@ package net.sf.hale.mainmenu;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Campaign;
+import net.sf.hale.Config;
 import net.sf.hale.Game;
 import net.sf.hale.Sprite;
 import net.sf.hale.loading.CampaignLoadingTaskList;
@@ -94,6 +96,8 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
 	private final List<PopupWindow> popupsToHide = new ArrayList<PopupWindow>();
 	
+	private String version;
+	
 	/**
 	 * Create a new MainMenu, with buttons for choosing campaign, loading games,
 	 * launching the editor, etc.
@@ -111,9 +115,11 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         campaignLabel.setTheme("campaignlabel");
         this.add(campaignLabel);
         
-        versionLabel = new Label("Build ID: " + Game.config.getVersionID());
-        versionLabel.setTheme("versionlabel");
-        this.add(versionLabel);
+        try {
+			version = FileUtil.readFileAsString("docs/version.txt");
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error reading version information", e);
+		}
         
         campaignButton = new Button();
         campaignButton.setTheme("campaignbutton");
@@ -159,7 +165,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         
         updateButton = new Button();
         updateButton.setTheme("updatebutton");
-        updateButton.setEnabled(false);
+        updateButton.setVisible(false);
         updateButton.addCallback(new Runnable() {
         	@Override public void run() {
         		// TODO implement
@@ -198,6 +204,51 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         // load last open campaign from file if it exists
         String campaignID = this.getLastOpenCampaign();
         if (campaignID != null) this.loadCampaign(campaignID);
+        
+        
+        if (version.equals("svn")) {
+        	versionLabel = new Label("Build ID: " + Game.config.getVersionID());
+        } else if (version.equals("disabled")) {
+        	versionLabel = new Label("Version Disabled");
+        } else {
+        	versionLabel = new Label("Version: " + version);
+        	
+        	File updateAvailable = new File("docs/updateAvailable.txt");
+        	if (updateAvailable.isFile()) {
+        		updateButton.setVisible(true);
+        	} else {
+
+        		long curTime = System.currentTimeMillis();
+        		long interval = Game.config.getCheckForUpdatesInterval();
+        		long lastTime = Config.getLastCheckForUpdatesTime();
+
+        		if (lastTime + interval < curTime) {
+        			CheckForUpdatesTask task = new CheckForUpdatesTask(this);
+        			task.start();
+        		}
+
+        		Config.writeCheckForUpdatesTime(curTime);
+        	}
+        }
+        versionLabel.setTheme("versionlabel");
+        this.add(versionLabel);
+	}
+	
+	/**
+	 * Enables the update button based on the finding of a new version
+	 */
+	
+	public void enableUpdate() {
+		updateButton.setVisible(true);
+	}
+	
+	/**
+	 * Returns the version string of this current version
+	 * @return the version string
+	 */
+	
+	public String getVersion() {
+		return version;
 	}
 	
 	/**
@@ -234,7 +285,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setVisible(visible);
 		loadGameButton.setVisible(visible);
 		editorButton.setVisible(visible);
-		updateButton.setVisible(visible);
+		//updateButton.setVisible(visible);
 		optionsButton.setVisible(visible);
 		exitButton.setVisible(visible);
 	}
@@ -262,7 +313,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setSize(newGameButton.getPreferredWidth(), newGameButton.getPreferredHeight());
 		loadGameButton.setSize(loadGameButton.getPreferredWidth(), loadGameButton.getPreferredHeight());
 		editorButton.setSize(editorButton.getPreferredWidth(), editorButton.getPreferredHeight());
-		updateButton.setSize(updateButton.getPreferredWidth(), updateButton.getPreferredHeight());
+		
 		optionsButton.setSize(optionsButton.getPreferredWidth(), optionsButton.getPreferredHeight());
 		exitButton.setSize(exitButton.getPreferredWidth(), exitButton.getPreferredHeight());
 		
@@ -276,15 +327,19 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		newGameButton.setPosition((resX - newGameButton.getWidth()) / 2, campaignButton.getBottom() + buttonGap);
 		loadGameButton.setPosition((resX - loadGameButton.getWidth()) / 2, newGameButton.getBottom() + buttonGap);
 		editorButton.setPosition((resX - editorButton.getWidth()) / 2, loadGameButton.getBottom() + buttonGap);
-		updateButton.setPosition((resX - updateButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
-		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, updateButton.getBottom() + buttonGap);
+		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
 		exitButton.setPosition((resX - exitButton.getWidth()) / 2, optionsButton.getBottom() + buttonGap);
 		
 		campaignLabel.setSize(campaignLabel.getPreferredWidth(), campaignLabel.getPreferredHeight());
 		campaignLabel.setPosition((resX - campaignLabel.getWidth()) / 2, buttonY - campaignLabel.getHeight() - titleOffset);
 		
 		versionLabel.setSize(versionLabel.getPreferredWidth(), versionLabel.getPreferredHeight());
-		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth(), getInnerBottom() - versionLabel.getHeight());
+		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth() - backgroundSpriteOffset.x,
+				getInnerBottom() - versionLabel.getHeight() - backgroundSpriteOffset.y);
+		
+		updateButton.setSize(updateButton.getPreferredWidth(), updateButton.getPreferredHeight());
+		updateButton.setPosition(getInnerRight() - updateButton.getWidth() - backgroundSpriteOffset.x,
+				backgroundSpriteOffset.y);
 	}
 	
 	private void handlePopups() {

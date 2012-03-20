@@ -526,8 +526,9 @@
 			<param name="text"><string>Launch Editor</string></param>
 		</theme>
 		
-		<theme name="updatebutton" ref="mainmenubutton">
-			<param name="text"><string>Update</string></param>
+		<theme name="updatebutton" ref="button">
+			<param name="text"><string>A new version is available!</string></param>
+			<param name="minHeight"><int>30</int></param>
 		</theme>
 		
 		<theme name="optionsbutton" ref="mainmenubutton">
