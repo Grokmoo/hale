@@ -168,7 +168,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         updateButton.setVisible(false);
         updateButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		// TODO implement
+        		new Updater().runUpdater();
         	}
         });
         this.add(updateButton);
