@@ -266,7 +266,9 @@ public class AreaEffectList implements Saveable {
 	 */
 	
 	public void remove(Effect effect) {
-		if (!effects.containsKey(effect)) return;
+		if (!effects.containsKey(effect)) {
+			throw new IllegalArgumentException("Effect " + effect + " is not in the area effect list");
+		}
 		
 		for (Point p : effects.get(effect)) {
 			effectsAtPosition[p.x][p.y].remove(effect);
