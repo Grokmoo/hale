@@ -72,8 +72,18 @@ public class Config {
 	private final boolean debugMode;
 	private final boolean warningMode;
 	private final int combatDelay;
+	private final long checkForUpdatesInterval;
 	
 	private final String versionID;
+	
+	/**
+	 * Returns the amount of time the game should wait between checking for updates
+	 * @return the amount of time the game waits between checking for updates
+	 */
+	
+	public long getCheckForUpdatesInterval() {
+		return checkForUpdatesInterval;
+	}
 	
 	/**
 	 * Returns true if a random seed has been set in the config file, false otherwise
@@ -216,7 +226,8 @@ public class Config {
 		warningMode = map.getValue("warningmode", false);
 		toolTipDelay = map.getValue("tooltipdelay", 400);
 		combatDelay = map.getValue("combatdelay", 150);
-
+		checkForUpdatesInterval = map.getValue("checkforupdatesinterval", 31536000000l);
+		
 		if (map.has("randseed")) {
 			randSeedSet = true;
 			randSeed = map.getValue("randseed", 0l);
@@ -239,6 +250,48 @@ public class Config {
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error creating configuration file.", e);
 		}
+	}
+	
+	/**
+	 * Writes the specified time to disk as the last check for updates time
+	 * @param time the time in milliseconds since midnight, January 1, 1970 UTC
+	 */
+	
+	public static void writeCheckForUpdatesTime(long time) {
+		try {
+			FileUtil.writeStringToFile(new File("docs/lastUpdateTime.txt"), Long.toString(time));
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error writing last update time to file", e);
+		}
+	}
+	
+	/**
+	 * Gets the last time that updates were checked for, or 0 if 
+	 * updates have never been checked for
+	 * @return the last update check time (in milliseconds since midnight, January 1, 1970 UTC)
+	 */
+	
+	public static long getLastCheckForUpdatesTime() {
+		File file = new File("docs/lastUpdateTime.txt");
+		if (file.canRead()) {
+			String time = null;
+			try {
+				time = FileUtil.readFileAsString("docs/lastUpdateTime.txt");
+			} catch (IOException e) {
+				Logger.appendToErrorLog("Error reading last update time", e);
+			}
+			
+			if (time != null) {
+				try {
+					return Long.parseLong(time);
+				} catch (Exception e) {
+					Logger.appendToErrorLog("Error parsing last update time", e);
+				}
+			}
+			
+		}
+		
+		return 0l;
 	}
 	
 	/**
