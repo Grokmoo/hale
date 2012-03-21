@@ -19,6 +19,8 @@
 
 package net.sf.hale.widgets;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +30,12 @@ import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
+import de.matthiasmann.twl.textarea.TextAreaModel;
 import net.sf.hale.Game;
 import net.sf.hale.ability.DelayedScriptCallback;
 import net.sf.hale.ability.Scriptable;
 import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.util.FileUtil;
 
 /**
  * A popup window containing a text field showing some HTML,
@@ -43,7 +47,7 @@ import net.sf.hale.resource.ResourceManager;
 
 public class HTMLPopup extends PopupWindow {
 	private final TextArea textArea;
-	private final HTMLTextAreaModel textAreaModel;
+	private final TextAreaModel textAreaModel;
 	private final ScrollPane textPane;
 	
 	private final Content content;
@@ -53,40 +57,53 @@ public class HTMLPopup extends PopupWindow {
 	private final List<DelayedScriptCallback> scriptCallbacks;
 	
 	/**
+	 * Creates a new HTML popup displaying the HTML found in the specified file
+	 * 
+	 * @param file the file containing the HTML to be shown.
+	 * @throws IOException 
+	 */
+	
+	public HTMLPopup(File file, Widget parent) throws IOException {
+		this(FileUtil.readFileAsString(file.getPath()), parent);
+	}
+	
+	/**
 	 * Creates a new HTML popup displaying the HTML found in the specified resource.
 	 * The resource must be a valid ResourceID as defined by {@link net.sf.hale.resource.ResourceManager}.
+	 * 
+	 * This popup will use the mainViewer as the parent widget
 	 * 
 	 * @param resource The String pointing to the resource containing the HTML to be shown.
 	 */
 	
 	public HTMLPopup(String resource) {
-		super(Game.mainViewer);
+		this(ResourceManager.getResourceAsString(resource), Game.mainViewer);
+	}
+	
+	private HTMLPopup(String htmlContent, Widget parent) {
+		super(parent);
 		
 		scriptCallbacks = new ArrayList<DelayedScriptCallback>();
 		
-		this.setTheme("");
 		this.setCloseOnClickedOutside(false);
 		
-		String htmlContent = ResourceManager.getResourceAsString(resource);
-		
 		content = new Content();
-		content.setTheme("/mainpane");
 		
 		this.add(content);
-		
-		textAreaModel = new HTMLTextAreaModel();
-        textArea = new TextArea(textAreaModel);
-        textPane = new ScrollPane(textArea);
-        textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
-        textPane.setCanAcceptKeyboardFocus(false);
-        textPane.setTheme("/scrollpane");
-        
-        content.add(textPane);
-        
-        closeButton = new CloseButton();
+
+		HTMLTextAreaModel model = new HTMLTextAreaModel();
+		model.setHtml(htmlContent);
+		textAreaModel = model;
+
+		textArea = new TextArea(textAreaModel);
+		textPane = new ScrollPane(textArea);
+		textPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+		textPane.setCanAcceptKeyboardFocus(false);
+
+		content.add(textPane);
+
+		closeButton = new CloseButton();
         content.add(closeButton);
-        
-        textAreaModel.setHtml(htmlContent);
 	}
 	
 	/**
@@ -171,7 +188,6 @@ public class HTMLPopup extends PopupWindow {
 	private class CloseButton extends Button implements Runnable {
 		private CloseButton() {
 			super("Continue");
-			this.setTheme("/button");
 			this.addCallback(this);
 		}
 		
