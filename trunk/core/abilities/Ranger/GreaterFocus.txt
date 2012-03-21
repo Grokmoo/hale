@@ -1,0 +1,11 @@
+name "Greater Focus"
+type "Ranger Abilities"
+description ""
+activateable false
+
+icon "icons/greaterFocus"
+
+addPrereq Ability DefensiveFocus
+addPrereq Role Ranger 7
+
+aiPower 40

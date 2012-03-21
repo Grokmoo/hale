@@ -1,0 +1,21 @@
+name "Ranged Focus"
+type "Ranger Abilities"
+description "You enter into a state of improved focus lasting for 3 rounds plus one round per 3 Ranger levels.  While in the state, you gain a bonus of 10 plus your Ranger level to attack and 20 plus twice your Ranger level to damage with all ranged weapons."
+activateable true
+fixed true
+cooldown 8
+
+icon "icons/rangedFocus"
+scriptFile "abilities/rangedFocus"
+
+actionType Buff
+groupType Single
+rangeType Personal
+
+addPrereq Role Ranger 3
+
+aiPower 20
+
+upgrade DefensiveFocus "With Defensive Focus, you now gain a 10 plus Ranger level bonus to Armor Class."
+
+upgrade "GreaterFocus" "With Greater Focus, your Ranger level is treated as double its actual value for the purposes of your Focus."

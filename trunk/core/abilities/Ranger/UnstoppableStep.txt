@@ -1,0 +1,10 @@
+name "Unstoppable Step"
+type "Ranger Abilities"
+description "You are able to move unhindered in all kinds of situations, becoming immune to all effects causing immobilization, including paralysis and stun effects.  In addition, you are unaffected by effects hindering movement, such as caused by a Tanglefoot spell."
+
+icon "icons/unstoppableStep"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('ImmobilizationImmunity'); parent.applyEffect(effect); }"
+
+addPrereq Ability FastStep
+addPrereq Role Ranger 5

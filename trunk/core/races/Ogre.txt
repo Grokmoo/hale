@@ -3,6 +3,7 @@ movementCost 1000
 unarmedWeapon unarmedMedium
 
 racialType Humanoid
+racialType Beast
 
 iconOffset Shield 25 15
 iconOffset OffHandWeapon 27 8
