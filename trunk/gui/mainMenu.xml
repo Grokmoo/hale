@@ -509,6 +509,9 @@
 		</theme>
 		
 		<theme name="versionlabel" ref="label"/>
+		<theme name="releasenotesbutton" ref="button">
+			<param name="text"><string>View Release Notes</string></param>
+		</theme>
 		
 		<theme name="campaignbutton" ref="mainmenubutton">
 			<param name="text"><string>Choose Campaign</string></param>

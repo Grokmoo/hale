@@ -37,6 +37,7 @@ import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.SaveGameUtil;
+import net.sf.hale.widgets.HTMLPopup;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -91,6 +92,7 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 	
 	private final Button exitButton;
 	
+	private final Button releaseNotesButton;
 	private final Label versionLabel;
 	
 	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
@@ -232,6 +234,21 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
         }
         versionLabel.setTheme("versionlabel");
         this.add(versionLabel);
+        
+        releaseNotesButton = new Button();
+        releaseNotesButton.addCallback(new Runnable() {
+        	@Override public void run() {
+        		try {
+					HTMLPopup popup = new HTMLPopup(new File("docs/Release Notes.html"), MainMenu.this);
+					popup.setSize(640, 480);
+					popup.openPopupCentered();
+				} catch (IOException e) {
+					Logger.appendToErrorLog("Error retrieving release notes", e);
+				}
+        	}
+        });
+        releaseNotesButton.setTheme("releasenotesbutton");
+        add(releaseNotesButton);
 	}
 	
 	/**
@@ -333,9 +350,13 @@ public class MainMenu extends Widget implements LoadGamePopup.Callback {
 		campaignLabel.setSize(campaignLabel.getPreferredWidth(), campaignLabel.getPreferredHeight());
 		campaignLabel.setPosition((resX - campaignLabel.getWidth()) / 2, buttonY - campaignLabel.getHeight() - titleOffset);
 		
+		releaseNotesButton.setSize(releaseNotesButton.getPreferredWidth(), releaseNotesButton.getPreferredHeight());
+		releaseNotesButton.setPosition(getInnerRight() - releaseNotesButton.getWidth() - backgroundSpriteOffset.x,
+				getInnerBottom() - releaseNotesButton.getHeight() - backgroundSpriteOffset.y);
+		
 		versionLabel.setSize(versionLabel.getPreferredWidth(), versionLabel.getPreferredHeight());
 		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth() - backgroundSpriteOffset.x,
-				getInnerBottom() - versionLabel.getHeight() - backgroundSpriteOffset.y);
+				releaseNotesButton.getY() - versionLabel.getHeight());
 		
 		updateButton.setSize(updateButton.getPreferredWidth(), updateButton.getPreferredHeight());
 		updateButton.setPosition(getInnerRight() - updateButton.getWidth() - backgroundSpriteOffset.x,
