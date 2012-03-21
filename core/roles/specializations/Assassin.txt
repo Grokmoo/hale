@@ -10,6 +10,8 @@ skillPointsPerLevel 10
 
 HPPerLevel 3
 
+maxLevel 10
+
 addPrereq Role Rogue 8
 
 addPrereq Ability ImprovedBackstab

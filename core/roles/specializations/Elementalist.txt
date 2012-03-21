@@ -8,6 +8,8 @@ attackBonusPerLevel 1
 
 skillPointsPerLevel 5
 
+maxLevel 10
+
 HPPerLevel 2
 
 addPrereq Role Mage 10

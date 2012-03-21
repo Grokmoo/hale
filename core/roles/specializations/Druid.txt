@@ -11,6 +11,7 @@ HPPerLevel 4
 
 addPrereq Role Priest 8
 addPrereq Role Adept 8
+addPrereq Role Mage 8
 
 addPrereq Ability SelfSufficient
 
