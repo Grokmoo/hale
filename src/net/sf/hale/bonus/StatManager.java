@@ -451,7 +451,13 @@ public class StatManager {
 		
 		addToStat(Stat.InitiativeBonus, get(Bonus.Type.Initiative));
 		addToStat(Stat.ArmorPenalty, get(Bonus.Type.ArmorPenalty) + (int)itemsArmorPenalty);
-		addToStat(Stat.MovementBonus, get(Bonus.Type.Movement) - (int)itemsMovementPenalty);
+		
+		// immobilization immunity prevents being slowed down as well
+		int baseMovementBonus = get(Bonus.Type.Movement);
+		if (this.has(Bonus.Type.ImmobilizationImmunity) && baseMovementBonus < 0)
+			baseMovementBonus = 0;
+		
+		addToStat(Stat.MovementBonus, baseMovementBonus - (int)itemsMovementPenalty);
 		addToStat(Stat.MovementCost, parent.getRace().getMovementCost() * (100 - get(Stat.MovementBonus)) / 100);
 		
 		int deflection = this.get(Bonus.Type.ArmorClass, Bonus.StackType.DeflectionBonus, Bonus.StackType.DeflectionPenalty);

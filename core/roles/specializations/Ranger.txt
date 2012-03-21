@@ -11,5 +11,11 @@ SkillPointsPerLevel 10
 HPPerLevel 4
 
 addPrereq Role Warrior 7
-addPrereq Ability PiercingShot
+addPrereq Ability RapidShot
 addPrereq Ability PointBlankShot
+
+level 1 selectAbilityFromList Ranger
+level 3 selectAbilityFromList Ranger
+level 5 selectAbilityFromList Ranger
+level 7 selectAbilityFromList Ranger
+level 9 selectAbilityFromList Ranger

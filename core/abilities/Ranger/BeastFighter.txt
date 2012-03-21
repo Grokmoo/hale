@@ -1,0 +1,8 @@
+name "Beast Fighter"
+type "Ranger Abilities"
+description "You are trained in combat against various beasts.  You gain a +10 bonus to Attack and a +10 bonus to Armor Class in combat against beast or animal racial types.  This includes many common enemy types, such as Orcs and Goblins."
+activateable false
+
+icon "icons/beastFighter"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addAttackBonusVsRacialType('Animal', 10); effect.getBonuses().addArmorClassBonusVsRacialType('Animal', 10); effect.getBonuses().addAttackBonusVsRacialType('Beast', 10); effect.getBonuses().addArmorClassBonusVsRacialType('Beast', 10); parent.applyEffect(effect); }"

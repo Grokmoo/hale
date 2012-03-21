@@ -1,0 +1,32 @@
+name "Ranger"
+
+add TrainingPiercing     0 0
+add AdvancedTrainingBows 0 1
+add ExpertTrainingBows   0 2
+add MasterTrainingBows   0 3
+
+connect 0 0 OneDown
+connect 0 1 OneDown
+connect 0 2 OneDown
+
+add BeastFighter 1 0
+add BeastSlayer  1 2
+
+connect 1 0 OneDown
+connect 1 1 OneDown
+connect 1 1 Through
+
+add RangedFocus       2.5 1
+add DefensiveFocus    2 2
+add GreaterFocus      3 3
+
+connect 2.5 1 TwoDown
+connect 3 2 OneDown
+connect 3 2 Through
+
+add FastStep            4 0
+add UnstoppableStep     4 2
+
+connect 4 0 OneDown
+connect 4 1 OneDown
+connect 4 1 Through

@@ -66,6 +66,11 @@ public class RoundTimer {
 		int total = 0;
 		for (Point p : path) {
 			int bonus = Game.curCampaign.curArea.getMovementBonus(p.x, p.y);
+			
+			// immobilization immunity protects against slowing effects
+			if (bonus < 0 && parent.stats().has(Bonus.Type.ImmobilizationImmunity))
+				bonus = 0;
+			
 			total += parent.stats().get(Stat.MovementCost) * (100 - bonus) / 100;
 		}
 		
