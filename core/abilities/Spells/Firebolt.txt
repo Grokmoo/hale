@@ -26,3 +26,5 @@ aiPower 10
 upgrade Fireball "With Fireball, Firebolt now explodes on impact, doing damage to all targets within 20 feet.
 
 upgrade Meteor "With Meteor, a swarm of meteors descends on an area with a 25 foot radius, doing 10 to 20 damage to all hostile targets and only one third as much damage to friendly targets.
+
+upgrade "BurningFlames" "With Burning Flames, targets now catch on fire, taking 1 point per 4 caster levels of Fire damage for 2 rounds."

@@ -1,0 +1,8 @@
+name "Lightning Mage"
+type "Elementalist Abilities"
+description "You have trained in the use of lightning magic, gaining a 10% bonus to all electrical damage from spells."
+activateable false
+
+icon "icons/lightningMage"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSpellDamageBonus('Electrical', 'Stackable', 10); parent.applyEffect(effect); }"
