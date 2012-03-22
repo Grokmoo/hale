@@ -30,7 +30,7 @@ import org.lwjgl.opengl.GL14;
 
 public class Particle extends AnimationBase {
 	private final Sprite sprite;
-	private boolean stopAtOpaque;
+	private boolean stopAtOpaque, drawInOpaque;
 	
 	public Particle(Particle other) {
 		super(other);
@@ -38,6 +38,7 @@ public class Particle extends AnimationBase {
 		this.sprite = other.sprite;
 		
 		this.stopAtOpaque = other.stopAtOpaque;
+		this.drawInOpaque = other.drawInOpaque;
 	}
 	
 	public Particle(Sprite sprite) {
@@ -45,6 +46,11 @@ public class Particle extends AnimationBase {
 		this.sprite = sprite;
 		
 		this.stopAtOpaque = false;
+		this.drawInOpaque = false;
+	}
+	
+	public final void setDrawInOpaque(boolean drawInOpaque) {
+		this.drawInOpaque = drawInOpaque;
 	}
 	
 	public final void setStopAtOpaque(boolean stopAtOpaque) {
@@ -65,13 +71,15 @@ public class Particle extends AnimationBase {
 		
 		Area area = Game.curCampaign.curArea;
 		
-		// don't draw effects in opaque tiles regardless of whether the effect stops or not
-		if ((!area.isTransparent(pos1) || !area.isTransparent(pos2) ||
-				!area.isTransparent(pos3) || !area.isTransparent(pos4)) ) {
-			Point pos =  AreaUtil.convertScreenToGrid(posX + getHalfWidth(), posY + getHalfHeight());
-			if (!area.isTransparent(pos) && stopAtOpaque) finish();
-			
-			return;
+		if (!drawInOpaque) {
+			// don't draw effects in opaque tiles regardless of whether the effect stops or not
+			if ((!area.isTransparent(pos1) || !area.isTransparent(pos2) ||
+					!area.isTransparent(pos3) || !area.isTransparent(pos4)) ) {
+				Point pos =  AreaUtil.convertScreenToGrid(posX + getHalfWidth(), posY + getHalfHeight());
+				if (!area.isTransparent(pos) && stopAtOpaque) finish();
+
+				return;
+			}
 		}
 		
 		if (getRotation() != 0.0f) {

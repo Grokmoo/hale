@@ -7,7 +7,8 @@ function onApply(game, effect) {
 	
 	var position = effect.getTarget().getScreenPosition();
 	generator.setPosition(position.x, position.y - 10.0);
-	
+	generator.setStopParticlesAtOpaque(false);
+	generator.setDrawParticlesInOpaque(true);
 	generator.setVelocityDistribution(game.getFixedAngleDistribution(20.0, 35.0, -3.14159 / 2));
 	generator.setDurationDistribution(game.getUniformDistribution(0.8, 1.3));
 	generator.setAlphaSpeedDistribution(game.getFixedDistribution(-0.5));

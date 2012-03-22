@@ -1,0 +1,9 @@
+name Bard
+
+add Bardsong 2 0
+
+connect 2 0 ThreeDown
+
+add SongOfLuck 1 1
+
+add CurseSong  3 1

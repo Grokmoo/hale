@@ -105,7 +105,7 @@ public class Bonus implements Saveable {
 		StackableBonus, StackablePenalty,
 		GenericBonus, MoraleBonus, DeflectionBonus, NaturalArmorBonus, ArmorBonus, ShieldBonus,
 		GenericPenalty, MoralePenalty, DeflectionPenalty, NaturalArmorPenalty, ArmorPenalty, ShieldPenalty,
-		EnhancementBonus, EnhancementPenalty,
+		EnhancementBonus, EnhancementPenalty, LuckBonus, LuckPenalty,
 	};
 	
 	private final Type type;
