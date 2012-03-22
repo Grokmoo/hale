@@ -1,0 +1,8 @@
+name "Ice Mage"
+type "Elementalist Abilities"
+description "You have trained in the use of ice magic, gaining a 10% bonus to all cold damage from spells."
+activateable false
+
+icon "icons/iceMage"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSpellDamageBonus('Cold', 'Stackable', 10); parent.applyEffect(effect); }"

@@ -1,0 +1,10 @@
+name "Elemental Defense"
+type "Elemental Abilities"
+description "You have worked with elemental magic so much that you have gained a natural immunity to it.  You gain a 10% Damage Immunity to Fire, Cold, and Electrical damage."
+activateable false
+
+icon "icons/elementalDefense"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Fire', 'Stackable', 10); effect.getBonuses().addDamageImmunity('Cold', 'Stackable', 10); effect.getBonuses().addDamageImmunity('Electrical', 'Stackable', 10);parent.applyEffect(effect); }"
+
+addPrereq Role Elementalist 4

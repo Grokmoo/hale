@@ -66,7 +66,7 @@ function performMeteor(game, targeter) {
 		var delay = target.getPosition().screenDistance(explosionCenter) / 200.0;
 		var callback = spell.createDelayedCallback("applyDamage");
 		callback.setDelay(delay);
-		callback.addArguments([parent, target, damage, spell]);
+		callback.addArguments([parent, target, damage, targeter]);
 		callback.start();
 	}
 	
@@ -83,7 +83,7 @@ function performMeteor(game, targeter) {
 		
 		var callback = spell.createDelayedCallback("animateMeteor");
 		callback.setDelay(meteorTime);
-		callback.addArguments([parent, target, damage, spell]);
+		callback.addArguments([parent, target, damage, targeter]);
 		callback.start();
 		meteorTime += 0.5;
 	}
@@ -91,12 +91,12 @@ function performMeteor(game, targeter) {
 	game.lockInterface(Math.max(explosionTime, meteorTime));
 }
 
-function animateMeteor(game, parent, target, damage, spell) {
+function animateMeteor(game, parent, target, damage, targeter) {
 	var g1 = game.getBaseAnimation("explosion");
 	g1.setPosition(target.getScreenPosition());
 	game.runAnimationNoWait(g1);
 	
-	applyDamage(game, parent, target, damage, spell);
+	applyDamage(game, parent, target, damage, targeter);
 }
 
 function performFireball(game, targeter) {
@@ -134,7 +134,7 @@ function performFireball(game, targeter) {
 		
 		var callback = spell.createDelayedCallback("applyDamage");
 		callback.setDelay(delayG1 + delayG2);
-		callback.addArguments([parent, target, damage, spell]);
+		callback.addArguments([parent, target, damage, targeter]);
 		callback.start();
 	}
 	
@@ -165,7 +165,7 @@ function performFirebolt(game, targeter) {
     // create the callback that will apply damage at the appropriate time
     var callback = spell.createDelayedCallback("applyDamage");
     callback.setDelay(delay);
-    callback.addArguments([parent, target, damage, spell]);
+    callback.addArguments([parent, target, damage, targeter]);
    
     // run the particle effect and start the callback timer
     game.runParticleGeneratorNoWait(generator);
@@ -173,6 +173,35 @@ function performFirebolt(game, targeter) {
     game.lockInterface(delay);
 }
 
-function applyDamage(game, parent, target, damage, spell) {
+function applyDamage(game, parent, target, damage, targeter) {
+	var spell = targeter.getSlot().getAbility();
+
     spell.applyDamage(parent, target, damage, "Fire");
+	
+	if (parent.getAbilities().has("BurningFlames")) {
+		var damageOverTime = parseInt(parent.getCasterLevel() / 4);
+   
+		var effect = targeter.getSlot().createEffect("effects/damageOverTime");
+		effect.setTitle("Burning Flames");
+		effect.put("damagePerRound", damageOverTime);
+		effect.put("type", "Fire");
+	
+		effect.setDuration(2);
+	
+		var pos = target.getScreenPosition();
+	
+		var g1 = game.getBaseParticleGenerator("flame");
+		g1.setPosition(pos.x - game.dice().rand(2, 8), pos.y + game.dice().rand(0, 10));
+		effect.addAnimation(g1);
+	
+		var g2 = game.getBaseParticleGenerator("flame");
+		g2.setPosition(pos.x + game.dice().rand(2, 8), pos.y + game.dice().rand(0, 10));
+		effect.addAnimation(g2);
+	
+		var g3 = game.getBaseParticleGenerator("flame");
+		g3.setPosition(pos.x + game.dice().rand(-2, 2), pos.y + game.dice().rand(10, 23));
+		effect.addAnimation(g3);
+	
+		target.applyEffect(effect);
+	}
 }

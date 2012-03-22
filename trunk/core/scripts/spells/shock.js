@@ -64,7 +64,7 @@ function lightningBolt(game, targeter) {
 	
 		var callback = spell.createDelayedCallback("applyDamage");
 		callback.setDelay(anim.getSecondsRemaining());
-		callback.addArguments([parent, target, damage, spell]);
+		callback.addArguments([parent, target, damage, targeter]);
 		callback.start();
 	
 		game.runAnimationNoWait(anim);
@@ -98,7 +98,7 @@ function performTouch(game, targeter) {
 		// create the callback that will apply damage partway through the animation
 		var callback = spell.createDelayedCallback("applyDamage");
 		callback.setDelay(0.2);
-		callback.addArguments([parent, target, damage, spell]);
+		callback.addArguments([parent, target, damage, targeter]);
 		
 		// create the animation
 		var anim = game.getBaseAnimation("blast");
@@ -111,6 +111,21 @@ function performTouch(game, targeter) {
 	}
 }
 
-function applyDamage(game, parent, target, damage, spell) {
+function applyDamage(game, parent, target, damage, targeter) {
+	var spell = targeter.getSlot().getAbility();
+
 	spell.applyDamage(parent, target, damage, "Electrical");
+	
+	if (parent.getAbilities().has("DisablingLightning")) {
+		var magnitude = 10 + parent.getCasterLevel();
+   
+		var effect = targeter.getSlot().createEffect();
+		effect.setTitle("Disabling Lightning");
+	
+		effect.getBonuses().addPenalty("SpellFailure", -magnitude);
+		effect.getBonuses().addPenalty("Attack", -magnitude);
+		effect.setDuration(3);
+	
+		target.applyEffect(effect);
+	}
 }
