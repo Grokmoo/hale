@@ -129,6 +129,7 @@ image sleep              12  6
 image massCure           13  6
 image regeneration       14  6
 image trainWisdom1       15  6
+image bardsong           16  6
 
 image massRegeneration    0  7
 image summon              1  7
@@ -146,6 +147,7 @@ image animalPower        12  7
 image chameleon          13  7
 image breach             14  7
 image trainCharisma1     15  7
+image songOfLuck         16  7
 
 image lightningBolt        0  8
 image shock                1  8
@@ -163,6 +165,7 @@ image healingSpellFocus   12  8
 image offensiveSpellFocus 13  8
 image improvedFlanking    14  8
 image trainStrength2      15  8
+image curseSong           16  8
 
 image curse                0  9
 image enfeeble             1  9

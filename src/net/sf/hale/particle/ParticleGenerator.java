@@ -50,7 +50,7 @@ public class ParticleGenerator implements Animated {
 	private boolean initialized;
 	private boolean burstGenerated;
 	private float timeLeft;
-	private boolean stopAtOpaque;
+	private boolean stopAtOpaque, drawInOpaque;
 	private float positionX, positionY;
 	private float velocityX, velocityY;
 	private float currentNewParticles;
@@ -94,6 +94,7 @@ public class ParticleGenerator implements Animated {
 		data.put("burstGenerated", burstGenerated);
 		data.put("timeLeft", timeLeft);
 		data.put("stopAtOpaque", stopAtOpaque);
+		data.put("drawInOpaque", drawInOpaque);
 		data.put("positionX", positionX);
 		data.put("positionY", positionY);
 		data.put("velocityX", velocityX);
@@ -179,6 +180,7 @@ public class ParticleGenerator implements Animated {
 		burstGenerated = data.get("burstGenerated", false);
 		timeLeft = data.get("timeLeft", 0.0f);
 		stopAtOpaque = data.get("stopAtOpaque", false);
+		drawInOpaque = data.get("drawInOpaque", false);
 		positionX = data.get("positionX", 0.0f);
 		positionY = data.get("positionY", 0.0f);
 		velocityX = data.get("velocityX", 0.0f);
@@ -297,6 +299,7 @@ public class ParticleGenerator implements Animated {
 		this.mode = other.mode;
 		this.timeLeft = other.timeLeft;
 		this.stopAtOpaque = other.stopAtOpaque;
+		this.drawInOpaque = other.drawInOpaque;
 		
 		this.positionX = other.positionX;
 		this.positionY = other.positionY;
@@ -368,6 +371,10 @@ public class ParticleGenerator implements Animated {
 	
 	public void addSubGenerator(Animated generator, float time) {
 		subGenerators.add(new SubGenerator(generator, time));
+	}
+	
+	public void setDrawParticlesInOpaque(boolean drawInOpaque) {
+		this.drawInOpaque = drawInOpaque;
 	}
 	
 	public void setStopParticlesAtOpaque(boolean stopAtOpaque) {
@@ -578,6 +585,7 @@ public class ParticleGenerator implements Animated {
 		for (int i = 0; i < num; i++) {
 			Particle p = new Particle(particleSprite);
 			p.setStopAtOpaque(stopAtOpaque);
+			p.setDrawInOpaque(drawInOpaque);
 			
 			setParticlePosition(p);
 			
