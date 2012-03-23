@@ -28,24 +28,34 @@ function enableSong(game, slot, song) {
 	slot.activate();
 }
 
+function addButton(game, slot, cbFunc, name) {
+	var cb = game.createButtonCallback(slot, "enableSong");
+	cb.addArgument(cbFunc);
+	game.addMenuButton(name, cb);
+}
+
 function onActivate(game, slot) {
 	var abilities = slot.getParent().getAbilities();
 
 	game.addMenuLevel("Bardsong");
 	
-	if (abilities.has("SongOfLuck")) {
-		var cb = game.createButtonCallback(slot, "enableSong");
-		cb.addArgument("songOfLuck");
-		
-		game.addMenuButton("Song of Luck", cb);
-	}
+	if (abilities.has("SongOfLuck"))
+		addButton(game, slot, "songOfLuck", "Song of Luck");
 	
-	if (abilities.has("CurseSong")) {
-		var cb = game.createButtonCallback(slot, "enableSong");
-		cb.addArgument("curseSong");
+	if (abilities.has("SongOfSlaying"))
+		addButton(game, slot, "songOfSlaying", "Song of Slaying");
+	
+	if (abilities.has("DefendersRhythm"))
+		addButton(game, slot, "defendersRhythm", "Defender's Rhythm");
+	
+	if (abilities.has("HealingSong"))
+		addButton(game, slot, "healingSong", "Healing Song");
 		
-		game.addMenuButton("Curse Song", cb);
-	}
+	if (abilities.has("CurseSong"))
+		addButton(game, slot, "curseSong", "Curse Song");
+	
+	if (abilities.has("MortalitySong"))
+		addButton(game, slot, "mortalitySong", "Mortality Song");
 	
 	game.showMenu();
 }

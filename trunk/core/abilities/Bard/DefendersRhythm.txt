@@ -1,0 +1,10 @@
+name "Defender's Rhythm"
+type "Bard Abilities"
+description "The Defender's Rhythm affects all allies within 40 feet of the Bard.  Affected creatures gain a bonus of 10 plus two times Bard level plus two per point of Charisma over 10 to Armor Class and Armor Penalty."
+activateable false
+
+icon "icons/defendersRhythm"
+
+aiPower 30
+
+addPrereq Ability Bardsong

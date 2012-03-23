@@ -1,3 +1,19 @@
+function onRoundElapsed(game, aura) {
+	var parent = aura.getSlot().getParent();
+	
+	var chaBonus = (parent.stats().getCha() - 10);
+	var lvls = parent.getRoles().getLevel("Bard");
+	
+	var bonus = parseInt( (chaBonus + lvls) / 2 );
+
+    var targets = game.currentArea().getAffectedCreatures(aura);
+	for (var i = 0; i < targets.size(); i++) {
+		var target = targets.get(i);
+		
+		target.healDamage(bonus);
+	}
+}
+
 function onTargetEnter(game, target, aura) {
 	var slot = aura.getSlot();
 	var parent = slot.getParent();
@@ -5,19 +21,11 @@ function onTargetEnter(game, target, aura) {
 	
 	if (parent.getFaction().isFriendly(target)) {
 		var targetEffect = slot.createEffect();
-		targetEffect.setTitle("Song of Luck");
+		targetEffect.setTitle("Healing Song");
 		targetEffect.setRemoveOnDeactivate(true);
 		aura.addChildEffect(targetEffect);
 	
 		var chaBonus = (parent.stats().getCha() - 10);
-		var lvls = parent.getRoles().getLevel("Bard");
-	
-		var bonus = 10 + 2 * lvls + 2 * chaBonus;
-	
-		targetEffect.getBonuses().addBonus('Attack', 'Luck', bonus);
-		targetEffect.getBonuses().addBonus('SpellFailure', 'Luck', bonus);
-		targetEffect.getBonuses().addSkillBonus('Locks', 'Luck', bonus);
-		targetEffect.getBonuses().addSkillBonus('Traps', 'Luck', bonus);
 		
 		if (parent.getAbilities().has("SongOfAllies"))
 			targetEffect.getBonuses().addBonus('Con', 'Luck', parseInt(chaBonus / 2) );
@@ -26,7 +34,7 @@ function onTargetEnter(game, target, aura) {
 	} else if (parent.getAbilities().has("SongOfEnemies") && parent.getFaction().isHostile(target)) {
 	
 		var targetEffect = slot.createEffect();
-		targetEffect.setTitle("Song of Luck");
+		targetEffect.setTitle("Healing Song");
 		targetEffect.setRemoveOnDeactivate(true);
 		aura.addChildEffect(targetEffect);
 	
