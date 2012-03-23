@@ -19,7 +19,7 @@
 
 package net.sf.hale.rules;
 
-import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 public class Weight {
 	private int grams;
@@ -45,10 +45,13 @@ public class Weight {
 	}
 	
 	public int getWeight() { return grams; }
+	
 	public void setWeight(int grams) { this.grams = grams; }
 	
 	public String toStringGrams() { return grams + ""; }
 	public String toStringKilograms() {
-		return new BigDecimal(grams + "").divide(new BigDecimal(1000)).toPlainString();
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMaximumFractionDigits(3);
+		return nf.format(grams / 1000.0);
 	}
 }

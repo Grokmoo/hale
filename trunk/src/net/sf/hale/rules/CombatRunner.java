@@ -629,7 +629,7 @@ public class CombatRunner {
 		
 		for (Encounter encounter : Game.curCampaign.curArea.getEncounters()) {
 			if (encounter.isCompleted()) {
-				Game.ruleset.xp().assignEncounterXPAndGold(encounter, combatLength);
+				XP.assignEncounterXPAndGold(encounter, combatLength);
 			}
 		}
 		

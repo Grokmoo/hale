@@ -66,6 +66,7 @@ import net.sf.hale.rules.Dice;
 import net.sf.hale.rules.Faction;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.XP;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
@@ -418,7 +419,7 @@ public class ScriptInterface {
 	}
 	
 	public static void addPartyXP(int xp) {
-		Game.ruleset.xp().addPartyXP(xp);
+		XP.addPartyXP(xp);
 	}
 	
 	public static void runExternalScript(String scriptLocation, String function) {

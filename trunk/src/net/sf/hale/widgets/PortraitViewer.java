@@ -28,6 +28,7 @@ import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Inventory;
 import net.sf.hale.rules.Merchant;
+import net.sf.hale.rules.XP;
 import net.sf.hale.view.DragAndDropHandler;
 import net.sf.hale.view.DragTarget;
 import net.sf.hale.view.DropTarget;
@@ -185,7 +186,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 		}
 		
 		int charLevel = creature.stats().get(Stat.CreatureLevel);
-		int xpForNext = Game.ruleset.xp().getPointsForLevel(charLevel + 1);
+		int xpForNext = XP.getPointsForLevel(charLevel + 1);
 		if (creature.getExperiencePoints() >= xpForNext) {
 			levelUp.setVisible(true);
 		} else {

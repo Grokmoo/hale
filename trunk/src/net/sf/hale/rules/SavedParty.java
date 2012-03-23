@@ -38,7 +38,8 @@ import net.sf.hale.util.SimpleJSONParser;
 import net.sf.hale.util.Logger;
 
 /**
- * A representation of a party that has been saved to a file on disk
+ * A representation of a party that has been saved to a file on disk, for use in
+ * building a party when starting a campaign
  * @author Jared
  *
  */
