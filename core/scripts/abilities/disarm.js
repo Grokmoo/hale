@@ -57,8 +57,6 @@ function performAttack(game, targeter) {
 	var bonus = 0;
 	if (!targetWeapon.isMeleeWeapon()) {
 		bonus = 30;
-	} else {
-		bonus = 10 * parentWeapon.getWeaponSizeDifference(targetWeapon);
 	}
 	
 	var effect = parent.createEffect();

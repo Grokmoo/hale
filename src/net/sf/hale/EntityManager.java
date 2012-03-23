@@ -357,7 +357,7 @@ public class EntityManager {
 		int findDiff = -1, placeDiff = -1, disarmDiff = -1, recoverDiff = -1, reflexDiff = -1;
 		Currency value = new Currency();
 		int valueStackSize = 1;
-		Size weaponSize = Size.get("Medium");
+		Size weaponSize = Size.Medium;
 		int minWeaponReach = 1, maxWeaponReach = 1;
 		int damageMin = 0, damageMax = 0;
 		
@@ -423,7 +423,7 @@ public class EntityManager {
 			if (s.equals("light")) weaponHanded = WeaponHanded.LIGHT;
 			else if (s.equals("onehanded")) weaponHanded = WeaponHanded.ONE_HANDED;
 			else if (s.equals("twohanded")) weaponHanded = WeaponHanded.TWO_HANDED;
-			weaponSize = Size.get(line.next());
+			weaponSize = Size.valueOf(line.next());
 		}
 		
 		line = keyMap.getLast("damage");

@@ -1,6 +1,6 @@
 icon "icons/dwarf"
 
-size medium
+size Medium
 movementCost 1250
 unarmedWeapon unarmedMedium
 playerSelectable true
