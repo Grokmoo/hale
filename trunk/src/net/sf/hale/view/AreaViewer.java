@@ -481,6 +481,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	@Override public void drawTransitions() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		
+		long curTime = System.currentTimeMillis();
+		
 		for (String s : area.getTransitions()) {
 			AreaTransition transition = Game.curCampaign.getAreaTransition(s);
 			
@@ -494,7 +496,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 				grid = new Point(transition.getAreaToX(), transition.getAreaToY());
 			}
 			
-			transition.draw(AreaUtil.convertGridToScreen(grid));
+			transition.draw(AreaUtil.convertGridToScreen(grid), curTime);
 		}
 	}
 	

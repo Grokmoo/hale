@@ -25,6 +25,9 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
 import net.sf.hale.editor.reference.ReferenceList;
 import net.sf.hale.editor.reference.Referenceable;
 import net.sf.hale.editor.reference.TransitionReferenceList;
@@ -226,7 +229,20 @@ public class AreaTransition implements Referenceable, Saveable {
 		return name;
 	}
 	
-	public final void draw(Point p) {
+	/**
+	 * Draw with a simple, hardcoded flashing animation
+	 * @param p
+	 * @param currentTimeMillis
+	 */
+	
+	public final void draw(Point p, long currentTimeMillis) {
+		float color = (currentTimeMillis % 1000) / 1000.0f;
+		if (color > 0.5f) color = 1.0f - color;
+		
+		GL14.glSecondaryColor3f(color, color, color);
+		
 		iconSprite.drawWithOffset(p);
+		
+		GL14.glSecondaryColor3f(0.0f, 0.0f, 0.0f);
 	}
 }
