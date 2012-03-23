@@ -25,7 +25,6 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 import net.sf.hale.editor.reference.ReferenceList;

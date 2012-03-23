@@ -405,7 +405,7 @@ public class StatManager {
 	}
 	
 	public void recomputeArmorClass() {
-		int sizeModifier = parent.getRace().getSize().getModifier();
+		int sizeModifier = parent.getRace().getSize().modifier;
 		
 		float itemsArmorClass = 0.0f;
 		float itemsArmorPenalty = 0.0f;
@@ -493,7 +493,7 @@ public class StatManager {
 	}
 	
 	public void recomputeAttackBonus() {
-		int sizeModifier = parent.getRace().getSize().getModifier();
+		int sizeModifier = parent.getRace().getSize().modifier;
 		
 		Item mainWeapon = parent.getInventory().getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
 		if (mainWeapon == null) mainWeapon = parent.getRace().getDefaultWeapon();

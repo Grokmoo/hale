@@ -1,6 +1,6 @@
 icon "icons/human"
 
-size medium
+size Medium
 movementCost 1000
 unarmedWeapon unarmedMedium
 playerSelectable true

@@ -92,7 +92,7 @@ public class Race {
 		this.descriptionFile = map.getValue("descriptionfile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
 		
 		String sizeString = map.getValue("size", null);
-		this.size = sizeString == null ? Size.get("Medium") : Size.get(sizeString);
+		this.size = sizeString == null ? Size.Medium : Size.valueOf(sizeString);
 		this.icon = map.getValue("icon", null);
 		
 		movementCost = map.getValue("movementcost", 1000);

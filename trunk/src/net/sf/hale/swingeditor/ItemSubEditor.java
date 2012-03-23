@@ -395,7 +395,7 @@ public class ItemSubEditor extends SubEditorPanel {
 			weaponSize = new JComboBox();
 			i = 0;
 			for (Size size : Size.values()) {
-				weaponSize.addItem(size.getName());
+				weaponSize.addItem(size.toString());
 				
 				if (size == item.getWeaponSize()) weaponSize.setSelectedIndex(i);
 				

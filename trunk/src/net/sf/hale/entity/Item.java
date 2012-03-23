@@ -414,24 +414,6 @@ public class Item extends Entity implements Referenceable {
 	public int getThreatenMin() { return threatenMin; }
 	public int getThreatenMax() { return threatenMax; }
 	
-	public int getWeaponSizeDifference(Item other) {
-		if (other == null) return 0;
-		
-		if (this.itemType != ItemType.WEAPON) return 0;
-		if (other.itemType != ItemType.WEAPON) return 0;
-		
-		int otherSize = other.weaponSize.getSize();
-		if (other.weaponHanded == WeaponHanded.LIGHT) otherSize--;
-		else if (other.weaponHanded == WeaponHanded.TWO_HANDED) otherSize++;
-		
-		
-		int thisSize = this.weaponSize.getSize();
-		if (this.weaponHanded == WeaponHanded.LIGHT) thisSize--;
-		else if (this.weaponHanded == WeaponHanded.TWO_HANDED) thisSize++;
-		
-		return thisSize - otherSize;
-	}
-	
 	public boolean canWieldInOffHand(Creature wielder, Item mainHand) {
 		if (!canWieldInOneHand(wielder)) return false;
 		

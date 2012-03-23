@@ -19,53 +19,33 @@
 
 package net.sf.hale.rules;
 
-public class Size {
-	public static final String[] names = { "Minuscule", "Tiny", "Small", "Medium",
-									  "Large", "Huge", "Gigantic" };
-	private static final Size[] sizes = new Size[7];
+/**
+ * A class representing a creature size, which confers certain bonuses or penalties
+ * @author Jared
+ *
+ */
+
+public enum Size {
+	Minuscule(4), Tiny(2), Small(1), Medium(0), Large(-1), Huge(-2), Gigantic(-4);
 	
-	private int size;
-	private int modifier;
+	/**
+	 * The Armor Class and Attack modifier for this Size
+	 */
 	
-	public static Size[] values() {
-		get(names[0]);
-		
-		return sizes;
+	public final int modifier;
+	
+	private final int sizeCategory;
+	
+	private Size(int modifier) {
+		this.modifier = 5 * modifier;
+		this.sizeCategory = modifier;
 	}
 	
-	public static Size get(String name) {
-		if (sizes[0] == null) {
-			for (int i = 0; i < sizes.length; i++) {
-				sizes[i] = new Size(i);
-			}
-		}
-		
-		for (int i = 0; i < names.length; i++) {
-			if (name.equalsIgnoreCase(names[i])) {
-				return sizes[i];
-			}
-		}
-		
-		return sizes[3];
-	}
+	/**
+	 * Returns the number of size categories different two sizes are
+	 * @param other the size to compare to
+	 * @return the number of size categories different the sizes are
+	 */
 	
-	private Size(int size) { 
-		this.size = size;
-		
-		if (this.size == 0)      this.modifier =  4;
-		else if (this.size == 1) this.modifier =  2;
-		else if (this.size == 2) this.modifier =  1;
-		else if (this.size == 3) this.modifier =  0;
-		else if (this.size == 4) this.modifier = -1;
-		else if (this.size == 5) this.modifier = -2;
-		else if (this.size == 6) this.modifier = -4;
-	}
-	
-	public int getModifier() { return modifier * 5; }
-	
-	public int getSize() {	return size; }
-	public String getName() { return names[size]; }
-	public int getDifference(Size other) { return (this.size - other.getSize()); }
-	
-	public String toString() { return names[size]; }
+	public int getDifference(Size other) { return (this.sizeCategory - other.sizeCategory); }
 }

@@ -209,12 +209,14 @@ public class WeaponEditor extends SubItemEditor {
 				if (weaponSizeBox.getSelected() == -1) return;
 				
 				String size = weaponSizeModel.getEntry(weaponSizeBox.getSelected());
-				selectedItem.setWeaponSize(Size.get(size));
+				selectedItem.setWeaponSize(Size.valueOf(size));
 			}
 		});
 		this.add(weaponSizeBox);
 		
-		for (String name : Size.names) {
+		for (Size size : Size.values()) {
+			String name = size.toString();
+			
 			weaponSizeModel.addElement(name);
 		}
 		
@@ -477,7 +479,7 @@ public class WeaponEditor extends SubItemEditor {
 			weaponHandedBox.setSelected(-1);
 		
 		if (item.getWeaponSize() != null) {
-			weaponSizeBox.setSelected(weaponSizeModel.findElement(item.getWeaponSize().getName()));
+			weaponSizeBox.setSelected(weaponSizeModel.findElement(item.getWeaponSize().toString()));
 		} else
 			weaponSizeBox.setSelected(-1);
 		
