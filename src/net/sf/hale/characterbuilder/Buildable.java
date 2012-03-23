@@ -516,15 +516,25 @@ public class Buildable {
 	 */
 	
 	protected void applySelectionsToCreature() {
-		if (selectedRole != null)
+		Quickbar quickbar = creature.getQuickbar();
+		
+		if (selectedRole != null) {
 			creature.getRoles().addLevels(selectedRole, 1);
+			
+			int curLevel = creature.getRoles().getLevel(selectedRole);
+			
+			// check all added abilities to see if they are activateable; if so add them to the quickbar
+			for (Ability ability : selectedRole.getAbilitiesAddedAtLevel(curLevel)) {
+				if (quickbar != null && ability.isActivateable())
+					quickbar.addToFirstEmptySlot(ability);
+			}
+		}
 		
 		if (selectedSkills != null) {
 			creature.getSkillSet().addRanksFromList(selectedSkills);
 			creature.setUnspentSkillPoints(selectedUnspentSkillPoints);
 		}
 		
-		Quickbar quickbar = creature.getQuickbar();
 		int level = getCreatureLevel();
 		for (Ability ability : selectedAbilities) {
 			creature.getAbilities().add(ability, level - 1);

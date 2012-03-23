@@ -183,6 +183,7 @@ image trainingPiercing    12  9
 image pointBlankShot      13  9
 image totalDefense        14  9
 image trainDexterity2     15  9
+image defendersRhythm     16  9
 
 image dispell             0 10
 image conjureWeapon       1 10
@@ -200,23 +201,25 @@ image advTrainMaces      12 10
 image advTrainBows       13 10
 image improvedShieldBash 14 10
 image trainConstitution2 15 10
+image healingSong        16 10
 
-image greaterDispell     0 11
-image massChameleon      1 11
-image meteor             2 11
-image lightningStorm     3 11
-image "crushingVines"    4 11
-image "deadlyVines"      5 11
-image "ward"             6 11
-image expertSmallSwords  7 11
-image expertLargeSwords  8 11
-image expertAxes         9 11
-image expertSpears      10 11
-image expertHammers     11 11
-image expertMaces       12 11
-image expertBows        13 11
-image devastatingShot   14 11
+image greaterDispell      0 11
+image massChameleon       1 11
+image meteor              2 11
+image lightningStorm      3 11
+image "crushingVines"     4 11
+image "deadlyVines"       5 11
+image "ward"              6 11
+image expertSmallSwords   7 11
+image expertLargeSwords   8 11
+image expertAxes          9 11
+image expertSpears       10 11
+image expertHammers      11 11
+image expertMaces        12 11
+image expertBows         13 11
+image devastatingShot    14 11
 image trainIntelligence2 15 11
+image songOfSlaying      16 11
 
 image fortifyHealth          0 12
 image conjureArmorSet        1 12
@@ -234,6 +237,7 @@ image masterMaces           12 12
 image masterBows            13 12
 image powerfulBlows         14 12
 image trainWisdom2          15 12
+image mortalitySong         16 12
 
 image massCrush             0 13
 image improvedSummon        1 13
@@ -251,6 +255,7 @@ image ranger               12 13
 image paladin              13 13
 image berserker            14 13
 image trainCharisma2       15 13
+image songOfAllies         16 13
 
 image positiveEnergy     0 14
 image personalMagnetism  1 14
@@ -268,6 +273,7 @@ image elementalist      12 14
 image warWizard         13 14
 image illusionist       14 14
 image trainStrength3    15 14
+image songOfEnemies     16 14
 
 image steadfastRage       0 15
 image epicRage            1 15

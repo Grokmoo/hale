@@ -3,33 +3,35 @@ function onTargetEnter(game, target, aura) {
 	var parent = slot.getParent();
 	var casterLevel = parent.getCasterLevel();
 	
-	if (parent.getFaction().isHostile(target)) {
+	if (parent.getFaction().isFriendly(target)) {
 		var targetEffect = slot.createEffect();
-		targetEffect.setTitle("Curse Song");
+		targetEffect.setTitle("Defender's Rhythm");
 		targetEffect.setRemoveOnDeactivate(true);
 		aura.addChildEffect(targetEffect);
 	
 		var chaBonus = (parent.stats().getCha() - 10);
 		var lvls = parent.getRoles().getLevel("Bard");
 	
-		var penalty = parseInt((lvls + chaBonus) / 2);
+		var bonus = 10 + 2 * lvls + 2 * chaBonus;
 	
-		targetEffect.getBonuses().addPenalty('Dex', 'Luck', -penalty);
-		targetEffect.getBonuses().addPenalty('Str', 'Luck', -penalty);
+		targetEffect.getBonuses().addBonus('ArmorClass', 'Luck', bonus);
+		targetEffect.getBonuses().addBonus('ArmorPenalty', 'Luck', bonus);
 		
-		if (parent.getAbilities().has("SongOfEnemies"))
-			targetEffect.getBonuses().addPenalty('Attack', 'Luck', -10 - chaBonus);
+		if (parent.getAbilities().has("SongOfAllies"))
+			targetEffect.getBonuses().addBonus('Con', 'Luck', parseInt(chaBonus / 2) );
 		
 		target.applyEffect(targetEffect);
-	} else if (parent.getAbilities().has("SongOfAllies") && parent.getFaction().isFriendly(target)) {
+	} else if (parent.getAbilities().has("SongOfEnemies") && parent.getFaction().isHostile(target)) {
+	
 		var targetEffect = slot.createEffect();
-		targetEffect.setTitle("Curse Song");
+		targetEffect.setTitle("Defender's Rhythm");
 		targetEffect.setRemoveOnDeactivate(true);
 		aura.addChildEffect(targetEffect);
 	
 		var chaBonus = (parent.stats().getCha() - 10);
 		
-		targetEffect.getBonuses().addBonus('Con', 'Luck', parseInt(chaBonus / 2) );
+		targetEffect.getBonuses().addPenalty('Attack', 'Luck', -10 - chaBonus);
+		
 		target.applyEffect(targetEffect);
 	}
 }
@@ -37,12 +39,12 @@ function onTargetEnter(game, target, aura) {
 function onTargetExit(game, target, aura) {
 	var parent = aura.getSlot().getParent();
 
-	if (parent.getFaction().isHostile(target)) {
+	if (parent.getFaction().isFriendly(target)) {
 		var targetEffect = aura.getChildEffectWithTarget(target);
    
 		target.removeEffect(targetEffect);
 		aura.removeChildEffect(targetEffect);
-	} else if (parent.getAbilities().has("SongOfAllies") && parent.getFaction().isFriendly(target)) {
+	} else if (parent.getAbilities().has("SongOfEnemies") && parent.getFaction().isHostile(target)) {
 		var targetEffect = aura.getChildEffectWithTarget(target);
    
 		target.removeEffect(targetEffect);
