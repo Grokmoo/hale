@@ -28,6 +28,7 @@ import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
 import net.sf.hale.rules.DamageType;
 import net.sf.hale.rules.Role;
+import net.sf.hale.rules.XP;
 import net.sf.hale.widgets.BasePortraitViewer;
 
 import de.matthiasmann.twl.ScrollPane;
@@ -114,7 +115,7 @@ public class CharacterSheet extends ScrollPane {
 			sb.append("</p>");
 		}
 
-		int nextLevel = Game.ruleset.xp().getPointsForLevel(parent.stats().get(Stat.CreatureLevel) + 1);
+		int nextLevel = XP.getPointsForLevel(parent.stats().get(Stat.CreatureLevel) + 1);
 		sb.append("<p><span style=\"font-family: vera-italic-blue\">");
 		sb.append(parent.getExperiencePoints()).append("</span> / <span style=\"font-family: vera-italic-blue\">");
 		sb.append(nextLevel).append("</span> XP</p>");

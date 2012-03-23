@@ -70,8 +70,6 @@ public class Ruleset {
 	
 	private final Map<String, Cutscene> cutscenes;
 	
-	private XP xp;
-	
 	private DifficultyManager difficultyManager;
 	
 	/**
@@ -132,7 +130,7 @@ public class Ruleset {
 		
 		readCutscenes();
 		
-		xp = new XP();
+		XP.initXPTable();
 		
 		difficultyManager = new DifficultyManager();
 	}
@@ -445,13 +443,6 @@ public class Ruleset {
 	public String getString(String rule) {
 		return ruleStrings.get(rule);
 	}
-	
-	/**
-	 * Returns the xp object that controls the Experience points related rules
-	 * @return the xp object
-	 */
-	
-	public XP xp() { return xp; }
 
 	public int getNumItemQualities() { return itemQualities.size(); }
 	public ItemQuality getItemQuality(int index) { return itemQualities.get(index); }

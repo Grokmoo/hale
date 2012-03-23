@@ -60,6 +60,7 @@ import net.sf.hale.rules.Size;
 import net.sf.hale.rules.SkillSet;
 import net.sf.hale.rules.SubIcon;
 import net.sf.hale.rules.Weight;
+import net.sf.hale.rules.XP;
 import net.sf.hale.util.FileKeyMap;
 import net.sf.hale.util.LineKeyList;
 import net.sf.hale.util.Logger;
@@ -733,7 +734,7 @@ public class EntityManager {
 			c.getInventory().equipItem(offHand.getItem(i), Inventory.EQUIPPED_OFF_HAND);
 		}
 		
-		if (xp == -1) c.setExperiencePoints(Game.ruleset.xp().getPointsForLevel(c.stats().get(Stat.CreatureLevel)));
+		if (xp == -1) c.setExperiencePoints(XP.getPointsForLevel(c.stats().get(Stat.CreatureLevel)));
 		else c.setExperiencePoints(xp);
 		
 		c.setMinCurrencyReward(minCurrencyReward);

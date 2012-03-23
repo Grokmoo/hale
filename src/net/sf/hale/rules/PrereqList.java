@@ -41,6 +41,10 @@ import net.sf.hale.util.Logger;
  */
 
 public class PrereqList {
+	private enum Type {
+		skill, ability, role, stat, weaponproficiency, armorproficiency;
+	}
+	
 	private final SkillSet skillPrereqs;
 	private final List<String> abilityPrereqs;
 	
@@ -118,22 +122,32 @@ public class PrereqList {
 	 */
 	
 	public void addPrereq(LineKeyList sLine) {
-		String type = sLine.next().toLowerCase();
-		if (type.equals("skill")) {
-			addSkillPrereq(sLine.next(), sLine.nextInt());
-		} else if (type.equals("ability")) {
-			addAbilityPrereq(sLine.next());
-		} else if (type.equals("role")) {
-			addRolePrereq(sLine.next(), sLine.nextInt());
-		} else if (type.equals("stat")) {
-			addStatPrereq(sLine.next(), sLine.nextInt());
-		} else if (type.equals("weaponproficiency")) {
-			addWeaponProficiencyPrereq(sLine.next());
-		} else if (type.equals("armorproficiency")) {
-			addArmorProficiencyPrereq(sLine.next());
-		} else {
-			Logger.appendToWarningLog("Prereq type " + type + " not found in " +
-					sLine.getFilePath() + " on line " + sLine.getLineNumber());
+		Type type = Type.valueOf(sLine.next().toLowerCase());
+		
+		try {
+			switch (type) {
+			case skill:
+				addSkillPrereq(sLine.next(), sLine.nextInt());
+				break;
+			case ability:
+				addAbilityPrereq(sLine.next());
+				break;
+			case role:
+				addRolePrereq(sLine.next(), sLine.nextInt());
+				break;
+			case stat:
+				addStatPrereq(sLine.next(), sLine.nextInt());
+				break;
+			case weaponproficiency:
+				addWeaponProficiencyPrereq(sLine.next());
+				break;
+			case armorproficiency:
+				addArmorProficiencyPrereq(sLine.next());
+				break;
+			}
+		} catch (Exception e) {
+			Logger.appendToWarningLog("Error parsing prereq in " + sLine.getFilePath() +
+					" on line " + sLine.getLineNumber());
 		}
 	}
 	
