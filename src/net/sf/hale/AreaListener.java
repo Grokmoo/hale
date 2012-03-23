@@ -166,13 +166,16 @@ public class AreaListener {
 	public TargeterManager getTargeterManager() { return targeterManager; }
 	
 	public boolean handleEvent(Event evt) {
-		switch (evt.getType()) {
-		case MOUSE_MOVED:
+		if (evt.getType() == Event.Type.MOUSE_MOVED) {
 			this.lastMouseX = evt.getMouseX();
 			this.lastMouseY = evt.getMouseY();
 			
 			computeMouseState();
-			break;
+		}
+		
+		if (curGridPoint == null) return true;
+		
+		switch (evt.getType()) {
 		case MOUSE_BTNDOWN:
 			mouseClickedWithoutDragging = true;
 			
