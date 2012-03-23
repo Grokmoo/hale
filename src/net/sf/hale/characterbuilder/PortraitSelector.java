@@ -196,25 +196,15 @@ public class PortraitSelector extends PopupWindow {
 	}
 	
 	private class PortraitLoader implements Runnable {
-		private List<String> resources;
-		private Widget content;
+		private List<PortraitViewer> viewers;
 		
-		private PortraitLoader(List<String> resources, Widget content) {
-			this.resources = resources;
-			this.content = content;
+		private PortraitLoader(List<PortraitViewer> viewers) {
+			this.viewers = viewers;
 		}
 		
 		@Override public void run() {
-			for (String resource : resources) {
-				PortraitViewer viewer = new PortraitViewer(resource);
-				viewer.setScale(0.5f);
-				content.add(viewer);
-
-				String portrait = PortraitSelector.getPortraitString(resource);
-				if (portrait.equals(character.getSelectedPortrait())) {
-					viewer.setActive(true);
-					selectedPortrait = viewer;
-				}
+			for (PortraitViewer viewer : viewers) {
+				viewer.loadSprite();
 			}
 		}
 	}
@@ -239,16 +229,23 @@ public class PortraitSelector extends PopupWindow {
 			
 			String directory = "portraits/" + race.getID();
 			
-			List<String> resources = new ArrayList<String>();
+			List<PortraitViewer> viewers = new ArrayList<PortraitViewer>();
 			for (String resource : ResourceManager.getResourcesInDirectory(directory)) {
-				if (!resource.endsWith(ResourceType.PNG.getExtension())) continue;
+				PortraitViewer viewer = new PortraitViewer(resource);
+				viewer.setScale(0.5f);
+				add(viewer);
 
-				resources.add(resource);
+				String portrait = PortraitSelector.getPortraitString(resource);
+				if (portrait.equals(character.getSelectedPortrait())) {
+					viewer.setActive(true);
+					selectedPortrait = viewer;
+				}
+				
+				numPortraits++;
+				viewers.add(viewer);
 			}
 			
-			numPortraits = resources.size();
-			
-			PortraitLoader loader = new PortraitLoader(resources, PortraitPaneContent.this);
+			PortraitLoader loader = new PortraitLoader(viewers);
 			getGUI().invokeAsync(loader, new PortraitLoaderListener());
 		}
 		
@@ -294,8 +291,11 @@ public class PortraitSelector extends PopupWindow {
 		
 		private PortraitViewer(String portrait) {
 			this.portrait = portrait;
-			this.sprite = SpriteManager.getImage(portrait);
 			this.addCallback(this);
+		}
+		
+		private void loadSprite() {
+			this.sprite = SpriteManager.getImage(portrait);
 		}
 		
 		@Override public void run() {
@@ -325,13 +325,15 @@ public class PortraitSelector extends PopupWindow {
 		@Override protected void paintWidget(GUI gui) {
 			super.paintWidget(gui);
 			
-			GL11.glPushMatrix();
-			GL11.glScalef(scale, scale, 1.0f);
-			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			if (sprite != null) {
+				GL11.glPushMatrix();
+				GL11.glScalef(scale, scale, 1.0f);
+				GL11.glColor3f(1.0f, 1.0f, 1.0f);
 			
-			sprite.draw((int) (getInnerX() * invScale), (int) (getInnerY() * invScale));
+				sprite.draw((int) (getInnerX() * invScale), (int) (getInnerY() * invScale));
 			
-			GL11.glPopMatrix();
+				GL11.glPopMatrix();
+			}
 		}
 	}
 }
