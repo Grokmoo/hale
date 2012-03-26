@@ -46,8 +46,8 @@ public class UniqueCharacter implements Iterable<Creature> {
 	private final Ruleset.Gender gender;
 	private final Race race;
 	
-	private int minLevel = 1;
-	private int maxLevel = 30;
+	private int minLevel;
+	private int maxLevel;
 	
 	/**
 	 * Creates a new new UniqueCharacter with the specified creature as the base.

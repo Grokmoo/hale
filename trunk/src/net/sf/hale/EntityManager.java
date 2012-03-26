@@ -146,8 +146,6 @@ public class EntityManager {
 			}
 		}
 		
-		if (c.getRoles().getTotalLevel() > Role.MAX_LEVELS) return false;
-		
 		for (String roleID : c.getRoles().getRoleIDs()) {
 			if (Game.ruleset.getRole(roleID) == null) return false;
 		}

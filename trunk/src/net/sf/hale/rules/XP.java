@@ -30,6 +30,8 @@ import net.sf.hale.entity.Creature;
  */
 
 public class XP {
+	private static int MAX_LEVEL = 100;
+	
 	private static int[] pointsForLevel;
 	
 	/**
@@ -42,14 +44,14 @@ public class XP {
 		int levelExpBaseInv = Game.ruleset.getValue("XPLevelExpBaseInv");
 		double levelExpBase = 1.0 + 1.0 / ((double)levelExpBaseInv);
 		
-		XP.pointsForLevel = new int[Role.MAX_LEVELS + 2];
+		XP.pointsForLevel = new int[MAX_LEVEL + 2];
 		
 		XP.pointsForLevel[0] = 0;
 		XP.pointsForLevel[1] = 0;
 		
 		double curPoints = 0.0;
 		
-		for (int prevLevel = 1; prevLevel <= Role.MAX_LEVELS; prevLevel++) {
+		for (int prevLevel = 1; prevLevel <= MAX_LEVEL; prevLevel++) {
 			curPoints += prevLevel * levelMultFactor * Math.pow(levelExpBase, prevLevel);
 			
 			XP.pointsForLevel[prevLevel + 1] = (int)((curPoints + 50) / 100) * 100;
