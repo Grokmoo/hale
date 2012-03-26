@@ -518,6 +518,7 @@ public class Inventory implements Saveable {
 			break;
 		case WEAPON:
 			Item.WeaponHanded handed = item.getWeaponHandedForCreature(parent.getRace().getSize());
+
 			if (slot == EQUIPPED_OFF_HAND) {
 				if (!parent.stats().has(Bonus.Type.DualWieldTraining)) return false; 
 				

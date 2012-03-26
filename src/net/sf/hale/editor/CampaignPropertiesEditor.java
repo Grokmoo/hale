@@ -32,7 +32,6 @@ import net.sf.hale.editor.widgets.TravelTimeSelector;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Merchant;
-import net.sf.hale.rules.Role;
 import net.sf.hale.util.Point;
 import net.sf.hale.view.WorldMapPopup;
 import net.sf.hale.widgets.WorldMapViewer;
@@ -327,13 +326,13 @@ public class CampaignPropertiesEditor extends EditorWindow implements Updateable
 		
 		startingLevelLabel = new Label("Starting Level");
 		startingLevelToLabel = new Label(" to ");
-		startingLevelMin = new ValueAdjusterInt(new SimpleIntegerModel(1, Role.MAX_LEVELS, 1));
+		startingLevelMin = new ValueAdjusterInt(new SimpleIntegerModel(1, 99, 1));
 		startingLevelMin.getModel().addCallback(new Runnable() {
 			@Override public void run() {
 				Game.curCampaign.setMinStartingLevel(startingLevelMin.getValue());
 			}
 		});
-		startingLevelMax = new ValueAdjusterInt(new SimpleIntegerModel(1, Role.MAX_LEVELS, 1));
+		startingLevelMax = new ValueAdjusterInt(new SimpleIntegerModel(1, 99, 1));
 		startingLevelMax.getModel().addCallback(new Runnable() {
 			@Override public void run() {
 				Game.curCampaign.setMaxStartingLevel(startingLevelMax.getValue());

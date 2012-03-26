@@ -17,4 +17,13 @@ addPrereq Role Priest 8
 addPrereq Ability Cure
 addPrereq Ability Regeneration
 
-
+level  1 addCasterLevel
+level  2 addCasterLevel
+level  3 addCasterLevel
+level  4 addCasterLevel
+level  5 addCasterLevel
+level  6 addCasterLevel
+level  7 addCasterLevel
+level  8 addCasterLevel
+level  9 addCasterLevel
+level 10 addCasterLevel

@@ -25,6 +25,21 @@ level 23 selectAbilityFromList Adept
 level 25 selectAbilityFromList Adept
 level 27 selectAbilityFromList Adept
 level 29 selectAbilityFromList Adept
+level 31 selectAbilityFromList Adept
+level 33 selectAbilityFromList Adept
+level 35 selectAbilityFromList Adept
+level 37 selectAbilityFromList Adept
+level 39 selectAbilityFromList Adept
+level 41 selectAbilityFromList Adept
+level 43 selectAbilityFromList Adept
+level 45 selectAbilityFromList Adept
+level 47 selectAbilityFromList Adept
+level 49 selectAbilityFromList Adept
+level 51 selectAbilityFromList Adept
+level 53 selectAbilityFromList Adept
+level 55 selectAbilityFromList Adept
+level 57 selectAbilityFromList Adept
+level 59 selectAbilityFromList Adept
 
 level 1 addAbility ProficiencyLightArmor
 level 1 addAbility ProficiencyShields
@@ -70,3 +85,33 @@ level 27 addCasterLevel
 level 28 addCasterLevel
 level 29 addCasterLevel
 level 30 addCasterLevel
+level 31 addCasterLevel
+level 32 addCasterLevel
+level 33 addCasterLevel
+level 34 addCasterLevel
+level 35 addCasterLevel
+level 36 addCasterLevel
+level 37 addCasterLevel
+level 38 addCasterLevel
+level 39 addCasterLevel
+level 40 addCasterLevel
+level 41 addCasterLevel
+level 42 addCasterLevel
+level 43 addCasterLevel
+level 44 addCasterLevel
+level 45 addCasterLevel
+level 46 addCasterLevel
+level 47 addCasterLevel
+level 48 addCasterLevel
+level 49 addCasterLevel
+level 40 addCasterLevel
+level 51 addCasterLevel
+level 52 addCasterLevel
+level 53 addCasterLevel
+level 54 addCasterLevel
+level 55 addCasterLevel
+level 56 addCasterLevel
+level 57 addCasterLevel
+level 58 addCasterLevel
+level 59 addCasterLevel
+level 60 addCasterLevel

@@ -228,7 +228,7 @@ public class CreatureEditor extends EditorWindow implements Updateable, PopupCal
 		
 		selectedCreatureLevelLabel = new Label("Level");
 		
-		selectedCreatureLevelAdjuster = new ValueAdjusterInt(new SimpleIntegerModel(1, Role.MAX_LEVELS, 1));
+		selectedCreatureLevelAdjuster = new ValueAdjusterInt(new SimpleIntegerModel(1, 99, 1));
 		
 		selectedCreatureAttributes = new ArrayList<AttributeAdjuster>();
 		

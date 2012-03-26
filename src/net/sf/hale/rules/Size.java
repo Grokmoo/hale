@@ -47,5 +47,5 @@ public enum Size {
 	 * @return the number of size categories different the sizes are
 	 */
 	
-	public int getDifference(Size other) { return (this.sizeCategory - other.sizeCategory); }
+	public int getDifference(Size other) { return (other.sizeCategory - this.sizeCategory); }
 }

@@ -21,8 +21,11 @@ package net.sf.hale.rules;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.hale.Game;
@@ -38,8 +41,6 @@ import net.sf.hale.util.LineKeyList;
 import net.sf.hale.util.Logger;
 
 public class Role {
-	public static int MAX_LEVELS = 30;
-	
 	private final String descriptionFile;
 	private final String id;
 	private final String name;
@@ -50,8 +51,6 @@ public class Role {
 	private final int attackBonusPerLevel;
 	private final int damageBonusPerLevel;
 	private final int maxLevel;
-	
-	private final int[] casterLevels;
 	
 	private final Stat spellCastingAttribute;
 	
@@ -66,20 +65,12 @@ public class Role {
 	
 	private final PrereqList prereqs;
 	
-	private final List<LevelUpList> levelUpLists;
+	private final Map<Integer, LevelUpList> levelUpLists;
 	
 	public Role(String id, String path) {
 		this.id = id;
 		
-		this.levelUpLists = new ArrayList<LevelUpList>(Role.MAX_LEVELS);
-		for (int i = 0; i < Role.MAX_LEVELS; i++) {
-			levelUpLists.add(new LevelUpList());
-		}
-		
-		casterLevels = new int[Role.MAX_LEVELS];
-		for (int i = 0; i < casterLevels.length; i++) {
-			casterLevels[i] = 0;
-		}
+		this.levelUpLists = new HashMap<Integer, LevelUpList>();
 		
 		prereqs = new PrereqList();
 		
@@ -113,21 +104,35 @@ public class Role {
 		for (LineKeyList line : map.get("level")) {
 			int level = line.nextInt();
 			String type = line.next().toLowerCase();
+			
+			LevelUpList levelUpList = getLevelUpList(level);
+			
 			if (type.equals("addcasterlevel")) {
-				casterLevels[level - 1]++;
+				levelUpList.casterLevelAdded++;
+				
 			} else if (type.equals("addability")) {
 				String abilityID = line.next();
 				
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				if (ability == null) {
-					throw new NullPointerException("Ability ID \"" + abilityID + "\" not found while reading " + this.id);
+					throw new IllegalArgumentException("Ability ID \"" + abilityID + "\" not found while reading " + this.id);
 				}
 				
-				levelUpLists.get(level - 1).abilities.add(ability.getID());
+				levelUpList.abilities.add(ability.getID());
+				
 			} else if (type.equals("selectabilityfromlist")) {
-				levelUpLists.get(level - 1).abilitySelectionLists.add(line.next());
+				String aslID = line.next();
+				
+				AbilitySelectionList asl = Game.ruleset.getAbilitySelectionList(aslID);
+				if (asl == null) {
+					throw new IllegalArgumentException("Ability Selection List \"" + aslID + "\" not found while reading " + this.id);
+				}
+				
+				levelUpList.abilitySelectionLists.add(aslID);
+				
 			} else if (type.equals("addabilityslot")) {
-				levelUpLists.get(level - 1).abilitySlots.add(line.next());
+				levelUpList.abilitySlots.add(line.next());
+				
 			} else {
 				Logger.appendToWarningLog("Invalid key " + type + " in " + line.getFilePath() +
 						" on " + line.getLineNumber());
@@ -146,17 +151,30 @@ public class Role {
 		map.checkUnusedKeys();
 	}
 	
+	/**
+	 * Used when parsing the input data
+	 * @param level the level for the list
+	 * @return the levelUpList for the specified level.  If the list does not exist, it is created and added
+	 * to the level up lists map
+	 */
+	
+	private LevelUpList getLevelUpList(int level) {
+		LevelUpList list = levelUpLists.get(level);
+		if (list == null) {
+			list = new LevelUpList();
+			levelUpLists.put(level, list);
+		}
+		
+		return list;
+	}
+	
 	public int[] getDefaultPlayerAttributeSelections() {
 		if (defaultPlayerAttributeSelections == null) return null;
 		
 		return Arrays.copyOf(defaultPlayerAttributeSelections, 6);
 	}
 	
-	public int getMaxLevel() { return maxLevel; }
-	
 	public int getLevel1HP() { return level1HP; }
-	
-	public int getCasterLevelAddedAtLevel(int level) { return casterLevels[level - 1]; }
 	
 	public String getDescription() {
 		return ResourceManager.getResourceAsString(descriptionFile);
@@ -266,6 +284,19 @@ public class Role {
 	}
 	
 	/**
+	 * Gets the number of caster levels added for this role at the specified role level
+	 * @param level the role level
+	 * @return the number of caster levels
+	 */
+	
+	public int getCasterLevelAddedAtLevel(int level) {
+		LevelUpList list = levelUpLists.get(level);
+		if (list == null) return 0;
+		
+		return list.casterLevelAdded;
+	}
+	
+	/**
 	 * Returns the List of all Abilities that should be added to a Creature
 	 * upon gaining the specified level of this Role.  If their are no Abilities
 	 * to be added, the List will be empty.
@@ -275,7 +306,10 @@ public class Role {
 	 */
 	
 	public List<Ability> getAbilitiesAddedAtLevel(int level) {
-		List<String> abilityIDs = this.levelUpLists.get(level - 1).abilities;
+		LevelUpList list = levelUpLists.get(level);
+		if (list == null) return Collections.emptyList();
+		
+		List<String> abilityIDs = list.abilities;
 		
 		List<Ability> abilities = new ArrayList<Ability>(abilityIDs.size());
 		for (String id : abilityIDs) {
@@ -297,7 +331,10 @@ public class Role {
 	 */
 	
 	public List<AbilitySlot> getAbilitySlotsAddedAtLevel(int level, Creature parent) {
-		List<String> types = this.levelUpLists.get(level - 1).abilitySlots;
+		LevelUpList list = levelUpLists.get(level);
+		if (list == null) return Collections.emptyList();
+		
+		List<String> types = list.abilitySlots;
 		
 		List<AbilitySlot> slots = new ArrayList<AbilitySlot>(types.size());
 		for (String type : types) {
@@ -318,7 +355,10 @@ public class Role {
 	 */
 	
 	public List<AbilitySelectionList> getAbilitySelectionsAddedAtLevel(int level) {
-		List<String> listIDs = this.levelUpLists.get(level - 1).abilitySelectionLists;
+		LevelUpList list = levelUpLists.get(level);
+		if (list == null) return Collections.emptyList();
+		
+		List<String> listIDs = list.abilitySelectionLists;
 		
 		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>(listIDs.size());
 		for (String id : listIDs) {
@@ -337,7 +377,7 @@ public class Role {
 	public Set<AbilitySelectionList> getAllReferencedAbilitySelectionLists() {
 		Set<AbilitySelectionList> lists = new LinkedHashSet<AbilitySelectionList>();
 		
-		for (LevelUpList levelUpList : levelUpLists) {
+		for (LevelUpList levelUpList : levelUpLists.values()) {
 			for (String id : levelUpList.abilitySelectionLists) {
 				AbilitySelectionList list = Game.ruleset.getAbilitySelectionList(id);
 				lists.add(list);
@@ -359,11 +399,13 @@ public class Role {
 		private List<String> abilitySlots;
 		private List<String> abilitySelectionLists;
 		private List<String> abilities;
+		private int casterLevelAdded;
 		
 		private LevelUpList() {
-			this.abilitySlots = new ArrayList<String>(1);
-			this.abilitySelectionLists = new ArrayList<String>(1);
-			this.abilities = new ArrayList<String>(1);
+			this.abilitySlots = new ArrayList<String>(0);
+			this.abilitySelectionLists = new ArrayList<String>(0);
+			this.abilities = new ArrayList<String>(0);
+			this.casterLevelAdded = 0;
 		}
 	}
 }

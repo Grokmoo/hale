@@ -30,6 +30,26 @@ level 25 selectAbilityFromList Priest
 level 26 selectAbilityFromList Priest
 level 28 selectAbilityFromList Priest
 level 29 selectAbilityFromList Priest
+level 31 selectAbilityFromList Priest
+level 32 selectAbilityFromList Priest
+level 34 selectAbilityFromList Priest
+level 35 selectAbilityFromList Priest
+level 37 selectAbilityFromList Priest
+level 38 selectAbilityFromList Priest
+level 40 selectAbilityFromList Priest
+level 41 selectAbilityFromList Priest
+level 43 selectAbilityFromList Priest
+level 44 selectAbilityFromList Priest
+level 46 selectAbilityFromList Priest
+level 47 selectAbilityFromList Priest
+level 49 selectAbilityFromList Priest
+level 50 selectAbilityFromList Priest
+level 52 selectAbilityFromList Priest
+level 53 selectAbilityFromList Priest
+level 55 selectAbilityFromList Priest
+level 56 selectAbilityFromList Priest
+level 58 selectAbilityFromList Priest
+level 59 selectAbilityFromList Priest
 
 level 1 addAbility ProficiencyLightArmor
 level 1 addAbility ProficiencyMediumArmor
@@ -77,3 +97,33 @@ level 27 addCasterLevel
 level 28 addCasterLevel
 level 29 addCasterLevel
 level 30 addCasterLevel
+level 31 addCasterLevel
+level 32 addCasterLevel
+level 33 addCasterLevel
+level 34 addCasterLevel
+level 35 addCasterLevel
+level 36 addCasterLevel
+level 37 addCasterLevel
+level 38 addCasterLevel
+level 39 addCasterLevel
+level 40 addCasterLevel
+level 41 addCasterLevel
+level 42 addCasterLevel
+level 43 addCasterLevel
+level 44 addCasterLevel
+level 45 addCasterLevel
+level 46 addCasterLevel
+level 47 addCasterLevel
+level 48 addCasterLevel
+level 49 addCasterLevel
+level 40 addCasterLevel
+level 51 addCasterLevel
+level 52 addCasterLevel
+level 53 addCasterLevel
+level 54 addCasterLevel
+level 55 addCasterLevel
+level 56 addCasterLevel
+level 57 addCasterLevel
+level 58 addCasterLevel
+level 59 addCasterLevel
+level 60 addCasterLevel
