@@ -12,8 +12,8 @@ maxLevel 10
 
 HPPerLevel 4
 
+addPrereq Stat CreatureLevel 100
 addPrereq Role Mage 8
-
 addPrereq Ability ElementalShield
 addPrereq Ability HardenArmor
 
