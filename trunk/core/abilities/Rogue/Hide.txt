@@ -12,3 +12,5 @@ scriptFile "abilities/hide"
 
 cooldown 5
 actionPointCost 8000
+
+upgrade HideInPlainSight "With Hide in Plain Sight, you no longer suffer a penalty to Hide attempts while in plain view of hostiles."

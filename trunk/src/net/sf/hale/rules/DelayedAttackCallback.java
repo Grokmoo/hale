@@ -98,8 +98,12 @@ public class DelayedAttackCallback extends Thread{
 		defender.getEffects().executeOnAll(ScriptFunctionType.onDefense, attack);
 		attacker.getEffects().executeOnAll(ScriptFunctionType.onAttack, attack);
 		
-		if (attack.getWeapon() != null && attack.getWeapon().hasScript())
-			attack.getWeapon().getScript().executeFunction(ScriptFunctionType.onAttack, attack.getWeapon(), attack);
+		if (attack.getWeapon() != null) {
+			if (attack.getWeapon().hasScript())
+				attack.getWeapon().getScript().executeFunction(ScriptFunctionType.onAttack, attack.getWeapon(), attack);
+			
+			attack.getWeapon().getEffects().executeOnAll(ScriptFunctionType.onAttack, attack);
+		}
 		
 		// determine if attack hits and compute damage if it does
 		if (attack.computeIsHit()) {
@@ -115,9 +119,13 @@ public class DelayedAttackCallback extends Thread{
 				defender.getEffects().executeOnAll(ScriptFunctionType.onDefenseHit, attack, damage);
 				attacker.getEffects().executeOnAll(ScriptFunctionType.onAttackHit, attack, damage);
 				
-				if (attack.getWeapon() != null && attack.getWeapon().hasScript()) {
-					attack.getWeapon().getScript().executeFunction(ScriptFunctionType.onAttackHit,
-							attack.getWeapon(), attack, damage);
+				if (attack.getWeapon() != null) {
+					if (attack.getWeapon().hasScript()) {
+						attack.getWeapon().getScript().executeFunction(ScriptFunctionType.onAttackHit,
+								attack.getWeapon(), attack, damage);
+					}
+					
+					attack.getWeapon().getEffects().executeOnAll(ScriptFunctionType.onAttackHit, attack, damage);
 				}
 			}
 			

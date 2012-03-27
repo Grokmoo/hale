@@ -1,0 +1,8 @@
+name "Hide In Plain Sight"
+type "Assassin Abilities"
+description "You no longer suffer a penalty in Hide skill checks while in plain view of enemies."
+activateable false
+
+icon "icons/hideInPlainSight"
+
+addPrereq Role Assassin 3

@@ -1,0 +1,41 @@
+name "Assassin"
+
+add "Backstab"         0.5 0.0
+add "ImprovedBackstab" 0.0 1.0
+add "RangedBackstab"   1.0 1.0
+
+add "CripplingBackstab" 0.0 2.0
+
+add "BackstabMastery"  0.5 3.0
+
+connect 0.5 0.0 TwoDown
+
+connect 0.0 1.0 OneDown
+
+connect 1.0 1.0 OneDown
+connect 1.0 2.0 Through
+connect 0.5 3.0 TwoUp
+
+
+add Poison 2.5 0
+
+add LingeringPoison 2.0 1
+add LethalPoison    3.0 2
+
+connect 2.5 0 TwoDown
+connect 3.0 1 Through
+connect 3.0 1 OneDown
+
+add DexterityTraining1 4.5 0
+add DexterityTraining2 4.0 1
+add DexterityTraining3 4.0 2
+
+connect 4.5 0 TwoDown
+connect 4.0 1 OneDown
+
+add CombatReady      5.5  0
+add DeadlyInitiative 5.25 1
+
+connect 5.5 0 OneDown
+
+add HideInPlainSight 6.5 1

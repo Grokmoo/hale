@@ -1,0 +1,10 @@
+name "Deadly Initiative"
+type "Assassin Abilities"
+description "You gain a large +40 bonus to initiative, making you far more likely to get the drop on enemies and take your turn first in combat."
+
+icon "icons/deadlyInitiative"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('Initiative', 'Stackable', 40); parent.applyEffect(effect); }"
+
+addPrereq Ability CombatReady
+addPrereq Ability DexterityTraining1
