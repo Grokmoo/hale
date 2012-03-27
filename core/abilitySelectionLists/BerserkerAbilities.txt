@@ -8,6 +8,13 @@ add EpicRage        0.5 3
 
 add Bruiser 3 1
 
+add StrengthTraining1 3.5 0
+add StrengthTraining2 4.0 1
+add StrengthTraining3 4.0 2
+
+connect 3.5 0 TwoDown
+connect 4.0 1 OneDown
+
 connect 1 0 ThreeDown
 connect 2 1 OneDown
 connect 2 1 Through

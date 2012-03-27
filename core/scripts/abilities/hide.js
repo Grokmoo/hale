@@ -17,8 +17,10 @@ function onActivate(game, slot) {
 	slot.getParent().applyEffect(effect);
 	slot.activate();
 	
-	game.performSearchChecksForCreature(slot.getParent(),
-		game.ruleset().getValue("HideInPlainSightPenalty"));
+	if (slot.getParent().getAbilities().has("HideInPlainSight"))
+		game.performSearchChecksForCreature(slot.getParent(), 0);
+	else
+		game.performSearchChecksForCreature(slot.getParent(), game.ruleset().getValue("HideInPlainSightPenalty"));
 }
 
 function onDeactivate(game, slot) {

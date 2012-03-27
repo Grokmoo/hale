@@ -291,3 +291,9 @@ image greaterFocus       12 15
 image beastFighter       13 15
 image beastSlayer        14 15
 image fireMage           15 15
+image poison             16 15
+
+image lingeringPoison     0 16
+image lethalPoison        1 16
+image deadlyInitiative    2 16
+image hideInPlainSight    3 16

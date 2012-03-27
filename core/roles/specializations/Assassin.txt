@@ -15,3 +15,9 @@ maxLevel 10
 addPrereq Role Rogue 8
 
 addPrereq Ability ImprovedBackstab
+
+level 1 selectAbilityFromList Assassin
+level 3 selectAbilityFromList Assassin
+level 5 selectAbilityFromList Assassin
+level 7 selectAbilityFromList Assassin
+level 9 selectAbilityFromList Assassin

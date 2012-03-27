@@ -7,3 +7,4 @@ icon "icons/bruiser"
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('OneHandedMeleeWeaponDamage', 'Stackable', 15); effect.getBonuses().addBonus('TwoHandedMeleeWeaponDamage', 'Stackable', 15); parent.applyEffect(effect); }"
 
 addPrereq Role Berserker 3
+addPrereq Ability StrengthTraining1

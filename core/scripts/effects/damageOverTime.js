@@ -2,6 +2,14 @@ function onRoundElapsed(game, effect) {
 	var damage = effect.get("damagePerRound");
 	var type = effect.get("damageType");
 	
+	var minDamage = effect.get("minDamagePerRound");
+	var maxDamage = effect.get("maxDamagePerRound");
+	
+	// optionally support random amount of damage
+	if (minDamage != null && maxDamage != null) {
+		damage = game.dice().rand(minDamage, maxDamage);
+	}
+	
 	var slot = effect.getSlot();
 	
 	var spell = null;
