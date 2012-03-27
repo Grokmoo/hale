@@ -137,7 +137,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 				characters.add(selector.getCreature());
 			}
 			
-			currencyCP = Game.curCampaign.partyCurrency.getTotalValueInCP();
+			currencyCP = Game.curCampaign.partyCurrency.getValue();
 			partyName = Game.curCampaign.party.getName();
 			
 			this.createdItems = new ArrayList<CreatedItem>();

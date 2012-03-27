@@ -22,7 +22,6 @@ package net.sf.hale.editor;
 import net.sf.hale.Area;
 import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.WorldMapLocation;
 import net.sf.hale.editor.reference.ReferenceComboBox;
 import net.sf.hale.editor.reference.ReferenceListBox;

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;

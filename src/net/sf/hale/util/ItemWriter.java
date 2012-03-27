@@ -114,7 +114,7 @@ public class ItemWriter {
 			out.write("value \"" + item.getValue().shortString() + "\" " + item.getValueStackSize());
 			out.newLine();
 			
-			out.write("weight " + item.getWeight().getWeight());
+			out.write("weight " + item.getWeight().grams);
 			out.newLine();
 			
 			out.write("itemType \"" + item.getItemType().toString() + "\"");

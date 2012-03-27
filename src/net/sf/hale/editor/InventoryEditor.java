@@ -20,7 +20,6 @@
 package net.sf.hale.editor;
 
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
 import net.sf.hale.rules.ItemList;

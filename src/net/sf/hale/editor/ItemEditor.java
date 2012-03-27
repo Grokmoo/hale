@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.editor.widgets.ColorSelectorPopup;
 import net.sf.hale.editor.widgets.CopyFilePopup;
 import net.sf.hale.editor.widgets.DeleteFilePopup;
@@ -564,7 +563,7 @@ public class ItemEditor extends EditorWindow implements Updateable, PopupCallbac
 			if (selectedItem.getDescription() != null) selectedItemDescription.setText(selectedItem.getDescription());
 			else selectedItemDescription.setText("");
 			
-			selectedItemValue.setValue(selectedItem.getValue().getTotalValueInCP());
+			selectedItemValue.setValue(selectedItem.getValue().getValue());
 			selectedItemStackValue.setValue(selectedItem.getValueStackSize());
 			selectedItemWeight.setValue(selectedItem.getWeightGrams());
 			

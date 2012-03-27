@@ -101,7 +101,7 @@ public class Campaign {
 		data.put("id", id);
 		data.put("currentDifficulty", currentDifficulty);
 		data.put("date", date.getTotalRoundsElapsed());
-		data.put("partyCurrency", partyCurrency.getTotalValueInCP());
+		data.put("partyCurrency", partyCurrency.getValue());
 		
 		data.put("currentArea", SaveGameUtil.getRef(curArea));
 		
