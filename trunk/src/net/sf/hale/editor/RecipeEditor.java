@@ -25,7 +25,6 @@ import java.util.List;
 
 import net.sf.hale.Game;
 import net.sf.hale.Recipe;
-import net.sf.hale.Updateable;
 import net.sf.hale.editor.reference.ReferenceComboBox;
 import net.sf.hale.editor.reference.ReferenceListBox;
 import net.sf.hale.editor.widgets.CopyFilePopup;

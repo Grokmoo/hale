@@ -23,70 +23,129 @@ import net.sf.hale.entity.Item;
 import net.sf.hale.util.LineParser;
 import net.sf.hale.util.Logger;
 
+/**
+ * This is a mutable class representing the amount of currency currently held by a creature.
+ * 
+ * 1 Platinum Piece (PP) = 10 Gold Pieces (GP) = 100 Silver Pieces (SP) = 1000 Copper Pieces (CP)
+ * @author Jared
+ *
+ */
+
 public class Currency {
 	private int value;
+	
+	/**
+	 * Creates a new Currency object with a value of zero
+	 */
 	
 	public Currency() {
 		this.value = 0;
 	}
 	
+	/**
+	 * Creates a new Currency object with the specified value
+	 * @param value the value in copper pieces (CP)
+	 */
+	
 	public Currency(int value) {
 		this.value = value;
 	}
+	
+	/**
+	 * Creates a new Currency object with exactly the same value as the specified Currency
+	 * @param other
+	 */
 	
 	public Currency(Currency other) {
 		this.value = other.value;
 	}
 	
-	public Currency(int pp, int gp, int sp, int cp) {
-		this.value = cp + 10 * sp + 100 * gp + 1000 * pp;
-	}
+	/**
+	 * Sets the value of this currency
+	 * @param value the value in copper pieces (CP)
+	 */
 	
 	public void setValue(int value) {
 		this.value = value;
 	}
 	
-	public void setValue(int pp, int gp, int sp, int cp) {
-		this.value = cp + 10 * sp + 100 * gp + 1000 * pp;
-	}
-	
-	public int getTotalValueInCP() { return value; }
-	public int getTotalValueInSP() { return value / 10; }
-	public int getTotalValueinGP() { return value / 100; }
-	public int getTotalValueInPP() { return value / 1000; }
-	
-	public int getCP() { return value % 10; }
-	public int getSP() { return (value / 10) % 10; }
-	public int getGP() { return (value / 100) % 10; }
-	public int getPP() { return (value / 1000); }
+	/**
+	 * Gets the total value of this Currency in Copper Pieces
+	 * @return the total value
+	 */
 	
 	public int getValue() { return value; }
 	
-	public void add(int pp, int gp, int sp, int cp) {
-		this.value += cp + 10 * sp + 100 * gp + 1000 * pp;
-	}
+	/**
+	 * Adds the specified amount of value to this currency
+	 * @param cp the amount of value to add in Copper Pieces
+	 */
 	
 	public void addCP(int cp) { this.value += cp; }
+	
+	/**
+	 * Adds the specified amount of value to this currency
+	 * @param sp the amount of value to add in Silver Pieces
+	 */
+	
 	public void addSP(int sp) { this.value += sp * 10; }
+	
+	/**
+	 * Adds the specified amount of value to this currency
+	 * @param gp the amount of value to add in Gold Pieces
+	 */
+	
 	public void addGP(int gp) { this.value += gp * 100; }
+	
+	/**
+	 * Adds the specified amount of value to this currency
+	 * @param pp the amount of value to add in Platinum Pieces
+	 */
+	
 	public void addPP(int pp) { this.value += pp * 1000; }
 	
+	/**
+	 * Adds the amount of value from the other currency to this currency
+	 * @param other
+	 */
+	
 	public void add(Currency other) { this.value += other.value; }
-	public void subtract(Currency other) { this.value -= other.value; }
 	
-	public void subtract(int pp, int gp, int sp, int cp) {
-		this.value -= (cp + 10 * sp + 100 * gp + 1000 * pp);
-	}
-	
-	public void subtractCP(int cp) { this.value -= cp; }
-	public void subtractSP(int sp) { this.value -= sp * 10; }
-	public void subtractGP(int gp) { this.value -= gp * 100; }
-	public void subtractPP(int pp) { this.value -= pp * 1000; }
-	
-	@Override
-	public String toString() {
+	@Override public String toString() {
 		return getPP() + " PP " + getGP() + " GP " + getSP() + " SP " + getCP() + " CP";
 	}
+	
+	private final int getCP() { return value % 10; }
+	private final int getSP() { return (value / 10) % 10; }
+	private final int getGP() { return (value / 100) % 10; }
+	private final int getPP() { return (value / 1000); }
+	
+	/**
+	 * Returns a string description of this currency object using as high value currency
+	 * types as possible.  (Any multiple of 1000 will be represented as PP, anything left
+	 * over from that multiple of 100 will be representing as GP, and so on).
+	 * @return the short string description
+	 */
+	
+	public String shortString() {
+		StringBuilder builder = new StringBuilder();
+		
+		if (getPP() != 0) builder.append(getPP() + " PP ");
+		if (getGP() != 0) builder.append(getGP() + " GP ");
+		if (getSP() != 0) builder.append(getSP() + " SP ");
+		if (getCP() != 0) builder.append(getCP() + " CP ");
+		
+		if (builder.length() == 0) builder.append("0 CP ");
+		
+		return builder.toString().trim();
+	}
+	
+	/**
+	 * Returns the short string description of this currency object, multiplied by the
+	 * specified percentage. See {@link #shortString()}.
+	 * @param percentage the integer percentage
+	 * @return the short string description.
+	 */
 	
 	public String shortString(int percentage) {
 		int oldValue = this.value;
@@ -107,18 +166,15 @@ public class Currency {
 		return builder.toString().trim();
 	}
 	
-	public String shortString() {
-		StringBuilder builder = new StringBuilder();
-		
-		if (getPP() != 0) builder.append(getPP() + " PP ");
-		if (getGP() != 0) builder.append(getGP() + " GP ");
-		if (getSP() != 0) builder.append(getSP() + " SP ");
-		if (getCP() != 0) builder.append(getCP() + " CP ");
-		
-		if (builder.length() == 0) builder.append("0 CP ");
-		
-		return builder.toString().trim();
-	}
+	/**
+	 * Parses the specified string and adds the represented amount of currency
+	 * to this currency object.  Any errors in parsing will generate warning or
+	 * error log entries, but will not throw exceptions.  The format of the string
+	 * should be a series of tokens separated by spaces.  Each token should be in a pair.
+	 * The first is an integer value, the second is one of "CP", "SP", "GP", or "PP" to
+	 * indicate the scaling of the first value
+	 * @param s the string to parse
+	 */
 	
 	public void addFromString(String s) {
 		LineParser parser = new LineParser(s);
@@ -139,13 +195,21 @@ public class Currency {
 						addPP(value);
 					}
 				} else {
-					Logger.appendToErrorLog("Warning.  Extra token in currency string " + s);
+					Logger.appendToWarningLog("Warning.  Extra token in currency string " + s);
 				}
 			}
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error parsing currency string.", e);
 		}
 	}
+	
+	/**
+	 * Returns the value of this currency divided by the value of the specified item marked up
+	 * by the specified percentage, rounded down
+	 * @param item
+	 * @param markup the markup percentage
+	 * @return the quantity of the specified item that can be afforded by this currency
+	 */
 	
 	public int getMaxNumberAffordable(Item item, int markup) {
 		int cost = item.getQualityValue().getValue() * markup / 100;
@@ -155,6 +219,17 @@ public class Currency {
 		
 		return (this.value / cost) * stackSize;
 	}
+	
+	/**
+	 * Creates a new Currency object representing the amount of currency it will cost
+	 * to buy the specified quantity of the specified item at the specified markdown.
+	 * 
+	 * Note that "buying" here is from the player's perspective
+	 * @param item
+	 * @param quantity
+	 * @param markdown the markdown percentage of the item's value
+	 * @return the new Currency object
+	 */
 	
 	public static Currency getPlayerBuyCost(Item item, int quantity, int markdown) {
 		int cost = item.getQualityValue().getValue();
@@ -173,6 +248,16 @@ public class Currency {
 		
 		return new Currency(value);
 	}
+	
+	/**
+	 * Returns a new Currency object representing the amount of currency it will
+	 * cost to sell the specified quantity of the specified item at the specified
+	 * markdown.  Selling here is from the player's perspective
+	 * @param item
+	 * @param quantity
+	 * @param markdown the percentage markdown of the item's value
+	 * @return the new Currency object
+	 */
 	
 	public static Currency getPlayerSellCost(Item item, int quantity, int markdown) {
 		int cost = item.getQualityValue().getValue();

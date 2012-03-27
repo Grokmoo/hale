@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.editor.widgets.ColorSelectorPopup;
 import net.sf.hale.editor.widgets.IconSelectorPopup;
 import net.sf.hale.entity.Creature;

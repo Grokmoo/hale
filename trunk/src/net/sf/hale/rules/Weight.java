@@ -21,34 +21,58 @@ package net.sf.hale.rules;
 
 import java.text.NumberFormat;
 
+/**
+ * A class for representing the weight of an item.  This class is immutable
+ * @author Jared
+ *
+ */
+
 public class Weight {
-	private int grams;
+	/**
+	 * The number of grams in this weight
+	 */
+	
+	public final int grams;
+	
+	/**
+	 * Initializes a new weight object with a weight of zero
+	 */
 	
 	public Weight() {
-		grams = 0;
+		this.grams = 0;
 	}
+	
+	/**
+	 * Initializes a new weight object to the specified weight in grams
+	 * @param grams
+	 */
 	
 	public Weight(int grams) {
 		this.grams = grams;
 	}
 	
+	/**
+	 * initializes a new weight object to exactly the same weight as the
+	 * specified other weight
+	 * @param other
+	 */
+	
 	public Weight(Weight other) {
 		this.grams = other.grams;
 	}
 	
-	public void add(Weight other) {
-		this.grams += other.grams;
-	}
-	
-	public void add(Weight other, int quantity) {
-		this.grams += quantity * other.grams;
-	}
-	
-	public int getWeight() { return grams; }
-	
-	public void setWeight(int grams) { this.grams = grams; }
+	/**
+	 * Returns a string representing the weight of this object in grams
+	 * @return a string representing the weight of this object in grams
+	 */
 	
 	public String toStringGrams() { return grams + ""; }
+	
+	/**
+	 * Returns a formatted string representing the weight of this object in kilograms
+	 * @return a String representing the weight of this object in kilograms
+	 */
+	
 	public String toStringKilograms() {
 		NumberFormat nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(3);

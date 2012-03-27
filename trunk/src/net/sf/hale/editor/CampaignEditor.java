@@ -29,7 +29,6 @@ import net.sf.hale.AreaTrigger;
 import net.sf.hale.Campaign;
 import net.sf.hale.Encounter;
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.WorldMapLocation;
 import net.sf.hale.editor.reference.Script;
 import net.sf.hale.editor.scripteditor.ScriptEditor;

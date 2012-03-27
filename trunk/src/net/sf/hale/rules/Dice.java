@@ -23,8 +23,18 @@ import java.util.Random;
 
 import net.sf.hale.Game;
 
+/**
+ * Class for handling all random number generation
+ * @author Jared
+ *
+ */
+
 public class Dice {
-	Random generator;
+	private Random generator;
+	
+	/**
+	 * initializes a new dice object using the seed from the config, if applicable
+	 */
 	
 	public Dice() {
 		generator = new Random();

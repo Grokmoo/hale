@@ -108,7 +108,7 @@ public class ItemSubEditor extends SubEditorPanel {
 		addRowFilled("Description", descriptionField);
 		
 		// add value field
-		value = new JSpinner(new SpinnerNumberModel(item.getValue().getTotalValueInCP(), 0, 100000, 1));
+		value = new JSpinner(new SpinnerNumberModel(item.getValue().getValue(), 0, 100000, 1));
 		stackSize = new JSpinner(new SpinnerNumberModel(item.getValueStackSize(), 1, 1000, 1));
 		addRow("Value in CP", value, new JLabel("for Stack Size"), stackSize);
 		

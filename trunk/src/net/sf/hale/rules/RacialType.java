@@ -19,12 +19,32 @@
 
 package net.sf.hale.rules;
 
+/**
+ * A class representing a racial type - Most races have one or more racial types, indicating
+ * they have something in common with other similar races.  Creatures can have bonuses against
+ * specific racial types.
+ * 
+ * This class is immutable
+ * @author Jared
+ *
+ */
+
 public class RacialType {
 	private String name;
+	
+	/**
+	 * Creates a new RacialType with the specified name
+	 * @param name
+	 */
 	
 	public RacialType(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Returns the name of this RacialType
+	 * @return the name of this RacialType
+	 */
 	
 	public String getName() { return name; }
 }

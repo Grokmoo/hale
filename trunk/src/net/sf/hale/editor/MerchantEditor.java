@@ -20,7 +20,6 @@
 package net.sf.hale.editor;
 
 import net.sf.hale.Game;
-import net.sf.hale.Updateable;
 import net.sf.hale.editor.reference.ReferenceListBox;
 import net.sf.hale.editor.widgets.CopyFilePopup;
 import net.sf.hale.editor.widgets.DeleteFilePopup;

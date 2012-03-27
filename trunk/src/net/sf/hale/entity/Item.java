@@ -507,7 +507,7 @@ public class Item extends Entity implements Referenceable {
 	public void setItemType(ItemType itemType) { this.itemType = itemType; }
 	public ItemType getItemType() { return itemType; }
 	
-	public int getWeightGrams() { return weight.getWeight(); }
+	public int getWeightGrams() { return weight.grams; }
 	public Weight getWeight() { return new Weight(weight); }
 	public Currency getValue() { return new Currency(value); }
 	public int getValueStackSize() { return valueStackSize; }

@@ -914,22 +914,22 @@ public class Inventory implements Saveable {
 	public int size() { return items.size(); }
 	
 	public Weight getTotalWeight() {
-		Weight total = new Weight();
-		
-		ItemList allItems = getAllItems();
-		
-		for (int i = 0; i < allItems.size(); i++) {
-			Item item = allItems.getItem(i);
-			int quantity = allItems.getQuantity(i);
-			
-			total.add(item.getWeight(), quantity);
-		}
-		
-		return total;
+		return new Weight(getTotalWeightInGrams());
 	}
 	
 	public int getTotalWeightInGrams() {
-		return getTotalWeight().getWeight();
+		int totalGrams = 0;
+		
+		for (int i = 0; i < EQUIPPED_SIZE; i++) {
+			if (equipped[i] != null)
+				totalGrams += equipped[i].getWeight().grams;
+		}
+		
+		for (int i = 0; i < items.size(); i++) {
+			totalGrams += items.getItem(i).getWeight().grams * items.getQuantity(i);
+		}
+		
+		return totalGrams;
 	}
 	
 	/**
