@@ -12,8 +12,8 @@ maxLevel 10
 
 HPPerLevel 3
 
+addPrereq Stat CreatureLevel 100
 addPrereq Role Priest 8
-
 addPrereq Ability Cure
 addPrereq Ability Regeneration
 
