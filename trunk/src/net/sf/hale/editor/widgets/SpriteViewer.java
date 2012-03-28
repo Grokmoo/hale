@@ -22,8 +22,8 @@ package net.sf.hale.editor.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.hale.EventCallback;
 import net.sf.hale.Sprite;
+import net.sf.hale.editor.EventCallback;
 
 import org.lwjgl.opengl.GL11;
 

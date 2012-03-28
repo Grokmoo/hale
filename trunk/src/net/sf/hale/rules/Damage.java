@@ -25,103 +25,117 @@ import java.util.List;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 
+/**
+ * This class represents an amount of damage (of one or more types)
+ * that is applied to a given creature
+ * @author Jared
+ *
+ */
+
 public class Damage {
 	private Creature parent;
-	private int appliedDamage;
+	private int totalDamage;
 	
-	private List<DamageType> types;
-	private List<Integer> damages;
-	private List<Integer> appliedDamages;
+	private List<Entry> entries;
+
+	
+	/**
+	 * Creates a new Damage object applied against the specified parent.  The damage object
+	 * is initially empty (total damage of 0)
+	 * @param parent
+	 */
 	
 	public Damage(Creature parent) {
 		this.parent = parent;
-		this.appliedDamage = 0;
+		this.totalDamage = 0;
 		
-		this.types = new ArrayList<DamageType>();
-		this.damages = new ArrayList<Integer>();
-		this.appliedDamages = new ArrayList<Integer>();
+		this.entries = new ArrayList<Entry>();
 	}
+	
+	/**
+	 * Creates a new Damage object with the specified initial type and amount of damage
+	 * @param parent the parent creature
+	 * @param type
+	 * @param damage
+	 */
 	
 	public Damage(Creature parent, DamageType type, int damage) {
 		this(parent);
 		add(type, damage);
 	}
 	
-	public Damage(Damage other) {
-		this.parent = other.parent;
-		this.appliedDamage = other.appliedDamage;
+	/*
+	 * Finds the entry with the specified type or creates it if it does not
+	 * exist
+	 */
+	
+	private Entry getEntry(DamageType type) {
+		for (Entry entry : entries) {
+			if (entry.type == type) return entry;
+		}
 		
-		this.types = new ArrayList<DamageType>(other.types);
-		this.damages = new ArrayList<Integer>(other.damages);
-		this.appliedDamages = new ArrayList<Integer>(other.appliedDamages);
+		Entry entry = new Entry(type);
+		entries.add(entry);
+		
+		return entry;
 	}
+	
+	/**
+	 * Adds the specified amount and type of damage to this damage
+	 * @param type the type of the damage
+	 * @param damage the amount of the damage
+	 */
 	
 	public void add(DamageType type, int damage) {
-		int index = types.indexOf(type);
-		
-		if (index != -1) {
-			damages.set(index, damages.get(index) + damage);
-		} else {
-			types.add(type);
-			damages.add(damage);
-			appliedDamages.add(0);
+		Entry entry = getEntry(type);
+		entry.damage += damage;
+	}
+	
+	private void add(Entry entry) {
+		add(entry.type, entry.damage);
+	}
+	
+	/**
+	 * Adds all of the damage types and amounts from the specified damage to this damage
+	 * @param other
+	 */
+	
+	public void add(Damage other) {
+		for (Entry entry : other.entries) {
+			add(entry);
 		}
 	}
 	
-	public void clear() {
-		for (int i = 0; i < types.size(); i++) {
-			appliedDamages.set(i, Integer.valueOf(0));
-		}
-		
-		appliedDamage = 0;
-	}
-	
-	public void remove(DamageType type) {
-		int index = types.indexOf(type);
-		
-		if (index != -1) {
-			types.remove(index);
-			damages.remove(index);
-			appliedDamages.remove(index);
-			
-			// recompute total applied damage
-			appliedDamage = 0;
-			for (Integer damage : appliedDamages) {
-				appliedDamage += damage;
-			}
-		}
-	}
-	
-	public void stack(Damage other) {
-		for (int i = 0; i < other.types.size(); i++) {
-			add(other.types.get(i), other.damages.get(i));
-		}
-	}
+	/**
+	 * Computes the total amount of damage that should be applied to the owner creature
+	 * from all the damage amounts and types that have been added to this damage
+	 * @param message whether to add a message to the main message viewer based on this damage
+	 * @return the total amount of damage to apply
+	 */
 	
 	public int computeAppliedDamage(boolean message) {
 		DifficultyManager diffManager = Game.ruleset.getDifficultyManager();
 		
-		this.appliedDamage = 0;
+		this.totalDamage = 0;
 		
 		StringBuilder str = new StringBuilder();
 		
-		for (int i = 0; i < types.size(); i++) {
-			int baseDamageOfType = damages.get(i);
+		for (Entry entry : entries) {
+			int baseDamageOfType = entry.damage;
 			if (parent.isPlayerSelectable()) {
 				// apply difficulty settings to PCs
 				baseDamageOfType = baseDamageOfType * diffManager.getDamageFactorOnPCs() / 100;
 			}
 			
-			int damage = parent.stats().getAppliedDamage(baseDamageOfType, types.get(i));
+			int damage = parent.stats().getAppliedDamage(baseDamageOfType, entry.type);
 			
-			appliedDamages.set( i, damage );
-			appliedDamage += damage;
+			totalDamage += damage;
 			
-			if (types.get(i) != null) {
-				int dr = parent.stats().getDamageReduction(types.get(i));
-				int percent = parent.stats().getDamageImmunity(types.get(i));
+			if (entry.type != null) {
+				int dr = parent.stats().getDamageReduction(entry.type);
+				int percent = parent.stats().getDamageImmunity(entry.type);
 				
-				str.append(" (" + baseDamageOfType + " " + types.get(i).getName());
+				str.append(" (" + baseDamageOfType + " " + entry.type.getName());
 				if (dr > 0) str.append(", DR " + dr);
 				
 				if (percent > 0) str.append(", " + percent + "% Immun");
@@ -131,38 +145,41 @@ public class Damage {
 		}
 		
 		str.append(".");
-		str.insert(0, parent.getName() + " takes " + appliedDamage + " damage");
+		str.insert(0, parent.getName() + " takes " + totalDamage + " damage");
 		
 		if (message && !parent.isImmortal() && Game.mainViewer != null) {
 			Game.mainViewer.addMessage("red", str.toString());
 		}
 		
-		return appliedDamage;
+		return totalDamage;
 	}
 	
-	@Override public String toString() {
-		StringBuilder str = new StringBuilder();
-		
-		str.append("Damage list: ");
-		
-		for (int i = 0; i < types.size(); i++) {
-			str.append(damages.get(i) + " " + types.get(i).getName() + " ");
-		}
-		
-		return str.toString();
-	}
+	/**
+	 * Returns the total amount of computed applied damage to the designated target
+	 * @return the total amount of applied damage
+	 */
 	
-	public Creature getDefender() { return parent; }
-	public int getAppliedDamage() { return appliedDamage; }
+	public int getTotalAppliedDamage() { return totalDamage; }
 	
-	public List<DamageType> getTypes() { return types; }
-	public List<Integer> getDamages() { return damages; }
+	/**
+	 * Returns true if and only if this damage has a total (preapplied damage) of at least 1
+	 * @return whether this damage has a preapplied damage greater than 0
+	 */
 	
 	public boolean causesDamage() {
-		for (int damage : damages) {
-			if (damage > 0) return true;
+		for (Entry entry : entries) {
+			if (entry.damage > 0) return true;
 		}
 		
 		return false;
+	}
+	
+	private class Entry {
+		private final DamageType type;
+		private int damage;
+		
+		private Entry(DamageType type) {
+			this.type = type;
+		}
 	}
 }

@@ -23,7 +23,7 @@ public class StringUtil {
 	public static String upperCaseToWord(String in) {
 		String inUpper = in.toUpperCase();
 		String inLower = in.toLowerCase();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(in.length());
 		
 		boolean newWord = true;
 		

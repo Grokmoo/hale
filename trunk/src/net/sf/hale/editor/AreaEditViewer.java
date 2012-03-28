@@ -29,6 +29,7 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
 import net.sf.hale.view.AreaViewer;
 import net.sf.hale.tileset.AreaTileGrid;
 
@@ -147,7 +148,7 @@ public class AreaEditViewer extends AreaViewer implements AreaTileGrid.AreaRende
 		for (String s : getArea().getTriggers()) {
 			AreaTrigger t = Game.curCampaign.getTrigger(s);
 			
-			for (Point p : t.getGridPoints()) {
+			for (PointImmutable p : t.getGridPoints()) {
 				GL11.glColor4f(0.0f, 1.0f, 0.5f, 0.4f);
 				fillGridTile(p.x, p.y);
 				

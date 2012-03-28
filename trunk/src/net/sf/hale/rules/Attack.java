@@ -33,7 +33,7 @@ import net.sf.hale.util.Point;
 
 /*
  * An attack should be used as follows.  Call the constructor as normal.
- * Then after, that call ON_ATTACK scripts for the attacker and ON_DEFENSE scripts for the defender.
+ * Then after that call ON_ATTACK scripts for the attacker and ON_DEFENSE scripts for the defender.
  * These can modify various parts of the attack such as the defender AC.
  * After this, call computeIsHit() which computes whether the attack hits and also finishes the attack.
  * Finally, call the ON_HIT scripts and then apply the damage to the target if you so choose.
@@ -84,7 +84,7 @@ public class Attack {
 	public void negateDamage() { negateDamage = true; }
 	
 	public void addDamage(Damage damage) {
-		this.damage.stack(damage);
+		this.damage.add(damage);
 	}
 	
 	public Damage getDamage() { return damage; }
@@ -289,10 +289,10 @@ public class Attack {
 		// add any standalone damage bonuses from the weapon or ammo
 		switch (weapon.getWeaponType()) {
 		case BOW: case CROSSBOW:
-			damage.stack(quiver.bonuses().rollStandaloneDamage(defender));
+			damage.add(quiver.bonuses().rollStandaloneDamage(defender));
 			// fall through here is intentional
 		case MELEE: case THROWN:
-			damage.stack(weapon.bonuses().rollStandaloneDamage(defender));
+			damage.add(weapon.bonuses().rollStandaloneDamage(defender));
 			break;
 		}
 	}

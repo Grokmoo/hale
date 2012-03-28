@@ -23,8 +23,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Scriptable;
@@ -40,12 +41,14 @@ import net.sf.hale.util.FileKeyMap;
 import net.sf.hale.util.LineKeyList;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
 import net.sf.hale.util.SimpleJSONObject;
 
 public class AreaTrigger implements Referenceable, Saveable {
 	private String area;
-	//TODO support more efficient searching of points
-	private final List<Point> gridPoints;
+	
+	private final Set<PointImmutable> gridPoints;
+	
 	private Scriptable script;
 	
 	private final List<Entity> entitiesEntered;
@@ -89,7 +92,7 @@ public class AreaTrigger implements Referenceable, Saveable {
 		this.enteredByPlayer = false;
 		this.areaLoaded = false;
 		
-		this.gridPoints = new ArrayList<Point>();
+		this.gridPoints = new HashSet<PointImmutable>();
 		
 		this.entitiesEntered = new ArrayList<Entity>();
 		
@@ -157,19 +160,15 @@ public class AreaTrigger implements Referenceable, Saveable {
 	}
 	
 	public void addPoint(Point point) {
-		if (this.containsPoint(point)) return;
-		
-		this.gridPoints.add(point);
+		PointImmutable pi = new PointImmutable(point);
+
+		gridPoints.add(pi);
 	}
 	
 	public void removePoint(Point point) {
-		Iterator<Point> iter = gridPoints.iterator();
-		while (iter.hasNext()) {
-			if (iter.next().equals(point)) {
-				iter.remove();
-				return;
-			}
-		}
+		PointImmutable pi = new PointImmutable(point);
+		
+		gridPoints.remove(pi);
 	}
 	
 	public void setArea(String area) {
@@ -185,17 +184,13 @@ public class AreaTrigger implements Referenceable, Saveable {
 		}
 	}
 	
-	public List<Point> getGridPoints() { return gridPoints; }
+	public Set<PointImmutable> getGridPoints() { return gridPoints; }
 	public String getArea() { return area; }
 	
 	public boolean containsPoint(Point p) { return containsPoint(p.x, p.y); }
 	
 	public boolean containsPoint(int x, int y) {
-		for (Point point : gridPoints) {
-			if (point.x == x && point.y == y) return true;
-		}
-		
-		return false;
+		return gridPoints.contains(new PointImmutable(x, y));
 	}
 	
 	@Override public String getID() { return id; }
@@ -220,7 +215,7 @@ public class AreaTrigger implements Referenceable, Saveable {
 			}
 			
 			out.write("addPoints");
-			for (Point p : gridPoints) {
+			for (PointImmutable p : gridPoints) {
 				out.write("   " + p.x + " " + p.y);
 			}
 			out.newLine();
@@ -242,7 +237,7 @@ public class AreaTrigger implements Referenceable, Saveable {
 		
 		for (LineKeyList line : fileMap.get("addpoints")) {
 			while (line.hasNext()) {
-				gridPoints.add(new Point(line.nextInt(), line.nextInt()));
+				gridPoints.add(new PointImmutable(line.nextInt(), line.nextInt()));
 			}
 		}
 		

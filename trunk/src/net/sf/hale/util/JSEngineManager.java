@@ -24,15 +24,31 @@ import java.util.List;
 
 import javax.script.ScriptEngineManager;
 
+/**
+ * A class for managing a pool of available JavaScript interpreters
+ * @author Jared
+ *
+ */
+
 public class JSEngineManager {
 	private final ScriptEngineManager manager;
 	
 	private final List<JSEngine> engines;
 	
+	/**
+	 * Creates a new empty manager
+	 */
+	
 	public JSEngineManager() {
 		this.manager = new ScriptEngineManager();
 		this.engines = new ArrayList<JSEngine>();
 	}
+	
+	/**
+	 * Gets an available javascript engine.  If one is not available, a new one is
+	 * created
+	 * @return the available JavaScript engine
+	 */
 	
 	public synchronized JSEngine getEngine() {
 		for (JSEngine engine : engines) {
@@ -47,6 +63,12 @@ public class JSEngineManager {
 		engines.add(engine);
 		return engine;
 	}
+	
+	/**
+	 * Gets a javascript engine but does not add it to the list of available engines
+	 * The returned engine will thus never be released and added back to the engine pool
+	 * @return a newly created javascript engine
+	 */
 	
 	public JSEngine getPermanentEngine() {
 		JSEngine engine = new JSEngine(manager);
