@@ -710,7 +710,7 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		
 		getEffects().executeOnAll(ScriptFunctionType.onDamaged, damage);
 		
-		int damageLeftToApply = damage.getAppliedDamage();
+		int damageLeftToApply = damage.getTotalAppliedDamage();
 		
 		if (immortal) damageLeftToApply = 0;
 		
@@ -725,7 +725,7 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		currentHP -= damageLeftToApply;
 		
 		if (message && Game.mainViewer != null)
-			Game.mainViewer.addFadeAway("" + damage.getAppliedDamage(), this.getX(), this.getY(), "red");
+			Game.mainViewer.addFadeAway("" + damage.getTotalAppliedDamage(), this.getX(), this.getY(), "red");
 		
 		if (getCurrentHP() <= 0 && getCurrentHP() > -20) {
 			dying = true;
@@ -761,7 +761,7 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		Damage dam = new Damage(this, damageType, damage);
 		dam.computeAppliedDamage(message);
 		takeDamage(dam, message);
-		return dam.getAppliedDamage();
+		return dam.getTotalAppliedDamage();
 	}
 	
 	public int takeDamage(int damage, String type) {
@@ -775,7 +775,7 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		
 		takeDamage(dam, true);
 		
-		return dam.getAppliedDamage();
+		return dam.getTotalAppliedDamage();
 	}
 	
 	public void kill() {

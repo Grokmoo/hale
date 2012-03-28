@@ -61,13 +61,14 @@ public class Config {
 	
 	private final OSType osType;
 	
+	private int editorResolutionX, editorResolutionY;
 	private int resolutionX, resolutionY;
+	
 	private final boolean fullscreen;
 	private final boolean showFPS, capFPS;
 	private final int toolTipDelay;
-	private int editorResolutionX, editorResolutionY;
-	private long randSeed;
-	private boolean randSeedSet;
+	private final long randSeed;
+	private final boolean randSeedSet;
 	private final boolean scriptConsoleEnabled;
 	private final boolean debugMode;
 	private final boolean warningMode;
@@ -231,6 +232,9 @@ public class Config {
 		if (map.has("randseed")) {
 			randSeedSet = true;
 			randSeed = map.getValue("randseed", 0l);
+		} else {
+			randSeedSet = false;
+			randSeed = 0l;
 		}
 		
 		String osString = System.getProperty("os.name").toLowerCase();

@@ -28,7 +28,7 @@ import net.sf.hale.editor.reference.Script;
 import net.sf.hale.editor.widgets.CopyFilePopup;
 import net.sf.hale.editor.widgets.DeleteFilePopup;
 import net.sf.hale.editor.widgets.PopupCallback;
-import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
 
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.CallbackWithReason;
@@ -284,7 +284,7 @@ public class AreaTriggerEditor extends EditorWindow implements Updateable, Popup
 		if (selectedTrigger == null) return;
 		
 		pointsModel.clear();
-		for (Point p : selectedTrigger.getGridPoints()) {
+		for (PointImmutable p : selectedTrigger.getGridPoints()) {
 			pointsModel.addElement(p.toString());
 		}
 	}

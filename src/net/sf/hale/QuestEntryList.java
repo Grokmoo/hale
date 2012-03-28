@@ -65,7 +65,6 @@ public class QuestEntryList implements Saveable {
 			QuestEntry questEntry = QuestEntry.load(entryData);
 			
 			list.activeEntries.put(questEntry.getTitle(), questEntry);
-			
 		}
 		
 		for (SimpleJSONArrayEntry entry : data.getArray("completedEntries")) {

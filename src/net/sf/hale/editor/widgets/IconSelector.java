@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.hale.EventCallback;
+import net.sf.hale.editor.EventCallback;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.FileUtil;
