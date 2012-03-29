@@ -38,7 +38,7 @@ function onTargetSelect(game, targeter, type) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 	
-	var duration = parseInt(3 + casterLevel / 2);
+	var duration = parseInt(3 + casterLevel / 3);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
@@ -81,7 +81,12 @@ function onTargetSelect(game, targeter, type) {
 	
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
-	effect.getBonuses().addBonus('ArmorClass', 'Shield', 15 + casterLevel);
+	
+	var lvls = parent.getRoles().getLevel("War Wizard");
+	var acBonus = parseInt(15 + casterLevel + 4 * lvls);
+	
+	
+	effect.getBonuses().addBonus('ArmorClass', 'Shield', acBonus);
 	
 	target.applyEffect(effect);
 	

@@ -1,6 +1,6 @@
 name "Shield"
 type "Conjuration"
-description "A magical shield of pure force appears in front of the caster, providing a bonus to Armor Class of 15 + 1 per caster level.  The shield lasts for 3 rounds + 1 round per 2 caster levels."
+description "A magical shield of pure force appears in front of the caster, providing a bonus to Armor Class of 15 + 1 per caster level.  The shield lasts for 3 rounds + 1 round per 3 caster levels."
 activateable true
 fixed true
 cooldown 8
@@ -22,5 +22,7 @@ rangeType Personal
 aiPower 10
 
 addPrereq Stat CasterLevel 1
+
+upgrade "WarShield" "With War Shield, your Shield spell now provides an additional 4 points of Armor Class bonus per War Wizard level."
 
 upgrade ElementalShield "With Elemental Shield, your Shield spell now is empowered with either Fire, Cold, Electricity, or Acid.  You gain Damage Reduction of 5 plus one per two caster levels against the selected damage type.  In addition, any creature hitting you with a melee attack suffers 1 to 6 plus one per two caster levels damage of the same type.

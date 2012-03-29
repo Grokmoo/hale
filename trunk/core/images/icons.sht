@@ -297,3 +297,7 @@ image lingeringPoison     0 16
 image lethalPoison        1 16
 image deadlyInitiative    2 16
 image hideInPlainSight    3 16
+image energyImmunity      4 16
+image invulnerability     5 16
+image warShield           6 16
+image juggernaut          7 16
