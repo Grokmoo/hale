@@ -47,7 +47,7 @@ public class Damage {
 	
 	public Damage(Creature parent) {
 		this.parent = parent;
-		this.totalDamage = 0;
+		this.totalDamage = -1;
 		
 		this.entries = new ArrayList<Entry>();
 	}
@@ -159,7 +159,12 @@ public class Damage {
 	 * @return the total amount of applied damage
 	 */
 	
-	public int getTotalAppliedDamage() { return totalDamage; }
+	public int getTotalAppliedDamage() {
+		if (totalDamage == -1)
+			throw new IllegalStateException("computeAppliedDamage must be called prior to getTotalAppliedDamage");
+		
+		return totalDamage;
+	}
 	
 	/**
 	 * Returns true if and only if this damage has a total (preapplied damage) of at least 1

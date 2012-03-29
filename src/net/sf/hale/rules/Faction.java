@@ -28,6 +28,13 @@ import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
 import net.sf.hale.util.SimpleJSONObject;
 
+/**
+ * A faction is a group of creatures that work together in game.  Factions are either Friendly,
+ * Neutral, or Hostile towards each other
+ * @author Jared
+ *
+ */
+
 public class Faction {
 	public enum Relationship {
 		Friendly, Neutral, Hostile
@@ -35,6 +42,11 @@ public class Faction {
 	
 	private String name;
 	private Map<String, Relationship> relationships;
+	
+	/**
+	 * Creates a new Faction with the specified identifying name
+	 * @param name
+	 */
 	
 	public Faction(String name) {
 		this.name = name;

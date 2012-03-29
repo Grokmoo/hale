@@ -1,0 +1,25 @@
+name "Juggernaut"
+type "War Wizard Abilities"
+description "The caster becomes a nearly unstoppable engine of melee destruction. He or she gains a bonus of 3 plus one per 3 War Wizard levels to Strength, a 3 per War Wizard level bonus to Attack, a 6 per War Wizard level bonus to Damage, and gains immunity to Immobilization. While Juggernaut is active, the caster suffers a 30 percent Spell Failure penalty.  The effect lasts for 2 rounds plus one per 3 War Wizard levels."
+activateable true
+fixed true
+cooldown 11
+
+icon "icons/juggernaut"
+scriptFile "spells/juggernaut"
+
+spell true
+spellLevel 4
+verbalComponent true
+somaticComponent true
+spellResistance false
+
+actionPointCost 6000
+
+actionType Buff
+groupType Single
+rangeType Personal
+aiPower 40
+
+addPrereq Stat CasterLevel 10
+addPrereq Role "War Wizard" 2
