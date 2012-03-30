@@ -4,7 +4,7 @@ function onEffectApplied(game, effectApplied, effectParent) {
 	
 	var abilityID = slot.getAbilityID();
 	
-	var abilitiesNegated = [ "Slow", "Curse", "Deafen", "Blindness", "Freeze", "FlamingFingers" ];
+	var abilitiesNegated = [ "AntiMagic", "Slow", "Curse", "Deafen", "Blindness", "Freeze", "FlamingFingers", "Vulnerability" ];
 	
 	for (var i = 0; i < abilitiesNegated.length; i++) {
 		if (abilitiesNegated[i] == abilityID) {

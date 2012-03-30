@@ -26,3 +26,5 @@ addPrereq Stat CasterLevel 1
 upgrade Sleep "With Sleep, your slow spell now puts the target to sleep if they fail the mental resistance check.  Sleeping creatures are immediately awoken if hurt in any way.  Even after being awoken, the action point penalty will remain."
 
 upgrade Paralyze "With Paralyze, the target becomes completely immobile and helpless for the duration of the spell if it fails the mental resistance check."
+
+upgrade MassParalyze "With Mass Paralyze, your slow spell now affects all hostile targets within 20 feet of the caster."

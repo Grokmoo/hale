@@ -125,6 +125,14 @@ public abstract class AreaTargeter extends Targeter {
 	
 	public void setRelationshipCriterion(String relationship) {
 		this.affectedCreatureRelationship = Faction.Relationship.valueOf(relationship);
+		
+		affectedCreatures.clear();
+		// recompute affected creatures
+		for (Point p : affectedPoints) {
+			Creature creature = Game.curCampaign.curArea.getCreatureAtGridPoint(p);
+			if (creature != null && meetsRelationshipCriterion(creature))
+				affectedCreatures.add(creature);
+		}
 	}
 	
 	/**

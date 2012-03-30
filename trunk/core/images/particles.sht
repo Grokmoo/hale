@@ -11,6 +11,7 @@ image sleepZ       101    0    15   18
 image circle9      101   21     9    9
 image arrow        113   21    15   24
 image arrowsmall     0   59    10   16
-image halo           0   75    200 200
-image musicNote   128     0    24   24
-image plus        152     0    17   17
+image halo           0   75    181 181
+image musicNote    128     0    24   24
+image plus         152     0    17   17
+image halosmall    169     0    72   72

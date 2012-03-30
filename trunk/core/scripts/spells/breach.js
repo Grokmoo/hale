@@ -49,11 +49,13 @@ function applySpellResistanceEffect(game, targeter, duration) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 
+	var lvls = parent.getRoles().getLevel("Avenger");
+	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	
-	effect.getBonuses().addPenalty("SpellResistance", -casterLevel);
+	effect.getBonuses().addPenalty("SpellResistance", -casterLevel - 3 * lvls);
 	
 	target.applyEffect(effect);
 }
@@ -61,8 +63,17 @@ function applySpellResistanceEffect(game, targeter, duration) {
 function breachDefense(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	
+	var lvls = targeter.getParent().getRoles().getLevel("Avenger");
+	
 	// go through the spells in a random order until we find one that is in effect
 	var spellsToRemove = shuffle( [ "HardenArmor", "AbsorbEnergy", "DeflectProjectiles", "Shield", "Chameleon", "Ward", "FortifyHealth", "LayerOfBark", "EnergyImmunity", "Invulnerability" ] );
+	
+	var spellsRemoved = 0;
+	var totalToRemove = 1;
+	
+	if (lvls > 0) totalToRemove++;
+	if (lvls > 4) totalToRemove++;
+	if (lvls > 9) totalToRemove++;
 	
 	for (var i = 0; i < spellsToRemove.length; i++) {
 		var spellID = spellsToRemove[i];
@@ -82,7 +93,9 @@ function breachDefense(game, targeter) {
 		if (effect != null) {
 			// we found a valid effect and can remove it
 			effectTarget.removeEffect(effect);
-			return;
+			spellsRemoved++;
+			
+			if (spellsRemoved == totalToRemove) return;
 		}
 	}
 }
