@@ -26,12 +26,24 @@ function onTargetSelect(game, targeter) {
 		if (!spell.checkSpellFailure(parent)) return;
 	
 		var targets = targeter.getAffectedCreatures();
-	
+		
 		for (var i = 0; i < targets.size(); i++) {
 			var target = targets.get(i);
 			
 			applyCurse(game, targeter, target, duration);
 		}
+		
+		var targetsCursed = targets.size();
+		
+		if (parent.getAbilities().has("Drain")) {
+			targeter.setRelationshipCriterion("Friendly");
+			for (var i = 0; i < targets.size() && i < targetsCursed; i++) {
+				var target = targets.get(i);
+				
+				bolsterAlly(game, targeter, target, duration);
+			}
+		}
+		
 	} else {
 		var target = targeter.getSelectedCreature();
 	
@@ -52,6 +64,36 @@ function performTouch(game, targeter, duration) {
 	if (!game.meleeTouchAttack(parent, target)) return;
 	
 	applyCurse(game, targeter, target, duration);
+	
+	if (parent.getAbilities().has("Drain"))
+		bolsterAlly(game, targeter, parent, duration);
+}
+
+function bolsterAlly(game, targeter, target, duration) {
+	var spell = targeter.getSlot().getAbility();
+	var parent = targeter.getParent();
+	var casterLevel = parent.getCasterLevel();
+	
+	if (parent.getAbilities().has("Enfeeble")) {
+		var attrPenalty = 3 + parseInt(casterLevel / 6);
+	
+		var effect = targeter.getSlot().createEffect();
+		effect.setDuration(duration);
+		effect.setTitle(spell.getName() + " Drain");
+		effect.getBonuses().addBonus('Con', attrPenalty);
+		effect.getBonuses().addBonus('Dex', attrPenalty);
+		
+		var g1 = game.getBaseParticleGenerator("sparkle");
+		g1.setDuration(1.0);
+		g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
+		g1.setPosition(target.getPosition());
+		g1.setRedDistribution(game.getFixedDistribution(0.0));
+		g1.setBlueDistribution(game.getFixedDistribution(0.0));
+		g1.setGreenDistribution(game.getFixedDistribution(1.0));
+		effect.addAnimation(g1);
+		
+		target.applyEffect(effect);
+	}
 }
 
 function applyCurse(game, targeter, target, duration) {
@@ -74,7 +116,7 @@ function applyCurse(game, targeter, target, duration) {
 	}
 	
 	var g1 = game.getBaseParticleGenerator("sparkle");
-	g1.setDurationInfinite();
+	g1.setDuration(1.0);
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
 	g1.setPosition(target.getPosition());
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));

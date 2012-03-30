@@ -1,15 +1,23 @@
 function onActivate(game, slot) {
-	var creatures = game.ai.getVisibleCreaturesWithinRange(slot.getParent(), "Hostile", 20);
+	if (slot.getParent().getAbilities().has("MassParalyze")) {
+		var targeter = game.createCircleTargeter(slot);
+		targeter.setRadius(4);
+		targeter.setRelationshipCriterion("Hostile");
+		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.activate();
+	} else {
+		var creatures = game.ai.getVisibleCreaturesWithinRange(slot.getParent(), "Hostile", 20);
 	
-	var targeter = game.createListTargeter(slot);
-	targeter.addAllowedCreatures(creatures);
-	targeter.activate();
+		var targeter = game.createListTargeter(slot);
+		targeter.addAllowedCreatures(creatures);
+		targeter.activate();
+	}
 }
 
 function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var target = targeter.getSelectedCreature();
+	
 	var casterLevel = parent.getCasterLevel();
 	
 	var duration = game.dice().rand(3, 6);
@@ -19,6 +27,26 @@ function onTargetSelect(game, targeter) {
 	
 	if (!spell.checkSpellFailure(parent)) return;
 	
+	if (parent.getAbilities().has("MassParalyze")) {
+		var targets = targeter.getAffectedCreatures();
+		
+		for (var i = 0; i < targets.size(); i++) {
+			var target = targets.get(i);
+			
+			applyEffect(game, targeter, target, duration);
+		}
+	} else {
+		var target = targeter.getSelectedCreature();
+		
+		applyEffect(game, targeter, target, duration);
+	}
+}
+
+function applyEffect(game, targeter, target, duration) {
+	var spell = targeter.getSlot().getAbility();
+	var parent = targeter.getParent();
+	var casterLevel = parent.getCasterLevel();
+
 	if ( target.mentalResistanceCheck(spell.getCheckDifficulty(parent)) )
 		return;
 	

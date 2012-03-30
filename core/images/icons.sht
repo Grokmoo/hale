@@ -78,12 +78,12 @@ image trainDexterity1 15  3
 image burningFlames   16  3
 
 image alchemy            0  4
-
+image rupture            1  4
 image speech             2  4
 image craftArmor         3  4
 image craftWeapons       4  4
 image enchanting         5  4
-
+image drain              6  4
 image hide               7  4
 image locks              8  4
 image search             9  4
@@ -266,12 +266,12 @@ image unstoppableRage    5 14
 image improvedRage       6 14
 image assassin           7 14
 image duelist            8 14
-
-image protector         10 14
+image vulnerability      9 14
+image avenger           10 14
 image bard              11 14
 image elementalist      12 14
 image warWizard         13 14
-
+image massParalyze      14 14
 image trainStrength3    15 14
 image songOfEnemies     16 14
 
@@ -293,18 +293,20 @@ image beastSlayer        14 15
 image fireMage           15 15
 image poison             16 15
 
-image lingeringPoison     0 16
-image lethalPoison        1 16
-image deadlyInitiative    2 16
-image hideInPlainSight    3 16
-image energyImmunity      4 16
-image invulnerability     5 16
-image warShield           6 16
-image juggernaut          7 16
-image duel                8 16
-image deadlyDuel          9 16
-image parry              10 16
-image multiDuel          11 16
-image criticalStrike     12 16
-image piercer            13 16
-image slasher            14 16
+image lingeringPoison        0 16
+image lethalPoison           1 16
+image deadlyInitiative       2 16
+image hideInPlainSight       3 16
+image energyImmunity         4 16
+image invulnerability        5 16
+image warShield              6 16
+image juggernaut             7 16
+image duel                   8 16
+image deadlyDuel             9 16
+image parry                 10 16
+image multiDuel             11 16
+image criticalStrike        12 16
+image piercer               13 16
+image slasher               14 16
+image physicalVulnerability 15 16
+image antiMagic             16 16

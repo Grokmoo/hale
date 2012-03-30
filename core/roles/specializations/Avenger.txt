@@ -1,7 +1,7 @@
 playerSelectable true
 baseRole false
 
-icon "icons/protector"
+icon "icons/avenger"
 
 damageBonusPerLevel 2
 attackBonusPerLevel 2
@@ -12,10 +12,9 @@ maxLevel 10
 
 HPPerLevel 3
 
-addPrereq Stat CreatureLevel 100
 addPrereq Role Priest 8
-addPrereq Ability Cure
-addPrereq Ability DivineLuck
+addPrereq Ability Curse
+addPrereq Ability Slow
 
 level  1 addCasterLevel
 level  2 addCasterLevel
@@ -27,3 +26,11 @@ level  7 addCasterLevel
 level  8 addCasterLevel
 level  9 addCasterLevel
 level 10 addCasterLevel
+
+level 1 selectAbilityFromList Avenger
+level 2 selectAbilityFromList Avenger
+level 4 selectAbilityFromList Avenger
+level 5 selectAbilityFromList Avenger
+level 7 selectAbilityFromList Avenger
+level 8 selectAbilityFromList Avenger
+level 10 selectAbilityFromList Avenger
