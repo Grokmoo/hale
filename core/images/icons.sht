@@ -78,12 +78,12 @@ image trainDexterity1 15  3
 image burningFlames   16  3
 
 image alchemy            0  4
-image barter             1  4
+
 image speech             2  4
 image craftArmor         3  4
 image craftWeapons       4  4
 image enchanting         5  4
-image heal               6  4
+
 image hide               7  4
 image locks              8  4
 image search             9  4
@@ -207,9 +207,9 @@ image greaterDispell      0 11
 image massChameleon       1 11
 image meteor              2 11
 image lightningStorm      3 11
-image "crushingVines"     4 11
-image "deadlyVines"       5 11
-image "ward"              6 11
+image crushingVines       4 11
+image deadlyVines         5 11
+image ward                6 11
 image expertSmallSwords   7 11
 image expertLargeSwords   8 11
 image expertAxes          9 11
@@ -266,12 +266,12 @@ image unstoppableRage    5 14
 image improvedRage       6 14
 image assassin           7 14
 image duelist            8 14
-image mechanist          9 14
+
 image healer            10 14
 image bard              11 14
 image elementalist      12 14
 image warWizard         13 14
-image illusionist       14 14
+
 image trainStrength3    15 14
 image songOfEnemies     16 14
 
