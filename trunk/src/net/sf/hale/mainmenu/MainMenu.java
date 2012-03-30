@@ -43,11 +43,11 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ThemeInfo;
-import de.matthiasmann.twl.Widget;
 
 /**
  * The main menu widget.  This is what is displayed when the player first starts the game.
@@ -60,7 +60,7 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class MainMenu extends Widget implements LoadGamePopup.Callback {
+public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	private Runnable exitCallback;
 	
 	private Sprite backgroundSprite;

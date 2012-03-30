@@ -159,6 +159,11 @@ public class PathFinder {
 		return null;
 	}
 	
+	/*
+	 * Returns the list of all creatures that can potentially threaten AoOs against the mover, assuming
+	 * the mover were to move into an appropriate position
+	 */
+	
 	private static List<Creature> computeThreateningCreatures(Creature mover, Data data) {
 		List<Creature> creatures = new ArrayList<Creature>();
 		
@@ -185,6 +190,10 @@ public class PathFinder {
 		return creatures;
 	}
 	
+	/*
+	 * Gets the cost for moving into a given position.  Non-threatened tiles are preferred
+	 */
+	
 	private static final int getCost(Point position, List<Creature> threateningCreatures) {
 		for (Creature creature : threateningCreatures) {
 			if (creature.threatensPosition(position.x, position.y)) return 2;
@@ -192,6 +201,11 @@ public class PathFinder {
 		
 		return 1;
 	}
+	
+	/*
+	 * Returns true if the specified point is a member of the goals set.  The point must not currently
+	 * be occuppied by a creature, unless that creature is a party member
+	 */
 	
 	private static final boolean isEndPointIgnorePartyMembers(Point check, List<Point> goals, Data data) {
 		for (Point p : goals) {
@@ -209,6 +223,11 @@ public class PathFinder {
 		return false;
 	}
 	
+	/*
+	 * Returns true if the specified point is a member of the goals set.  The point
+	 * must not currently be occupied by another creature
+	 */
+	
 	private static final boolean isEndPoint(Point check, List<Point> goals, Data data) {
 		for (Point p : goals) {
 			if (check.x == p.x && check.y == p.y) {
@@ -219,9 +238,19 @@ public class PathFinder {
 		return false;
 	}
 	
+	/*
+	 * Verifies that a given point is a valid coordinate (inside the area bounds) for the
+	 * area we are pathfinding in
+	 */
+	
 	private static final boolean checkCoordinates(Point p, Data data) {
 		return (p.x >= 0 && p.x < data.width && p.y >= 0 && p.y < data.height);
 	}
+	
+	/*
+	 * Traverses back through the linked list of parent points to compute the path from the
+	 * start to end points
+	 */
 	
 	private static final List<Point> getFinalPath(Data data, Point start, Point end) {
 		List<Point> path = new ArrayList<Point>();
