@@ -301,3 +301,10 @@ image energyImmunity      4 16
 image invulnerability     5 16
 image warShield           6 16
 image juggernaut          7 16
+image duel                8 16
+image deadlyDuel          9 16
+image parry              10 16
+image multiDuel          11 16
+image criticalStrike     12 16
+image piercer            13 16
+image slasher            14 16

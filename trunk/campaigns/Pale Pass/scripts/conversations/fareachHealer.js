@@ -17,7 +17,7 @@ function startConversation(game, parent, target, conversation) {
 
 function raisePartyMember(game, parent, talker, conversation, partyMember) {
     if (game.getPartyCurrency().getValue() >= 500) {
-        game.getPartyCurrency().subtractGP(5);
+        game.getPartyCurrency().addGP(-5);
         
         partyMember.raiseFromDead();
         game.addMessage("link", partyMember.getName() + " has been raised back to life.");

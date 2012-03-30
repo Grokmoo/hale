@@ -13,6 +13,8 @@ maxLevel 10
 HPPerLevel 4
 
 addPrereq Role Mage 10
+addPrereq Role Adept 10
+
 addPrereq Ability Shield
 addPrereq Ability AbsorbEnergy
 addPrereq Ability HardenArmor

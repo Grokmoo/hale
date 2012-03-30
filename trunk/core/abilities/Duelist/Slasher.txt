@@ -1,0 +1,10 @@
+name "Slasher"
+type "Duelist Abilities"
+description "You gain a permanent 10 percent damage bonus with all Slashing weapons."
+activateable false
+
+icon "icons/slasher"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponDamageBonus('Slashing', 'Stackable', 10); parent.applyEffect(effect); }"
+
+addPrereq Role Duelist 1
