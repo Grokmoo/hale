@@ -1,7 +1,7 @@
 playerSelectable true
 baseRole false
 
-icon "icons/healer"
+icon "icons/protector"
 
 damageBonusPerLevel 2
 attackBonusPerLevel 2
@@ -15,7 +15,7 @@ HPPerLevel 3
 addPrereq Stat CreatureLevel 100
 addPrereq Role Priest 8
 addPrereq Ability Cure
-addPrereq Ability Regeneration
+addPrereq Ability DivineLuck
 
 level  1 addCasterLevel
 level  2 addCasterLevel
