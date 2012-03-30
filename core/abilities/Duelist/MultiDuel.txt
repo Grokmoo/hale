@@ -1,0 +1,11 @@
+name "Multi-Duel"
+type "Duelist Abilities"
+description "You are now able to select two Duel targets instead of one."
+activateable false
+
+icon "icons/multiDuel"
+
+aiPower 40
+
+addPrereq Ability Duel
+addPrereq Role Duelist 5

@@ -27,7 +27,7 @@ function sleep(game, parent, talker, conversation) {
     var currency = game.getPartyCurrency();
     
     if (currency.getValue() >= 50) {
-        currency.subtractSP(5);
+        currency.addSP(-5);
         
         game.date().incrementHours(8);
         

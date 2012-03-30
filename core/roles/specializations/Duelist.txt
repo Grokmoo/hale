@@ -12,8 +12,12 @@ maxLevel 10
 
 HPPerLevel 4
 
-addPrereq Stat CreatureLevel 100
-addPrereq Role Rogue 8
-addPrereq Role Adept 8
-addPrereq Ability AdvancedDualWielding
-addPrereq Stat CreatureLevel 100
+addPrereq Role Rogue 7
+addPrereq Role Warrior 7
+addPrereq Ability TrainingPiercing
+
+level 1 selectAbilityFromList Duelist
+level 3 selectAbilityFromList Duelist
+level 5 selectAbilityFromList Duelist
+level 7 selectAbilityFromList Duelist
+level 9 selectAbilityFromList Duelist
