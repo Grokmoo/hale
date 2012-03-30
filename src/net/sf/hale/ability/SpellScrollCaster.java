@@ -46,7 +46,7 @@ public class SpellScrollCaster implements AbilityActivator {
 	
 	private StatManager stats;
 	private CreatureAbilitySet abilities;
-	// effects with be empty
+	// effects will be empty
 	private EntityEffectSet effects;
 	
 	/**

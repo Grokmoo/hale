@@ -28,6 +28,10 @@ package net.sf.hale.view;
 public class CraftingWindow extends GameSubWindow {
 	private final RecipeSetViewer recipeViewer;
 	
+	/**
+	 * Creates a new crafting window
+	 */
+	
 	public CraftingWindow() {
 		setTitle("Crafting");
 		
