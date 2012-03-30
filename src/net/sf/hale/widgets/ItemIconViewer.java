@@ -249,9 +249,11 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 			if (!isMouseInside(evt)) break;
 			switch (evt.getMouseButton()) {
 			case Event.MOUSE_LBUTTON:
-				InventoryCallbackFactory.ExamineDetailsCallback cb =
-					new InventoryCallbackFactory.ExamineDetailsCallback(item, evt.getMouseX(), evt.getMouseY());
-				cb.run();
+				if (item != null) {
+					InventoryCallbackFactory.ExamineDetailsCallback cb =
+						new InventoryCallbackFactory.ExamineDetailsCallback(item, evt.getMouseX(), evt.getMouseY());
+					cb.run();
+				}
 				break;
 			case Event.MOUSE_RBUTTON:
 				if (callback != null) {
