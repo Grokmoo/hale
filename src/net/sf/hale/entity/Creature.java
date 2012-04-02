@@ -230,7 +230,7 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		Game.ruleset.getRace(race).addAbilitiesToCreature(this);
 		
 		// add the roles which will also add role abilities
-		roleSet.load(data.getObject("roleSet"), this);
+		this.roleSet = RoleSet.load(data.getObject("roleSet"), this);
 		
 		if (data.containsKey("abilitySet"))
 			abilities.load(data.getObject("abilitySet"), refHandler);

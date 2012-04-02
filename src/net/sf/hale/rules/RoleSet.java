@@ -65,28 +65,28 @@ public class RoleSet implements Saveable {
 		return data;
 	}
 	
-	public void load(SimpleJSONObject data, Creature parent) {
-		clear();
+	public static RoleSet load(SimpleJSONObject data, Creature parent) {
+		RoleSet roleSet = new RoleSet(parent);
 		
-		this.parent = parent;
-		
-		baseRoleID = data.get("baseRoleID", null);
+		roleSet.baseRoleID = data.get("baseRoleID", null);
 		
 		for (String roleID : data.keySet()) {
+			// skip the baseRoleID key
+			// note that the base role levels will still be read in a separate entry
 			if (roleID.equals("baseRoleID")) continue;
 			
 			Role role = Game.ruleset.getRole(roleID);
 			int value = data.get(roleID, 0);
 			
 			// set the new level
-			roles.put(roleID, value);
+			roleSet.roles.put(roleID, value);
 			
 			// compute new total level
-			totalLevel += value;
+			roleSet.totalLevel += value;
 
 			// check each added level for new caster levels and new abilities
 			for (int level = 1; level <= value; level++) {
-				casterLevel += role.getCasterLevelAddedAtLevel(level);
+				roleSet.casterLevel += role.getCasterLevelAddedAtLevel(level);
 
 				List<Ability> abilities = role.getAbilitiesAddedAtLevel(level);
 				for (Ability ability : abilities) {
@@ -96,6 +96,8 @@ public class RoleSet implements Saveable {
 				// do not load any slots as those are loaded separately
 			}
 		}
+		
+		return roleSet;
 	}
 	
 	/**
