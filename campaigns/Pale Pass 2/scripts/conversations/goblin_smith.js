@@ -4,13 +4,21 @@ function startConversation(game, parent, target, conversation) {
     if (game.get("slaverQuestStarted") != null && game.get("slaverQuestFinished") != null) {
         conversation.addText("Thank you surfacer, for finding my sons!");
         
-        if (parent.get("agreedToPay") != null && parent.get("rewardGiven") == null) {
-            conversation.addText("I don't have much, but I give you what I can, 10 gold, as promised.");
-            
-            parent.put("rewardGiven", true);
-            game.getPartyCurrency().addPP(1);
-            game.addMessage("blue", "The party has gained 10 GP.");
-        }
+		if (parent.get("rewardGiven") == null) {
+			if (parent.get("agreedToPay") != null) {
+				conversation.addText("I don't have much, but I give you what I can, 10 gold, as promised.");
+				
+				game.getPartyCurrency().addPP(1);
+				
+				game.addMessage("blue", "The party has gained 10 GP.");
+				
+				game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
+			} else {
+				game.addPartyXP(8 * game.ruleset().getValue("EncounterXPFactor"));
+			}
+		
+			parent.put("rewardGiven", true);
+		}
         
         game.runExternalScript("quests/dwarvenSlavers", "endQuest");
         

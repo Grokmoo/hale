@@ -30,6 +30,8 @@ function trialsComplete(game) {
     var entry = quest.createSubEntry("Trials Complete");
     
     entry.addText("You have completed the trials.  Now, you need to claim the key fragment.");
+	
+	game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
 }
 
 function keyObtained(game) {

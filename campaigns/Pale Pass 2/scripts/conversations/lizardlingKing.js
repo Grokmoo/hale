@@ -48,7 +48,7 @@ function convo04a(game, parent, target, conversation) {
     var ranks = game.campaign().getBestPartySkillRanks("Speech");
     
     if (ranks > 30) {
-        game.addPartyXP(1000);
+        game.addPartyXP(16 * game.ruleset().getValue("EncounterXPFactor"));
     
         conversation.addText("Perhaps.  The key is located in the vault of our ancestors on an island in the center of this lake.");
         
@@ -88,6 +88,7 @@ function onExit(game, parent, talker, conversation) {
 function askReward(game, parent, target, conversation) {
     conversation.addText("As promised.  I give you a powerful ring I'm sure you'll find useful.");
     
+	game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
     target.getInventory().addItem("ringGreaterProtection", 1, "Good");
     
     game.addMessage(target.getName() + " was given a Ring of Greater Protection.");
