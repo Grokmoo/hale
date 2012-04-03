@@ -5,3 +5,4 @@
 "thread" 100 "Good"
 "wire" 100 "Good"
 "coal" 40 "Good"
+"pressure_plate" 10 "Good"
