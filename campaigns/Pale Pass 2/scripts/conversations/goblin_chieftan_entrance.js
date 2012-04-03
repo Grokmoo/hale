@@ -106,6 +106,8 @@ function convoB201(game, parent, target, conversation) {
     
     conversation.addText("In return, we will aid you as best we can.  Our city is now open to you.  Find me in my chambers at the south end of the city when you wish to discuss this further.");
     
+	game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
+	
     conversation.addResponse("Very well.", "onExitGrimbok");
 }
 
