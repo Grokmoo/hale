@@ -54,6 +54,10 @@ public class RoleSet implements Saveable {
 		
 		data.put("baseRoleID", baseRoleID);
 		
+		Role baseRole = Game.ruleset.getRole(baseRoleID);
+		if (!baseRole.isBaseRole())
+			throw new IllegalArgumentException("Error saving: base role for " + parent.getID() + " is invalid.");
+		
 		for (String key : roles.keySet()) {
 			int value = roles.get(key);
 			
@@ -69,6 +73,10 @@ public class RoleSet implements Saveable {
 		RoleSet roleSet = new RoleSet(parent);
 		
 		roleSet.baseRoleID = data.get("baseRoleID", null);
+		
+		Role baseRole = Game.ruleset.getRole(roleSet.baseRoleID);
+		if (!baseRole.isBaseRole())
+			throw new IllegalArgumentException("Error loading: base role for " + parent.getID() + " is invalid.");
 		
 		for (String roleID : data.keySet()) {
 			// skip the baseRoleID key
@@ -173,7 +181,12 @@ public class RoleSet implements Saveable {
 		if (levelsToAdd < 1) throw new IllegalArgumentException("Only a positive number of levels " +
 				"may be added to a RoleSet.");
 		
-		if (baseRoleID == null) baseRoleID = role.getID();
+		if (baseRoleID == null) {
+			baseRoleID = role.getID();
+			
+			if (!role.isBaseRole())
+				throw new IllegalArgumentException("The first role added to a role set must be a base role.");
+		}
 		
 		// compute what the new level will be
 		int oldLevel;
