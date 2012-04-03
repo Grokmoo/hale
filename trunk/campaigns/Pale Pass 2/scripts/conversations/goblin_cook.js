@@ -67,7 +67,8 @@ function done04(game, parent, target, conversation) {
 
 function done05(game, parent, target, conversation) {
     game.getPartyCurrency().addGP(parent.get("paymentAmount"));
-    
+    game.addPartyXP(5 * game.ruleset().getValue("EncounterXPFactor"));
+	
     conversation.addText("OK.  Take hat and gold.  I take mushroom.");
     
     conversation.addResponse("Farewell.", "onExitQuestDone");

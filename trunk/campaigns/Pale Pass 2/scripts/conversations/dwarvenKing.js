@@ -91,6 +91,7 @@ function onExitAxeQuest(game, parent, talker, conversation) {
 function giveAxe(game, parent, target, conversation) {
 	game.addMessage("You gave away the Axe of Gan Tok.");
     game.getParty().removeItem("axe_dwarven");
+	game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
 	
 	parent.put("questComplete", true);
 	
