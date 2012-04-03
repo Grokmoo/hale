@@ -30,7 +30,7 @@ public class Skill implements Comparable<Skill> {
 	private final String descriptionFile;
 	private final String id;
 	private final String name;
-	private final String verb;
+	private final String verb, verbPast;
 	private final String icon;
 	private final String restrictToRole;
 	private final boolean untrained;
@@ -45,6 +45,7 @@ public class Skill implements Comparable<Skill> {
 		
 		name = map.getValue("name", id);
 		verb = map.getValue("verb", id);
+		verbPast = map.getValue("verbpast", id);
 		icon = map.getValue("icon", null);
 		descriptionFile = map.getValue("descriptionfile", "descriptions/skills/" + name + ResourceType.HTML.getExtension());
 		untrained = map.getValue("untrained", true);
@@ -83,6 +84,7 @@ public class Skill implements Comparable<Skill> {
 		return ResourceManager.getResourceAsString(descriptionFile);
 	}
 	
+	public String getVerbPastTense() { return verbPast; }
 	public String getVerb() { return verb; }
 	public String getIcon() { return icon; }
 	public String getID() { return id; }

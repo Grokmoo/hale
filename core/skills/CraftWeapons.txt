@@ -1,5 +1,6 @@
 name "Craft Weapons"
 verb Craft
+verbPast Crafted
 untrained false
 keyAttribute Int
 hasArmorPenalty false

@@ -1,5 +1,6 @@
 name Alchemy
 verb Craft
+verbPast Crafted
 untrained false
 keyAttribute Wis
 hasArmorPenalty false

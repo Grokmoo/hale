@@ -1,5 +1,6 @@
 name "Traps"
 verb Trap
+verbPast Trapped
 untrained false
 keyAttribute Dex
 hasArmorPenalty false

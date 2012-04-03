@@ -160,12 +160,12 @@ public class Recipe implements Referenceable {
 	}
 	
 	private void addMessage(Item item, int quantity, Creature parent, boolean equipped) {
-		String message = item.getFullName() + " crafted and ";
+		String message = item.getFullName() + " " + Game.ruleset.getSkill(skill).getVerbPastTense() + " and ";
 		
 		if (equipped)
 			message += "equipped by " + parent.getName() + ".";
 		else
-			message += "in inventory of " + parent.getName() + ".";
+			message += "in the inventory of " + parent.getName() + ".";
 		
 		if (quantity != 1)
 			message = quantity + "x " + message;
