@@ -1,5 +1,6 @@
 name "Locks"
 verb Lock
+verbPast Locked
 untrained false
 keyAttribute Dex
 hasArmorPenalty false
