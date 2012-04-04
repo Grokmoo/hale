@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.hale.ability.AbilitySlot;
+import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.entity.CreatedItem;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
@@ -606,8 +608,9 @@ public class Campaign {
 		
 		Creature c = Game.curCampaign.party.getSelected();
 		
+		List<AbilitySlot> canceledAuraSlots = new ArrayList<AbilitySlot>();
 		for (Creature p : Game.curCampaign.party) {
-			p.getAbilities().cancelAllAuras();
+			canceledAuraSlots.addAll(p.getAbilities().cancelAllAuras());
 		}
 		
 		for (Creature p : Game.curCampaign.party) {
@@ -678,6 +681,12 @@ public class Campaign {
 		Game.areaViewer.scrollToCreature(Game.curCampaign.party.getSelected());
 		
 		Game.areaListener.getCombatRunner().checkForceCombatMode();
+		
+		for (AbilitySlot slot : canceledAuraSlots) {
+			// reactivate cancelable mode ability slots
+			// that were canceled due to auras being removed
+			slot.getAbility().executeFunction(ScriptFunctionType.onReactivate, slot);
+		}
 	}
 	
 	public WorldMapLocation getWorldMapLocation(String ref) {
