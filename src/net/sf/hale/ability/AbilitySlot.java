@@ -517,6 +517,7 @@ public class AbilitySlot implements Saveable {
 	public void cancelAllAuras() {
 		int size = activeEffects.size();
 		
+		boolean auraFound = false;
 		for (int i = 0; i < size; i++) {
 			Effect effect = activeEffects.get(i);
 			
@@ -527,6 +528,12 @@ public class AbilitySlot implements Saveable {
 			
 			i--;
 			size--;
+			auraFound = true;
+		}
+		
+		if (auraFound && abilityID != null) {
+			if (getAbility().isCancelable())
+				deactivate();
 		}
 	}
 	

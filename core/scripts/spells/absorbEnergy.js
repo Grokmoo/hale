@@ -48,14 +48,13 @@ function onTargetSelect(game, targeter, type) {
 		effect.getBonuses().addBonus("SpellResistance", 15 + casterLevel);
 	}
 	
-	var g1 = game.getBaseParticleGenerator("sparkle");
+	var g1 = game.getBaseParticleGenerator("rotatingRing");
 	g1.setDurationInfinite();
-	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
 	g1.setPosition(target.getPosition());
 	
 	if (type == "Fire") {
 		g1.setBlueDistribution(game.getFixedDistribution(0.0));
-		g1.setGreenDistribution(game.getFixedDistribution(0.0));
+		g1.setGreenDistribution(game.getFixedDistribution(0.6));
 	} else if (type == "Cold") {
 		// default white color is fine
 	} else if (type == "Electrical") {

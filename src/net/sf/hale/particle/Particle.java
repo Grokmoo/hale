@@ -89,13 +89,13 @@ public class Particle extends AnimationBase {
 			
 			GL11.glRotatef(getRotation(), 0.0f, 0.0f, 1.0f);
 			
-			if (area.isVisible(pos1) && area.isVisible(pos2) && area.isVisible(pos3) && area.isVisible(pos4)) {
+			if (area.isVisible(pos1) || area.isVisible(pos2) || area.isVisible(pos3) || area.isVisible(pos4)) {
 				sprite.drawNoTextureBind(-getHalfWidth(), -getHalfHeight());
 			}
 			
 			GL11.glPopMatrix();
 		} else {
-			if (area.isVisible(pos1) && area.isVisible(pos2) && area.isVisible(pos3) && area.isVisible(pos4)) {
+			if (area.isVisible(pos1) || area.isVisible(pos2) || area.isVisible(pos3) || area.isVisible(pos4)) {
 				sprite.drawNoTextureBind((int)getX() - getHalfWidth(), (int)getY() - getHalfHeight());
 			}
 		}
