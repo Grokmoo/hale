@@ -594,11 +594,14 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		return attack(defender, Inventory.EQUIPPED_OFF_HAND);
 	}
 	
-	public boolean threatensPosition(int x, int y) {
-		if (this.isHelpless()) return false;
-		
+	public final boolean threatensPosition(int x, int y) {
 		Item weapon = inventory.getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
 		if (weapon == null) weapon = getRace().getDefaultWeapon();
+		
+		int dist = AreaUtil.distance(this.getX(), this.getY(), x, y);
+		if (dist > weapon.getThreatenMax() || dist < weapon.getThreatenMin()) return false;
+		
+		if (this.isHelpless()) return false;
 		
 		if (!this.getVisibility()[x][y]) return false;
 		
@@ -610,9 +613,6 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 			byte targetElev = Game.curCampaign.curArea.getElevationGrid().getElevation(x, y);
 			if (curElev != targetElev) return false;
 		}
-		
-		int dist = AreaUtil.distance(this.getX(), this.getY(), x, y);
-		if (dist > weapon.getThreatenMax() || dist < weapon.getThreatenMin()) return false;
 		
 		return true;
 	}

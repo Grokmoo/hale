@@ -89,19 +89,28 @@ public class Move implements DefaultAbility {
 	
 	public boolean canMove(Creature parent, Point targetPosition, int distanceAway) {
 		boolean[][] explored = Game.curCampaign.curArea.getExplored();
+		boolean[][] passable = Game.curCampaign.curArea.getPassability();
 		
 		if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= explored.length ||
 				targetPosition.y >= explored[0].length) return false;
 		
 		if (parent.isPlayerSelectable()) {
 			// player characters can't move to unexplored areas
-			if (!Game.curCampaign.curArea.getExplored()[targetPosition.x][targetPosition.y])
+			if (!explored[targetPosition.x][targetPosition.y])
 				return false;
 			
 			// if the interface is disabling movement
 			if (Game.mainViewer.isMoveDisabledDueToOpenWindows())
 				return false;
 		}
+		
+		// check for a passability difference
+		if (!passable[targetPosition.x][targetPosition.y]) return false;
+		
+		// check for an elevation difference
+		byte curElev = Game.curCampaign.curArea.getElevationGrid().getElevation(parent.getX(), parent.getY());
+		byte targetElev = Game.curCampaign.curArea.getElevationGrid().getElevation(targetPosition.x, targetPosition.y);
+		if (curElev != targetElev) return false;
 
 		if (parent.isImmobilized()) return false;
 		
@@ -110,10 +119,10 @@ public class Move implements DefaultAbility {
 		
 		// if the parent already has a movement lock
 		if (parent.isCurrentlyMoving()) return false;
-
+		
 		// check to see if a valid path exists up to distanceAway from targetPosition
 		computedPath = Game.areaListener.getAreaUtil().findShortestPath(parent, targetPosition, distanceAway);
-
+		
 		if (computedPath == null) {
 			return false;
 		}

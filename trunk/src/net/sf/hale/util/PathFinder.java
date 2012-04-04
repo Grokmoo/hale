@@ -169,7 +169,7 @@ public class PathFinder {
 		
 		if (mover.stats().isHidden()) return creatures;
 		if (!Game.isInTurnMode()) return creatures;
-		
+
 		synchronized(data.area.getEntities()) {
 			for (Entity entity : data.area.getEntities()) {
 				if (entity == mover) continue;
