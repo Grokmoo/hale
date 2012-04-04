@@ -673,6 +673,17 @@ public class Area implements Referenceable, EffectTarget, Saveable {
 		return pass;
 	}
 	
+	public final boolean isCurrentPassable(int x, int y) {
+		if (x < 0 || x >= size.x || y < 0 || y >= size.y) return false;
+		
+		if (entityList.getCreature(x, y) != null) return false;
+		
+		Door door = entityList.getDoor(x, y);
+		if (door != null && !door.isOpen()) return false;
+		
+		return passable[x][y];
+	}
+	
 	public final boolean isPassable(int x, int y) {
 		if (x < 0 || x >= size.x || y < 0 || y >= size.y) return false;
 		
