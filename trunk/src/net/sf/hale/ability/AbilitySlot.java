@@ -369,6 +369,15 @@ public class AbilitySlot implements Saveable {
 	}
 	
 	/**
+	 * Sets the cooldown time remaining for this ability slot to zero, allowing it
+	 * to be activated again immediately if it is not currently active
+	 */
+	
+	public void resetCooldown() {
+		this.cooldownRoundsLeft = 0;
+	}
+	
+	/**
 	 * Returns true if and only if the Ability readied in this slot can be activated.  Meaning
 	 * that this slot is readying an Ability, it is not already active or in cooldown, and the
 	 * parent of this slot has the necessary Action Points (AP).  If the readied Ability has
@@ -418,8 +427,6 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public void activate() {
-		if (abilityID == null || active) return;
-		
 		if (cooldownRoundsLeft > 0) return;
 		
 		if (getAbility().isMode()) {
@@ -512,9 +519,11 @@ public class AbilitySlot implements Saveable {
 	
 	/**
 	 * Cancels and immediately ends all Aura effects active for this ability slot
+	 * @return true if this ability slot was deactivated as a result of the aura cancelation,
+	 * false otherwise
 	 */
 	
-	public void cancelAllAuras() {
+	public boolean cancelAllAuras() {
 		int size = activeEffects.size();
 		
 		boolean auraFound = false;
@@ -532,9 +541,13 @@ public class AbilitySlot implements Saveable {
 		}
 		
 		if (auraFound && abilityID != null) {
-			if (getAbility().isCancelable())
+			if (getAbility().isCancelable()) {
 				deactivate();
+				return true;
+			}
 		}
+		
+		return false;
 	}
 	
 	/**

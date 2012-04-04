@@ -1,4 +1,6 @@
 function enableSong(game, slot, song) {
+	slot.getParent().put("lastBardSong", song);
+
 	var aura = slot.createAura("effects/" + song);
 	aura.setTitle(slot.getAbility().getName());
 	aura.setRemoveOnDeactivate(true);
@@ -32,6 +34,15 @@ function addButton(game, slot, cbFunc, name) {
 	var cb = game.createButtonCallback(slot, "enableSong");
 	cb.addArgument(cbFunc);
 	game.addMenuButton(name, cb);
+}
+
+function onReactivate(game, slot) {
+	slot.resetCooldown();
+	var song = slot.getParent().get("lastBardSong");
+	
+	if (song != null) {
+		enableSong(game, slot, song);
+	}
 }
 
 function onActivate(game, slot) {

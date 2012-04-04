@@ -728,18 +728,25 @@ public class CreatureAbilitySet implements Saveable {
 	
 	/**
 	 * Cancels all currently active aura effects, ending them immediately
+	 * @return the list of all ability slots that were deactivated as a result
+	 * of canceling their auras, and can be reactivated
 	 */
 	
-	public void cancelAllAuras() {
+	public List<AbilitySlot> cancelAllAuras() {
+		List<AbilitySlot> canceledSlots = new ArrayList<AbilitySlot>();
+		
 		for (String type : abilitySlots.keySet()) {
 			for (AbilitySlot slot : abilitySlots.get(type)) {
-				slot.cancelAllAuras();
+				if (slot.cancelAllAuras()) canceledSlots.add(slot);
 			}
 		}
 		
 		for (AbilitySlot slot : tempAbilitySlots) {
+			// don't allow reactivation of temp ability slots
 			slot.cancelAllAuras();
 		}
+		
+		return canceledSlots;
 	}
 	
 	/**

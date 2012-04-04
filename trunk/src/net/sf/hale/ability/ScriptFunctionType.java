@@ -60,6 +60,9 @@ public enum ScriptFunctionType {
 	/** Function called when Ability is activated by the player */
 	onActivate,
 
+	/** Function called when reactivating auras that were canceled when going through an area transition */
+	onReactivate,
+	
 	/** Function called when an Ability is deactivated by the player*/
 	onDeactivate,
 	

@@ -18,6 +18,10 @@ function onActivate(game, slot) {
 	slot.activate();
 }
 
+function onReactivate(game, slot) {
+	onActivate(game, slot);
+}
+
 function onDeactivate(game, slot) {
    slot.deactivate();
 }
