@@ -104,7 +104,7 @@ public class Move implements DefaultAbility {
 				return false;
 		}
 		
-		// check for a passability difference
+		// check for passability
 		if (!passable[targetPosition.x][targetPosition.y]) return false;
 		
 		// check for an elevation difference

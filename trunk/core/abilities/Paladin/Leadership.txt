@@ -10,6 +10,8 @@ cooldown 0
 icon "icons/leadership"
 scriptFile "abilities/leadership"
 
+actionPointCost 4000
+
 actionType Buff
 groupType Multiple
 rangeType Short
