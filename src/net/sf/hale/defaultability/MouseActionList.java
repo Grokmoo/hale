@@ -257,7 +257,9 @@ public class MouseActionList {
 			// no need to generate a new instance of the DefaultAbility with
 			// getAbility() here, as we don't need to save the instance data
 			// from canActivate
-			if (condition.ability.canActivate(parent, targetPosition)) return condition;
+			if (condition.ability.canActivate(parent, targetPosition)) {
+				return condition;
+			}
 		}
 		
 		return Condition.Cancel;
