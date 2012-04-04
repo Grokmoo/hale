@@ -52,11 +52,13 @@ public class RoleSet implements Saveable {
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
-		data.put("baseRoleID", baseRoleID);
-		
-		Role baseRole = Game.ruleset.getRole(baseRoleID);
-		if (!baseRole.isBaseRole())
-			throw new IllegalArgumentException("Error saving: base role for " + parent.getID() + " is invalid.");
+		if (baseRoleID != null) {
+			data.put("baseRoleID", baseRoleID);
+			
+			Role baseRole = Game.ruleset.getRole(baseRoleID);
+			if (!baseRole.isBaseRole())
+				throw new IllegalArgumentException("Error saving: base role for " + parent.getID() + " is invalid.");
+		}
 		
 		for (String key : roles.keySet()) {
 			int value = roles.get(key);
@@ -74,9 +76,11 @@ public class RoleSet implements Saveable {
 		
 		roleSet.baseRoleID = data.get("baseRoleID", null);
 		
-		Role baseRole = Game.ruleset.getRole(roleSet.baseRoleID);
-		if (!baseRole.isBaseRole())
-			throw new IllegalArgumentException("Error loading: base role for " + parent.getID() + " is invalid.");
+		if (roleSet.baseRoleID != null) {
+			Role baseRole = Game.ruleset.getRole(roleSet.baseRoleID);
+			if (!baseRole.isBaseRole())
+				throw new IllegalArgumentException("Error loading: base role for " + parent.getID() + " is invalid.");
+		}
 		
 		for (String roleID : data.keySet()) {
 			// skip the baseRoleID key
