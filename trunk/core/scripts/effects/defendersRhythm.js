@@ -14,8 +14,8 @@ function onTargetEnter(game, target, aura) {
 	
 		var bonus = 10 + 2 * lvls + 2 * chaBonus;
 	
-		targetEffect.getBonuses().addBonus('ArmorClass', 'Luck', bonus);
-		targetEffect.getBonuses().addBonus('ArmorPenalty', 'Luck', bonus);
+		targetEffect.getBonuses().addBonus('ArmorClass', 'Stackable', bonus);
+		targetEffect.getBonuses().addBonus('ArmorPenalty', 'Luck', -bonus);
 		
 		if (parent.getAbilities().has("SongOfAllies"))
 			targetEffect.getBonuses().addBonus('Con', 'Luck', parseInt(chaBonus / 2) );
