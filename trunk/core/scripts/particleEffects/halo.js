@@ -3,8 +3,10 @@
  * You need to set the position and duration
  */
 
-var g1 = game.createParticleGenerator("Point", "Continuous", "particles/halo", 1.0);
-g1.setDurationDistribution(game.getFixedDistribution(1.0));
+var g1 = game.createParticleGenerator("Point", "Continuous", "particles/halo", 0.5);
+g1.setDrawParticlesInOpaque(true);
+g1.setStopParticlesAtOpaque(false);
+g1.setDurationDistribution(game.getFixedDistribution(2.0));
 var color = game.getFixedDistribution(1.0);
 g1.setRedDistribution(color);
 g1.setGreenDistribution(color);
