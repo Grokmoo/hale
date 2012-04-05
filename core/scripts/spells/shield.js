@@ -79,6 +79,13 @@ function onTargetSelect(game, targeter, type) {
 		effect = targeter.getSlot().createEffect();
 	}
 	
+	// add the basic shield animation
+	var anim = game.getBaseAnimation("shieldLoop");
+	var position = target.getScreenPosition();
+	anim.setPosition(position.x, position.y - 10.0);
+	anim.setDurationInfinite();
+	effect.addAnimation(anim);
+	
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	

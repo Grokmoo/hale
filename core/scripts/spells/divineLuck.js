@@ -62,15 +62,15 @@ function onTargetSelect(game, targeter) {
 				effect.getBonuses().addBonus('ReflexResistance', 'Morale', resistanceBonus);
 			}
 		
-			var g1 = game.getBaseParticleGenerator("sparkle");
-			g1.setDurationInfinite();
-			g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-			g1.setPosition(creatures.get(i).getPosition());
-			g1.setBlueDistribution(game.getFixedDistribution(0.0));
-			g1.setBlueSpeedDistribution(game.getUniformDistribution(0.5, 1.0));
-			effect.addAnimation(g1);
+			// create the animation
+			var anim = game.getBaseAnimation("sparkleAnim");
+			var position = creatures.get(i).getScreenPosition();
+			anim.setPosition(position.x, position.y);
+			game.runAnimationNoWait(anim);
 	   
 			creatures.get(i).applyEffect(effect);
 		}
+		
+		game.lockInterface(anim.getSecondsRemaining());
 	}
 }
