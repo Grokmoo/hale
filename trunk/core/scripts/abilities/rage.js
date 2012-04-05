@@ -41,6 +41,14 @@ function onActivate(game, slot) {
 	
 	effect.getBonuses().addPenalty('Attack', 'Stackable', -25);
 	effect.getBonuses().addPenalty('ArmorClass', 'Stackable', -25);
+	
+	var anim = game.getBaseAnimation("rune");
+	anim.addFrames("animations/rune1-", 1, 4);
+	anim.setDurationInfinite();
+	var position = parent.getScreenPosition();
+	anim.setPosition(position.x, position.y + 15.0);
+	effect.addAnimation(anim);
+	
 	parent.applyEffect(effect);
 	
 	var anim = game.getBaseAnimation("blast");

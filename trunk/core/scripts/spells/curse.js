@@ -115,13 +115,12 @@ function applyCurse(game, targeter, target, duration) {
 		effect.getBonuses().addPenalty('Dex', attrPenalty);
 	}
 	
-	var g1 = game.getBaseParticleGenerator("sparkle");
-	g1.setDuration(1.0);
-	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(target.getPosition());
-	g1.setBlueDistribution(game.getFixedDistribution(0.0));
-	g1.setGreenDistribution(game.getFixedDistribution(0.0));
-	effect.addAnimation(g1);
+	var anim = game.getBaseAnimation("rune");
+	anim.addFrames("animations/rune2-", 1, 4);
+	anim.setDurationInfinite();
+	var position = target.getScreenPosition();
+	anim.setPosition(position.x, position.y + 15.0);
+	effect.addAnimation(anim);
 	   
 	target.applyEffect(effect);
 }

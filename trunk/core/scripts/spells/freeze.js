@@ -104,24 +104,19 @@ function freeze(game, targeter) {
 	
 	var pos = target.getScreenPosition();
 	
-	var g1 = game.getBaseParticleGenerator("explosion");
-	g1.setDuration(0.5);
-	g1.setDurationDistribution(game.getFixedDistribution(0.333));
-	g1.setAlphaSpeedDistribution(game.getFixedDistribution(-3.0));
-	g1.setVelocityDistribution(game.getEquallySpacedAngleDistribution(15.0, 24.0, 3.0, 99.0, 1.0));
-	g1.setGreenSpeedDistribution(game.getUniformDistributionWithBase(game.getSpeedDistributionBase(), -0.012, 0.0, 0.05));
-	g1.setRedSpeedDistribution(game.getUniformDistributionWithBase(game.getSpeedDistributionBase(), -0.025, 0.0, 0.05));
-	g1.setPosition(pos.x, pos.y);
+	var anim = game.getBaseAnimation("iceCrystal");
+	var position = target.getScreenPosition();
+	anim.setPosition(position.x, position.y);
+	game.runAnimationNoWait(anim);
    
 	// create the callback that will apply damage at the appropriate time
 	var callback = spell.createDelayedCallback("applyFreeze");
-	callback.setDelay(0.2);
+	callback.setDelay(0.4);
 	callback.addArgument(targeter);
    
 	// run the particle effect and start the callback timer
 	callback.start();
-	game.runParticleGeneratorNoWait(g1);
-	game.lockInterface(g1.getTimeLeft());
+	game.lockInterface(anim.getSecondsRemaining());
 }
 
 function applyFreeze(game, targeter) {

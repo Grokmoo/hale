@@ -18,3 +18,32 @@ image blast6 1 2
 image blast7 2 2
 image blast8 3 2
 
+image sparkle1 0 3
+image sparkle2 1 3
+image sparkle3 2 3
+image sparkle4 3 3
+image sparkle5 4 3
+image sparkle6 5 3
+
+image icicle1 4 0
+image icicle2 5 0
+image icicle3 6 0
+image icicle4 7 0
+
+image rune1-1 4 1
+image rune1-2 5 1
+image rune1-3 6 1
+image rune1-4 7 1
+
+image rune2-1 4 2
+image rune2-2 5 2
+image rune2-3 6 2
+image rune2-4 7 2
+
+defaultWidth 128
+defaultHeight 128
+
+image shield1 0 4
+image shield2 2 4
+image shield3 4 4
+image shield4 6 4
