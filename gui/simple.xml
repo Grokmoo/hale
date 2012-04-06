@@ -52,10 +52,13 @@
         <area name="white" xywh="24,4,1,1"/>
         <area name="textarea.ul-bullet" center="true" sizeOverwriteH="20" inset="3,0,-3,0" xywh="20,41,9,9"/>
 
-		<area name="-apBar" xywh="0,64,98,12"/>
-		<area name="-apBarBorder" xywh="0,76,100,16"/>
-		<area name="-hpBar" xywh="0,92,98,12"/>
-		<area name="-hpBarBorder" xywh="0,104,100,16"/>
+		<area name="-statBar" xywh="0,64,98,12"/>
+		<area name="-statBarBorder" xywh="0,76,100,16"/>
+		
+		<alias name="-apBar" ref="-statBar" tint="#f0f"/>
+		<alias name="-apBarBorder" ref="-statBarBorder"/>
+		<alias name="-hpBar" ref="-statBar" tint="#f00"/>
+		<alias name="-hpBarBorder" ref="-statBarBorder"/>
 		
 		<area name="minimapempty" xywh="80,18,20,20"/>
 		<area name="minimapcreature" xywh="80,38,20,20"/>
