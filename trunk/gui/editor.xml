@@ -90,7 +90,19 @@
         <theme name="scrollpane" ref="scrollpane">
             <param name="minWidth"><int>150</int></param>
             <theme name="content" ref="dialoglayout"/>
-			<theme name="worldmapviewer" ref="-defaults"/>
+			<theme name="worldmapviewer" ref="-defaults">
+				<theme name="locationviewer" ref="-defaults"/>
+				
+				<theme name="locationhover" ref="-defaults">
+					<param name="border"><border>5</border></param>
+					<param name="background"><image>-borderH</image></param>
+					<theme name="label" ref="labelbigblack"/>
+					<theme name="button" ref="button">
+						<param name="minWidth"><int>70</int></param>
+						<param name="minHeight"><int>25</int></param>
+					</theme>
+				</theme>
+			</theme>
         </theme>
     </theme>
 
