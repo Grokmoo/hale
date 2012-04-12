@@ -38,6 +38,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 
 /**
@@ -175,6 +176,8 @@ public class WorldMapViewer extends Widget {
 	}
 	
 	private class LocationHover extends Widget {
+		private int labelOverlap;
+		
 		private LocationViewer parent;
 		
 		private Label name;
@@ -207,12 +210,18 @@ public class WorldMapViewer extends Widget {
 			add(travel);
 			
 			if (origin == null) {
-				travel.setText("9 Days 23 Hours");
+				travel.setText("Travel: 9 Days 23 Hours");
 			} else if (origin == location) {
 				travel.setVisible(false);
 			} else {
-				travel.setText(Game.curCampaign.getDate().getDateString(0, 0, origin.getTravelTime(location), 0, 0));
+				travel.setText("Travel: " + Game.curCampaign.getDate().getDateString(0, 0, origin.getTravelTime(location), 0, 0));
 			}
+		}
+		
+		@Override protected void applyTheme(ThemeInfo themeInfo) {
+			super.applyTheme(themeInfo);
+			
+			labelOverlap = themeInfo.getParameter("labeloverlap", 0);
 		}
 		
 		@Override public void paintWidget(GUI gui) {
@@ -236,7 +245,7 @@ public class WorldMapViewer extends Widget {
 		}
 		
 		@Override public int getPreferredHeight() {
-			int height = name.getPreferredHeight() + getBorderVertical() + sprite.getHeight();
+			int height = name.getPreferredHeight() + getBorderVertical() + sprite.getHeight() - labelOverlap;
 			
 			if (travel.isVisible()) height += travel.getPreferredHeight();
 			
@@ -244,18 +253,20 @@ public class WorldMapViewer extends Widget {
 		}
 		
 		@Override protected void layout() {
-			spriteY = name.getPreferredHeight();
-			spriteX = (getPreferredWidth() - sprite.getWidth()) / 2;
+			setSize(getPreferredWidth(), getPreferredHeight());
+			
+			name.setSize(name.getPreferredWidth(), name.getPreferredHeight() - labelOverlap);
+			
+			spriteY = name.getHeight();
+			spriteX = (getWidth() - sprite.getWidth()) / 2;
 			
 			setPosition(WorldMapViewer.this.getInnerX() + parent.relativeX - spriteX - getBorderLeft(),
 					WorldMapViewer.this.getInnerY() + parent.relativeY - spriteY - getBorderTop());
 			
-			setSize(getPreferredWidth(), getPreferredHeight());
-			
-			name.setSize(getPreferredInnerWidth(), name.getPreferredHeight());
+			name.setPosition(getInnerX() + (getInnerWidth() - name.getWidth()) / 2, getInnerY());
 			
 			travel.setSize(travel.getPreferredWidth(), travel.getPreferredHeight());
-			travel.setPosition(getInnerX() + (name.getWidth() - travel.getWidth()) / 2,
+			travel.setPosition(getInnerX() + (getInnerWidth() - travel.getWidth()) / 2,
 					getInnerY() + spriteY + sprite.getHeight());
 		}
 		

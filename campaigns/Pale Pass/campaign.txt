@@ -10,12 +10,12 @@ hoursPerDay 24
 daysPerMonth 30
 stripStartingCharacters true
 worldMapImage "worldMap"
-addLocation "Fareach" "fareachToWorldMap" "worldmap/elven" 170 45
-addLocation "The Willow Inn" "WillowInnRoadToWorldMap" "worldmap/human" 50 25
+addLocation "Fareach" "fareachToWorldMap" "worldmap/elven" 170 70
+addLocation "The Willow Inn" "WillowInnRoadToWorldMap" "worldmap/human" 50 45
 addLocation "Black River Crossing" "BlackRiverCrossingToWorldMap" "worldmap/bridge-ne" 410 40
 addLocation "Southern Road" "SouthernRoadToWorldMap" "worldmap/stones1" 310 170
-addLocation "Sonorin Desert" "SonorinDesertToWorldMap" "worldmap/cactus" 260 285
-addLocation "Sonorin Desert South" "SonorinDesertToWorldMap2" "worldmap/cactus2" 260 390
+addLocation "Sonorin Desert" "SonorinDesertToWorldMap" "worldmap/cactus" 260 315
+addLocation "Sonorin Desert South" "SonorinDesertToWorldMap2" "worldmap/cactus2" 260 410
 setTravelTime "Fareach" "The Willow Inn" 4
 setTravelTime "Fareach" "Black River Crossing" 24
 setTravelTime "Fareach" "Southern Road" 24
