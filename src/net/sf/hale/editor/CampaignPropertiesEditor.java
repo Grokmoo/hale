@@ -389,7 +389,7 @@ public class CampaignPropertiesEditor extends EditorWindow implements Updateable
 		Group bottomH = content.createSequentialGroup(bottomLeftH);
 		Group bottomV = content.createParallelGroup(bottomLeftV);
 		
-		worldMapContent = new WorldMapViewer();
+		worldMapContent = new WorldMapViewer(null);
 		worldMapPane = new ScrollPane(worldMapContent);
 		
 		bottomH.addWidget(worldMapPane);

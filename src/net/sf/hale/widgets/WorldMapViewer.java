@@ -21,14 +21,23 @@ package net.sf.hale.widgets;
 
 import java.util.List;
 
+import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
 import net.sf.hale.Sprite;
 import net.sf.hale.WorldMapLocation;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Entity;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Date;
+import net.sf.hale.util.Logger;
+import net.sf.hale.view.WorldMapPopup;
 
 import org.lwjgl.opengl.GL11;
 
+import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
+import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.Widget;
 
 /**
@@ -41,17 +50,35 @@ import de.matthiasmann.twl.Widget;
  */
 
 public class WorldMapViewer extends Widget {
-	private Sprite sprite;
-	private List<WorldMapLocation> locations;
+	private Sprite backgroundSprite;
+	private WorldMapLocation origin;
+	
+	private WorldMapPopup popup;
 	
 	/**
 	 * Create a new WorldMapViewer widget.  No locations are shown
 	 * until {@link #updateLocations(List)} is called.  The sprite that
 	 * is drawn will be the current campaign world map sprite.
+	 * 
+	 * @param transition the current transition being used by the player, or null if no
+	 * transition is currently active
 	 */
 	
-	public WorldMapViewer() {
+	public WorldMapViewer(AreaTransition transition) {
+		if (transition != null) {
+			this.origin = Game.curCampaign.getWorldMapLocation(transition.getWorldMapLocation());
+		}
+		
 		updateSprite();
+	}
+	
+	/**
+	 * Sets the owning popup window for this viewer
+	 * @param popup
+	 */
+	
+	public void setWorldMapPopup(WorldMapPopup popup) {
+		this.popup = popup;
 	}
 	
 	/**
@@ -61,45 +88,73 @@ public class WorldMapViewer extends Widget {
 	
 	public void updateSprite() {
 		if (Game.curCampaign != null)
-			this.sprite = Game.curCampaign.getWorldMapSprite();
+			this.backgroundSprite = Game.curCampaign.getWorldMapSprite();
 		else
-			this.sprite = null;
+			this.backgroundSprite = null;
 	}
 	
 	@Override public void paintWidget(GUI gui) {
 		super.paintWidget(gui);
 		
-		int offsetX = getInnerX();
-		int offsetY = getInnerY();
-		
-		GL11.glPushMatrix();
-		
-		GL11.glTranslatef(offsetX, offsetY, 0.0f);
-		
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		
-		if (sprite != null) {
-			sprite.draw(0, 0);
+		if (backgroundSprite != null) {
+			backgroundSprite.draw(getInnerX(), getInnerY());
 		}
-		
-		if (locations != null) {
-			for (WorldMapLocation location : locations) {
-				if (location.getIcon() != null)
-					SpriteManager.getSprite(location.getIcon()).draw(location.getPosition());
-			}
-		}
-		
-		GL11.glPopMatrix();
 	}
 	
 	@Override public int getPreferredWidth() {
-		if (sprite == null) return getBorderHorizontal();
-		else return sprite.getWidth() + getBorderHorizontal();
+		if (backgroundSprite == null) return getBorderHorizontal();
+		else return backgroundSprite.getWidth() + getBorderHorizontal();
 	}
 	
 	@Override public int getPreferredHeight() {
-		if (sprite == null) return getBorderVertical();
-		else return sprite.getHeight() + getBorderVertical();
+		if (backgroundSprite == null) return getBorderVertical();
+		else return backgroundSprite.getHeight() + getBorderVertical();
+	}
+	
+	@Override protected void layout() {
+		for (int i = 0; i < getNumChildren(); i++) {
+			Widget child = getChild(i);
+			
+			if (! (child instanceof LocationViewer)) continue;
+			
+			LocationViewer viewer = (LocationViewer)child;
+			
+			viewer.setSize(viewer.getPreferredWidth(), viewer.getPreferredHeight());
+			viewer.setPosition(getInnerX() + viewer.relativeX, getInnerY() + viewer.relativeY);
+		}
+	}
+	
+	private void travel(WorldMapLocation origin, WorldMapLocation destination) {
+		// used for mock world map viewers
+		if (origin == null) return;
+		
+		popup.closePopup();
+		
+		String transitionID = destination.getAreaTransition();
+		if (transitionID == null) {
+			Logger.appendToErrorLog("World Map Location " + destination.getID() + " has no area transition defined.");
+		}
+		
+		AreaTransition transition = Game.curCampaign.getAreaTransition(transitionID);
+		
+		int travelTime = origin.getTravelTime(destination);
+		Date date = Game.curCampaign.getDate();
+		int travelTimeRounds = date.ROUNDS_PER_HOUR * travelTime;
+		
+		// elapse the rounds for all entities being tracked
+		Game.curCampaign.curArea.getEntities().elapseRoundsForDeadCreatures(travelTimeRounds);
+		for (Entity e : Game.curCampaign.curArea.getEntities()) {
+			if (e.getType() == Entity.Type.CREATURE) {
+				Creature c = (Creature)e;
+				c.elapseRounds(travelTimeRounds);
+			}
+		}
+		
+		date.incrementHours(travelTime);
+		Game.curCampaign.transition(transition, "World Map");
+		Game.timer.resetTime();
 	}
 	
 	/**
@@ -111,6 +166,218 @@ public class WorldMapViewer extends Widget {
 	 */
 	
 	public void updateLocations(List<WorldMapLocation> locations) {
-		this.locations = locations;
+		removeAllChildren();
+		
+		for (WorldMapLocation location : locations) {
+			LocationViewer viewer = new LocationViewer(location);
+			add(viewer);
+		}
+	}
+	
+	private class LocationHover extends Widget {
+		private LocationViewer parent;
+		
+		private Label name;
+		private Sprite sprite;
+		private int spriteX, spriteY;
+		
+		private Button travel;
+		
+		private WorldMapLocation location;
+		
+		private boolean isHovering = true;
+		
+		private LocationHover(LocationViewer parent) {
+			this.parent = parent;
+			this.location = parent.location;
+			
+			name = new Label(location.getName());
+			add(name);
+			
+			if (location.getIcon() != null) {
+				sprite = SpriteManager.getSprite(location.getIcon());
+			}
+			
+			travel = new Button();
+			travel.addCallback(new Runnable() {
+				@Override public void run() {
+					travel(origin, location);
+				}
+			});
+			add(travel);
+			
+			if (origin == null) {
+				travel.setText("9 Days 23 Hours");
+			} else if (origin == location) {
+				travel.setVisible(false);
+			} else {
+				travel.setText(Game.curCampaign.getDate().getDateString(0, 0, origin.getTravelTime(location), 0, 0));
+			}
+		}
+		
+		@Override public void paintWidget(GUI gui) {
+			super.paintWidget(gui);
+			
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			
+			if (sprite != null)
+				sprite.draw(getInnerX() + spriteX, getInnerY() + spriteY);
+		}
+		
+		@Override public int getPreferredInnerWidth() {
+			int width = Math.max(name.getPreferredWidth(), sprite.getWidth());
+			width = Math.max(width, travel.getPreferredWidth());
+			
+			return width;
+		}
+		
+		@Override public int getPreferredWidth() {
+			return getPreferredInnerWidth() + getBorderHorizontal();
+		}
+		
+		@Override public int getPreferredHeight() {
+			int height = name.getPreferredHeight() + getBorderVertical() + sprite.getHeight();
+			
+			if (travel.isVisible()) height += travel.getPreferredHeight();
+			
+			return height;
+		}
+		
+		@Override protected void layout() {
+			spriteY = name.getPreferredHeight();
+			spriteX = (getPreferredWidth() - sprite.getWidth()) / 2;
+			
+			setPosition(WorldMapViewer.this.getInnerX() + parent.relativeX - spriteX - getBorderLeft(),
+					WorldMapViewer.this.getInnerY() + parent.relativeY - spriteY - getBorderTop());
+			
+			setSize(getPreferredWidth(), getPreferredHeight());
+			
+			name.setSize(getPreferredInnerWidth(), name.getPreferredHeight());
+			
+			travel.setSize(travel.getPreferredWidth(), travel.getPreferredHeight());
+			travel.setPosition(getInnerX() + (name.getWidth() - travel.getWidth()) / 2,
+					getInnerY() + spriteY + sprite.getHeight());
+		}
+		
+		private void handleHover(Event evt) {
+			if (evt.isMouseEvent()) {
+				boolean hover = evt.getType() != Event.Type.MOUSE_EXITED && isMouseInside(evt);
+				
+				if (hover && !isHovering) {
+					isHovering = true;
+				} else if (!hover && isHovering) {
+					isHovering = false;
+					parent.endHover();
+				}
+			}
+		}
+		
+		@Override protected boolean handleEvent(Event evt) {
+			handleHover(evt);
+			
+			switch (evt.getType()) {
+			case MOUSE_ENTERED:
+				return true;
+			}
+			
+			// swallow up all events
+			return true;
+		}
+	}
+	
+	private class LocationViewer extends Widget {
+		private LocationHover hover;
+		
+		private WorldMapLocation location;
+		private Sprite sprite;
+		
+		private boolean isHovering = false;
+		
+		private final int relativeX, relativeY;
+		
+		private LocationViewer(WorldMapLocation location) {
+			this.location = location;
+			
+			if (location.getIcon() != null) {
+				sprite = SpriteManager.getSprite(location.getIcon());
+			}
+			
+			relativeX = location.getPosition().x;
+			relativeY = location.getPosition().y;
+			
+			// always show the hover for the origin
+			if (location == origin)
+				startHover();
+		}
+		
+		@Override public void paintWidget(GUI gui) {
+			super.paintWidget(gui);
+			
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			
+			if (sprite != null)
+				sprite.draw(getInnerX(), getInnerY());
+		}
+		
+		@Override public int getPreferredWidth() {
+			int width = getBorderHorizontal();
+			
+			if (sprite != null) width += sprite.getWidth();
+			
+			return width;
+		}
+		
+		@Override public int getPreferredHeight() {
+			int height = getBorderVertical();
+			
+			if (sprite != null) height += sprite.getHeight();
+			
+			return height;
+		}
+		
+		private void startHover() {
+			hover = new LocationHover(LocationViewer.this);
+			WorldMapViewer.this.add(hover);
+		}
+		
+		private void endHover() {
+			// don't allow the hover to be removed for the origin
+			if (location == origin) return;
+			
+			if (hover != null) {
+				WorldMapViewer.this.removeChild(hover);
+				hover = null;
+			}
+		}
+		
+		private void handleHover(Event evt) {
+			if (evt.isMouseEvent()) {
+				boolean hover = evt.getType() != Event.Type.MOUSE_EXITED && isMouseInside(evt);
+				
+				if (hover && !isHovering) {
+					isHovering = true;
+					startHover();
+				} else if (!hover && isHovering) {
+					isHovering = false;
+					endHover();
+				}
+			}
+		}
+		
+		@Override protected boolean handleEvent(Event evt) {
+			if (hover != null) return false;
+			
+			// don't allow hover events for the origin location
+			if (location == origin) return false;
+			
+			handleHover(evt);
+			
+			switch (evt.getType()) {
+			case MOUSE_ENTERED:
+				return true;
+			}
+			
+			return super.handleEvent(evt);
+		}
 	}
 }

@@ -787,23 +787,25 @@
 	</theme>
 	
 	<theme name="worldmappopup" ref="-defaults">
-		<param name="labelOverlap"><int>12</int></param>
-		<param name="buttonOverlap"><int>12</int></param>
-	
 		<theme name="content" ref="iconbutton">
 			<param name="border"><border>2</border></param>
-			<theme name="worldmapviewer" ref="-defaults"/>
+			<theme name="worldmapviewer" ref="-defaults">
+				<theme name="locationviewer" ref="-defaults"/>
+				
+				<theme name="locationhover" ref="-defaults">
+					<param name="border"><border>5</border></param>
+					<param name="background"><image>-borderH</image></param>
+					<theme name="label" ref="labelbigblack"/>
+					<theme name="button" ref="button">
+						<param name="minWidth"><int>70</int></param>
+						<param name="minHeight"><int>25</int></param>
+					</theme>
+				</theme>
+			</theme>
 			
 			<theme name="closebutton" ref="button">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>60</int></param>
-				<param name="minHeight"><int>30</int></param>
-			</theme>
-			
-			<theme name="currentlocationlabel" ref="labelbigred"/>
-			<theme name="locationlabel" ref="labelbigblack"/>
-			
-			<theme name="travelbutton" ref="button">
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 		</theme>
