@@ -54,7 +54,6 @@ import net.sf.hale.rules.ItemQuality;
 import net.sf.hale.rules.LootList;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Role;
-import net.sf.hale.rules.RoleSet;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.rules.Size;
 import net.sf.hale.rules.SkillSet;
@@ -526,8 +525,6 @@ public class EntityManager {
 		int minCurrencyReward = 0;
 		int maxCurrencyReward = 0;
 		
-		RoleSet roles = new RoleSet(null);
-		
 		ItemList unequipped = new ItemList(id);
 		ItemList equipped = new ItemList(id);
 		ItemList offHand = new ItemList(id);
@@ -564,12 +561,32 @@ public class EntityManager {
 		
 		boolean pregenerated = keyMap.getValue("pregenerated", false);
 		
+		// parse the list of roles
+		Role baseRole = null;
+		Map<Role, Integer> roles = new HashMap<Role, Integer>();
+		
 		for (LineKeyList line : keyMap.get("role")) {
-			Role role = Game.ruleset.getRole(line.next());
+			String roleID = line.next();
+			int level = line.nextInt();
 			
-			if (role == null) return null;
+			Role role = Game.ruleset.getRole(roleID);
 			
-			roles.addLevels(role, line.nextInt());
+			if (role == null)
+				throw new IllegalArgumentException("Role " + roleID + " not found while parsing character " + id);
+			
+			if (roles.containsKey(role))
+				throw new IllegalArgumentException("Duplicate role " + roleID + " for character " + id);
+			
+			// save the role in the roleset
+			roles.put(role, level);
+			
+			// set the base role as needed
+			if (role.isBaseRole()) {
+				if (baseRole != null)
+					throw new IllegalArgumentException("Base role is defined twice for character " + id);
+				
+				baseRole = role;
+			}
 		}
 		
 		for (LineKeyList line : keyMap.get("createitem")) {
@@ -716,7 +733,17 @@ public class EntityManager {
 			}
 		}
 		
-		c.getRoles().addLevels(roles);
+		if (baseRole != null) {
+			// now add the role levels
+			c.getRoles().addLevels(baseRole, roles.get(baseRole));
+
+			for (Role role : roles.keySet()) {
+				// base role was already added
+				if (role == baseRole) continue;
+
+				c.getRoles().addLevels(role, roles.get(role));
+			}
+		}
 		
 		c.getAbilities().addAll(abilities);
 
