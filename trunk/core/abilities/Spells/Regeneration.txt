@@ -18,8 +18,8 @@ actionPointCost 6000
 actionType Heal
 groupType Single
 rangeType Touch
-aiPower 20
-aiPriority 5
+aiPower 25
+aiPriority 10
 
 addPrereq Ability Cure
 

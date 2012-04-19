@@ -11,11 +11,11 @@ icon "icons/defensiveFighting"
 
 scriptFile "abilities/defensiveFighting"
 
-actionType Tactical
+actionType Buff
 groupType Single
 rangeType Personal
 
-aiPower 20
+aiPower 15
 aiPriority 5
 
 addPrereq Stat LevelAttackBonus 15

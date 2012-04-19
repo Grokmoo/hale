@@ -19,6 +19,7 @@ level 1 addAbility "MassCurse"
 level 1 addAbility "ImproveWeapon"
 level 1 addAbility "FlamingWeapon"
 level 1 addAbility "NaturalArmor10"
+level 1 addAbility "Dispell"
 
 currencyReward 50 100
 equip "mace" Good

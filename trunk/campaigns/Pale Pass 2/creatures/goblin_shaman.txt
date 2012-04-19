@@ -21,6 +21,8 @@ level 1 addAbility "DivineBurst"
 level 1 addAbility "DivineLuck"
 level 1 addAbility "Cure"
 
+level 1 addAbility "Renewal"
+
 currencyReward 45 80
 equip "mace" Good
 equip "shield_buckler_base" Good

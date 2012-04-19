@@ -22,3 +22,5 @@ equip "shield_light_base" Good
 equip "armor_leather_base" Good
 addloot "LootLevel5" 50 PER_LIST
 addloot "LootLevel5" 10 PER_LIST
+
+level 1 addAbility TotalDefense

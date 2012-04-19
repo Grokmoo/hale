@@ -15,5 +15,8 @@ actionType Tactical
 groupType Single
 rangeType Personal
 
+aiPower 30
+aiPriority 4
+
 addPrereq Ability DefensiveFighting
 addPrereq Stat LevelAttackBonus 30

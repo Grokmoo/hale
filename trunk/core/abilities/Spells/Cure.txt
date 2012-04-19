@@ -19,8 +19,8 @@ actionPointCost 6000
 actionType Heal
 groupType Single
 rangeType Touch
-aiPower 10
-aiPriority 2
+aiPower 15
+aiPriority 8
 
 addPrereq Stat CasterLevel 1
 
