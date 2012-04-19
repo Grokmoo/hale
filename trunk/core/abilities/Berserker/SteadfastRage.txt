@@ -8,3 +8,5 @@ icon "icons/steadfastRage"
 
 addPrereq Ability Rage
 addPrereq Role Berserker 5
+
+aiPower 40

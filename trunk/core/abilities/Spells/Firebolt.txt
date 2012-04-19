@@ -22,6 +22,7 @@ actionType Damage
 groupType Single
 rangeType Long
 aiPower 10
+aiPriority 2
 
 upgrade Fireball "With Fireball, Firebolt now explodes on impact, doing damage to all targets within 20 feet.
 

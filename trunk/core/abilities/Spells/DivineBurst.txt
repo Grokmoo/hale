@@ -20,6 +20,7 @@ actionType Debuff
 groupType Multiple
 rangeType Personal
 aiPower 30
+aiPriority 5
 
 addPrereq Ability DivineLuck
 

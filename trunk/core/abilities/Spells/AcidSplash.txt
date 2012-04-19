@@ -21,5 +21,6 @@ actionType Damage
 groupType Single
 rangeType Short
 aiPower 30
+aiPriority 4
 
 addPrereq Stat CasterLevel 7

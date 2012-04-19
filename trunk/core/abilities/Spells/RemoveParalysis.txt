@@ -11,6 +11,7 @@ actionType Tactical
 groupType Single
 rangeType Touch
 aiPower 30
+aiPriority 1
 
 addPrereq Ability Renewal
 addPrereq Stat CasterLevel 7

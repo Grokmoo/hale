@@ -20,6 +20,7 @@ actionType Debuff
 groupType Single
 rangeType Short
 aiPower 10
+aiPriority 5
 
 addPrereq Stat CasterLevel 1
 

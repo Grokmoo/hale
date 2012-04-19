@@ -20,6 +20,7 @@ actionType Summon
 groupType Single
 rangeType Short
 aiPower 20
+aiPriority 9
 
 addPrereq Stat CasterLevel 4
 

@@ -21,6 +21,7 @@ groupType Single
 rangeType Touch
 
 aiPower 15
+aiPriority 5
 
 addPrereq Stat CasterLevel 4
 

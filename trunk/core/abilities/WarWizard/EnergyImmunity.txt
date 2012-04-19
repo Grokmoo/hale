@@ -20,6 +20,7 @@ actionType Buff
 groupType Single
 rangeType Personal
 aiPower 50
+aiPriority 7
 
 addPrereq Stat CasterLevel 13
 addPrereq Role "War Wizard" 5

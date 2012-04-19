@@ -20,6 +20,7 @@ actionType Buff
 groupType Single
 rangeType Personal
 aiPower 10
+aiPriority 7
 
 addPrereq Stat CasterLevel 1
 

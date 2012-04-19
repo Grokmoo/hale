@@ -20,4 +20,5 @@ RangeType Short
 
 addPrereq Ability MightyBlow
 
-aiPower 20
+aiPower 30
+aiPriority 10

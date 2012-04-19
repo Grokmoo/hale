@@ -7,3 +7,5 @@ icon "icons/positiveEnergy"
 
 addPrereq Ability Leadership
 addPrereq Role Paladin 3
+
+aiPower 40

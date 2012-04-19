@@ -140,6 +140,7 @@ public class Ability extends Scriptable {
 	private final GroupType groupType;
 	private final RangeType rangeType;
 	private final int aiPower;
+	private final int aiPriority;
 	
 	private Map<String, String> upgrades;
 	
@@ -256,6 +257,7 @@ public class Ability extends Scriptable {
 		this.rangeType = rangeType != null ? RangeType.valueOf(rangeType) : null;
 		
 		this.aiPower = map.getValue("aipower", 0);
+		this.aiPriority = map.getValue("aipriority", 1);
 		
 		this.prereqs = new PrereqList();
 		for (LineKeyList line : map.get("addprereq")) {
@@ -494,6 +496,14 @@ public class Ability extends Scriptable {
 		
 		return groupType;
 	}
+	
+	/**
+	 * Returns the priority that the AI should attempt to use this ability at.  Higher priority abilities
+	 * should be used sooner in combat
+	 * @return the AI priority
+	 */
+	
+	public int getAIPriority() { return aiPriority; }
 	
 	/**
 	 * Returns the approximate relative power or effectiveness of this ability, relative

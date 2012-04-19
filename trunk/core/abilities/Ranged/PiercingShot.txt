@@ -14,5 +14,8 @@ actionType Damage
 groupType Multiple
 rangeType Long
 
+aiPower 30
+aiPriority 3
+
 addPrereq Ability CripplingShot
 addPrereq Stat LevelAttackBonus 30

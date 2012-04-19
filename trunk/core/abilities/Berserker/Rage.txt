@@ -14,6 +14,9 @@ actionType Buff
 groupType Single
 rangeType Personal
 
+aiPower 20
+aiPriority 10
+
 upgrade UnstoppableRage "With Unstoppable Rage, you become immune to any effect causing immobilization, as well as critical hits.  You also gain spell resistance equal to 10 plus twice your Berserker level."
 
 upgrade ImprovedRage "With Improved Rage, your bonus to Strength increases to +6.  Furthermore, your Rage lasts for an additional 2 rounds."

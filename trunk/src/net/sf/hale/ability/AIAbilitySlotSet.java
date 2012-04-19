@@ -47,6 +47,9 @@ public class AIAbilitySlotSet {
 	private Map<GroupType, List<AbilitySlot>> slotsByGroup;
 	private Map<RangeType, List<AbilitySlot>> slotsByRange;
 	
+	// list of all ability slots sorted by their ai priority times their ai power
+	private List<AbilitySlot> sortedSlots;
+	
 	/**
 	 * Creates a new AIAbilitySlotSet from the AbilitySlots contained in the
 	 * specified Map.  Only AbilitySlots that have a non null ActionType,
@@ -64,6 +67,8 @@ public class AIAbilitySlotSet {
 		slotsByGroup = new HashMap<GroupType, List<AbilitySlot>>();
 		slotsByRange = new HashMap<RangeType, List<AbilitySlot>>();
 		
+		sortedSlots = new ArrayList<AbilitySlot>();
+		
 		for (String type : slots.keySet()) {
 			for (AbilitySlot slot : slots.get(type)) {
 				if (!slot.canActivate() && !slot.canDeactivate()) continue;
@@ -75,6 +80,8 @@ public class AIAbilitySlotSet {
 				if (ability.getGroupType() != null) add(ability.getUpgradedGroupType(slot.getParent()), slot);
 				
 				if (ability.getRangeType() != null) add(ability.getUpgradedRangeType(slot.getParent()), slot);
+				
+				sortedSlots.add(slot);
 			}
 		}
 		
@@ -90,6 +97,8 @@ public class AIAbilitySlotSet {
 		for (RangeType type : slotsByRange.keySet()) {
 			Collections.sort(slotsByRange.get(type), new AbilityComparator());
 		}
+		
+		Collections.sort(sortedSlots, new AbilityComparator());
 	}
 	
 	/**
@@ -109,6 +118,25 @@ public class AIAbilitySlotSet {
 		}
 		
 		return total;
+	}
+	
+	/**
+	 * Returns the total number of ability slots in this AI Ability Slot set
+	 * @return the total number of ability slots
+	 */
+	
+	public int getNumAbilities() {
+		return sortedSlots.size();
+	}
+	
+	/**
+	 * Returns a list of all AbilitySlots in this AIAbilitySlotSet, sorted by
+	 * ai priority times ai power
+	 * @return a sorted list of all AbilitySlots
+	 */
+	
+	public List<AbilitySlot> getAllAbilitySlots() {
+		return sortedSlots;
 	}
 	
 	/**
@@ -357,8 +385,8 @@ public class AIAbilitySlotSet {
 	
 	private class AbilityComparator implements Comparator<AbilitySlot> {
 		@Override public int compare(AbilitySlot a, AbilitySlot b) {
-			return b.getAbility().getUpgradedAIPower(b.getParent()) -
-					a.getAbility().getUpgradedAIPower(a.getParent());
+			return b.getAbility().getAIPriority() * b.getAbility().getUpgradedAIPower(b.getParent()) -
+					a.getAbility().getAIPriority() * a.getAbility().getUpgradedAIPower(a.getParent());
 		}
 	}
 }

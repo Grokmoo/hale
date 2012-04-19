@@ -15,5 +15,8 @@ actionType Tactical
 groupType Single
 rangeType Personal
 
+aiPower 20
+aiPriority 5
+
 addPrereq Stat LevelAttackBonus 15
 addPrereq Ability ShieldDefense

@@ -21,5 +21,6 @@ actionType Damage
 groupType Single
 rangeType Short
 aiPower 10
+aiPriority 2
 
 upgrade "MassCrush" "With Mass Crush, your Crush spell now affects all hostile targets within 15 feet of the caster."

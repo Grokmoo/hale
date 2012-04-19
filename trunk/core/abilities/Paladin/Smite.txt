@@ -13,4 +13,7 @@ actionType Buff
 groupType Single
 rangeType Personal
 
+aiPower 30
+aiPriority 8
+
 addPrereq Role Paladin 3

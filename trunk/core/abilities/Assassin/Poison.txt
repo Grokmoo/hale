@@ -15,6 +15,7 @@ groupType Single
 rangeType Personal
 
 aiPower 20
+aiPriority 10
 
 upgrade LingeringPoison "With Lingering Poison, your poison ability now lasts for up to 8 rounds on your weapon.  The effects of the poison on your target last for 3 rounds instead of 2."
 

@@ -21,3 +21,4 @@ addPrereq Ability ShieldDefense
 upgrade ImprovedShieldBash "With Improved Shield Bash, you now gain a +10 bonus to attack on a shield bash attempt, the physical resistance check is more difficult, and the stun effect lasts for 1 additional round."
 
 aiPower 10
+aiPriority 8
