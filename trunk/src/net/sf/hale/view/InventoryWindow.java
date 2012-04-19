@@ -60,6 +60,8 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	private Creature creature;
 	private Merchant merchant;
 	
+	private final Button organize;
+	
 	private final Label currency;
 	private final Label weight;
 	
@@ -76,6 +78,16 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		this.weight = new Label();
 		this.weight.setTheme("weightlabel");
 		add(weight);
+		
+		organize = new Button();
+		organize.setTheme("organizebutton");
+		organize.addCallback(new Runnable() {
+			@Override public void run() {
+				creature.getInventory().getUnequippedItems().sort();
+				Game.mainViewer.updateInterface();
+			}
+		});
+		add(organize);
 		
 		creatureViewer = new CreatureViewer();
 		add(creatureViewer);
@@ -118,6 +130,9 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		
 		weight.setSize(weight.getPreferredWidth(), weight.getPreferredHeight());
 		weight.setPosition(getInnerX(), currency.getBottom() + labelGap);
+		
+		organize.setSize(organize.getPreferredWidth(), organize.getPreferredHeight());
+		organize.setPosition(getInnerRight() - organize.getWidth(), weight.getY() - (labelGap + organize.getHeight()) / 2);
 		
 		// the top position for the equipped items area
 		int baseY = weight.getBottom() + labelGap;
