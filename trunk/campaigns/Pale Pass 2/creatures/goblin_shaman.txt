@@ -19,6 +19,7 @@ level 1 addAbility "Enfeeble"
 level 1 addAbility "Curse"
 level 1 addAbility "DivineBurst"
 level 1 addAbility "DivineLuck"
+level 1 addAbility "Cure"
 
 currencyReward 45 80
 equip "mace" Good

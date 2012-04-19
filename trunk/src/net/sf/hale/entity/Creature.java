@@ -993,8 +993,6 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		
 		if (Game.curCampaign.curArea == null) return true;
 		
-		// TODO handle exiting and entering from area transitions (oldEffects will not be valid)
-		
 		List<Effect> oldEffects = Game.curCampaign.curArea.getEffectsAt(getLastPositionX(), getLastPositionY());
 		//this.moveAurasToCaster();
 		List<Effect> newEffects = Game.curCampaign.curArea.getEffectsAt(getX(), getY());

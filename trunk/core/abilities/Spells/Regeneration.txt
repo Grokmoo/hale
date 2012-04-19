@@ -1,6 +1,6 @@
 name "Regeneration"
 type "Restoration"
-description "A targeted friendly creature is touched by the caster.  Each round for the next 5 rounds, the creature is healed for an amount such that the total healing is one to eight hit points per caster level."
+description "A targeted friendly creature is touched by the caster.  Each round for the next 5 rounds, the creature is healed for an amount such that the total healing is four to eight hit points per caster level."
 activateable true
 fixed true
 cooldown 10
