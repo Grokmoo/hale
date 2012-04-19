@@ -343,6 +343,7 @@
 	
 		<theme name="exportbutton" ref="button">
 			<param name="text"><string>Export</string></param>
+			<param name="tooltip"><string>Export Characters or your Party</string></param>
 		</theme>
 	
 		<theme name="content" ref="tabbedpane">
@@ -415,33 +416,43 @@
 		
 		<theme name="allfilter" ref="togglebutton">
 			<param name="text"><string>All</string></param>
+			<param name="tooltip"><string>Show all Items</string></param>
 		</theme>
 		<theme name="weaponsfilter" ref="togglebutton">
 			<param name="text"><string>Weapons</string></param>
+			<param name="tooltip"><string>Show only Weapons</string></param>
 		</theme>
 		<theme name="armorfilter" ref="togglebutton">
 			<param name="text"><string>Armor</string></param>
+			<param name="tooltip"><string>Show only Armor, Boots, Gloves, and Helmets</string></param>
 		</theme>
 		<theme name="apparelfilter" ref="togglebutton">
 			<param name="text"><string>Apparel</string></param>
+			<param name="tooltip"><string>Show only Clothing and Accessories</string></param>
 		</theme>
 		<theme name="ammofilter" ref="togglebutton">
 			<param name="text"><string>Ammo</string></param>
+			<param name="tooltip"><string>Show only Ammo</string></param>
 		</theme>
 		<theme name="miscfilter" ref="togglebutton">
 			<param name="text"><string>Misc</string></param>
+			<param name="tooltip"><string>Show Miscellaneous Items</string></param>
 		</theme>
 		<theme name="usablefilter" ref="togglebutton">
 			<param name="text"><string>Usable</string></param>
+			<param name="tooltip"><string>Show only Usable items (Potions, Scrolls)</string></param>
 		</theme>
 		<theme name="ingredientsfilter" ref="togglebutton">
 			<param name="text"><string>Ingredients</string></param>
+			<param name="tooltip"><string>Show only Ingredients for Recipes</string></param>
 		</theme>
 		<theme name="trapsfilter" ref="togglebutton">
 			<param name="text"><string>Traps</string></param>
+			<param name="tooltip"><string>Show only Traps</string></param>
 		</theme>
 		<theme name="questfilter" ref="togglebutton">
 			<param name="text"><string>Quest</string></param>
+			<param name="tooltip"><string>Show only Quest Items</string></param>
 		</theme>
 	</theme>
 	
@@ -460,6 +471,11 @@
 	
 		<theme name="currencylabel" ref="labelblack"/>
 		<theme name="weightlabel" ref="labelblack"/>
+		
+		<theme name="organizebutton" ref="button">
+			<param name="text"><string>Organize</string></param>
+			<param name="tooltip"><string>Re-arrange your inventory by name and item quality</string></param>
+		</theme>
 		
 		<theme name="creatureviewer" ref="iconbutton">
 			<param name="gridCenterX"><int>3</int></param>

@@ -448,6 +448,18 @@ public class Ruleset {
 	public ItemQuality getItemQuality(int index) { return itemQualities.get(index); }
 	public List<ItemQuality> getAllItemQualities() { return itemQualities; }
 	
+	public int getItemQualityIndex(String id) {
+		int i = 0;
+		
+		for (ItemQuality quality : itemQualities) {
+			if (quality.getName().equals(id)) return i;
+			
+			i++;
+		}
+		
+		return -1;
+	}
+	
 	public ItemQuality getItemQuality(String id) {
 		for (ItemQuality quality : itemQualities) {
 			if (quality.getName().equals(id)) return quality;

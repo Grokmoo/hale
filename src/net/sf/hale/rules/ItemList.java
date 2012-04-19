@@ -23,6 +23,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -483,6 +484,14 @@ public class ItemList implements Referenceable, Saveable {
 	}
 	
 	/**
+	 * Sorts this item list.  First by name, then item quality
+	 */
+	
+	public void sort() {
+		Collections.sort(entries);
+	}
+	
+	/**
 	 * The interface for any widgets that wish to be notified when an entry is added or removed
 	 * from this ItemList
 	 * @author Jared Stephen
@@ -498,7 +507,7 @@ public class ItemList implements Referenceable, Saveable {
 		public void itemListModified();
 	}
 	
-	private class Entry {
+	private class Entry implements Comparable<Entry> {
 		private String itemID;
 		private int quantity;
 		private String quality;
@@ -519,6 +528,19 @@ public class ItemList implements Referenceable, Saveable {
 			this.itemID = other.itemID;
 			this.quantity = other.quantity;
 			this.quality = other.quality;
+		}
+
+		@Override public int compareTo(Entry other) {
+			int idComparison = itemID.compareTo(other.itemID);
+			
+			if (idComparison == 0) {
+				int thisQuality = Game.ruleset.getItemQualityIndex(quality);
+				int otherQuality = Game.ruleset.getItemQualityIndex(other.quality);
+				
+				return otherQuality - thisQuality;
+			} else {
+				return idComparison;
+			}
 		}
 	}
 }
