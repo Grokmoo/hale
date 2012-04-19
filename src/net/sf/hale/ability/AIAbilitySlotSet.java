@@ -22,14 +22,16 @@ package net.sf.hale.ability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability.ActionType;
 import net.sf.hale.ability.Ability.GroupType;
 import net.sf.hale.ability.Ability.RangeType;
+import net.sf.hale.util.Logger;
 import net.sf.hale.widgets.RightClickMenu;
 import net.sf.hale.widgets.RightClickMenuLevel;
 
@@ -43,10 +45,6 @@ import net.sf.hale.widgets.RightClickMenuLevel;
  */
 
 public class AIAbilitySlotSet {
-	private Map<ActionType, List<AbilitySlot>> slotsByAction;
-	private Map<GroupType, List<AbilitySlot>> slotsByGroup;
-	private Map<RangeType, List<AbilitySlot>> slotsByRange;
-	
 	// list of all ability slots sorted by their ai priority times their ai power
 	private List<AbilitySlot> sortedSlots;
 	
@@ -63,61 +61,17 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public AIAbilitySlotSet(Map<String, List<AbilitySlot>> slots) {
-		slotsByAction = new HashMap<ActionType, List<AbilitySlot>>();
-		slotsByGroup = new HashMap<GroupType, List<AbilitySlot>>();
-		slotsByRange = new HashMap<RangeType, List<AbilitySlot>>();
-		
 		sortedSlots = new ArrayList<AbilitySlot>();
 		
 		for (String type : slots.keySet()) {
 			for (AbilitySlot slot : slots.get(type)) {
 				if (!slot.canActivate() && !slot.canDeactivate()) continue;
 				
-				Ability ability = slot.getAbility();
-				
-				if (ability.getActionType() != null) add(ability.getActionType(), slot);
-				
-				if (ability.getGroupType() != null) add(ability.getUpgradedGroupType(slot.getParent()), slot);
-				
-				if (ability.getRangeType() != null) add(ability.getUpgradedRangeType(slot.getParent()), slot);
-				
 				sortedSlots.add(slot);
 			}
 		}
 		
-		// sort by usefulness of abilities
-		for (ActionType type : slotsByAction.keySet()) {
-			Collections.sort(slotsByAction.get(type), new AbilityComparator());
-		}
-		
-		for (GroupType type : slotsByGroup.keySet()) {
-			Collections.sort(slotsByGroup.get(type), new AbilityComparator());
-		}
-		
-		for (RangeType type : slotsByRange.keySet()) {
-			Collections.sort(slotsByRange.get(type), new AbilityComparator());
-		}
-		
 		Collections.sort(sortedSlots, new AbilityComparator());
-	}
-	
-	/**
-	 * Returns the number of abilities in this set with one of the specified action types
-	 * @param actionTypes the actionTypes to search for
-	 * @return the number of abilities in this set with one of the specified action types
-	 */
-	
-	public int getNumAbilitiesOfActionType(String[] actionTypes) {
-		int total = 0;
-		
-		for (String actionTypeID : actionTypes) {
-			ActionType type = ActionType.valueOf(actionTypeID);
-			
-			if (slotsByAction.containsKey(type))
-				total += slotsByAction.get(type).size();
-		}
-		
-		return total;
 	}
 	
 	/**
@@ -140,6 +94,35 @@ public class AIAbilitySlotSet {
 	}
 	
 	/**
+	 * Returns a list of all ability slots in this set with one of the specified action types
+	 * @param actionTypes the array of action types
+	 * @return all ability slots with one of the specified action types
+	 */
+	
+	public List<AbilitySlot> getWithActionTypes(String[] actionTypes) {
+		// first construct the set of specified action types
+		Set<ActionType> types = new HashSet<ActionType>();
+		
+		for (String typeString : actionTypes) {
+			try {
+				types.add(ActionType.valueOf(typeString));
+			} catch (Exception e) {
+				Logger.appendToWarningLog("Error in AI ability set, action type " + typeString + " not found.");
+			}
+		}
+		
+		// now look through the list of sorted slots for slots with the right action type
+		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
+		
+		for (AbilitySlot slot : this.sortedSlots) {
+			if (types.contains(slot.getAbility().getActionType()))
+				slots.add(slot);
+		}
+		
+		return slots;
+	}
+	
+	/**
 	 * Returns a List of all AbilitySlots in this AIAbilitySlotSet that have
 	 * the specified ActionType.  The returned list can be modified if it is
 	 * non-empty, and the modifications will affect this AIAbilitySlotSet.
@@ -149,11 +132,22 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public List<AbilitySlot> getWithActionType(String actionTypeID) {
-		ActionType actionType = ActionType.valueOf(actionTypeID);
+		ActionType actionType;
+		try {
+			actionType = ActionType.valueOf(actionTypeID);
+		} catch (Exception e) {
+			Logger.appendToWarningLog("Error in AI ability set, action type " + actionTypeID + " not found.");
+			return Collections.emptyList();
+		}
 		
-		if (!slotsByAction.containsKey(actionType)) return Collections.emptyList();
+		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
 		
-		return slotsByAction.get(actionType);
+		for (AbilitySlot slot : this.sortedSlots) {
+			if (slot.getAbility().getActionType() == actionType)
+				slots.add(slot);
+		}
+		
+		return slots;
 	}
 	
 	/**
@@ -166,11 +160,22 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public List<AbilitySlot> getWithGroupType(String groupTypeID) {
-		GroupType groupType = GroupType.valueOf(groupTypeID);
+		GroupType groupType;
+		try {
+			groupType = GroupType.valueOf(groupTypeID);
+		} catch (Exception e) {
+			Logger.appendToWarningLog("Error in AI ability set, group type " + groupTypeID + " not found.");
+			return Collections.emptyList();
+		}
 		
-		if (!slotsByGroup.containsKey(groupType)) return Collections.emptyList();
+		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
 		
-		return slotsByGroup.get(groupType);
+		for (AbilitySlot slot : this.sortedSlots) {
+			if (slot.getAbility().getGroupType() == groupType)
+				slots.add(slot);
+		}
+		
+		return slots;
 	}
 	
 	/**
@@ -183,11 +188,22 @@ public class AIAbilitySlotSet {
 	 */
 	
 	public List<AbilitySlot> getWithRangeType(String rangeTypeID) {
-		RangeType rangeType = RangeType.valueOf(rangeTypeID);
+		RangeType rangeType;
+		try {
+			rangeType = RangeType.valueOf(rangeTypeID);
+		} catch (Exception e) {
+			Logger.appendToWarningLog("Error in AI ability set, range type " + rangeTypeID + " not found.");
+			return Collections.emptyList();
+		}
 		
-		if (!slotsByRange.containsKey(rangeType)) return Collections.emptyList();
+		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
 		
-		return slotsByRange.get(rangeType);
+		for (AbilitySlot slot : this.sortedSlots) {
+			if (slot.getAbility().getRangeType() == rangeType)
+				slots.add(slot);
+		}
+		
+		return slots;
 	}
 	
 	/**
@@ -314,36 +330,6 @@ public class AIAbilitySlotSet {
 		}
 		
 		return Game.areaListener.getTargeterManager().getCurrentTargeter();
-	}
-	
-	private void add(ActionType type, AbilitySlot slot) {
-		if (slotsByAction.containsKey(type)) {
-			slotsByAction.get(type).add(slot);
-		} else {
-			List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
-			slots.add(slot);
-			slotsByAction.put(type, slots);
-		}
-	}
-	
-	private void add(GroupType type, AbilitySlot slot) {
-		if (slotsByGroup.containsKey(type)) {
-			slotsByGroup.get(type).add(slot);
-		} else {
-			List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
-			slots.add(slot);
-			slotsByGroup.put(type, slots);
-		}
-	}
-	
-	private void add(RangeType type, AbilitySlot slot) {
-		if (slotsByRange.containsKey(type)) {
-			slotsByRange.get(type).add(slot);
-		} else {
-			List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
-			slots.add(slot);
-			slotsByRange.put(type, slots);
-		}
 	}
 	
 	private class GroupSorter implements Comparator<AbilitySlot> {

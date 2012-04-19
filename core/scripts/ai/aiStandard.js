@@ -7,15 +7,15 @@
 function runTurn(game, parent) {
 	var aiSet = parent.getAbilities().createAISet();
 	
+	var allSlots = aiSet.getWithActionTypes(["Buff", "Debuff", "Damage", "Summon"]);
+	
 	// check if we have any valid abilities to use
 	// if not, fall back to basic AI
-	var numAbilities = aiSet.getNumAbilities();
+	var numAbilities = allSlots.size();
 	if (numAbilities == 0) {
 		fallbackToBasicAI(game, parent);
 		return;
 	}
-	
-	var allSlots = aiSet.getAllAbilitySlots();
 	
 	// go through all of the abilities in the list in order and try them until
 	// we run out of AP
@@ -66,7 +66,7 @@ function tryActivateAbility(game, parent, target, slot, aiSet) {
 	}
 	
 	// try to activate on our preferred target
-	targeter.setMousePosition(target.getPosition());
+	targeter.setMousePosition(target);
 	
 	// check to see if we have a valid selection here
 	var condition = targeter.getMouseActionCondition().toString();
@@ -126,7 +126,20 @@ function moveTowardsForAbility(game, parent, slot) {
 	
 	// if it is self targeted
 	if (preferredDistance == 0) {
-		return { 'endTurn' : false, 'targetFound' : true, 'target' : parent };
+		return { 'endTurn' : false, 'targetFound' : true, 'target' : parent.getPosition() };
+	}
+	
+	// for summon spells, try to find an empty tile to summon the creature onto
+	if (actionType.equals("Summon")) {
+		var position = game.ai.findClosestEmptyTile(parent.getPosition(), preferredDistance);
+		
+		// if we can't find a position to summon, just return that no target was found
+		// this should be a very rare event since it requires all tiles around the caster
+		// to be unusable
+		if (position == null)
+			return { 'endTurn' : false, 'targetFound' : false };
+		else
+			return { 'endTurn' : false, 'targetFound' : true, 'target' : position };
 	}
 	
 	// get the list of all targets sorted closest first
@@ -161,7 +174,7 @@ function moveTowardsForAbility(game, parent, slot) {
 	}
 	
 	// at this point we should be able to activate the ability on our target
-	return { 'endTurn' : false, 'targetFound' : true, 'target' : preferredTarget };
+	return { 'endTurn' : false, 'targetFound' : true, 'target' : preferredTarget.getPosition() };
 }
 
 function findClosestValidTarget(game, creatures, parent, ability) {
