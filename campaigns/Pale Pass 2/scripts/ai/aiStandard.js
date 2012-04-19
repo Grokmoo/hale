@@ -17,6 +17,25 @@ function runTurn(game, parent) {
 		return;
 	}
 	
+	// check to see if we have any healing spells
+	var healingSlots = aiSet.getWithActionType("Heal");
+	if (healingSlots.size() > 0) {
+		// if we have a healing spell, check if there are any good targets
+		
+		var friendlies = game.ai.getLiveVisibleCreatures(parent, "Friendly");
+		
+		// check for a friendly below 1/2 Max HP
+		for (var i = 0; i < friendlies.size(); i++) {
+			var friendly = friendlies.get(i);
+			
+			if (friendly.getCurrentHP() / friendly.stats().getMaxHP() < 0.5) {
+				// we found a good target; add the healing spells to the front of the slots list
+				allSlots.addAll(0, healingSlots);
+				break;
+			}
+		}
+	}
+	
 	// go through all of the abilities in the list in order and try them until
 	// we run out of AP
 	for (var i = 0; i < allSlots.size(); i++) {
@@ -108,14 +127,6 @@ function moveTowardsForAbility(game, parent, slot) {
 
 	var ability = slot.getAbility();
 	
-	// figure out whether we should target friendlies or hostiles
-	var actionType = ability.getActionType().toString();
-	
-	var targetRelationship = "Friendly";
-	if (actionType.equals("Damage") || actionType.equals("Debuff")) {
-		targetRelationship = "Hostile";
-	}
-	
 	// figure out how far away we should be
 	var rangeType = ability.getRangeType().toString();
 	
@@ -123,37 +134,16 @@ function moveTowardsForAbility(game, parent, slot) {
 	if (rangeType.equals("Touch")) preferredDistance = 1;
 	else if (rangeType.equals("Short")) preferredDistance = 2;
 	else if (rangeType.equals("Long")) preferredDistance = 6;
-	
-	// if it is self targeted
-	if (preferredDistance == 0) {
-		return { 'endTurn' : false, 'targetFound' : true, 'target' : parent.getPosition() };
-	}
-	
-	// for summon spells, try to find an empty tile to summon the creature onto
-	if (actionType.equals("Summon")) {
-		var position = game.ai.findClosestEmptyTile(parent.getPosition(), preferredDistance);
-		
-		// if we can't find a position to summon, just return that no target was found
-		// this should be a very rare event since it requires all tiles around the caster
-		// to be unusable
-		if (position == null)
-			return { 'endTurn' : false, 'targetFound' : false };
-		else
-			return { 'endTurn' : false, 'targetFound' : true, 'target' : position };
-	}
-	
-	// get the list of all targets sorted closest first
-	var allTargets = game.ai.getLiveVisibleCreatures(parent, targetRelationship);
 
-	// the best target is the closest valid one
-	var preferredTarget = findClosestValidTarget(game, allTargets, parent, ability);
+	// find the best target for our ability
+	var preferredTarget = findBestTarget(game, preferredDistance, parent, ability);
 	
 	// if no target was found, return and try a different ability
 	if (preferredTarget == null) {
 		return { 'endTurn' : false, 'targetFound' : false };
 	}
 
-	// now move towards the target until we either run out of AP or are in position to
+	// now move towards the target as needed until we either run out of AP or are in position to
 	// use the ability
 	var curDistance = game.distance(parent, preferredTarget) / 5;
 	
@@ -177,10 +167,70 @@ function moveTowardsForAbility(game, parent, slot) {
 	return { 'endTurn' : false, 'targetFound' : true, 'target' : preferredTarget.getPosition() };
 }
 
-function findClosestValidTarget(game, creatures, parent, ability) {
-	game.ai.sortCreatureListClosestFirst(parent, creatures);
+function findBestTarget(game, preferredDistance, parent, ability) {
+	// figure out whether we should target friendlies or hostiles
+	var actionType = ability.getActionType().toString();
 	
-	// find the closest valid target
+	var targetRelationship = "Friendly";
+	if (actionType.equals("Damage") || actionType.equals("Debuff")) {
+		targetRelationship = "Hostile";
+	}
+	
+	// if it is self targeted
+	if (preferredDistance == 0) {
+		return parent.getPosition();
+	}
+	
+	// for summon spells, try to find an empty tile to summon the creature onto
+	if (actionType.equals("Summon")) {
+		var position = game.ai.findClosestEmptyTile(parent.getPosition(), preferredDistance);
+		
+		// we return the position that was found, even if it is null
+		// this should be a very rare event since it requires all tiles around the caster
+		// to be unusable
+		return position;
+	}
+	
+	// get the list of all targets sorted closest first
+	var allTargets = game.ai.getLiveVisibleCreatures(parent, targetRelationship);
+	game.ai.sortCreatureListClosestFirst(parent, allTargets);
+	
+	// find the best target based on action type
+	if (actionType.equals("Heal")) {
+		// find the most damaged friendly
+		return findBestHealTarget(game, allTargets, parent, ability);
+	} else {
+		// find the closest target match
+		return findClosestTarget(game, allTargets, parent, ability);
+	}
+}
+
+/*
+ * it is assumed that the creatures array is already sorted closest first
+ */
+
+function findBestHealTarget(game, creatures, parent, ability) {
+	var bestTarget = null;
+	var bestHP = 1.0;
+	
+	for (var i = 0; i < creatures.size(); i++) {
+		var hpFraction = creatures.get(i).getCurrentHP() / creatures.get(i).stats().getMaxHP();
+		
+		// favor earlier (closer) entries in the inequality when ties arise
+		if (hpFraction < bestHP) {
+			bestTarget = creatures.get(i);
+			bestHP = hpFraction;
+		}
+	}
+	
+	return bestTarget;
+}
+
+/*
+ * it is assumed that the creatures array is already sorted closest first
+ */
+
+function findClosestTarget(game, creatures, parent, ability) {
 	var preferredTarget = null;
 	
 	if (ability.hasFunction("isTargetValid")) {
@@ -204,15 +254,3 @@ function findClosestValidTarget(game, creatures, parent, ability) {
 	return preferredTarget;
 }
 
-function getShortestDistance(game, creatures, parent) {
-	var smallestDist = 10000;
-	
-	for (var i = 0; i < creatures.size(); i++) {
-		var curDist = game.distance(parent, creatures.get(i));
-		
-		if (curDist > smallestDist)
-			curDist = smallestDist;
-	}
-	
-	return smallestDist;
-}

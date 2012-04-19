@@ -24,6 +24,8 @@ level 1 addAbility "Chameleon"
 level 1 addAbility "MassChameleon"
 level 1 addAbility "ShieldCombat"
 level 1 addAbility "ShieldDefense"
+level 1 addAbility "Cure"
+level 1 addAbility "MassCure"
 
 currencyReward 100 250
 equip "flail" Fine

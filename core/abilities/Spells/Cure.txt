@@ -1,6 +1,6 @@
 name "Cure"
 type "Restoration"
-description "A targeted friendly creature is touched by the caster and healed for 5 hit points plus one to two hit points per caster level."
+description "A targeted friendly creature is touched by the caster and healed for 5 hit points plus one to four hit points per caster level."
 activateable true
 fixed true
 cooldown 8

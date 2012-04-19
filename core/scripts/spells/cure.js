@@ -35,7 +35,7 @@ function cure(game, targeter) {
 	if (!spell.checkSpellFailure(parent, target)) return;
    
 	// compute the amount of healing
-	var healing = 5 + game.dice().rand(casterLevel, casterLevel * 2);
+	var healing = 5 + game.dice().d4(casterLevel);
 	spell.applyHealing(parent, target, healing);
    
 	showHealAnimation(game, target);
