@@ -245,16 +245,16 @@ public class AIAbilitySlotSet {
 	 * Calls the standard AbilityActivateCallback for the given AbilitySlot.
 	 * If the AbilitySlot creates a targeter in its onActivate script function,
 	 * then returns that Targeter.  If the script opens a menu in its onActivate,
-	 * selects the specified menu selection and then attempts to return the targeter from that.
-	 * If no menu selection is found with the specified text, selects a menu item randomly instead
+	 * selects the first menu selection that is found in the passed array.
+	 * If no menu selection is found matching one of the array entries, selects a menu item randomly instead
 	 * This method is used by AI scripts to activate AbilitySlots.
 	 * 
 	 * @param slot the AbilitySlot to activate
-	 * @param menuSelection the menu selection to make if a menu is opened
+	 * @param menuSelections the menu selections to make if a menu is opened, in order of priority
 	 * @return the Targeter created by the onActivate script function
 	 */
 	
-	public Targeter activateAndGetTargeter(AbilitySlot slot, String menuSelection) {
+	public Targeter activateAndGetTargeter(AbilitySlot slot, String[] menuSelections) {
 		Targeter curTargeter = tryActivateSlotAndGetTargeter(slot);
 		
 		RightClickMenu menu = Game.mainViewer.getMenu();
@@ -270,14 +270,21 @@ public class AIAbilitySlotSet {
 			
 			// attempt to select the specified menu selection
 			boolean activated = false;
-			for (int i = 0; i < level.getNumSelections(); i++) {
-				String text = level.getSelectionText(i);
+			for (int j = 0; j < menuSelections.length; j++) {
+				String menuSelection = menuSelections[j];
 				
-				if (text.equals(menuSelection)) {
-					level.activateSelection(i);
-					activated = true;
-					break;
+				for (int i = 0; i < level.getNumSelections(); i++) {
+					String text = level.getSelectionText(i);
+				
+					if (text.equals(menuSelection)) {
+						level.activateSelection(i);
+						activated = true;
+						break;
+					}
 				}
+				
+				if (activated)
+					break;
 			}
 			
 			// fall back to a random selection if needed
@@ -287,6 +294,26 @@ public class AIAbilitySlotSet {
 		}
 		
 		return Game.areaListener.getTargeterManager().getCurrentTargeter();
+	}
+	
+	/**
+	 * Calls the standard AbilityActivateCallback for the given AbilitySlot.
+	 * If the AbilitySlot creates a targeter in its onActivate script function,
+	 * then returns that Targeter.  If the script opens a menu in its onActivate,
+	 * selects the specified menu selection and then attempts to return the targeter from that.
+	 * If no menu selection is found with the specified text, selects a menu item randomly instead
+	 * This method is used by AI scripts to activate AbilitySlots.
+	 * 
+	 * @param slot the AbilitySlot to activate
+	 * @param menuSelection the menu selection to make if a menu is opened
+	 * @return the Targeter created by the onActivate script function
+	 */
+	
+	public Targeter activateAndGetTargeter(AbilitySlot slot, String menuSelection) {
+		String[] selections = new String[1];
+		selections[0] = menuSelection;
+		
+		return activateAndGetTargeter(slot, menuSelection);
 	}
 	
 	/**

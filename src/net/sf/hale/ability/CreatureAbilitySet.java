@@ -675,6 +675,35 @@ public class CreatureAbilitySet implements Saveable {
 	}
 	
 	/**
+	 * Returns the first slot found that is readying the specified ability, or
+	 * null if no such slot exists
+	 * @param abilityID
+	 * @return the first slot found readying the ability
+	 */
+	
+	public AbilitySlot getSlotWithReadiedAbility(String abilityID) {
+		return getSlotWithReadiedAbility(Game.ruleset.getAbility(abilityID));
+	}
+	
+	/**
+	 * Returns the first slot found that is readying the specified ability, or
+	 * null if no such slot exists
+	 * @param ability
+	 * @return the first slot found readying the ability
+	 */
+	
+	public AbilitySlot getSlotWithReadiedAbility(Ability ability) {
+		if (!abilitySlots.containsKey(ability.getType())) return null;
+		
+		for (AbilitySlot slot : abilitySlots.get(ability.getType())) {
+			if (slot.getAbility() == ability)
+				return slot;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Returns a List of all AbilitySlots in this CreatureAbilitySet that
 	 * currently ready the Ability with the specified ID.  If no such slots exist,
 	 * returns an empty List.

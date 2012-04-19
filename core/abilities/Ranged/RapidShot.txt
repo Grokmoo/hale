@@ -10,6 +10,9 @@ cooldown 0
 icon "icons/rapidShot"
 scriptFile "abilities/rapidShot"
 
-actionType Tactical
+actionType Buff
 GroupType Single
 RangeType Personal
+
+aiPower 20
+aiPriority 5

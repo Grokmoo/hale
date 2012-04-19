@@ -10,9 +10,12 @@ cooldown 0
 icon "icons/intenseCasting"
 scriptFile "abilities/intenseCasting"
 
-actionType Tactical
+actionType Buff
 groupType Single
 RangeType Personal
+
+aiPower 30
+aiPriority 10
 
 addPrereq Ability MeleeCasting
 addPrereq Ability ProficientCasting

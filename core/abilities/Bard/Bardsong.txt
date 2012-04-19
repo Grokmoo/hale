@@ -12,9 +12,9 @@ actionPointCost 5000
 icon "icons/bardsong"
 scriptFile "abilities/bardsong"
 
-actionType Tactical
+actionType Buff
 groupType Multiple
-rangeType Short
+rangeType Personal
 
-aiPower 15
+aiPower 30
 aiPriority 10

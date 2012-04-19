@@ -11,9 +11,12 @@ icon "icons/forcefulBlows"
 
 scriptfile "abilities/forcefulBlows"
 
-actionType Tactical
+actionType Buff
 GroupType Single
 RangeType Personal
+
+aiPower 10
+aiPriority 5
 
 addPrereq Stat LevelAttackBonus 20
 addPrereq Ability MightyBlow

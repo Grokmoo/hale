@@ -409,12 +409,38 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * all Effects in this EntityEffectSet.  In this context, only
 	 * Bonuses that have a positive value are returned.
 	 * 
+	 * @param bonusType
+	 * @return the List of all Bonuses of the specified Type
+	 */
+	
+	public BonusList getBonusesOfType(String bonusType) {
+		return getBonusesOfType(Bonus.Type.valueOf(bonusType), true);
+	}
+	
+	/**
+	 * Returns a List of all Bonuses of the specified Type contained in
+	 * all Effects in this EntityEffectSet.  In this context, only
+	 * Bonuses that have a positive value are returned.
+	 * 
 	 * @param type the Bonus Type to search for
 	 * @return the List of all Bonuses of the specified Type
 	 */
 	
 	public BonusList getBonusesOfType(Bonus.Type type) {
 		return getBonusesOfType(type, true);
+	}
+	
+	/**
+	 * Returns a List of all penalty Bonuses of the specified Type contained in
+	 * all Effects in this EntityEffectSet.  In this context, only Bonuses
+	 * with a negative value are returned.
+	 * 
+	 * @param bonusType
+	 * @return the List of all Bonuses of the specified Type
+	 */
+	
+	public BonusList getPenaltiesOfType(String bonusType) {
+		return getBonusesOfType(Bonus.Type.valueOf(bonusType), false);
 	}
 	
 	/**
@@ -460,6 +486,38 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 		}
 		
 		return effects;
+	}
+	
+	/**
+	 * Returns true if this entity has one or more penalties of any of the
+	 * specified types, false otherwise
+	 * @param types
+	 * @return whether this entity has any penalties of any of the specified types
+	 */
+	
+	public synchronized boolean hasPenaltiesOfTypes(String[] types) {
+		// first build up the hashset of bonus types
+		Set<Bonus.Type> bonusTypes = new HashSet<Bonus.Type>();
+		for (String type : types) {
+			bonusTypes.add(Bonus.Type.valueOf(type));
+		}
+		
+		// now check all bonuses for the specified types
+		for (Effect effect : effectsNoActiveScript) {
+			for (Bonus bonus : effect.getBonuses()) {
+				if (bonusTypes.contains(bonus.getType()))
+					return true;
+			}
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
+			for (Bonus bonus : effect.getBonuses()) {
+				if (bonusTypes.contains(bonus.getType()))
+					return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	// if bonusOrPenalty true, find bonuses, else find penalties

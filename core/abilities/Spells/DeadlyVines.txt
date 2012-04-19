@@ -7,7 +7,7 @@ icon "icons/deadlyVines"
 
 spellLevel 4
 
-actionType Tactical
+actionType Debuff
 groupType Multiple
 rangeType Long
 aiPower 40

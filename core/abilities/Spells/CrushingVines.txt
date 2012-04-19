@@ -7,7 +7,7 @@ icon "icons/crushingVines"
 
 spellLevel 2
 
-actionType Tactical
+actionType Debuff
 groupType Multiple
 rangeType Long
 aiPower 10
