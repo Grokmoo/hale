@@ -20,8 +20,10 @@
 package net.sf.hale.mainmenu;
 
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -123,17 +125,14 @@ public class CampaignPopup extends PopupWindow {
 			DialogLayout.Group mainV = paneContent.createSequentialGroup();
 			
 			// add available campaigns to pane Content
-			Map<String, CampaignDescriptor> campaigns = CampaignPopup.getAvailableCampaigns();
-			for (String id : campaigns.keySet()) {
-				CampaignDescriptor descriptor = campaigns.get(id);
-				
-				CampaignSelector selector = new CampaignSelector(id, descriptor.name, descriptor.description);
+			for (CampaignDescriptor descriptor : CampaignPopup.getAvailableCampaigns()) {
+				CampaignSelector selector = new CampaignSelector(descriptor.id, descriptor.name, descriptor.description);
 				mainH.addWidget(selector);
 				mainV.addWidget(selector);
 				
 				// if we found the current campaign in the list of selections,
 				// select that campaign
-				if (Game.curCampaign != null && id.equals(Game.curCampaign.getID()) ) {
+				if (Game.curCampaign != null && descriptor.id.equals(Game.curCampaign.getID()) ) {
 					selected = selector;
 					textAreaModel.setHtml(selected.description);
 					selected.setActive(true);
@@ -210,13 +209,12 @@ public class CampaignPopup extends PopupWindow {
 	}
 	
 	/**
-	 * Returns a Map of all available (loadable) campaigns.  The keySet is the set of available
-	 * campaign IDs.  Each key is mapped to the campaign description file contents.
-	 * @return the Map of all available campaigns
+	 * Returns a sorted list of all available campaigns (sorted by campaign ID)
+	 * @return the list of available campaigns
 	 */
 	
-	public static Map<String, CampaignDescriptor> getAvailableCampaigns() {
-		Map<String, CampaignDescriptor> campaigns = new LinkedHashMap<String, CampaignDescriptor>();
+	public static List<CampaignDescriptor> getAvailableCampaigns() {
+		List<CampaignDescriptor> campaigns = new ArrayList<CampaignDescriptor>();
 		
 		File campaignDir = new File("campaigns");
 		String[] fileList = campaignDir.list();
@@ -228,14 +226,15 @@ public class CampaignPopup extends PopupWindow {
 
 				if (!f.isDirectory() || f.getName().startsWith(".")) continue;
 
-				CampaignDescriptor descriptor = new CampaignDescriptor();
-				descriptor.description = FileUtil.readFileAsString(f.getPath() + "/description" +
-						ResourceType.HTML.getExtension());
-				
+				// get the id, name, and description for the campaign
 				FileKeyMap fileMap = new FileKeyMap(new File(f.getPath() + "/campaign.txt"));
-				descriptor.name = fileMap.getValue("name", fileName);
 				
-				campaigns.put( fileName, descriptor );
+				String id = fileName;
+				String description = FileUtil.readFileAsString(f.getPath() + "/description" +
+						ResourceType.HTML.getExtension());
+				String name = fileMap.getValue("name", fileName);
+				
+				campaigns.add(new CampaignDescriptor(id, name, description));
 			}
 
 			// now, look for zip archives.
@@ -246,25 +245,44 @@ public class CampaignPopup extends PopupWindow {
 
 				String id = ResourceManager.getResourceID(f.getName(), ResourceType.Zip);
 
-				if (campaigns.containsKey(id)) continue;
-
-				CampaignDescriptor descriptor = new CampaignDescriptor();
+				// if we already added the directory version of this campaign, don't also add the
+				// zip version
+				if (containsCampaign(campaigns, id)) continue;
 				
+				// get the name and description of the campaign
 				ZipFile file = new ZipFile(f);
 				ZipEntry entry = file.getEntry("description" + ResourceType.HTML.getExtension());
-
-				descriptor.description = ResourceManager.getResourceAsString(file.getInputStream(entry));
+				String description = ResourceManager.getResourceAsString(file.getInputStream(entry));
 				
 				FileKeyMap fileMap = new FileKeyMap( file.getInputStream(file.getEntry("campaign.txt")) );
-				descriptor.name = fileMap.getValue("name", id);
+				String name = fileMap.getValue("name", id);
 				
-				campaigns.put(id,  descriptor);
+				campaigns.add(new CampaignDescriptor(id, name, description));
 			}
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error generating list of campaigns.", e);
 		}
 		
+		// now sort the list by ID
+		Collections.sort(campaigns, new Comparator<CampaignDescriptor>() {
+			@Override public int compare(CampaignDescriptor c1, CampaignDescriptor c2) {
+				return c1.id.compareTo(c2.id);
+			}
+		});
+		
 		return campaigns;
+	}
+	
+	/*
+	 * Returns true if the specified list already contains a campaign with the specified ID
+	 */
+	
+	private static boolean containsCampaign(List<CampaignDescriptor> campaigns, String id) {
+		for (CampaignDescriptor descriptor : campaigns) {
+			if (descriptor.id.equals(id)) return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -272,7 +290,14 @@ public class CampaignPopup extends PopupWindow {
 	 */
 	
 	private static class CampaignDescriptor {
-		private String name;
-		private String description;
+		private final String id;
+		private final String name;
+		private final String description;
+		
+		private CampaignDescriptor(String id, String name, String description) {
+			this.id = id;
+			this.name = name;
+			this.description = description;
+		}
 	}
 }
