@@ -24,3 +24,4 @@ actionType Debuff
 GroupType Multiple
 RangeType Long
 aiPower 20
+aiPriority 3

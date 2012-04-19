@@ -18,3 +18,4 @@ addPrereq Ability MightyBlow
 addPrereq Stat LevelAttackBonus 15
 
 aiPower 20
+aiPriority 3

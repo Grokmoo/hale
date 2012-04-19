@@ -19,6 +19,7 @@ actionType Heal
 groupType Single
 rangeType Touch
 aiPower 20
+aiPriority 5
 
 addPrereq Ability Cure
 

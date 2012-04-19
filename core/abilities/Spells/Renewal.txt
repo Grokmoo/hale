@@ -19,6 +19,7 @@ actionType Tactical
 groupType Single
 rangeType Touch
 aiPower 20
+aiPriority 1
 
 addPrereq Stat CasterLevel 4
 

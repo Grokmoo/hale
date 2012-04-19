@@ -14,5 +14,8 @@ actionType Damage
 groupType Single
 rangeType Long
 
+aiPower 30
+aiPriority 3
+
 addPrereq Ability RapidShot
 addPrereq Stat LevelAttackBonus 10

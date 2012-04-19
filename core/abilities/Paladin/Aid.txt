@@ -13,3 +13,6 @@ scriptFile "abilities/aid"
 actionType Buff
 groupType Single
 rangeType Touch
+
+aiPower 30
+aiPriority 5

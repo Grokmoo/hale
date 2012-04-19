@@ -20,6 +20,7 @@ actionType Damage
 groupType Single
 rangeType Touch
 aiPower 10
+aiPriority 2
 
 addPrereq Stat CasterLevel 1
 

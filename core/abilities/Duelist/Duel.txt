@@ -13,6 +13,7 @@ groupType Single
 rangeType Long
 
 aiPower 20
+aiPriority 10
 
 actionPointCost 4000
 

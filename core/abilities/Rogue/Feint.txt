@@ -14,4 +14,7 @@ actionType Debuff
 groupType Single
 rangeType Short
 
+aiPower 20
+aiPriority 5
+
 addPrereq Role Rogue 3

@@ -14,6 +14,9 @@ actionType Damage
 groupType Single
 rangeType Long
 
+aiPower 40
+aiPriority 7
+
 addPrereq Ability PiercingShot
 addPrereq Ability MultiShot
 addPrereq Stat LevelAttackBonus 50

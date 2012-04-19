@@ -14,5 +14,8 @@ actionType Debuff
 groupType Single
 rangeType Long
 
+aiPower 30
+aiPriority 8
+
 addPrereq Ability RapidShot
 addPrereq Stat LevelAttackBonus 10

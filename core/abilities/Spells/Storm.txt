@@ -20,6 +20,7 @@ actionType Damage
 groupType Multiple
 rangeType Long
 aiPower 30
+aiPriority 4
 
 addPrereq Stat CasterLevel 7
 addPrereq Ability Freeze

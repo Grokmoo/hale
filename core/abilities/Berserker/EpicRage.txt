@@ -8,3 +8,5 @@ icon "icons/epicRage"
 addPrereq Ability ImprovedRage
 addPrereq Ability UnstoppableRage
 addPrereq Role Berserker 7
+
+aiPower 50

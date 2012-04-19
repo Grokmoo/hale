@@ -7,3 +7,5 @@ icon "icons/unstoppableRage"
 
 addPrereq Ability Rage
 addPrereq Role Berserker 3
+
+aiPower 30

@@ -20,4 +20,5 @@ addPrereq Stat LevelAttackBonus 50
 addPrereq Ability ChargeAttack
 addPrereq Ability Disarm
 
-aiPower 30
+aiPower 40
+aiPriority 3

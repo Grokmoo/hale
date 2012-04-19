@@ -20,5 +20,6 @@ actionType Buff
 groupType Single
 rangeType Touch
 aiPower 40
+aiPriority 7
 
 addPrereq Stat CasterLevel 10

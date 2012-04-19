@@ -5,66 +5,41 @@
  */
 
 function runTurn(game, parent) {
-	var allSlots = parent.getAbilities().createAISet();
+	var aiSet = parent.getAbilities().createAISet();
 	
 	// check if we have any valid abilities to use
 	// if not, fall back to basic AI
-	var numAbilities = allSlots.getNumAbilitiesOfActionType( [ "Damage", "Debuff", "Buff" ] );
+	var numAbilities = aiSet.getNumAbilities();
 	if (numAbilities == 0) {
 		fallbackToBasicAI(game, parent);
 		return;
 	}
 	
-	// figure out whether we are closest to hostiles or friendlies
-	var allFriendlies = game.ai.getLiveVisibleCreatures(parent, "Friendly");
-	var allHostiles = game.ai.getLiveVisibleCreatures(parent, "Hostile");
-	
-	var friendlyDistance = getShortestDistance(game, allFriendlies, parent);
-	var hostileDistance = getShortestDistance(game, allHostiles, parent);
-	
-	// sort our list of action types based on nearby creatures
-	var actionTypesSorted;
-	var sortByRange;
-	
-	if (friendlyDistance > hostileDistance) {
-		actionTypesSorted = [ "Damage", "Debuff", "Buff" ];
-		sortByRange = [ true, true, false ];
-	} else {
-		actionTypesSorted = [ "Buff", "Damage", "Debuff" ];
-		sortByRange = [ false, true, true ];
-	}
+	var allSlots = aiSet.getAllAbilitySlots();
 	
 	// go through all of the abilities in the list in order and try them until
 	// we run out of AP
-	for (var i = 0; i < actionTypesSorted.length; i++) {
-		var curSlots = allSlots.getWithActionType(actionTypesSorted[i]);
+	for (var i = 0; i < allSlots.size(); i++) {
+		var slot = allSlots.get(i);
 		
-		if (curSlots.isEmpty()) continue;
+		// first attempt to move within range as needed
+		var targetData = moveTowardsForAbility(game, parent, slot);
 		
-		if (sortByRange[i]) {
-			allSlots.sortByRangeType(curSlots, "FURTHEST");
-		}
+		if (targetData.endTurn)
+			return;
 		
-		for (var j = 0; j < curSlots.size(); j++) {
-			// first attempt to move within range as needed
-			var targetData = moveTowardsForAbility(game, parent, curSlots.get(j));
+		if (!targetData.targetFound)
+			continue;
 		
-			if (targetData.endTurn)
-				return;
-		
-			if (!targetData.targetFound)
-				continue;
-		
-			// now try to activate the ability
-			var activateData = tryActivateAbility(game, parent, targetData.target, curSlots.get(j), allSlots);
+		// now try to activate the ability
+		var activateData = tryActivateAbility(game, parent, targetData.target, slot, aiSet);
 			
-			// we have activated one ability
-			numAbilities--;
+		// we have activated one ability
+		numAbilities--;
 			
-			// we can either end the turn here or try another ability
-			if (activateData.endTurn)
-				return;
-		}
+		// we can either end the turn here or try another ability
+		if (activateData.endTurn)
+			return;
 	}
 
 	// if all abilities have been used at this point, we may still have AP left

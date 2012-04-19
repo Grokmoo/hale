@@ -15,4 +15,7 @@ actionType Tactical
 groupType Single
 rangeType Personal
 
+aiPower 20
+aiPriority 1
+
 addPrereq Role Rogue 5

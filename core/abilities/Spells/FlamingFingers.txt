@@ -24,4 +24,5 @@ actionType Damage
 GroupType Multiple
 RangeType Short
 aiPower 20
+aiPriority 3
 
