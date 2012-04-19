@@ -5,66 +5,41 @@
  */
 
 function runTurn(game, parent) {
-	var allSlots = parent.getAbilities().createAISet();
+	var aiSet = parent.getAbilities().createAISet();
+	
+	var allSlots = aiSet.getWithActionTypes(["Buff", "Debuff", "Damage", "Summon"]);
 	
 	// check if we have any valid abilities to use
 	// if not, fall back to basic AI
-	var numAbilities = allSlots.getNumAbilitiesOfActionType( [ "Damage", "Debuff", "Buff" ] );
+	var numAbilities = allSlots.size();
 	if (numAbilities == 0) {
 		fallbackToBasicAI(game, parent);
 		return;
 	}
 	
-	// figure out whether we are closest to hostiles or friendlies
-	var allFriendlies = game.ai.getLiveVisibleCreatures(parent, "Friendly");
-	var allHostiles = game.ai.getLiveVisibleCreatures(parent, "Hostile");
-	
-	var friendlyDistance = getShortestDistance(game, allFriendlies, parent);
-	var hostileDistance = getShortestDistance(game, allHostiles, parent);
-	
-	// sort our list of action types based on nearby creatures
-	var actionTypesSorted;
-	var sortByRange;
-	
-	if (friendlyDistance > hostileDistance) {
-		actionTypesSorted = [ "Damage", "Debuff", "Buff" ];
-		sortByRange = [ true, true, false ];
-	} else {
-		actionTypesSorted = [ "Buff", "Damage", "Debuff" ];
-		sortByRange = [ false, true, true ];
-	}
-	
 	// go through all of the abilities in the list in order and try them until
 	// we run out of AP
-	for (var i = 0; i < actionTypesSorted.length; i++) {
-		var curSlots = allSlots.getWithActionType(actionTypesSorted[i]);
+	for (var i = 0; i < allSlots.size(); i++) {
+		var slot = allSlots.get(i);
 		
-		if (curSlots.isEmpty()) continue;
+		// first attempt to move within range as needed
+		var targetData = moveTowardsForAbility(game, parent, slot);
 		
-		if (sortByRange[i]) {
-			allSlots.sortByRangeType(curSlots, "FURTHEST");
-		}
+		if (targetData.endTurn)
+			return;
 		
-		for (var j = 0; j < curSlots.size(); j++) {
-			// first attempt to move within range as needed
-			var targetData = moveTowardsForAbility(game, parent, curSlots.get(j));
+		if (!targetData.targetFound)
+			continue;
 		
-			if (targetData.endTurn)
-				return;
-		
-			if (!targetData.targetFound)
-				continue;
-		
-			// now try to activate the ability
-			var activateData = tryActivateAbility(game, parent, targetData.target, curSlots.get(j), allSlots);
+		// now try to activate the ability
+		var activateData = tryActivateAbility(game, parent, targetData.target, slot, aiSet);
 			
-			// we have activated one ability
-			numAbilities--;
+		// we have activated one ability
+		numAbilities--;
 			
-			// we can either end the turn here or try another ability
-			if (activateData.endTurn)
-				return;
-		}
+		// we can either end the turn here or try another ability
+		if (activateData.endTurn)
+			return;
 	}
 
 	// if all abilities have been used at this point, we may still have AP left
@@ -91,7 +66,7 @@ function tryActivateAbility(game, parent, target, slot, aiSet) {
 	}
 	
 	// try to activate on our preferred target
-	targeter.setMousePosition(target.getPosition());
+	targeter.setMousePosition(target);
 	
 	// check to see if we have a valid selection here
 	var condition = targeter.getMouseActionCondition().toString();
@@ -151,7 +126,20 @@ function moveTowardsForAbility(game, parent, slot) {
 	
 	// if it is self targeted
 	if (preferredDistance == 0) {
-		return { 'endTurn' : false, 'targetFound' : true, 'target' : parent };
+		return { 'endTurn' : false, 'targetFound' : true, 'target' : parent.getPosition() };
+	}
+	
+	// for summon spells, try to find an empty tile to summon the creature onto
+	if (actionType.equals("Summon")) {
+		var position = game.ai.findClosestEmptyTile(parent.getPosition(), preferredDistance);
+		
+		// if we can't find a position to summon, just return that no target was found
+		// this should be a very rare event since it requires all tiles around the caster
+		// to be unusable
+		if (position == null)
+			return { 'endTurn' : false, 'targetFound' : false };
+		else
+			return { 'endTurn' : false, 'targetFound' : true, 'target' : position };
 	}
 	
 	// get the list of all targets sorted closest first
@@ -186,7 +174,7 @@ function moveTowardsForAbility(game, parent, slot) {
 	}
 	
 	// at this point we should be able to activate the ability on our target
-	return { 'endTurn' : false, 'targetFound' : true, 'target' : preferredTarget };
+	return { 'endTurn' : false, 'targetFound' : true, 'target' : preferredTarget.getPosition() };
 }
 
 function findClosestValidTarget(game, creatures, parent, ability) {

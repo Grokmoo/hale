@@ -18,7 +18,7 @@ actionPointCost 6000
 
 actionType Debuff
 groupType Multiple
-rangeType Personal
+rangeType Short
 aiPower 30
 aiPriority 5
 

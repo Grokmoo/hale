@@ -6,6 +6,6 @@ activateable false
 icon "icons/improvedRage"
 
 addPrereq Ability Rage
-addPrereq Role Berserker
+addPrereq Role Berserker 3
 
 aiPower 30
