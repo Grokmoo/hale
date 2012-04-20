@@ -56,9 +56,9 @@ function applyEffect(game, targeter, target, duration) {
 	effect.setTitle(spell.getName());
 	
 	if (parent.getAbilities().has("ImprovedChameleon")) {
-		effect.getBonuses().addBonus('Concealment', 35 + 2 * casterLevel);
+		effect.getBonuses().addBonus('Concealment', 15 + 2 * casterLevel);
 	} else {
-		effect.getBonuses().addBonus('Concealment', 25 + casterLevel);
+		effect.getBonuses().addBonus('Concealment', 15 + casterLevel);
 	}
 	
 	var anim = game.createAnimation("particles/circle33", 2.0);
