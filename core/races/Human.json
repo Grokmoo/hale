@@ -38,5 +38,15 @@
   "abilitySelectionsFromList" : {
 	"General" : [ 2, 5, 8, 11, 14, 17, 20, 23, 26, 29,
 	              32, 35, 38, 41, 44, 47, 50, 53, 56, 59 ]
-  }
+  },
+  
+  "randomMaleNames" : [
+    "Adane", "Aeric", "Brien", "Cromir", "Cyric", "Darian", "Duffus", "Golin", "Jackin", "Jartet",
+	"Kennig", "Melin", "Merick", "Ranith", "Sorran", "Shorman", "Sydney", "Teffis", "Terlin", "Wellen"
+  ],
+  
+  "randomFemaleNames" : [
+    "Alissa", "Amicia", "Brena", "Brook", "Coley", "Crista", "Glinta", "Gwena", "Jenae", "Kerry", "Lobanna",
+	"Lucie", "Nella", "Rosie", "Morianna", "Shamma", "Shirriel", "Tetra", "Vadanna", "Zaria"
+  ]
 }

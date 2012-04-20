@@ -356,6 +356,7 @@
 	</theme>
 	
 	<theme name="partyformationwindow" ref="iconbuttongrey">
+		<param name="defaultpartyname"><string>The Adventurers</string></param>
 		<param name="smallGap"><int>5</int></param>
 		<param name="sectionGap"><int>20</int></param>
 		<param name="selectableWidth"><int>600</int></param>
@@ -369,7 +370,7 @@
 		</theme>
 		
 		<theme name="namelabel" ref="labelbigblack">
-			<param name="text"><string>Enter a Name</string></param>
+			<param name="text"><string>Party Name</string></param>
 		</theme>
 		
 		<theme name="namefield" ref="editfield">

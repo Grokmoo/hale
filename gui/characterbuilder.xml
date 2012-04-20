@@ -223,6 +223,9 @@
 			<param name="minWidth"><int>150</int></param>
 			<theme name="renderer" ref="labelbigred"/>
 		</theme>
+		<theme name="randomnamebutton" ref="button">
+			<param name="font"><font>nobile-bold</font></param>
+		</theme>
 		<theme name="genderlabel" ref="labelbigblack"/>
 		<theme name="genderselector" ref="charpropertyeditor"/>
 		

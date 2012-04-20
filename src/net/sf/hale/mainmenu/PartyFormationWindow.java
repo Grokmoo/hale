@@ -302,6 +302,8 @@ public class PartyFormationWindow extends Widget {
 		smallGap = themeInfo.getParameter("smallGap", 0);
 		sectionGap = themeInfo.getParameter("sectionGap", 0);
 		selectableWidth = themeInfo.getParameter("selectableWidth", 0);
+		
+		nameField.setText(themeInfo.getParameter("defaultpartyname", ""));
 	}
 	
 	@Override protected void layout() {
