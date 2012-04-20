@@ -1,5 +1,0 @@
-size Medium
-movementCost 1000
-unarmedWeapon unarmedMedium
-
-racialType Elemental

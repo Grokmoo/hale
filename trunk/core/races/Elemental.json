@@ -1,0 +1,9 @@
+{ "name" : "Elemental",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedMedium",
+  
+  "racialTypes" : [
+    "Elemental"
+  ]
+}

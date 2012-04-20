@@ -183,9 +183,14 @@ public class Ruleset {
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("races");
 		for (String resource : resources) {
-			String id = ResourceManager.getResourceID(resource, "races", ResourceType.Text);
+			String id = ResourceManager.getResourceID(resource, "races", ResourceType.JSON);
 			if (id == null) continue;
-			races.put(id, new Race(id));
+			
+			try {
+				races.put(id, new Race(id));
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error loading race " + id, e);
+			}
 		}
 	}
 	

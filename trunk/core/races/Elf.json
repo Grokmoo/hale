@@ -1,0 +1,44 @@
+{ "name" : "Elf",
+  "icon" : "icons/elf",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedMedium",
+  "playerSelectable" : true,
+  
+  "baseAttributes" : [ 9, 12, 9, 10, 10, 10 ],
+  
+  "racialTypes" : [
+    "Humanoid"
+  ],
+  
+  "icons" : {
+    "maleForeground" : "creatures/human-male-fg",
+	"maleBackground" : "creatures/human-male-bg",
+	"maleEars" : "subIcons/earsElfMale",
+	"femaleForeground" : "creatures/human-female-fg",
+	"femaleBackground" : "creatures/human-female-bg",
+	"femaleEars" : "subIcons/earsElfFemale",
+	"maleClothes" : "creatures/human-male-clothes",
+	"femaleClothes" : "creatures/human-female-clothes"
+  },
+  
+  "iconOffsets" : {
+    "Cloak" : [ 16, 15 ],
+	"Quiver" : [ 16, 15 ],
+	"Torso" : [ 16, 15 ],
+	"Gloves" : [ 16, 15 ],
+	"Head" : [ 16, 4 ],
+	"Ears" : [ 16, 4 ],
+	"Hair" : [ 16, 4 ],
+	"Beard" : [ 16, 5 ],
+	"Shield" : [ 22, 15 ],
+	"Boots" : [ 16, 26 ],
+	"MainHandWeapon" : [ 4, 10 ],
+	"OffHandWeapon" : [ 24, 11 ]
+  }
+  
+  "abilitySelectionsFromList" : {
+	"General" : [ 2, 5, 8, 11, 14, 17, 20, 23, 26, 29,
+	              32, 35, 38, 41, 44, 47, 50, 53, 56, 59 ]
+  }
+}

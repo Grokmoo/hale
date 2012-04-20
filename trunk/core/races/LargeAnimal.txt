@@ -1,5 +1,0 @@
-size Medium
-movementCost 800
-unarmedWeapon unarmedLargeThreatens
-
-racialType Animal

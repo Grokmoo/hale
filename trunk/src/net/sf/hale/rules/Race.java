@@ -22,6 +22,7 @@ package net.sf.hale.rules;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,12 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Item;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.util.FileKeyMap;
-import net.sf.hale.util.LineKeyList;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
 public class Race {
 	private final String id;
@@ -68,94 +71,126 @@ public class Race {
 	
 	private List<String> abilities;
 	
-	private int baseStr, baseDex, baseCon, baseInt, baseWis, baseCha;
+	private final int baseStr, baseDex, baseCon, baseInt, baseWis, baseCha;
 	
 	public Race(String id) {
-		FileKeyMap map = new FileKeyMap("races/" + id + ResourceType.Text.getExtension());
+		SimpleJSONParser parser = new SimpleJSONParser("races/" + id, ResourceType.JSON);
 		
 		this.id = id;
-		this.name = id;
+		this.name = parser.get("name", id);
+		this.defaultWeapon = Game.entityManager.getItem(parser.get("unarmedWeapon", null));
 		
-		this.baseStr = 10;
-		this.baseDex = 10;
-		this.baseCon = 10;
-		this.baseInt = 10;
-		this.baseWis = 10;
-		this.baseCha = 10;
+		parser.setWarnOnMissingKeys(false);
 		
-		abilitySelectionLists = new HashMap<Integer, List<String>>();
+		this.size = Size.valueOf(parser.get("size", "Medium"));
+		this.movementCost = parser.get("baseMovementCost", 1000);
+		this.descriptionFile = parser.get("descriptionFile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
+		this.icon = parser.get("icon", null);
+		this.playerSelectable = parser.get("playerSelectable", false);
+		
+		if (parser.containsKey("baseAttributes")) {
+			SimpleJSONArray attrArray = parser.getArray("baseAttributes");
+			
+			Iterator<SimpleJSONArrayEntry> iter = attrArray.iterator();
+			
+			this.baseStr = iter.next().getInt(10);
+			this.baseDex = iter.next().getInt(10);
+			this.baseCon = iter.next().getInt(10);
+			this.baseInt = iter.next().getInt(10);
+			this.baseWis = iter.next().getInt(10);
+			this.baseCha = iter.next().getInt(10);
+		} else {
+			this.baseStr = 10;
+			this.baseDex = 10;
+			this.baseCon = 10;
+			this.baseInt = 10;
+			this.baseWis = 10;
+			this.baseCha = 10;
+		}
 		
 		abilities = new ArrayList<String>();
+		if (parser.containsKey("abilities")) {
+			SimpleJSONArray array = parser.getArray("abilities");
+			for (SimpleJSONArrayEntry entry : array) {
+				abilities.add(entry.getString());
+			}
+		}
+		((ArrayList<String>)abilities).trimToSize();
+		
 		racialTypes = new ArrayList<RacialType>();
+		if (parser.containsKey("racialTypes")) {
+			SimpleJSONArray array = parser.getArray("racialTypes");
+			for (SimpleJSONArrayEntry entry : array) {
+				racialTypes.add(Game.ruleset.getRacialType(entry.getString()));
+			}
+		}
+		((ArrayList<RacialType>)racialTypes).trimToSize();
+		
+		if (parser.containsKey("icons")) {
+			SimpleJSONObject obj = parser.getObject("icons");
+			
+			this.maleBackgroundIcon = obj.get("maleBackground", null);
+			this.maleForegroundIcon = obj.get("maleForeground", null);
+			this.maleEarsIcon = obj.get("maleEars", null);
+			this.femaleBackgroundIcon = obj.get("femaleBackground", null);
+			this.femaleForegroundIcon = obj.get("femaleForeground", null);
+			this.femaleEarsIcon = obj.get("femaleEars", null);
+			this.maleClothesIcon = obj.get("maleClothes", null);
+			this.femaleClothesIcon = obj.get("femaleClothes", null);
+		} else {
+			this.maleBackgroundIcon = null;
+			this.maleForegroundIcon = null;
+			this.maleEarsIcon = null;
+			this.femaleBackgroundIcon = null;
+			this.femaleForegroundIcon = null;
+			this.femaleEarsIcon = null;
+			this.maleClothesIcon = null;
+			this.femaleClothesIcon = null;
+		}
+		
 		iconOffsets = new HashMap<SubIcon.Type, Point>();
-		
-		this.descriptionFile = map.getValue("descriptionfile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
-		
-		String sizeString = map.getValue("size", null);
-		this.size = sizeString == null ? Size.Medium : Size.valueOf(sizeString);
-		this.icon = map.getValue("icon", null);
-		
-		movementCost = map.getValue("movementcost", 1000);
-
-		String defaultWeaponString = map.getValue("unarmedweapon", null);
-		this.defaultWeapon = Game.entityManager.getItem(defaultWeaponString);
-		
-		this.playerSelectable = map.getValue("playerselectable", false);
-		
-		this.maleBackgroundIcon = map.getValue("malebackgroundicon", null);
-		this.maleForegroundIcon = map.getValue("maleforegroundicon", null);
-		this.maleEarsIcon = map.getValue("maleearsicon", null);
-		
-		this.femaleBackgroundIcon = map.getValue("femalebackgroundicon", null);
-		this.femaleForegroundIcon = map.getValue("femaleforegroundicon", null);
-		this.femaleEarsIcon = map.getValue("femaleearsicon", null);
-		
-		this.maleClothesIcon = map.getValue("maleclothesicon", null);
-		this.femaleClothesIcon = map.getValue("femaleclothesicon", null);
-		
-		for (LineKeyList line : map.get("racialtype")) {
-			racialTypes.add(Game.ruleset.getRacialType(line.next()));
-		}
-		
-		for (LineKeyList line : map.get("addability")) {
-			abilities.add(line.next());
-		}
-		
-		for (LineKeyList line : map.get("iconoffset")) {
-			SubIcon.Type type = SubIcon.Type.valueOf(line.next());
-			iconOffsets.put(type, new Point(line.nextInt(), line.nextInt()));
-		}
-		
-		for (LineKeyList line : map.get("level")) {
-			int level = line.nextInt();
+		if (parser.containsKey("iconOffsets")) {
+			SimpleJSONObject obj = parser.getObject("iconOffsets");
 			
-			String type = line.next();
-			
-			List<String> lists = abilitySelectionLists.get(level);
-			if (lists == null) {
-				lists = new ArrayList<String>(1);
-				abilitySelectionLists.put(level, lists);
-			}
-			
-			if (type.equals("selectAbilityFromList")) {
-				String abilityListID = line.next();
-				lists.add(abilityListID);
-			} else {
-				Logger.appendToErrorLog("Unrecognized type " + type + " while loading race " + id);
+			for (String key : obj.keySet()) {
+				SubIcon.Type type = SubIcon.Type.valueOf(key);
+				
+				SimpleJSONArray array = obj.getArray(key);
+				Iterator<SimpleJSONArrayEntry> iter = array.iterator();
+				
+				int x = iter.next().getInt(0);
+				int y = iter.next().getInt(0);
+				
+				iconOffsets.put(type, new Point(x, y));
 			}
 		}
 		
-		LineKeyList line = map.getLast("baseattributes");
-		if (line != null) {
-			baseStr = line.nextInt();
-			baseDex = line.nextInt();
-			baseCon = line.nextInt();
-			baseInt = line.nextInt();
-			baseWis = line.nextInt();
-			baseCha = line.nextInt();
+		abilitySelectionLists = new HashMap<Integer, List<String>>();
+		if (parser.containsKey("abilitySelectionsFromList")) {
+			SimpleJSONObject obj = parser.getObject("abilitySelectionsFromList");
+			
+			for (String listID : obj.keySet()) {
+				SimpleJSONArray array = obj.getArray(listID);
+				
+				for (SimpleJSONArrayEntry entry : array) {
+					int level = entry.getInt(0);
+					
+					addAbilitySelectionListAtLevel(listID, level);
+				}
+			}
 		}
 		
-		map.checkUnusedKeys();
+		parser.warnOnUnusedKeys();
+	}
+	
+	private void addAbilitySelectionListAtLevel(String listID, int level) {
+		List<String> listsAtLevel = abilitySelectionLists.get(level);
+		if (listsAtLevel == null) {
+			listsAtLevel = new ArrayList<String>(1);
+			abilitySelectionLists.put(level, listsAtLevel);
+		}
+		
+		listsAtLevel.add(listID);
 	}
 	
 	public Point getIconOffset(SubIcon.Type type) {

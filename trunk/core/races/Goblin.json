@@ -1,0 +1,15 @@
+{ "name" : "Goblin",
+  "size" : "Medium",
+  "baseMovementCost" : 1200,
+  "unarmedWeapon" : "unarmedMedium",
+  
+  "racialTypes" : [
+    "Humanoid", "Beast"
+  ],
+  
+  "iconOffsets" : {
+    "Shield" : [ 21, 16 ],
+	"OffHandWeapon" : [ 25, 12 ],
+	"MainHandWeapon" : [ 1, 13 ]
+  }
+}

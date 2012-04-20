@@ -1,0 +1,9 @@
+{ "name" : "Zombie",
+  "size" : "Medium",
+  "baseMovementCost" : 2000,
+  "unarmedWeapon" : "unarmedMediumThreatens",
+  
+  "racialTypes" : [
+    "Humanoid", "Undead"
+  ]
+}

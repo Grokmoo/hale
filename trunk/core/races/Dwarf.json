@@ -1,0 +1,42 @@
+{ "name" : "Dwarf",
+  "icon" : "icons/dwarf",
+  "size" : "Medium",
+  "baseMovementCost" : 1250,
+  "unarmedWeapon" : "unarmedMedium",
+  "playerSelectable" : true,
+  
+  "baseAttributes" : [ 10, 9, 12, 10, 10, 9 ],
+  
+  "racialTypes" : [
+    "Humanoid"
+  ],
+
+  "icons" : {
+    "maleForeground" : "creatures/dwarf-fg",
+	"maleBackground" : "creatures/dwarf-bg",
+	"femaleForeground" : "creatures/dwarf-fg",
+	"femaleBackground" : "creatures/dwarf-bg",
+	"maleClothes" : "creatures/dwarf-clothes",
+	"femaleClothes" : "creatures/dwarf-clothes"
+  },
+  
+  "iconOffsets" : {
+    "Cloak" : [ 18, 17 ],
+	"Quiver" : [ 14, 24 ],
+	"Torso" : [ 16, 21 ],
+	"Gloves" : [ 15, 21 ],
+	"Head" : [ 17, 14 ],
+	"Ears" : [ 17, 14 ],
+	"Hair" : [ 17, 14 ],
+	"Beard" : [ 17, 14 ],
+	"Shield" : [ 22, 21 ],
+	"Boots" : [ 16, 26 ],
+	"MainHandWeapon" : [ 4, 17 ],
+	"OffHandWeapon" : [ 25, 17 ]
+  }
+  
+  "abilitySelectionsFromList" : {
+	"General" : [ 2, 5, 8, 11, 14, 17, 20, 23, 26, 29,
+	              32, 35, 38, 41, 44, 47, 50, 53, 56, 59 ]
+  }
+}
