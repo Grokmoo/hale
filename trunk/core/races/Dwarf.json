@@ -38,5 +38,15 @@
   "abilitySelectionsFromList" : {
 	"General" : [ 2, 5, 8, 11, 14, 17, 20, 23, 26, 29,
 	              32, 35, 38, 41, 44, 47, 50, 53, 56, 59 ]
-  }
+  },
+  
+  "randomMaleNames" : [
+    "Angolf", "Beardie", "Connink", "Daalor", "Hraftink", "Haleon", "Hrothil", "Killus", "Morgour", "Muili", "Oilti", "Orgrin", "Osrin",
+	"Thior", "Thaid", "Thorvyn", "Thraunos", "Uerih", "Wendir", "Ysonir"
+  ],
+  
+  "randomFemaleNames" : [
+    "Alynnee", "Armissa", "Blatia", "Britta", "Codaha", "Garwai", "Gregina", "Imaryle", "Lorcy", "Nokkvi", "Norean", "Onnda", "Pesina",
+	"Quodda", "Rathie", "Turella", "Shorta", "Tytta", "Winie", "Zabethe"
+  ]
 }

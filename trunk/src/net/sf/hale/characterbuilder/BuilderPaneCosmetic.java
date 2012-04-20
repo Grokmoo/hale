@@ -80,6 +80,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	
 	private Label nameLabel;
 	private EditField nameField;
+	private Button randomName;
 	
 	private Label genderLabel;
 	private List<GenderSelector> genderSelectors;
@@ -175,6 +176,20 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		});
 		nameField.setTheme("nameeditfield");
 		add(nameField);
+		
+		randomName = new Button("Random");
+		randomName.setTheme("randomnamebutton");
+		randomName.addCallback(new Runnable() {
+			@Override public void run() {
+				// setting the name field text will fire the nameField callback
+				if (workingCopy.getGender() == Ruleset.Gender.Male) {
+					nameField.setText(workingCopy.getRace().getRandomMaleName());
+				} else {
+					nameField.setText(workingCopy.getRace().getRandomFemaleName());
+				}
+			}
+		});
+		add(randomName);
 		
 		genderLabel = new Label("Gender");
 		genderLabel.setTheme("genderlabel");
@@ -365,6 +380,9 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		nameField.setSize(nameField.getPreferredWidth(), nameField.getPreferredHeight());
 		nameField.setPosition(contentColumnX, getInnerY());
 		int nameCenterY = nameField.getY() + nameField.getHeight() / 2;
+		
+		randomName.setSize(randomName.getPreferredWidth(), randomName.getPreferredHeight());
+		randomName.setPosition(nameField.getRight() + smallGap, nameCenterY - randomName.getHeight() / 2);
 		
 		int curY = nameField.getBottom() + gap;
 		

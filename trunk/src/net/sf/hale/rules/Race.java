@@ -69,7 +69,9 @@ public class Race {
 	
 	private final Map<SubIcon.Type, Point> iconOffsets;
 	
-	private List<String> abilities;
+	private final List<String> abilities;
+	
+	private final List<String> randomMaleNames, randomFemaleNames;
 	
 	private final int baseStr, baseDex, baseCon, baseInt, baseWis, baseCha;
 	
@@ -180,6 +182,24 @@ public class Race {
 			}
 		}
 		
+		randomMaleNames = new ArrayList<String>();
+		if (parser.containsKey("randomMaleNames")) {
+			SimpleJSONArray array = parser.getArray("randomMaleNames");
+			for (SimpleJSONArrayEntry entry : array) {
+				randomMaleNames.add(entry.getString());
+			}
+		}
+		((ArrayList<String>)randomMaleNames).trimToSize();
+		
+		randomFemaleNames = new ArrayList<String>();
+		if (parser.containsKey("randomFemaleNames")) {
+			SimpleJSONArray array = parser.getArray("randomFemaleNames");
+			for (SimpleJSONArrayEntry entry : array) {
+				randomFemaleNames.add(entry.getString());
+			}
+		}
+		((ArrayList<String>)randomFemaleNames).trimToSize();
+		
 		parser.warnOnUnusedKeys();
 	}
 	
@@ -199,6 +219,25 @@ public class Race {
 		}
 		
 		return new Point(iconOffsets.get(type));
+	}
+	
+	private String getRandomFromList(List<String> names) {
+		switch (names.size()) {
+		case 0:
+			return "";
+		case 1:
+			return names.get(0);
+		default:
+			return names.get(Game.dice.rand(0, names.size() - 1));
+		}
+	}
+	
+	public String getRandomMaleName() {
+		return getRandomFromList(randomMaleNames);
+	}
+	
+	public String getRandomFemaleName() {
+		return getRandomFromList(randomFemaleNames);
 	}
 	
 	public String getMaleClothesIcon() { return maleClothesIcon; }
