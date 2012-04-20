@@ -17,5 +17,5 @@ rangeType Long
 aiPower 30
 aiPriority 3
 
-addPrereq Ability CripplingShot
+addPrereq Ability RapidShot
 addPrereq Stat LevelAttackBonus 30

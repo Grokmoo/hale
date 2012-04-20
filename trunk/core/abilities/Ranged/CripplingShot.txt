@@ -19,3 +19,5 @@ aiPriority 8
 
 addPrereq Ability RapidShot
 addPrereq Stat LevelAttackBonus 10
+
+upgrade DevastatingShot "With Devastating Shot, your Crippling Shot is now made with a +40 Attack Bonus and a +160 Damage Bonus."

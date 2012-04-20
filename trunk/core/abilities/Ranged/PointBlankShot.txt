@@ -7,6 +7,4 @@ icon "icons/pointBlankShot"
 
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('AoOFromRangedImmunity'); parent.applyEffect(effect); }"
 
-addPrereq Ability Longshot
-addPrereq Stat LevelAttackBonus 10
-
+addPrereq Stat LevelAttackBonus 5
