@@ -1,4 +1,4 @@
 name "Ranger"
 
 subList "RangerAbilities" 0.5 0.5
-subList Ranged 6.0 0.5
+subList Ranged 0.5 5.0
