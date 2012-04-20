@@ -334,6 +334,17 @@ public class CombatRunner {
 			long delay = 0l;
 			
 			if (attack.isRanged()) {
+				if (!attacker.isPlayerSelectable()) {
+					// for NPCs, scroll to half way between the attacker and defender for
+					// ranged attacks
+					Point aScreen = attacker.getScreenPosition();
+					Point dScreen = defender.getScreenPosition();
+					int avgX = (aScreen.x + dScreen.x) / 2;
+					int avgY = (aScreen.y + dScreen.y) / 2;
+					
+					Game.areaViewer.addDelayedScrollToScreenPoint(new Point(avgX, avgY));
+				}
+				
 				String icon = null;
 				Color color = null;
 				

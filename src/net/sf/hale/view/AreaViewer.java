@@ -305,17 +305,14 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	}
 	
 	/**
-	 * Adds a delayed scroll to the specified creature using the DelayedScrollTime.
-	 * After the scroll completes, the view will be centered on the specified creature
-	 * in the same way as {@link #scrollToCreature(Entity)}
-	 * @param creature the creature to scroll to
+	 * Adds a delayed scroll to the specified point using the DelayedScrollTime.
+	 * After the scroll completes, the view will be centered on the specified point
+	 * @param pScreen the point to scroll to
 	 */
 	
-	public void addDelayedScrollToCreature(Entity creature) {
+	public void addDelayedScrollToScreenPoint(Point pScreen) {
 		this.delayedScroll = new DelayedScroll();
-		
-		Point pScreen = creature.getScreenPosition();
-		
+
 		int destx = pScreen.x - this.getInnerWidth() / 2;
 		int desty = pScreen.y - this.getInnerHeight() / 2;
 		
@@ -332,6 +329,17 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		
 		delayedScroll.startTime = System.currentTimeMillis();
 		delayedScroll.endTime = delayedScroll.startTime + totalTime;
+	}
+	
+	/**
+	 * Adds a delayed scroll to the specified creature using the DelayedScrollTime.
+	 * After the scroll completes, the view will be centered on the specified creature
+	 * in the same way as {@link #scrollToCreature(Entity)}
+	 * @param creature the creature to scroll to
+	 */
+	
+	public void addDelayedScrollToCreature(Entity creature) {
+		addDelayedScrollToScreenPoint(creature.getScreenPosition());
 	}
 	
 	/**
