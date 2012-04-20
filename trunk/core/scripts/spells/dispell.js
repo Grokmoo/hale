@@ -1,5 +1,17 @@
+function isTargetValid(game, target, slot) {
+	var effects = target.getEffects().getDispellableEffects();
+	return effects.size() != 0;
+}
+
 function onActivate(game, slot) {
 	var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
+	
+	for (var i = 0; i < creatures.size(); i++) {
+		if ( !isTargetValid(game, creatures.get(i), slot) ) {
+			creatures.remove(i);
+			i--;
+		}
+	}
 	
 	var targeter = game.createListTargeter(slot);
 	targeter.addAllowedCreatures(creatures);

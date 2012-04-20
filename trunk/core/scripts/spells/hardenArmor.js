@@ -1,4 +1,4 @@
-function isTargetValid(game, target) {
+function isTargetValid(game, target, slot) {
 	var armor = target.getInventory().getEquippedArmor();
 	
 	if (armor == null || !armor.isArmor()) {
@@ -55,7 +55,7 @@ function onTargetSelect(game, targeter, type) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 	
-	if (!isTargetValid(game, target)) return;
+	if (!isTargetValid(game, target, targeter.getSlot())) return;
 	
 	var duration = parseInt(3 + casterLevel / 4);
 	

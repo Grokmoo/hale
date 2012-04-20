@@ -6,40 +6,7 @@ function runTurn(game, parent) {
 		tryRoar(game, parent);
 	}
 	
-    var preferredDistance = 1;
-    var weapon = parent.getInventory().getEquippedMainHand();
-        
-    if (weapon != null) {
-        if (weapon.isMeleeWeapon()) {
-            if (weapon.threatens()) preferredDistance = weapon.getThreatenMax();
-            else preferredDistance = 1;
-        } else {
-            preferredDistance = weapon.getMaximumRange() / 10;
-        }
-    }
-
-    for (;;) {
-        var closestHostile = game.ai.findNearestCreatureToAttack(parent, "Hostile");
-        if (closestHostile == null) break;
-        
-        var curDistance = game.distance(parent, closestHostile) / 5;
-        
-        var distance = preferredDistance;
-        
-        if (preferredDistance >= curDistance) distance = curDistance / 2;
-        
-        if (!parent.getTimer().canAttack()) {
-            break;
-        } else if (!game.creatureCanAttackTarget(parent, closestHostile)) {
-            if (!game.ai.moveTowards(parent, closestHostile.getPosition(), distance)) {
-                break;
-            }
-        } else if (parent.getInventory().hasAmmoEquippedForWeapon()) {
-            game.standardAttack(parent, closestHostile);
-        } else {
-            break;
-        }
-    }
+    game.runExternalScript("ai/aiStandard", "runTurn", parent);
 	
 	parent.put("turnNum", (turnNum + 1));
 }

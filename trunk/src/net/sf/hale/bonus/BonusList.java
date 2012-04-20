@@ -50,6 +50,10 @@ public class BonusList implements Iterable<Bonus>, Saveable {
 		this.bonuses = new ArrayList<Bonus>(other.bonuses);
 	}
 	
+	public void remove(Bonus bonus) {
+		this.bonuses.remove(bonus);
+	}
+	
 	public void addAll(BonusList other) {
 		for (Bonus bonus : other.bonuses) {
 			this.bonuses.add(bonus);

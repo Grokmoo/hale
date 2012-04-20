@@ -1,5 +1,30 @@
+function isTargetValid(game, target, slot) {
+	var parent = slot.getParent();
+	
+	var types = ["Str", "Dex", "Con", "Int", "Wis", "Cha" ];
+	
+	if (parent.getAbilities().has("RestoreMorale")) {
+		types = types.concat(["Attack", "AttackCost", "ArmorClass", "ArmorPenalty",
+			"Skill", "MentalResistance", "PhysicalResistance",
+			"ReflexResistance", "SpellFailure"]);
+	}
+	
+	if (parent.getAbilities().has("RemoveParalysis")) {
+		types = types.concat(["Immobilized", "Helpless"]);
+	}
+
+	return target.getEffects().hasPenaltiesOfTypes(types);
+}
+
 function onActivate(game, slot) {
 	var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
+	
+	for (var i = 0; i < creatures.size(); i++) {
+		if ( !isTargetValid(game, creatures.get(i), slot) ) {
+			creatures.remove(i);
+			i--;
+		}
+	}
 	
 	var targeter = game.createListTargeter(slot);
 	targeter.addAllowedCreatures(creatures);
@@ -20,31 +45,21 @@ function onTargetSelect(game, targeter) {
 	
 	var points = parseInt(2 + casterLevel / 2);
 	
-	points = target.stats().reducePenaltiesOfTypeByAmount("Str", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("Dex", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("Con", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("Int", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("Wis", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("Cha", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseStr", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseDex", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseCon", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseInt", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseWis", points);
-	points = target.stats().reducePenaltiesOfTypeByAmount("BaseCha", points);
+	var types = [ "Str", "Dex", "Con", "Int", "Wis", "Cha" ];
+	
+	for (var i = 0; i < types.length; i++) {
+		points = target.stats().reducePenaltiesOfTypeByAmount(types[i], points);
+	}
 	
 	if (targeter.getSlot().getParent().getAbilities().has("RestoreMorale")) {
 		var reductionAmount = parseInt(5 + casterLevel / 2);
 		
-		target.stats().reducePenaltiesOfTypeByAmount("Attack", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("AttackCost", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("ArmorClass", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("ArmorPenalty", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("Skill", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("MentalResistance", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("PhysicalResistance", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("ReflexResistance", reductionAmount);
-		target.stats().reducePenaltiesOfTypeByAmount("SpellFailure", reductionAmount);
+		var types = [ "Attack", "AttackCost", "ArmorClass", "ArmorPenalty", "Skill",
+			"MentalResistance", "PhysicalResistance", "ReflexResistance", "SpellFailure" ];
+		
+		for (var i = 0; i < types.length; i++) {
+			target.stats().reducePenaltiesOfTypeByAmount(types[i], reductionAmount);
+		}
 	}
 	
 	if (targeter.getSlot().getParent().getAbilities().has("RemoveParalysis")) {

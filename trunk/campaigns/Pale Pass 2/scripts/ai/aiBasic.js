@@ -37,7 +37,20 @@ function runTurn(game, parent) {
             break;
         } else if (!game.creatureCanAttackTarget(parent, closestHostile)) {
 			// if we cannot attack, then attempt to move towards the target
-            if (!game.ai.moveTowards(parent, closestHostile.getPosition(), distance)) {
+			var initialDistance = distance;
+			
+			// try to move next to the target.  if that fails, try to move one square further away
+			// from the target, and so on
+			while (!game.ai.moveTowards(parent, closestHostile.getPosition(), distance)) {
+				distance++;
+				
+				if (distance >= curDistance)
+					break;
+			}
+			
+			// if we were unable to move the initial distance, then we cannot attack
+			// and should end our turn
+            if (distance > initialDistance) {
                 break;
             }
         } else if (parent.getInventory().hasAmmoEquippedForWeapon()) {
