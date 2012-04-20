@@ -1,7 +1,7 @@
 name "Expert Dual Wielding"
 type "Dual Wielding"
 activateable false
-description "You gain an additional +2 damage bonus per point of Strength above 10 with both weapons while dual wielding, partially offsetting the dual wielding damage penalties."
+description "You gain an additional +2 damage bonus per point of Strength above 10 with both weapons while dual wielding, mostly offsetting the dual wielding damage penalties."
 
 addPrereq Ability DualWielding
 addPrereq Stat LevelAttackBonus 25

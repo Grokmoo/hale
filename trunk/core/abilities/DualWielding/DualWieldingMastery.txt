@@ -1,7 +1,7 @@
 name "Dual Wielding Mastery"
 type "Dual Wielding"
 activateable false
-description "You gain an additional +15 bonus to attack and a +1 damage bonus per point of Strength above 10 while Dual Wielding.  With this ability, the penalties for dual wielding are completely offset for the main hand and nearly offset for the off hand."
+description "You gain an additional +15 bonus to attack and a +1 damage bonus per point of Strength above 10 while Dual Wielding.  With this ability, the penalties for dual wielding are completely offset for the main hand and almost completely offset for the off hand."
 
 icon "icons/dualWieldMastery"
 
