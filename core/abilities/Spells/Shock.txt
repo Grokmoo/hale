@@ -26,4 +26,4 @@ addPrereq Stat CasterLevel 1
 
 upgrade LightningBolt "With Lightning Bolt, Shock now does damage to all creatures within a 10 foot radius of the caster."
 
-upgrade DisablingLighting "With Disabling Lightning, Shock now temporarily cripples opponents for 3 rounds.  Affected targets suffer a 10 plus one per caster level penalty to Spell Failure and Attack.
+upgrade DisablingLightning "With Disabling Lightning, Shock now temporarily cripples opponents for 3 rounds.  Affected targets suffer a 10 plus one per caster level penalty to Spell Failure and Attack.
