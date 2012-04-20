@@ -589,8 +589,8 @@ public class StatManager {
 			addToStat(Stat.OffHandDamageBonus, (3 + get(Bonus.Type.DualWieldStrDamage)) * (getStr() - 10));
 			addToStat(Stat.MainHandDamageBonus, (5 + get(Bonus.Type.DualWieldStrDamage)) * (getStr() - 10));
 			
-			addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 25 + offWeaponLightBonus);
-			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 35 + offWeaponLightBonus);
+			addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 15 + offWeaponLightBonus);
+			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.DualWieldAttack) - 25 + offWeaponLightBonus);
 		}
 		
 		addToStat(Stat.AttackCost, Math.max(mainWeaponSpeed, offWeaponSpeed));

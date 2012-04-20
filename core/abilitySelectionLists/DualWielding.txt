@@ -2,15 +2,21 @@ name "Dual Wielding"
 
 add "DualWielding"          1.0 0.0
 add "DualWieldingDefense"   0.0 1.0
-add "AdvancedDualWielding"  1.0 1.0
 add "ExpertDualWielding"    1.0 2.0
 add "DualStrike"            2.0 1.0
-
-add DualWieldingMastery     0.5 3.0
+add "Flurry"                2.5 2.0
+add "DualCritical"          1.5 3.0
+add "DualWieldingMastery"   0.5 3.0
 
 connect 1.0 0.0 ThreeDown
 connect 1.0 1.0 OneDown
+connect 1.0 1.0 Through
 
 connect 0.0 2.0 Through
 connect 0.0 1.0 OneDown
 connect 0.5 3.0 TwoUp
+
+connect 2.0 1.0 TwoDown
+
+connect 1.5 2.0 OneDown
+connect 1.5 2.0 Through

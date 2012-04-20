@@ -15,7 +15,7 @@ image improvedBackstab       6  0
 image rangedBackstab         7  0
 image dualWielding           8  0
 image dualWieldingDefense    9  0
-image advancedDualWielding  10  0
+image flurry                10  0
 image expertDualWielding    11  0
 image quickDraw             12  0
 image fastActions           13  0
@@ -41,6 +41,7 @@ image cripplingShot           13  1
 image piercingShot            14  1
 image loadBearer              15  1
 image lightningMage           16  1
+image dualCritical            17  1
 
 image proficiencySmallSwords   0   2
 image proficiencyLargeSwords   1   2

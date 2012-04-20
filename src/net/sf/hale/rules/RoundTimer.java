@@ -55,7 +55,7 @@ public class RoundTimer {
 	public void reset() {
 		active = true;
 		
-		maxAP = Game.ruleset.getValue("BaseActionPoints") + parent.stats().get(Bonus.Type.ActionPoint) * 100;
+		maxAP = Math.max(0, Game.ruleset.getValue("BaseActionPoints") + parent.stats().get(Bonus.Type.ActionPoint) * 100);
 		
 		AP = maxAP;
 	}

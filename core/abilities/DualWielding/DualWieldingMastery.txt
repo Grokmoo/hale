@@ -8,6 +8,6 @@ icon "icons/dualWieldMastery"
 addPrereq Ability DualWieldingDefense
 addPrereq Ability ExpertDualWielding
 
-addPrereq Stat LevelAttackBonus 60
+addPrereq Stat LevelAttackBonus 50
 
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('DualWieldAttack', 'Stackable', 15); effect.getBonuses().addBonus('DualWieldStrDamage', 'Stackable', 1); parent.applyEffect(effect); }"

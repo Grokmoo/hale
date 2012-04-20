@@ -1,0 +1,20 @@
+name "Flurry"
+type "Offensive"
+description "You launch into an all out attack against a selected enemy, rapidly performing three dual weapon attacks in a row.  If your enemy survives the attack, they are so preoccuppied with their defense that they suffer an Action Point Penalty of -80 for the next round.  However, you must lower your guard for this attack, suffering a -20 Armor Class Penalty for one round.  This ability can only be used while dual wielding."
+activateable true
+fixed true
+cooldown 6
+
+icon "icons/flurry"
+scriptFile "abilities/flurry"
+
+actionPointCostDescription "Same as 3 attacks"
+
+actionType Damage
+groupType Single
+rangeType Touch
+aiPower 30
+aiPriority 5
+
+addPrereq Ability DualStrike
+addPrereq Stat LevelAttackBonus 30

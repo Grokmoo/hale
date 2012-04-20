@@ -40,10 +40,22 @@ function performAttack(game, targeter) {
 	effect.getBonuses().addBonus('Damage', 'Stackable', 40);
 	parent.applyEffect(effect);
 
+	if (parent.getAbilities().has("DualCritical")) {
+		var weapon = parent.getInventory().getMainWeapon();
+		var weaponEffect = parent.createEffect();
+		weaponEffect.getBonuses().addBonus('WeaponCriticalChance', 90);
+		weaponEffect.getBonuses().addBonus('WeaponCriticalMultiplier', 1);
+		weapon.applyEffect(weaponEffect);
+	}
+	
 	parent.getTimer().performAttack();
 	
 	// animate the attack
 	game.singleAttackAnimate(parent, target);
 
 	parent.removeEffect(effect);
+	
+	if (parent.getAbilities().has("DualCritical")) {
+		weapon.removeEffect(weaponEffect);
+	}
 }

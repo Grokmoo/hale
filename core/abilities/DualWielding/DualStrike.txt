@@ -14,7 +14,10 @@ actionPointCostDescription "Same as an attack"
 actionType Damage
 groupType Single
 rangeType Touch
-aiPower 10
+aiPower 20
+aiPriority 5
 
 addPrereq Ability DualWielding
 addPrereq Stat LevelAttackBonus 20
+
+upgrade DualCritical "With Dual Critical, your Dual Strike is made with a +90 bonus to Critical Chance, and a +1 bonus to Critical Multiplier."
