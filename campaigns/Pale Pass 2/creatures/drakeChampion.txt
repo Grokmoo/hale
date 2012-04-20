@@ -15,3 +15,7 @@ level 1 addAbility "NaturalArmor20"
 currencyReward 80 140
 equip "unarmedClaw" Fine
 equip "armor_mail_base" Good
+addloot "LootCraft" 20 PER_LIST
+addloot "LootGems" 5 PER_LIST
+addloot "LootLevel10Fine" 10 PER_LIST
+addloot "LootPotionsFine" 10 PER_LIST

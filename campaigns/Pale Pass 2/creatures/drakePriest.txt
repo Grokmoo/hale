@@ -22,3 +22,7 @@ level 1 addAbility "Regeneration"
 
 currencyReward 80 140
 equip "armor_mail_base" Good
+addloot "LootCraft" 20 PER_LIST
+addloot "LootGems" 5 PER_LIST
+addloot "LootLevel10Fine" 5 PER_LIST
+addloot "LootPotionsFine" 5 PER_LIST

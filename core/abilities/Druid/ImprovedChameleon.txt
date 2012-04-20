@@ -1,6 +1,6 @@
 name "Improved Chameleon"
 type "Druid Abilities"
-description "Your Chameleon ability is improved.  Now, all targets gain a 35 + 2 per caster level bonus to personal concealment."
+description "Your Chameleon ability is improved.  Now, all targets gain a 15 + 2 per caster level bonus to personal concealment."
 activateable false
 
 icon "icons/improvedChameleon"
