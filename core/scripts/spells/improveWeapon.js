@@ -1,4 +1,4 @@
-function isTargetValid(game, target) {
+function isTargetValid(game, target, slot) {
 	var weapon = target.getInventory().getEquippedMainHand();
 	
 	if (weapon == null || !weapon.isMeleeWeapon())
@@ -11,7 +11,7 @@ function onActivate(game, slot) {
 	var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
 	
 	for (var i = 0; i < creatures.size(); i++) {
-		if ( !isTargetValid(game, creatures.get(i)) ) {
+		if ( !isTargetValid(game, creatures.get(i), slot) ) {
 			creatures.remove(i);
 			i--;
 		}

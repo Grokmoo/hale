@@ -47,11 +47,9 @@ import net.sf.hale.util.Point;
 public class AIScriptInterface {
 	
 	/**
-	 * Returns the path length (number of tiles the parent creature must move) in order
-	 * to reach the specified position from its current position.
-	 * @param parent the parent used as the starting point for the movement path
-	 * @param position the destination position for the movement path
-	 * @return the path length of the computed path or Integer.MAX_VALUE if no path is found
+	 * Returns a path for the parent to the specified position, or null if no path
+	 * exists
+	 * @return the path to the specified position
 	 */
 	
 	public static List<Point> getMovementPath(Creature parent, Point position) {

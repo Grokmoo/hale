@@ -81,7 +81,11 @@ public class StatManager {
 		
 		int amountLeft = amount;
 		
+		List<Bonus> bonusesToRemoveFromEffect = new ArrayList<Bonus>();
+		
 		for (Effect effect : parent.getEffects().getEffectsWithBonusesOfType(type)) {
+			bonusesToRemoveFromEffect.clear();
+			
 			for (Bonus bonus : effect.getBonuses()) {
 				if (bonus.getType() == type) {
 					int bonusValue = -bonus.getValue();
@@ -91,11 +95,13 @@ public class StatManager {
 						amountLeft = 0;
 						
 						effect.getBonuses().add(newBonus);
+						bonusesToRemoveFromEffect.add(bonus);
 						
 						bonusesToRemove.add(bonus);
 						bonusesToAdd.add(newBonus);
 					} else {
 						bonusesToRemove.add(bonus);
+						bonusesToRemoveFromEffect.add(bonus);
 						
 						amountLeft -= bonusValue;
 					}
@@ -103,6 +109,9 @@ public class StatManager {
 				
 				if (amountLeft == 0) break;
 			}
+			
+			for (Bonus bonus : bonusesToRemoveFromEffect)
+				effect.getBonuses().remove(bonus);
 			
 			if (amountLeft == 0) break;
 		}

@@ -505,14 +505,14 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 		// now check all bonuses for the specified types
 		for (Effect effect : effectsNoActiveScript) {
 			for (Bonus bonus : effect.getBonuses()) {
-				if (bonusTypes.contains(bonus.getType()))
+				if (bonusTypes.contains(bonus.getType()) && bonus.getValue() < 0)
 					return true;
 			}
 		}
 		
 		for (Effect effect : effectsWithActiveScript) {
 			for (Bonus bonus : effect.getBonuses()) {
-				if (bonusTypes.contains(bonus.getType()))
+				if (bonusTypes.contains(bonus.getType()) && bonus.getValue() < 0)
 					return true;
 			}
 		}

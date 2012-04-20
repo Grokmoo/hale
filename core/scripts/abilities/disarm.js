@@ -1,4 +1,4 @@
-function isTargetValid(game, target) {
+function isTargetValid(game, target, slot) {
 	var weapon = target.getInventory().getEquippedMainHand();
 	
 	if (weapon == null || weapon.getBaseWeapon().getName().equals("Unarmed"))

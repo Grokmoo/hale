@@ -241,7 +241,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		
 		switch (evt.getType()) {
 		case MOUSE_DRAGGED:
-			if (dragAndDropHandler == null) {
+			if (dragAndDropHandler == null && item != null) {
 				dragAndDropHandler = new DragAndDropHandler(this);
 			}
 			break;
