@@ -32,15 +32,24 @@ function performAttack(game, targeter) {
 	
 	// apply a temporary effect with the bonuses
 	var effect = parent.createEffect();
-	effect.getBonuses().addBonus('Attack', 'Stackable', 20);
+	
+	if (parent.getAbilities().has("DevastatingShot")) {
+		effect.getBonuses().addBonus('Attack', 'Stackable', 40);
+		effect.getBonuses().addBonus('Damage', 'Stackable', 160);
+	} else {
+		effect.getBonuses().addBonus('Attack', 'Stackable', 20);
+	}
+	
 	parent.applyEffect(effect);
 
+	// perform the attack
 	if (game.standardAttack(parent, target)) {
-		var checkDC = 50 + 2 * (parent.stats().getDex() - 1) + parent.stats().getLevelAttackBonus() / 2;
+		var checkDC = 50 + 2 * (parent.stats().getDex() - 10) + parent.stats().getLevelAttackBonus() / 2;
 		
+		// check the crippling shot effect
 		if (!target.reflexCheck(checkDC)) {
 			var effect2 = parent.createEffect();
-			effect2.setDuration(4);
+			effect2.setDuration(3);
 			effect2.setTitle(targeter.getSlot().getAbility().getName());
 			effect2.getBonuses().add('Immobilized');
 			
@@ -55,7 +64,7 @@ function performAttack(game, targeter) {
 			target.applyEffect(effect2);
 		} else {
 			var effect2 = parent.createEffect();
-			effect2.setDuration(4);
+			effect2.setDuration(3);
 			effect2.setTitle(targeter.getSlot().getAbility().getName());
 			effect2.getBonuses().addPenalty('Movement', -50);
 			target.applyEffect(effect2);

@@ -1,19 +1,25 @@
 name "Ranged"
 
-add "RapidShot"       0.5 0.0
-add "MultiShot"       1.0 1.0
-add "CripplingShot"   0.0 1.0
-add "PiercingShot"    0.0 2.0
-add "DevastatingShot" 0.5 3.0
+add RapidShot        1.0 0.0
+add PiercingShot     0.0 2.0
+add CripplingShot    1.0 1.0
+add DevastatingShot  1.0 3.0
+add MultiShot        2.0 1.0
+add Scattershot      2.0 3.0
 
-add "Longshot"       2.5 0.0
-add "PreciseShot"    3.0 1.0
-add "PointBlankShot" 2.0 1.0
-
-connect 0.5 0.0 TwoDown
+connect 1.0 0.0 ThreeDown
 connect 0.0 1.0 OneDown
-connect 0.5 3.0 TwoUp
-
+connect 0.0 1.0 Through
 connect 1.0 1.0 OneDown
+connect 1.0 2.0 OneDown
 connect 1.0 2.0 Through
-connect 2.5 0.0 TwoDown
+connect 2.0 1.0 OneDown
+connect 2.0 2.0 Through
+connect 2.0 2.0 OneDown
+
+add PointBlankShot   3.0 0.5
+add PreciseShot      4.0 0.0
+add Longshot         4.0 1.0
+
+connect 4.0 0.0 OneDown
+

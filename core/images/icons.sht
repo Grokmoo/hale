@@ -22,6 +22,7 @@ image fastActions           13  0
 image packMule              14  0
 image dualStrike            15  0
 image iceMage               16  0
+image scattershot           17  0
 
 image proficiencyLightArmor    0  1
 image proficiencyMediumArmor   1  1

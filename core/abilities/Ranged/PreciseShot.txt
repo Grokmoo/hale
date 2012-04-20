@@ -5,6 +5,3 @@ activateable false
 
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ConcealmentIgnoringRanged', 'Stackable', 30); parent.applyEffect(effect); }"
 icon "icons/preciseShot"
-
-addPrereq Ability Longshot
-addPrereq Stat LevelAttackBonus 10
