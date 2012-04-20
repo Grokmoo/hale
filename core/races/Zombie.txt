@@ -1,6 +1,0 @@
-size Medium
-movementCost 2000
-unarmedWeapon unarmedMediumThreatens
-
-racialType Humanoid
-racialType Undead

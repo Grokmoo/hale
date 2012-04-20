@@ -1,0 +1,15 @@
+{ "name" : "Orc",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedMedium",
+  
+  "racialTypes" : [
+    "Humanoid", "Beast"
+  ],
+  
+  "iconOffsets" : {
+    "Shield" : [ 22, 14 ],
+	"OffHandWeapon" : [ 23, 12 ],
+	"MainHandWeapon" : [ 2, 6 ]
+  }
+}

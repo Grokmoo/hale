@@ -1,0 +1,19 @@
+{ "name" : "Lizardling",
+  "size" : "Medium",
+  "baseMovementCost" : 1200,
+  "unarmedWeapon" : "unarmedMedium",
+  
+  "racialTypes" : [
+    "Humanoid", "Beast"
+  ],
+  
+  "iconOffsets" : {
+    "Shield" : [ 25, 20 ],
+	"OffHandWeapon" : [ 29, 15 ],
+	"MainHandWeapon" : [ 2, 15 ]
+  },
+  
+  "abilities" : [
+    "Ambidextrous"
+  ]
+}

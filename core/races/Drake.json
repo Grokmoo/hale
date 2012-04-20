@@ -1,0 +1,9 @@
+{ "name" : "Drake",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedClaw",
+  
+  "racialTypes" : [
+    "Beast"
+  ]
+}
