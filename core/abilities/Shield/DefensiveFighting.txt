@@ -18,5 +18,5 @@ rangeType Personal
 aiPower 15
 aiPriority 5
 
-addPrereq Stat LevelAttackBonus 15
+addPrereq Stat LevelAttackBonus 20
 addPrereq Ability ShieldDefense

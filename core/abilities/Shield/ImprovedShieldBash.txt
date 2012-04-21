@@ -9,7 +9,7 @@ actionType Debuff
 groupType Single
 rangeType Short
 
-addPrereq Stat LevelAttackBonus 30
+addPrereq Stat LevelAttackBonus 20
 addPrereq Ability ShieldBash
 
-aiPower 20
+aiPower 30
