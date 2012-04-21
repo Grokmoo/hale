@@ -21,10 +21,10 @@ connect 0.5 3.0 TwoUp
 # other abilities
 
 add "Feint"  2 0
-add "Tumble" 3 0
+add "Tumble" 3 1
 
-add ImprovedFlanking 2.5 1
+add ImprovedFlanking 2.5 2
 
-connect 2.5 1 TwoUp
-
-
+connect 2.5 2 TwoUp
+connect 2 0 OneDown
+connect 2 1 Through
