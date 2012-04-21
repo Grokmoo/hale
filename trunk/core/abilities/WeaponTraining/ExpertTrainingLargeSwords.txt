@@ -1,11 +1,11 @@
 name "Expert Training, Large Swords"
 type "Weapon Training"
-description "You gain an additional +3 chance to inflict critical hits with longswords, bastard swords, and great swords."
+description "You gain an additional +5 chance to inflict critical hits with longswords, bastard swords, and great swords."
 activateable false
 
 icon "icons/expertLargeSwords"
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Longsword', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Bastard Sword', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Greatsword', 'CriticalChance', 3); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Longsword', 'CriticalChance', 5); effect.getBonuses().addBaseWeaponBonus('Bastard Sword', 'CriticalChance', 5); effect.getBonuses().addBaseWeaponBonus('Greatsword', 'CriticalChance', 5); parent.applyEffect(effect); }"
 
 addPrereq Ability AdvancedTrainingLargeSwords
-addPrereq Stat LevelAttackBonus 50
+addPrereq Stat LevelAttackBonus 45

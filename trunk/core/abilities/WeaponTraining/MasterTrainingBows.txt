@@ -8,4 +8,4 @@ icon "icons/masterBows"
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Shortbow', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Longbow', 'CriticalMultiplier', 1); parent.applyEffect(effect); }"
 
 addPrereq Ability ExpertTrainingBows
-addPrereq Stat LevelAttackBonus 70
+addPrereq Stat LevelAttackBonus 60

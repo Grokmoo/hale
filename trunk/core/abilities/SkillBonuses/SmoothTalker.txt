@@ -1,7 +1,7 @@
 name "Smooth Talker"
 type "Skill Bonuses"
-description "You can talk your way into and out of a variety of situations.  You gain +10 on all Speech checks."
+description "You can talk your way into and out of a variety of situations.  You gain +15 on all Speech checks."
 
 icon "icons/smoothTalker"
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Speech', 'Stackable', 10); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Speech', 'Stackable', 15); parent.applyEffect(effect); }"

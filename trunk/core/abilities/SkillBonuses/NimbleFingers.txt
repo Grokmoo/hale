@@ -1,9 +1,9 @@
 name "Nimble Fingers"
 type "Skill Bonuses"
-description "You are very good at dealing with delicate mechanical systems. You gain +5 to all Locks and Traps checks."
+description "You are very good at dealing with delicate mechanical systems. You gain +10 to all Locks and Traps checks."
 
 icon "icons/nimbleFingers"
 
 addPrereq Role Rogue 1
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Locks', 'Stackable', 5); effect.getBonuses().addSkillBonus('Traps', 'Stackable', 5); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Locks', 'Stackable', 10); effect.getBonuses().addSkillBonus('Traps', 'Stackable', 10); parent.applyEffect(effect); }"

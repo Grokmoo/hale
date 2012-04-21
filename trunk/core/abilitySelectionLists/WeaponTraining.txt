@@ -1,4 +1,4 @@
-name "Weapon Training"
+name "Weapons"
 
 add TrainingSlashing 0.5 0
 add TrainingPiercing 3.0 0
