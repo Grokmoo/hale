@@ -1,6 +1,6 @@
 name "Improved Backstab"
 type "Rogue Abilities"
-description "You can now perform backstab attacks when flanking an opponent."
+description "You can now perform backstab attacks merely by flanking an opponent."
 activateable false
 
 icon "icons/improvedBackstab"

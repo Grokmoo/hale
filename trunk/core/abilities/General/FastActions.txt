@@ -1,7 +1,7 @@
 name "Fast Actions"
 type "General"
 activateable false
-description "Everything you do is a bit faster than those around you.  All of your actions use 5% fewer action points."
+description "Everything you do is a bit faster than those around you. You gain 5 additional Action Points each round."
 
 addPrereq Stat Dex 15
 addPrereq Ability QuickDraw

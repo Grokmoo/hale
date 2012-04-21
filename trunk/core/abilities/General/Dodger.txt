@@ -6,6 +6,6 @@ addPrereq Ability LightningReflexes
 
 icon "icons/dodger"
 
-addPrereq Stat Dex 16
+addPrereq Stat Dex 15
 
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ArmorClass', 'Stackable', 10); parent.applyEffect(effect); }"

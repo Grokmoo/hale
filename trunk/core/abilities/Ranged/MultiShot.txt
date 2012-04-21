@@ -1,6 +1,6 @@
 name "Multi-Shot"
 type "Offensive"
-description "As a standard attack action, you fire multiple arrows at once against a single target.  Each arrow fired is rolled as an individual attack with the usual bonuses and penalties.  You fire one additional arrow for each 25 points of your character's level attack bonus.  This ability can be used with shortbows, longbows, and crossbows."
+description "As a standard attack action, you fire multiple arrows at once against a single target.  Each arrow fired is rolled as an individual attack with the usual bonuses and penalties.  You fire one arrow plus one per 25 points of your character's level attack bonus.  This ability can be used with shortbows, longbows, and crossbows."
 activateable true
 fixed true
 cooldown 5

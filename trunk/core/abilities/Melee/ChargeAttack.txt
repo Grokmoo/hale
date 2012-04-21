@@ -1,6 +1,6 @@
 name "Charge Attack"
 type "Offensive"
-description "You select a target that must be at least 15 feet away, and charge at them, following the charge with a powerful attack.  The attack is made with a +40 attack bonus and a +100 damage bonus.  The charge can only be performed in a straight line path, and you must have sufficient AP to perform both the movement and the attack.  You must have a melee weapon equipped to use this ability.  If the charge is interrupted for any reason (such as an attack of opportunity or stepping on a trap), the charge is not completed."
+description "You select a target that must be at least 15 feet away, and charge at them, following the charge with a powerful attack.  The attack is made with a +40 attack bonus and a +100 damage bonus.  The charge can only be performed in a straight line path, and you must have sufficient AP to perform both the movement and the attack.  You must have a melee weapon equipped to use this ability.  If the charge is interrupted for any reason (such as an attack of opportunity or stepping on a trap), the attack is not completed."
 activateable true
 mode false
 cancelable false
