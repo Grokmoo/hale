@@ -1,6 +1,6 @@
 name "Combat Ready"
 type "General"
-description "You are always ready for combat, gaining a +20 bonus on initiative which determines who goes first in combat."
+description "You are always ready for action, gaining a +20 bonus to Initiative.  This makes your turn more likely to come up first in combat."
 
 icon "icons/combatReady"
 

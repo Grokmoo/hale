@@ -1,6 +1,6 @@
 name "Disarm"
 type "Offensive"
-description "You attempt to disarm a single opponent with your melee weapon, causing their equipped weapon to fall to the ground under their feet.  You make a melee touch attack against your opponent, with a +30 bonus if they are wielding a range weapon.  If you succeed, your opponent must succeed at a Reflex Resistance check or drop their weapon." 
+description "You attempt to disarm a single opponent with your melee weapon, causing their equipped weapon to fall to the ground under their feet.  You make a melee touch attack against your opponent, with a +30 bonus if they are wielding a ranged weapon.  If you hit, your opponent must succeed at a Reflex Resistance check or drop their weapon." 
 activateable true
 fixed true
 cooldown 4

@@ -6,7 +6,7 @@ function onActivate(game, slot) {
 	var parent = slot.getParent();
 	
 	// this is an estimate of how much movement the parent can perform
-	// it will not be exact if their are movement penalizing effects on the area
+	// it will not be exact if there are movement penalizing effects on the area
 	var AP = parent.getTimer().getAP();
 	var moves = AP / parent.stats().getMovementCost();
 	if (moves > 3) moves = 3;
