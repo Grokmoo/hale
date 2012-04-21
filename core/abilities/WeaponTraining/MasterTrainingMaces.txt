@@ -8,4 +8,4 @@ icon "icons/masterMaces"
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Mace', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Morningstar', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Flail', 'CriticalMultiplier', 1); parent.applyEffect(effect); }"
 
 addPrereq Ability ExpertTrainingMaces
-addPrereq Stat LevelAttackBonus 70
+addPrereq Stat LevelAttackBonus 60

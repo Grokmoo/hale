@@ -1,4 +1,4 @@
-name "Weapon Training"
+name "Weapons"
 
 add "TrainingPiercing" 0.5 0
 add "AdvancedTrainingSmallSwords" 0.0 1

@@ -1,11 +1,11 @@
 name "Advanced Training, Small Swords"
 type "Weapon Training"
-description "You gain an additional +10 to damage with daggers and short swords."
+description "You gain an additional +15 to damage with daggers and short swords."
 activateable false
 
 icon "icons/advTrainSmallSwords"
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Dagger', 'Damage', 10); effect.getBonuses().addBaseWeaponBonus('Short Sword', 'Damage', 10); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Dagger', 'Damage', 15); effect.getBonuses().addBaseWeaponBonus('Short Sword', 'Damage', 15); parent.applyEffect(effect); }"
 
 addPrereq Ability TrainingPiercing
 addPrereq Stat LevelAttackBonus 30

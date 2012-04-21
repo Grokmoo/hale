@@ -1,11 +1,11 @@
 name "Advanced Training, Hammers"
 type "Weapon Training"
-description "You gain an additional +10 to damage with light hammers, warhammers, and mauls."
+description "You gain an additional +15 to damage with light hammers, warhammers, and mauls."
 activateable false
 
 icon "icons/advTrainHammers"
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Light Hammer', 'Damage', 10); effect.getBonuses().addBaseWeaponBonus('Warhammer', 'Damage', 10); effect.getBonuses().addBaseWeaponBonus('Maul', 'Damage', 10); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Light Hammer', 'Damage', 15); effect.getBonuses().addBaseWeaponBonus('Warhammer', 'Damage', 15); effect.getBonuses().addBaseWeaponBonus('Maul', 'Damage', 15); parent.applyEffect(effect); }"
 
 addPrereq Ability TrainingBlunt
 addPrereq Stat LevelAttackBonus 30

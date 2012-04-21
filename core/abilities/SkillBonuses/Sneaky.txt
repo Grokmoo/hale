@@ -1,9 +1,9 @@
 name "Sneaky"
 type "Skill Bonuses"
-description "You are especially good at sneaking and spoting anyone else trying to be sneaky.  You gain a +5 bonus to Hide and Search checks."
+description "You are especially good at sneaking and spoting anyone else trying to be sneaky.  You gain a +10 bonus to Hide and Search checks."
 
 icon "icons/sneaky"
 
 addPrereq Role Rogue 1
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Hide', 'Stackable', 5); effect.getBonuses().addSkillBonus('Search', 'Stackable', 5); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSkillBonus('Hide', 'Stackable', 10); effect.getBonuses().addSkillBonus('Search', 'Stackable', 10); parent.applyEffect(effect); }"

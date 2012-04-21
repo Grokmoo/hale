@@ -1,4 +1,4 @@
-name "Defense"
+name "Shield"
 
 add "ShieldDefense" 1.0 0.0
 

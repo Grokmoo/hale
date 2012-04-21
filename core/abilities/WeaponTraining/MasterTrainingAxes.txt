@@ -8,4 +8,4 @@ icon "icons/masterAxes"
 script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Handaxe', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Battleaxe', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Waraxe', 'CriticalMultiplier', 1); effect.getBonuses().addBaseWeaponBonus('Greataxe', 'CriticalMultiplier', 1); parent.applyEffect(effect); }"
 
 addPrereq Ability ExpertTrainingAxes
-addPrereq Stat LevelAttackBonus 70
+addPrereq Stat LevelAttackBonus 60

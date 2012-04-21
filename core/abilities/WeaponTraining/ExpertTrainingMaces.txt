@@ -1,11 +1,11 @@
 name "Expert Training, Maces"
 type "Weapon Training"
-description "You gain an additional +3 chance to inflict critical hits with maces, morningstars, and flails."
+description "You gain an additional +5 chance to inflict critical hits with maces, morningstars, and flails."
 activateable false
 
 icon "icons/expertMaces"
 
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Mace', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Morningstar', 'CriticalChance', 3); effect.getBonuses().addBaseWeaponBonus('Flail', 'CriticalChance', 3); parent.applyEffect(effect); }"
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBaseWeaponBonus('Mace', 'CriticalChance', 5); effect.getBonuses().addBaseWeaponBonus('Morningstar', 'CriticalChance', 5); effect.getBonuses().addBaseWeaponBonus('Flail', 'CriticalChance', 5); parent.applyEffect(effect); }"
 
 addPrereq Ability AdvancedTrainingMaces
-addPrereq Stat LevelAttackBonus 50
+addPrereq Stat LevelAttackBonus 45
