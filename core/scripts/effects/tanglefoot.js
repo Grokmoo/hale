@@ -15,13 +15,16 @@ function checkDeadlyVines(game, target, spell, parent) {
 
 	var casterLevel = parent.getCasterLevel();
 	
-	var damage = parseInt(game.dice().d8() + casterLevel / 3);
+	var damage = parseInt(game.dice().d6() + casterLevel / 4);
 	
 	spell.applyDamage(parent, target, damage, "Piercing");
 }
 
 function checkCrushingVines(game, target, spell, parent, parentEffect) {
 	if (!parent.getAbilities().has("CrushingVines")) return;
+	
+	// 50% chance of crushing vines
+	if (game.dice().d2() == 1) return;
 	
 	if ( target.physicalResistanceCheck(spell.getCheckDifficulty(parent)) ) return;
 	
@@ -41,7 +44,7 @@ function checkCrushingVines(game, target, spell, parent, parentEffect) {
 			
 	target.applyEffect(effect);
 	
-	spell.applyDamage(parent, target, game.dice().d10(), "Blunt");
+	spell.applyDamage(parent, target, game.dice().d6(), "Blunt");
 }
 
 function onRoundElapsed(game, effect) {

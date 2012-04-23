@@ -24,6 +24,6 @@ aiPriority 7
 
 addPrereq Stat CasterLevel 1
 
-upgrade CrushingVines "With Crushing Vines, hostile creatures in the area of effect must succeed at a physical resistance check each round or become immobilized for that round and take 1 to 10 blunt damage."
+upgrade CrushingVines "With Crushing Vines, each round, hostile creatures in the area of effect have a 50% chance of needing a physical resistance check or becoming immobilized for one round and taking 1 to 6 blunt damage."
 
-upgrade DeadlyVines "With Deadly Vines, hostile creatures in the area of effect take 1 to 8 plus one per three caster levels piercing damage each round."
+upgrade DeadlyVines "With Deadly Vines, hostile creatures in the area of effect take 1 to 6 plus one per four caster levels piercing damage each round."

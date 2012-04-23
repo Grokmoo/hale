@@ -1,0 +1,57 @@
+playerCharacter true
+faction "Player"
+name "Griman"
+portrait "Dwarf/fighter"
+
+gender "Male"
+race "Dwarf"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair016" "#ff808080"
+beardicon "subIcons/beard005" "#ff545454"
+skincolor "#fff6d39b"
+clothingcolor "#ffffa500"
+xp 21126
+role "Priest" 14
+attributes 13 9 15 10 17 11
+addSkillRanks "CraftArmor" 70
+addSkillRanks "Speech" 70
+level 8 addAbility "FastSpellRecovery1"
+level 6 addAbility "ProficientCasting"
+level 3 addAbility "MeleeCasting"
+level 11 addAbility "WisdomTraining1"
+level 14 addAbility "StrongSoul"
+level 6 addAbility "EnhanceAttributes"
+level 5 addAbility "DivineBurst"
+level 7 addAbility "Sleep"
+level 13 addAbility "Paralyze"
+level 3 addAbility "Slow"
+level 1 addAbility "DivineLuck"
+level 10 addAbility "AnimalPower"
+level 8 addAbility "Cure"
+level 14 addAbility "Renewal"
+level 11 addAbility "MassCure"
+
+equip "morningstar" Fine
+equip "shield_heavy_base" Fine
+equip "armor_plate_base" Superb
+equip "gloves_plate_base" Fine
+equip "helmet_plate_base" Fine
+equip "boots_plate_base" Fine
+equip "beltLesserCon" Good
+equip "amuletLesserHealer" Good
+equip "ringLesserProtection" Good
+equip "ringLesserSpellResistance" Good
+additem "potionHealing" 3 Good
+additem "potionCon" 1 Good
+additem "potionStrength" 2 Good
+additem "scrollRaiseDead" 1 Good
+additem "scrollCure" 1 Good
+quickbarslot 0 Equip "morningstar" "Fine"
+quickbarslot 1 Use "potionHealing" "Good"
+quickbarslot 2 Ability "DivineLuck"
+quickbarslot 3 Ability "DivineBurst"
+quickbarslot 4 Ability "Slow"
+quickbarslot 5 Ability "EnhanceAttributes"
+quickbarslot 6 Ability "Cure"
+quickbarslot 7 Ability "Renewal"
