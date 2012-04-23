@@ -146,6 +146,7 @@
 		<theme name="content" ref="-defaults">
 			<theme name="characterbutton" ref="-defaults">
 				<param name="height"><int>25</int></param>
+				<param name="border"><border>2</border></param>
 				<param name="background"><image>characterbutton.background</image></param>
 			
 				<theme name="textarea" ref="textarea">

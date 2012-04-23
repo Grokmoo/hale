@@ -469,7 +469,7 @@ public class CharacterSelector extends Widget {
 				
 				deleteButton.setSize(deleteButton.getPreferredWidth(), deleteButton.getPreferredHeight());
 				deleteButton.setPosition(selectButton.getInnerRight() - deleteButton.getWidth(),
-						selectButton.getInnerY() + selectButton.getInnerHeight() / 2 - deleteButton.getHeight() / 2);
+						selectButton.getInnerY());
 				
 				curY = selectButton.getBottom();
 			}
@@ -572,7 +572,7 @@ public class CharacterSelector extends Widget {
 			numRows = 0;
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append("<div style=\"font-family: vera; margin-bottom: 1em\">");
+			sb.append("<div style=\"font-family: vera\">");
 			for (String roleID : creature.getRoles().getRoleIDs()) {
 				Role role = Game.ruleset.getRole(roleID);
 				int level = creature.getRoles().getLevel(role);
@@ -625,8 +625,8 @@ public class CharacterSelector extends Widget {
 		}
 		
 		@Override protected void layout() {
-			textArea.setPosition(getInnerX(), getInnerY());
-			textArea.setSize(getInnerWidth(), textArea.getPreferredHeight());
+			textArea.setPosition(getX(), getY());
+			textArea.setSize(getWidth(), textArea.getPreferredHeight());
 		}
 	}
 }
