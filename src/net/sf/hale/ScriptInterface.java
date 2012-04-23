@@ -322,6 +322,8 @@ public class ScriptInterface {
 			parent.getEncounter().addAreaCreature(creature);
 		}
 		
+		creature.resetAll();
+		
 		Area area = Game.curCampaign.curArea;
 		
 		if (area.isPassable(position.x, position.y) && area.getCreatureAtGridPoint(position) == null) {
@@ -330,7 +332,7 @@ public class ScriptInterface {
 		}
 		
 		creature.setAIActive(true);
-		creature.resetAll();
+		
 		creature.setVisibility(true);
 		
 		if (Game.isInTurnMode()) {
@@ -340,7 +342,6 @@ public class ScriptInterface {
 		creature.setSummoned(duration);
 		
 		Game.mainViewer.updateInterface();
-		
 		Game.areaListener.getCombatRunner().checkAIActivation();
 		
 		return creature;

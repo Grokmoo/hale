@@ -21,7 +21,6 @@ script "ai/aiStandard"
 conversation "conversations/goblin_chieftan"
 level 1 addAbility "ExpertDualWielding"
 level 1 addAbility "DualWielding"
-level 1 addAbility "AdvancedDualWielding"
 
 currencyReward 50 90
 equip "quarterstaff" Good
