@@ -3,7 +3,7 @@ startArea "Large Cavern"
 minPartySize 2
 maxPartySize 4
 minStartingLevel 6
-maxStartingLevel 15
+maxStartingLevel 13
 roundsPerMinute 10
 minutesPerHour 60
 hoursPerDay 24

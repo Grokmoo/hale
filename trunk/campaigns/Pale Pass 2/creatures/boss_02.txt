@@ -10,7 +10,7 @@ beardicon "subIcons/beard002" "#ffb59541"
 skincolor "#ffbe7238"
 clothingcolor "#ff47b145"
 xp 25400
-role "Warrior" 15
+role "Warrior" 14
 attributes 18 12 16 10 10 10
 script "ai/aiStandard"
 level 1 addAbility "MightyBlow"

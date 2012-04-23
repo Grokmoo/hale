@@ -1,6 +1,6 @@
 name "Crushing Vines"
 type "Conjuration"
-description "Crushing Vines upgrades your tanglefoot spell.  Hostile creatures in the area of the spell must succeed at a physical resistance check each round or be immobilized for that round.  Creatures that are immobilized by this spell take 1 to 10 blunt damage each round."
+description "Crushing Vines upgrades your Tanglefoot spell.  Each round, hostile creatures in the area of effect have a 50% chance of needing a physical resistance check or becoming immobilized for one round and taking 1 to 6 blunt damage."
 activateable false
 
 icon "icons/crushingVines"

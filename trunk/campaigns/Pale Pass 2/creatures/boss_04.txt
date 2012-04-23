@@ -10,7 +10,7 @@ hairicon "subIcons/hair006" "#ff93733e"
 skincolor "#ffd0b891"
 clothingcolor "#ffffffff"
 xp 25400
-role "Warrior" 15
+role "Warrior" 14
 attributes 12 20 14 10 10 10
 script "ai/aiStandard"
 level 1 addAbility "PreciseShot"

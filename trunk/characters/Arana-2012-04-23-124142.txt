@@ -1,0 +1,58 @@
+playerCharacter true
+faction "Player"
+name "Arana"
+portrait "Human/assassin+female"
+
+gender "Female"
+race "Human"
+unspentSkillPoints 4
+drawWithSubIcons true
+hairicon "subIcons/hair003" "#ff8b4513"
+
+skincolor "#fff8e088"
+clothingcolor "#ff0000ff"
+xp 21126
+role "Rogue" 9
+role "Assassin" 5
+attributes 13 17 13 11 10 11
+addSkillRanks "Locks" 70
+addSkillRanks "Search" 50
+addSkillRanks "Alchemy" 5
+addSkillRanks "Hide" 45
+addSkillRanks "Traps" 70
+level 9 addAbility "Poison"
+level 13 addAbility "LethalPoison"
+level 11 addAbility "LingeringPoison"
+level 2 addAbility "ReflexiveAttacks"
+level 8 addAbility "DexterityTraining1"
+level 14 addAbility "BlindFighting"
+level 11 addAbility "CombatReady"
+level 5 addAbility "QuickDraw"
+level 14 addAbility "ImprovedFlanking"
+level 3 addAbility "Feint"
+level 1 addAbility "Backstab"
+level 7 addAbility "Tumble"
+level 5 addAbility "ImprovedBackstab"
+
+equip "shortSword" Superb
+equip "armor_leatherhard_base" Fine
+equip "gloves_leather_base" Fine
+equip "helmet_leather_base" Fine
+equip "cloakLesserHiding" Good
+equip "boots_leather_base" Fine
+equip "beltLesserFortitude" Good
+equip "amuletLesserInitiative" Good
+equip "ringLesserInvisibility" Good
+equip "ringLesserFireResistance" Good
+equip "arrow" Good
+additem "arrow" 199 Good
+additem "compositeLongbow" 1 Fine
+additem "potionHealing" 3 Good
+additem "potionStrength" 1 Good
+quickbarslot 0 Equip "shortSword" "Superb"
+quickbarslot 1 Equip "compositeLongbow" "Fine"
+quickbarslot 2 Use "potionHealing" "Good"
+quickbarslot 3 Ability "Hide"
+quickbarslot 4 Ability "Feint"
+quickbarslot 5 Ability "Tumble"
+quickbarslot 6 Ability "Poison"
