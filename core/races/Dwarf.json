@@ -42,11 +42,17 @@
   
   "randomMaleNames" : [
     "Angolf", "Beardie", "Connink", "Daalor", "Hraftink", "Haleon", "Hrothil", "Killus", "Morgour", "Muili", "Oilti", "Orgrin", "Osrin",
-	"Thior", "Thaid", "Thorvyn", "Thraunos", "Uerih", "Wendir", "Ysonir"
+	"Thior", "Thaid", "Thorvyn", "Thraunos", "Uerih", "Wendir", "Ysonir", "Dor", "Ovund", "Durkon", "Bulak", "Barrak", "Ovlin", "Hadri",
+	"Dil", "Durrak", "Dordri", "Ragur", "Balrak", "Thorkon", "Munzad", "Bulbur", "Morain", "Fimrund", "Boltil", "Nalzad", "Farain",
+	"Bofdri", "Brak", "Dalur", "Bilum", "Morkk", "Bofim", "Fimgin", "Barond", "Dalain", "Morlin", "Dalond", "Chalkon", "Thingar",
+	"Munni", "Dorunn", "Nalur", "Norar"
   ],
   
   "randomFemaleNames" : [
     "Alynnee", "Armissa", "Blatia", "Britta", "Codaha", "Garwai", "Gregina", "Imaryle", "Lorcy", "Nokkvi", "Norean", "Onnda", "Pesina",
-	"Quodda", "Rathie", "Turella", "Shorta", "Tytta", "Winie", "Zabethe"
+	"Quodda", "Rathie", "Turella", "Shorta", "Tytta", "Winie", "Zabethe", "Runzadi", "Griumma", "Fimili", "Gargoli", "Grogoli", "Gomrimi",
+	"Harili", "Dorbura", "Nora", "Ragip", "Dwinila", "Gimraka", "Drukka", "Groa", "Gomundi", "Barnia", "Ragria", "Durkka", "Thrunni",
+	"Gomunni", "Norundi", "Ketina", "Herrimi", "Simdina", "Chalundi", "Ovondi", "Farili", "Gombari", "Stordina", "Belzadi", "Mungari",
+	"Farola", "Dormina", "Thola", "Storana"
   ]
 }

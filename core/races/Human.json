@@ -42,11 +42,17 @@
   
   "randomMaleNames" : [
     "Adane", "Aeric", "Brien", "Cromir", "Cyric", "Darian", "Duffus", "Golin", "Jackin", "Jartet",
-	"Kennig", "Melin", "Merick", "Ranith", "Sorran", "Shorman", "Sydney", "Teffis", "Terlin", "Wellen"
+	"Kennig", "Melin", "Merick", "Ranith", "Sorran", "Shorman", "Sydney", "Teffis", "Terlin", "Wellen",
+	"Melor", "Ruan", "Alan", "Nadelek", "Colan", "Jermyn", "Conan", "Gawen", "Howel", "Pedrek", "Carlyon",
+	"Branek", "Wolmar", "Rudi", "Georg", "Rutger", "Jakob", "Runnolf", "Vikar", "Bosi", "Fjori", "Frodi",
+	"Asmund", "Hakon", "Bjarkmar", "Hosvir", "Hakon"
   ],
   
   "randomFemaleNames" : [
     "Alissa", "Amicia", "Brena", "Brook", "Coley", "Crista", "Glinta", "Gwena", "Jenae", "Kerry", "Lobanna",
-	"Lucie", "Nella", "Rosie", "Morianna", "Shamma", "Shirriel", "Tetra", "Vadanna", "Zaria"
+	"Lucie", "Nella", "Rosie", "Morianna", "Shamma", "Shirriel", "Tetra", "Vadanna", "Zaria", "Elestren",
+	"Tega", "Tressa", "Lowenna", "Eseld", "Rosenwyn", "Tressa", "Mellyn", "Kerensa", "Caja", "Bronnen",
+	"Wenna", "Gitta", "Elfrida", "Kathrine", "Emilie", "Sima", "Frida", "Ursua", "Theda", "Elisa", "Bera",
+	"Galumvor", "Isgerd", "Vaetild", "Ilsa"
   ]
 }
