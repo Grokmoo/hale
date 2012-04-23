@@ -394,6 +394,10 @@ public class StatManager {
 		}
 		
 		addToStat(Stat.MaxHP, ((getCon() - 10) * get(Stat.CreatureLevel)) / 3);
+		
+		recomputeMentalResistance();
+		recomputePhysicalResistance();
+		recomputeReflexResistance();
 	}
 	
 	public void recomputeMentalResistance() {
