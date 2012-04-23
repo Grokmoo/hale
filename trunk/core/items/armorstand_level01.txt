@@ -13,4 +13,4 @@ addloot "ArmorMediocre" 100 PER_LIST
 addloot "LootLevel1" 25 PER_LIST
 addloot "LootLevel1" 8 PER_LIST
 workbench false
-openicon "items/I_Bag_01"
+openicon "items/Z_armorstandEmpty"
