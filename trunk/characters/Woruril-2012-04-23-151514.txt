@@ -1,0 +1,55 @@
+playerCharacter true
+faction "Player"
+name "Woruril"
+portrait "Dwarf/guard"
+
+gender "Male"
+race "Dwarf"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair014" "#ff8b4513"
+beardicon "subIcons/beard002" "#ffffa500"
+skincolor "#ffce9452"
+clothingcolor "#ff808080"
+xp 21126
+role "Adept" 9
+role "Bard" 5
+attributes 11 14 15 10 10 15
+addSkillRanks "Alchemy" 70
+addSkillRanks "Speech" 65
+addSkillRanks "Search" 30
+level 1 addAbility "Shield"
+level 5 addAbility "Summon"
+level 3 addAbility "ProficientCasting"
+level 6 addAbility "FastSpellRecovery1"
+level 14 addAbility "MeleeCasting"
+level 11 addAbility "CharismaTraining1"
+level 8 addAbility "SmoothTalker"
+level 9 addAbility "SongOfLuck"
+level 13 addAbility "SongOfSlaying"
+level 11 addAbility "CurseSong"
+level 14 addAbility "Chameleon"
+level 3 addAbility "AbsorbEnergy"
+level 7 addAbility "ResistSpells"
+
+equip "longbow" Superb
+equip "armor_leatherhard_base" Fine
+equip "gloves_leather_base" Fine
+equip "helmet_leather_base" Fine
+equip "cloakLesserHiding" Fine
+equip "boots_leather_base" Fine
+equip "beltLesserCon" Fine
+equip "ringLesserSpellResistance" Fine
+equip "ringLesserProtection" Fine
+equip "arrow" Good
+additem "potionHealing" 3 Good
+additem "arrow" 98 Good
+additem "shortSword" 1 Fine
+quickbarslot 0 Equip "shortSword" "Fine"
+quickbarslot 1 Equip "longbow" "Superb"
+quickbarslot 2 Use "potionHealing" "Good"
+quickbarslot 3 Ability "Shield"
+quickbarslot 4 Ability "Summon"
+quickbarslot 5 Ability "AbsorbEnergy"
+quickbarslot 6 Ability "Bardsong"
+quickbarslot 7 Ability "Chameleon"
