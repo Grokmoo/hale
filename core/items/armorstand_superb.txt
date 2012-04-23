@@ -9,8 +9,6 @@ weight 0
 itemType "ITEM"
 quality "Good"
 container true
-addloot "ArmorGood" 100 PER_LIST
-addloot "LootLevel10" 25 PER_LIST
-addloot "LootLevel10" 8 PER_LIST
+addloot "ArmorSuperb" 100 PER_LIST
 workbench false
 openicon "items/Z_armorstandEmpty"

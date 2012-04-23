@@ -11,4 +11,4 @@ quality "Good"
 container true
 addloot "ArmorFine" 100 PER_LIST
 workbench false
-openicon "items/I_Bag_02"
+openicon "items/Z_armorstandEmpty"
