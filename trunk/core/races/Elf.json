@@ -44,11 +44,17 @@
   
   "randomMaleNames" : [
     "Aramon", "Argoth", "Arzhen", "Callmand", "Ceryn", "Cregil", "Dericris", "Edrus", "Firlon", "Iniot", "Isais", "Iuvea",
-	"Labhaidh", "Mellus", "Nimrosin", "Qualus", "Scotapth", "Sirith", "Tiritissie", "Vianssl", "Xerindsye"
+	"Labhaidh", "Mellus", "Nimrosin", "Qualus", "Scotapth", "Sirith", "Tiritissie", "Vianssl", "Xerindsye", "Edriellion",
+	"Vicoral", "Aesholen", "Imirllan", "Aesras", "Faranel", "Caavandrel", "Eponras", "Carane", "Harlad", "Ullialdil",
+	"Morinal", "Caarel", "Amarel", "Hascoral", "Imarr", "Dollad", "Sirfar", "Larcoran", "Torarr", "Ralhile", "Malhuil",
+	"Urdiandilas", "Carhil", "Dolarel", "Imraanel", "Offran", "Laurerond", "Eldinor", "Shaswing"
   ],
   
   "randomFemaleNames" : [
     "Anwen", "Alacia", "Bonea", "Brada", "Chaeth", "Colena", "Eawyn", "Eochta", "Fiath", "Galli", "Glyneth", "Gwylis", "Jophilda",
-	"Kacelda", "Mithieene", "Neamhna", "Perskeylia", "Stelynne", "Swiua", "Tameline", "Xydrian", "Yunad"
+	"Kacelda", "Mithieene", "Neamhna", "Perskeylia", "Stelynne", "Swiua", "Tameline", "Xydrian", "Yunad", "Vallana", "Ellhali",
+	"Calhali", "Amarel", "Filuviel", "Linandara", "Amandilas", "Edriavandrel", "Edriina", "Torfana", "Edrifar", "Caia", "Ellcora",
+	"Lorhali", "Iocora", "Shasanel", "Carllana", "Imgrana", "Malina", "Airfar", "Algrana", "Marwen", "Yavahal", "Laurethi",
+	"Galmaris", "Linwing", "Eldiandil", "Fanuviel"
   ]
 }
