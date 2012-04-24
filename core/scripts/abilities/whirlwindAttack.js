@@ -15,6 +15,16 @@ function onActivate(game, slot) {
 }
 
 function onTargetSelect(game, targeter) {
+	var ability = targeter.getSlot().getAbility();
+
+    // perform the attack in a new thread as the standardAttack will
+    // block
+    var cb = ability.createDelayedCallback("performAttack");
+    cb.addArgument(targeter);
+    cb.start();
+}
+
+function performAttack(game, targeter) {
 	var parent = targeter.getParent();
 	
 	parent.getTimer().performAttack();
@@ -29,7 +39,8 @@ function onTargetSelect(game, targeter) {
 	for (var i = 0; i < creatures.size(); i++) {
 		var target = creatures.get(i);
 		
-		game.singleAttack(parent, target);
+		game.singleAttackAnimate(parent, target);
+		game.sleepStandardDelay(1);
 	}
 	
 	parent.removeEffect(effect);
