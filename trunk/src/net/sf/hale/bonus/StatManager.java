@@ -341,7 +341,7 @@ public class StatManager {
 	}
 	
 	// for use when recomputing all stats so we don't compute attackBonus twice - once for str and again for dex
-	public void recomputeStrNoAttackBonus() {
+	private void recomputeStrNoAttackBonus() {
 		stats.put(Stat.Str, getBaseStr() + get(Bonus.Type.Str));
 		recomputeWeightLimit();
 	}
@@ -484,7 +484,7 @@ public class StatManager {
 		
 		// if dex AC value is positive, it is decreased by the armor modifier
 		// if it is negative, apply the full amount
-		float dexACValue = 4.0f * (getDex() - 10.0f);
+		float dexACValue = 3.0f * (getDex() - 10.0f);
 		int dexACBonus = 0;
 		if (dexACValue > 0.0) dexACBonus = (int)(dexACValue * armorModifier);
 		else dexACBonus = (int)dexACValue;
