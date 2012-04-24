@@ -11,16 +11,15 @@ HPPerLevel 4
 level1HP 12
 
 level  1 selectAbilityFromList Priest
-level  2 selectAbilityFromList Priest
+level  3 selectAbilityFromList Priest
 level  4 selectAbilityFromList Priest
-level  5 selectAbilityFromList Priest
+level  6 selectAbilityFromList Priest
 level  7 selectAbilityFromList Priest
-level  8 selectAbilityFromList Priest
+level  9 selectAbilityFromList Priest
 level 10 selectAbilityFromList Priest
-level 11 selectAbilityFromList Priest
+level 12 selectAbilityFromList Priest
 level 13 selectAbilityFromList Priest
-level 14 selectAbilityFromList Priest
-level 16 selectAbilityFromList Priest
+level 15 selectAbilityFromList Priest
 level 17 selectAbilityFromList Priest
 level 19 selectAbilityFromList Priest
 level 20 selectAbilityFromList Priest
@@ -63,7 +62,7 @@ level 1 addAbility ProficiencySpears
 spellCastingAttribute Wis
 
 spellFailureBase -30
-spellFailureSpellLevelFactor 5
+spellFailureSpellLevelFactor 6
 spellFailureAbilityScoreFactor 2
 spellFailureCasterLevelFactor 1
 

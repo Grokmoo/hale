@@ -18,11 +18,11 @@ addPrereq Ability SelfSufficient
 maxLevel 10
 
 level 1 selectAbilityFromList Druid
-level 2 selectAbilityFromList Druid
+level 3 selectAbilityFromList Druid
 level 4 selectAbilityFromList Druid
-level 5 selectAbilityFromList Druid
+level 6 selectAbilityFromList Druid
 level 7 selectAbilityFromList Druid
-level 8 selectAbilityFromList Druid
+level 9 selectAbilityFromList Druid
 level 10 selectAbilityFromList Druid
 
 level  1 addCasterLevel

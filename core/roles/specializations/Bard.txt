@@ -20,6 +20,8 @@ level 1 addAbility Bardsong
 
 level 1 selectAbilityFromList Bard
 level 3 selectAbilityFromList Bard
-level 5 selectAbilityFromList Bard
+level 4 selectAbilityFromList Bard
+level 6 selectAbilityFromList Bard
 level 7 selectAbilityFromList Bard
 level 9 selectAbilityFromList Bard
+level 10 selectAbilityFromList Bard

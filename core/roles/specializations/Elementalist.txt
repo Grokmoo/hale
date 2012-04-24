@@ -19,11 +19,11 @@ addPrereq Ability Freeze
 addPrereq Ability Shock
 
 level  1 selectAbilityFromList Elementalist
-level  2 selectAbilityFromList Elementalist
+level  3 selectAbilityFromList Elementalist
 level  4 selectAbilityFromList Elementalist
-level  5 selectAbilityFromList Elementalist
+level  6 selectAbilityFromList Elementalist
 level  7 selectAbilityFromList Elementalist
-level  8 selectAbilityFromList Elementalist
+level  9 selectAbilityFromList Elementalist
 level 10 selectAbilityFromList Elementalist
 
 level  1 addCasterLevel
