@@ -13,3 +13,4 @@ armorType "None"
 armorClass 0
 armorPenalty 0
 movementPenalty 0
+forcenoquality true
