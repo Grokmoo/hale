@@ -28,9 +28,9 @@ level  9 addCasterLevel
 level 10 addCasterLevel
 
 level 1 selectAbilityFromList Avenger
-level 2 selectAbilityFromList Avenger
+level 3 selectAbilityFromList Avenger
 level 4 selectAbilityFromList Avenger
-level 5 selectAbilityFromList Avenger
+level 6 selectAbilityFromList Avenger
 level 7 selectAbilityFromList Avenger
-level 8 selectAbilityFromList Avenger
+level 9 selectAbilityFromList Avenger
 level 10 selectAbilityFromList Avenger

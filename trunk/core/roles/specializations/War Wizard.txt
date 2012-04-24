@@ -24,11 +24,11 @@ level 1 addAbility ProficiencyShields
 level 1 addAbility ProficiencySmallSwords
 
 level 1 selectAbilityFromList WarWizard
-level 2 selectAbilityFromList WarWizard
+level 3 selectAbilityFromList WarWizard
 level 4 selectAbilityFromList WarWizard
-level 5 selectAbilityFromList WarWizard
+level 6 selectAbilityFromList WarWizard
 level 7 selectAbilityFromList WarWizard
-level 8 selectAbilityFromList WarWizard
+level 9 selectAbilityFromList WarWizard
 level 10 selectAbilityFromList WarWizard
 
 level  2 addCasterLevel
