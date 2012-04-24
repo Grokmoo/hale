@@ -1,23 +1,22 @@
-pregenerated true
 playerCharacter true
 faction "Player"
-name "Arana"
-portrait "Human/assassin+female"
+name "Ellhali"
+portrait "Elf/FlareFemaleHero2"
 
 gender "Female"
-race "Human"
+race "Elf"
 unspentSkillPoints 1
 drawWithSubIcons true
-hairicon "subIcons/hair003" "#ff8b4513"
+hairicon "subIcons/hair004" "#ff5c3317"
 
-skincolor "#fff8e088"
-clothingcolor "#ff0000ff"
+skincolor "#ffd48661"
+clothingcolor "#ff00ff00"
 role "Rogue" 1
-attributes 13 17 13 11 10 11
+attributes 12 19 12 11 10 11
 addSkillRanks "Hide" 5
 addSkillRanks "Locks" 5
 addSkillRanks "Traps" 5
 addSkillRanks "Search" 5
-level 1 addAbility "Backstab"
+level 1 addAbility "RapidShot"
 
 equip "armor_clothes" Good

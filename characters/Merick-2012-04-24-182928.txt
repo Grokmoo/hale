@@ -1,0 +1,20 @@
+playerCharacter true
+faction "Player"
+name "Merick"
+portrait "Human/FlareMaleHero3"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair002" "#ff545454"
+beardicon "subIcons/beard003" "#ff545454"
+skincolor "#ffffc794"
+clothingcolor "#ffff0000"
+role "Priest" 1
+attributes 13 10 13 10 17 12
+addSkillRanks "CraftWeapons" 5
+addSkillRanks "Speech" 5
+level 1 addAbility "DivineLuck"
+
+equip "armor_clothes" Good
