@@ -24,7 +24,7 @@ level 2 addAbility "ReflexiveAttacks"
 level 5 addAbility "QuickDraw"
 level 1 addAbility "Backstab"
 level 3 addAbility "Feint"
-level 5 addAbility "ImprovedBackstab"
+level 4 addAbility "ImprovedBackstab"
 level 7 addAbility "Tumble"
 
 equip "shortSword" Decent

@@ -64,6 +64,7 @@ spellFailureSpellLevelFactor 4
 spellFailureAbilityScoreFactor 2
 spellFailureCasterLevelFactor 1
 
+level  1 addCasterLevel
 level  2 addCasterLevel
 level  3 addCasterLevel
 level  5 addCasterLevel
