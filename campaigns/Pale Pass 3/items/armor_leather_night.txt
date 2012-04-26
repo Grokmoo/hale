@@ -1,0 +1,18 @@
+name "Night Armor"
+icon "items/A_Clothing02" "#ff4b2806"
+subIcon "subIcons/armor-04" "#ff4b2806"
+ingredient false
+quest false
+cursed false
+description "Well crafted leather armor enchanted for use by a skilled rogue."
+value "1 PP 5 GP" 1
+weight 2000
+itemType "ARMOR"
+quality "Phenomenal"
+enchantment "entity.addBonus('Dex', 'Enhancement', 1);"
+enchantment "entity.addSkillBonus('Hide', 'Enhancement', 10);"
+useButtonText ""
+armorType "Light"
+armorClass 6
+armorPenalty 5
+movementPenalty 0

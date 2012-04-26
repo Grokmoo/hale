@@ -1,0 +1,17 @@
+name "Leather Boots of Speed"
+icon "items/A_Shoes06" "#ffffffff"
+subIcon "subIcons/boots-03" "#ff93e178"
+ingredient false
+quest false
+cursed false
+description "Magcially enchanted, these boots provide a +20 bonus to Movement in addition to providing protection."
+value "4 GP 5 SP" 1
+weight 800
+itemType "BOOTS"
+quality "Exceptional"
+enchantment "entity.addBonus('Movement', 'Enhancement', 20);"
+useButtonText ""
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

@@ -4,7 +4,7 @@ ingredient false
 quest false
 cursed false
 description "This ring has a powerful magical enchantment that provides a +15 bonus to Armor Class."
-value "1 GP 6 SP" 1
+value "4 GP 5 SP" 1
 weight 100
 itemType "RING"
 quality "Good"

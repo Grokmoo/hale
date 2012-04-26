@@ -1,0 +1,15 @@
+name "Dragon Armor"
+icon "items/A_Armor05" "#ffffffff"
+subIcon "subIcons/armor-01" "#fff4bf8e"
+ingredient false
+quest false
+cursed false
+description "Armor consisting of the scales of a red dragon, providing excellent protection and mobility as compared to ordinary steel plate."
+value "4 PP" 1
+weight 12000
+itemType "ARMOR"
+quality "Phenomenal"
+armorType "Heavy"
+armorClass 28
+armorPenalty 20
+movementPenalty 15

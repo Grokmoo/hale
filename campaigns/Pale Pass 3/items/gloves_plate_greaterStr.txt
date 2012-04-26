@@ -1,0 +1,17 @@
+name "Plate Gloves of Power"
+icon "items/Ac_Gloves06" "#ffa5ddc4"
+subIcon "subIcons/gloves-01" "#ffa5ddc4"
+ingredient false
+quest false
+cursed false
+description "Gloves providing a +2 bonus to Strength in addition to protection."
+value "1 PP 2 GP" 1
+weight 800
+itemType "GLOVES"
+quality "Exceptional"
+enchantment "entity.addBonus('Str', 'Enhancement', 2);"
+useButtonText ""
+armorType "Heavy"
+armorClass 4
+armorPenalty 4
+movementPenalty 3

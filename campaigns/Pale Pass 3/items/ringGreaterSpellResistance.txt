@@ -1,0 +1,12 @@
+name "Ring of Greater Spell Resistance"
+icon "items/Ac_Ring01" "#ff807e7e"
+ingredient false
+quest false
+cursed false
+description "This ring has a magical enchantment that provides 20% spell resistance."
+value "1 PP" 1
+weight 100
+itemType "RING"
+quality "Good"
+enchantment "entity.addBonus('SpellResistance', 20);"
+useButtonText ""

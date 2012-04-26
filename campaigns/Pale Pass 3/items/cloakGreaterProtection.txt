@@ -1,0 +1,13 @@
+name "Cloak of Greater Protection"
+icon "items/A_Cloak01" "#ff918fe2"
+subIcon "subIcons/cloak-01" "#ffadb3f1"
+ingredient false
+quest false
+cursed false
+description "This cloak has a magical enchantment to provide a +10 bonus to Armor Class."
+value "4 GP 5 SP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"
+enchantment "entity.addBonus('ArmorClass', 'Deflection', 10);"
+useButtonText ""

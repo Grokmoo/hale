@@ -1,0 +1,13 @@
+name "Cloak of Haste"
+icon "items/A_Cloak01" "#ffd2ee84"
+subIcon "subIcons/cloak-01" "#ffd2ee84"
+ingredient false
+quest false
+cursed false
+description "Magically enchanted, this cloak grants 5 bonus action points each round."
+value "5 GP 5 SP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"
+enchantment "entity.addBonus('ActionPoint', 5);"
+useButtonText ""

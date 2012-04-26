@@ -1,0 +1,17 @@
+name "Leather Gloves of Dexterity"
+icon "items/Ac_Gloves04" "#ffffffff"
+subIcon "subIcons/gloves-02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "These gloves are magically enchanted to provide a +2 bonus to Dexterity, in addition to protection."
+value "6 GP" 1
+weight 400
+itemType "GLOVES"
+quality "Exceptional"
+enchantment "entity.addBonus('Dex', 'Enhancement', 2);"
+useButtonText ""
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

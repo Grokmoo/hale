@@ -1,0 +1,23 @@
+name "Greatsword of Slaughter"
+icon "items/W_Sword005" "#ffffffff"
+subIcon "subIcons/weapon-sword07" "#ffbbfcf9"
+ingredient false
+quest false
+cursed false
+description "A huge and powerful greatsword that does bonus damage with every hit."
+value "3 PP 5 GP" 1
+weight 4000
+itemType "WEAPON"
+quality "Phenomenal"
+enchantment "entity.addStandaloneDamageBonus('Slashing', 2, 6);"
+useButtonText ""
+baseWeapon "Greatsword"
+weaponType "MELEE"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 3 12
+criticalRange 93
+criticalMultiplier 2
+attackCost 4200

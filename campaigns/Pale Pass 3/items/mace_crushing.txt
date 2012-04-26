@@ -1,0 +1,23 @@
+name "Mace of Crushing"
+icon "items/W_Mace009" "#ffebac72"
+subIcon "subIcons/weapon-mace02" "#ffebac72"
+ingredient false
+quest false
+cursed false
+description "A powerful magical mace that does bonus blunt damage."
+value "2 PP" 1
+weight 2200
+itemType "WEAPON"
+quality "Exceptional"
+enchantment "entity.addBonus('WeaponDamage', 35);"
+useButtonText ""
+baseWeapon "Mace"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 5
+criticalRange 97
+criticalMultiplier 2
+attackCost 2800
