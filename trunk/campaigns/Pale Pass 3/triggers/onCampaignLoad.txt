@@ -1,0 +1,3 @@
+area "The Gate"
+script "triggers/onCampaignLoad"
+addPoints
