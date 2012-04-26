@@ -1,6 +1,7 @@
 name "Clothes"
 icon "items/A_Clothing01" "#ffffffff"
 subIcon "subIcons/armor-11" "#ffffffff"
+forceNoQuality true
 ingredient false
 quest false
 cursed false
@@ -13,4 +14,3 @@ armorType "None"
 armorClass 0
 armorPenalty 0
 movementPenalty 0
-forcenoquality true
