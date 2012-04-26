@@ -9,4 +9,5 @@ minutesPerHour 60
 hoursPerDay 24
 daysPerMonth 30
 stripStartingCharacters false
-addLocation "The Gate" "null" "worldmap/drake4" 0 0
+worldMapImage "worldMap"
+addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 60 420
