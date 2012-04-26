@@ -26,18 +26,11 @@ function onTargetSelect(game, targeter) {
 		aura.setAuraMaxRadius(4);
 		aura.setDuration(duration);
 	
-		for (var i = 0; i < targeter.getAffectedPoints().size(); i++) {
-			var point = targeter.getAffectedPoints().get(i);
-	   
-			var g1 = game.getBaseParticleGenerator("fog");
-			g1.setRedDistribution(game.getFixedDistribution(1.0));
-			g1.setGreenDistribution(game.getFixedDistribution(0.8));
-			g1.setBlueDistribution(game.getFixedDistribution(0.2));
-			g1.setAlphaDistribution(game.getUniformDistribution(0.1, 0.2));
-			g1.setDurationInfinite();
-			g1.setPosition(point);
-			aura.addAnimation(g1);
-		}
+		// the flashing cross effect
+		var g1 = game.getBaseParticleGenerator("haloCross");
+		g1.setPosition(parent.getPosition());
+		g1.setDurationInfinite();
+		aura.addAnimation(g1);
 	
 		parent.applyEffect(aura);
 		

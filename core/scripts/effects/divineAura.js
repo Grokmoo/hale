@@ -18,12 +18,25 @@ function onTargetEnter(game, target, aura) {
 		targetEffect.getBonuses().addBonus('MentalResistance', 'Morale', resistanceBonus);
 		targetEffect.getBonuses().addBonus('PhysicalResistance', 'Morale', resistanceBonus);
 		targetEffect.getBonuses().addBonus('ReflexResistance', 'Morale', resistanceBonus);
+		
+		var anim = game.getBaseAnimation("sparkleAnim");
+		var position = target.getScreenPosition();
+		anim.setPosition(position.x, position.y);
+		game.runAnimationNoWait(anim);
+		
 	} else if (parent.getFaction().isHostile(target)) {
 		targetEffect.getBonuses().addPenalty('Attack', 'Morale', -attackBonus);
 		targetEffect.getBonuses().addPenalty('Damage', 'Morale', -damageBonus);
 		targetEffect.getBonuses().addPenalty('MentalResistance', 'Morale', -resistanceBonus);
 		targetEffect.getBonuses().addPenalty('PhysicalResistance', 'Morale', -resistanceBonus);
 		targetEffect.getBonuses().addPenalty('ReflexResistance', 'Morale', -resistanceBonus);
+		
+		var anim = game.getBaseAnimation("sparkleAnim");
+		var position = target.getScreenPosition();
+		anim.setGreen(0.0);
+		anim.setBlue(0.0);
+		anim.setPosition(position.x, position.y);
+		game.runAnimationNoWait(anim);
 	}
 	
 	target.applyEffect(targetEffect);
