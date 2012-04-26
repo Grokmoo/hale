@@ -1,0 +1,16 @@
+name "Light Shield"
+icon "items/E_Wood02" "#ffffffff"
+subIcon "subIcons/shield-smallshield01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A small, lightweight wooden shield, providing some defense without sacrificing much mobility."
+value "8 SP" 1
+weight 2000
+itemType "SHIELD"
+quality "Good"
+shieldAttackPenalty 0
+armorType "Shield"
+armorClass 10
+armorPenalty 8
+movementPenalty 0

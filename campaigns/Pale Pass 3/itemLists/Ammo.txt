@@ -1,0 +1,3 @@
+"arrow" 2147483647 "Good"
+"bolt" 2147483647 "Good"
+"slingstone" 2147483647 "Good"

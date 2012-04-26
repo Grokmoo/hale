@@ -1,0 +1,10 @@
+name "Feather"
+icon "items/I_FishTail" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A feather from a bird."
+value "1 CP" 3
+weight 10
+itemType "ITEM"
+quality "Good"

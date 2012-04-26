@@ -1,0 +1,19 @@
+name "Long Spear"
+description "Creates a long spear.  The quality is dependant on your Craft Weapons skill."
+skill "CraftWeapons"
+skillRequirement 25
+result "longspear"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_iron" 1
+ingredient "bar_wood" 2
+ingredient "coal" 4
+qualityModifier 20 ""
+qualityModifier 40 ""
+qualityModifier 60 ""
+qualityModifier 80 ""
+qualityModifier 100 ""
+qualityModifier 120 ""
+qualityModifier 135 ""
+qualityModifier 155 ""

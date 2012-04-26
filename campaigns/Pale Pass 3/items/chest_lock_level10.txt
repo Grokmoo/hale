@@ -1,0 +1,17 @@
+name "Chest"
+icon "items/Z_chest001" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A chest that can hold a variety of items within."
+value "0 CP" 1
+weight 20000
+itemType "ITEM"
+quality "Good"
+container true
+addloot "LootLevel10" 100 PER_LIST
+addloot "LootLevel10" 25 PER_LIST
+addloot "LootLevel10" 8 PER_LIST
+workbench false
+openicon "items/Z_chest001_open"
+lock 120

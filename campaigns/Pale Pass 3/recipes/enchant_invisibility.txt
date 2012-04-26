@@ -1,0 +1,18 @@
+name "Cloak of Invisibility"
+description "Adds a concealment enchantment to a cloak.  The amount of concealment depends on your enchanting skill."
+skill "Enchanting"
+skillRequirement 50
+resultQuantity 1
+resultHasQuality "true
+anyItemOfTypeIngredient "CLOAK"
+resultIsIngredient true
+ingredient "bar_gold" 1
+ingredient "gem10" 2
+qualityModifier 30 "entity.addBonus('Concealment',  10);"
+qualityModifier 50 "entity.addBonus('Concealment',  20);"
+qualityModifier 70 "entity.addBonus('Concealment',  30);"
+qualityModifier 90 "entity.addBonus('Concealment',  40);"
+qualityModifier 110 "entity.addBonus('Concealment',  50);"
+qualityModifier 130 "entity.addBonus('Concealment',  60);"
+qualityModifier 150 "entity.addBonus('Concealment',  70);"
+qualityModifier 170 "entity.addBonus('Concealment',  80);"

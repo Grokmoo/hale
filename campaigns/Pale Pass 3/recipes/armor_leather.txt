@@ -1,0 +1,18 @@
+name "Leather Armor"
+description "Creates leather armor.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 10
+result "armor_leather_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 4
+ingredient "thread" 10
+qualityModifier 5 ""
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 125 ""
+qualityModifier 145 ""

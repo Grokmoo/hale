@@ -1,0 +1,12 @@
+name "Pale Pass Chapter 3"
+startArea "The Gate"
+minPartySize 2
+maxPartySize 4
+minStartingLevel 12
+maxStartingLevel 18
+roundsPerMinute 10
+minutesPerHour 60
+hoursPerDay 24
+daysPerMonth 30
+stripStartingCharacters false
+addLocation "The Gate" "null" "worldmap/drake4" 0 0

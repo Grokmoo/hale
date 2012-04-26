@@ -1,0 +1,15 @@
+name "Leather Gloves"
+icon "items/Ac_Gloves01" "#ffffffff"
+subIcon "subIcons/gloves-02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Gloves made of sturdy leather to protect the wearer's hands."
+value "1 SP 7 CP" 1
+weight 400
+itemType "GLOVES"
+quality "Good"
+armorType "Light"
+armorClass 2
+armorPenalty 1
+movementPenalty 0

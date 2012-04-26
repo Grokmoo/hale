@@ -1,0 +1,15 @@
+name "Plate Gloves"
+icon "items/Ac_Gloves06" "#ffffffff"
+subIcon "subIcons/gloves-01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Gloves made of carefully crafted steel plates, these provide excellent protection for the wearer's hands."
+value "1 GP 6 SP" 1
+weight 800
+itemType "GLOVES"
+quality "Good"
+armorType "Heavy"
+armorClass 4
+armorPenalty 4
+movementPenalty 3

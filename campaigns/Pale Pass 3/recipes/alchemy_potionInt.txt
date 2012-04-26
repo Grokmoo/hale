@@ -1,0 +1,19 @@
+name "Potion of Intelligence"
+description "Creates a potion of intelligence.  The bonus conferred by the potion depends on your Alchemy Skill."
+skill "Alchemy"
+skillRequirement 20
+result "potionInt"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "empty_bottle" 1
+ingredient "water_jug" 1
+ingredient "gem09" 2
+qualityModifier 10 ""
+qualityModifier 30 ""
+qualityModifier 50 ""
+qualityModifier 70 ""
+qualityModifier 90 ""
+qualityModifier 110 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

@@ -1,0 +1,15 @@
+name "Mail Gloves"
+icon "items/Ac_Gloves03" "#ffffffff"
+subIcon "subIcons/gloves-03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "Gloves made of interlocking metal rings, these provide more protection than leather gloves."
+value "5 SP 3 CP" 1
+weight 600
+itemType "GLOVES"
+quality "Good"
+armorType "Medium"
+armorClass 3
+armorPenalty 2
+movementPenalty 2

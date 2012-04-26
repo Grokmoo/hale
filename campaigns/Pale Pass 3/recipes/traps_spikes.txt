@@ -1,0 +1,17 @@
+name "Spikes"
+description "Creates 10 spikes for use in trap making."
+skill "Traps"
+skillRequirement 5
+result "spike"
+resultQuantity 10
+resultHasQuality "false
+resultIsIngredient false
+ingredient "bar_iron" 1
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""
+qualityModifier 0 ""

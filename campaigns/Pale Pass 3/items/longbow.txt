@@ -1,0 +1,25 @@
+name "Longbow"
+icon "items/W_Bow02" "#ffffffff"
+subIcon "subIcons/weapon-bow02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A large and powerful bow that can do large damage and be fired rapidly by a skilled user."
+value "8 GP" 1
+weight 1400
+itemType "WEAPON"
+quality "Good"
+useButtonText ""
+baseWeapon "Longbow"
+weaponType "BOW"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens false
+damageType "Piercing"
+damage 2 7
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800
+rangePenalty 16
+maximumRange 125
+maxStrengthBonus 0

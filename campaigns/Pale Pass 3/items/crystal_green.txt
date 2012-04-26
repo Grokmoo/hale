@@ -1,0 +1,10 @@
+name "Green Crystal"
+icon "items/I_Eye" "#ff23d900"
+ingredient true
+quest false
+cursed false
+description "A chunk of rock with green crystals embedded in it, useful for some crafting recipes."
+value "2 SP 5 CP" 1
+weight 400
+itemType "ITEM"
+quality "Good"

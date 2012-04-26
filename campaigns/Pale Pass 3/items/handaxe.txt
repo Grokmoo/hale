@@ -1,0 +1,21 @@
+name "Handaxe"
+icon "items/W_Axe002" "#ffffffff"
+subIcon "subIcons/weapon-axe01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A small axe that does piercing damage, suitable for use as an off hand weapon."
+value "1 GP 5 SP" 1
+weight 1200
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Handaxe"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Piercing"
+damage 1 5
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800
