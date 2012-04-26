@@ -1,0 +1,11 @@
+name "Amulet"
+icon "items/Ac_Necklace02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A mundane amulet that can be worn around the neck."
+value "1 SP" 1
+weight 500
+itemType "AMULET"
+quality "Good"
+useButtonText ""

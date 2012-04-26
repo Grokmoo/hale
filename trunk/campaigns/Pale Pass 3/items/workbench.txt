@@ -1,0 +1,13 @@
+name "Workbench"
+icon "items/workbench" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A workbench, suitable for use in crafting a variety of items."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+container true
+workbench true
+openicon "items/workbench"

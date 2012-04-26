@@ -1,0 +1,15 @@
+playerCharacter false
+
+name "Bear"
+icon "creatures/bear" "#ffffffff"
+gender "Male"
+race "MediumAnimal"
+unspentSkillPoints 0
+xp 1000
+role "Monster" 5
+attributes 18 10 18 3 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor10"
+
+currencyReward 15 25
+equip "mediumClaw" Superb

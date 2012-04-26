@@ -1,0 +1,19 @@
+name "Large Claw"
+ingredient false
+quest false
+cursed false
+description "This item has no unique properties."
+value "0 CP" 1
+weight 0
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Unarmed"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 3 8
+criticalRange 96
+criticalMultiplier 2
+attackCost 2800

@@ -1,0 +1,10 @@
+name "Moonstone"
+icon "items/S_Sling01" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A good example of a moonstone, worth a bit of coin."
+value "3 SP 2 CP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

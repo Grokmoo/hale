@@ -1,0 +1,10 @@
+name "Stone"
+icon "items/I_Rock04" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A large stone."
+value "2 CP" 1
+weight 1000
+itemType "ITEM"
+quality "Good"

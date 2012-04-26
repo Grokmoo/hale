@@ -1,0 +1,24 @@
+name "Shortbow"
+icon "items/W_Bow01" "#ffffffff"
+subIcon "subIcons/weapon-bow01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A small bow that still is able to deal out respectible damage with accuracy at range."
+value "5 GP" 1
+weight 1100
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Shortbow"
+weaponType "BOW"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens false
+damageType "Piercing"
+damage 2 6
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800
+rangePenalty 20
+maximumRange 100
+maxStrengthBonus 0

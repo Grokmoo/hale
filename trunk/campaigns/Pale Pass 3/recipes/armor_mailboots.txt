@@ -1,0 +1,20 @@
+name "Mail Boots"
+description "Creates a pair of mail boots.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 15
+result "boots_mail_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 1
+ingredient "thread" 2
+ingredient "bar_iron" 1
+ingredient "coal" 2
+qualityModifier 10 ""
+qualityModifier 30 ""
+qualityModifier 50 ""
+qualityModifier 70 ""
+qualityModifier 90 ""
+qualityModifier 110 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

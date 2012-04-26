@@ -1,0 +1,10 @@
+name "Wire"
+icon "items/Z_wires" "#ffa0a883"
+ingredient true
+quest false
+cursed false
+description "A length of wire, useful in crafting certain items"
+value "1 SP" 1
+weight 100
+itemType "ITEM"
+quality "Good"

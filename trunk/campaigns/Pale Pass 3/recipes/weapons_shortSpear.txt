@@ -1,0 +1,19 @@
+name "Short Spear"
+description "Creates a short spear.  The quality is dependant on your Craft Weapons skill."
+skill "CraftWeapons"
+skillRequirement 20
+result "shortspear"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_iron" 1
+ingredient "bar_wood" 1
+ingredient "coal" 4
+qualityModifier 15 ""
+qualityModifier 35 ""
+qualityModifier 55 ""
+qualityModifier 75 ""
+qualityModifier 95 ""
+qualityModifier 115 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

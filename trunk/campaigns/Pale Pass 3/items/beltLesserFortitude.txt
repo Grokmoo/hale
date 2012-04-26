@@ -1,0 +1,12 @@
+name "Belt of Fortitude"
+icon "items/Ac_Belt01" "#ff6cbc29"
+ingredient false
+quest false
+cursed false
+description "This magically enchanted belt provides a +5 bonus to Physical Resistance checks."
+value "9 SP" 1
+weight 1000
+itemType "BELT"
+quality "Good"
+enchantment "entity.addBonus('PhysicalResistance', 'Enhancement', 5);"
+useButtonText ""

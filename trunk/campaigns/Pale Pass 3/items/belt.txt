@@ -1,0 +1,10 @@
+name "Belt"
+icon "items/Ac_Belt01" "#ffcdb998"
+ingredient false
+quest false
+cursed false
+description "A mundane belt which is wrapped around the wearer's waist."
+value "5 CP" 1
+weight 1000
+itemType "BELT"
+quality "Good"

@@ -1,0 +1,24 @@
+name "Sling"
+icon "items/W_Sling01" "#ffffffff"
+subIcon "subIcons/weapon-sling01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "An ancient weapon, a sling is a device for hurling small stones at high velocity."
+value "3 CP" 1
+weight 400
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Sling"
+weaponType "SLING"
+weaponSize "light" "Medium"
+reach 1 1
+threatens false
+damageType "Blunt"
+damage 1 5
+criticalRange 98
+criticalMultiplier 3
+attackCost 2800
+rangePenalty 20
+maximumRange 100
+maxStrengthBonus 0

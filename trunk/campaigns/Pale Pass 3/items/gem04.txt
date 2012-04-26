@@ -1,0 +1,10 @@
+name "Jasper"
+icon "items/I_Scroll" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A good example of a jasper stone, worth a bit of coin."
+value "4 SP" 1
+weight 10
+itemType "ITEM"
+quality "Good"

@@ -1,0 +1,10 @@
+name "Red Crystal"
+icon "items/I_Diamond" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A chunk of rock with red crystals embedded in it, useful for some crafting recipes."
+value "2 SP 5 CP" 1
+weight 400
+itemType "ITEM"
+quality "Good"

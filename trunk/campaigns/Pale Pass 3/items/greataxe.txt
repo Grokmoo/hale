@@ -1,0 +1,21 @@
+name "Greataxe"
+icon "items/W_Axe009" "#ffffffff"
+subIcon "subIcons/weapon-axe05" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A huge axe, suitable for use in two hands.  This weapon deals out tremendous damage."
+value "4 GP" 1
+weight 5000
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Greataxe"
+weaponType "MELEE"
+weaponSize "twohanded" "Medium"
+reach 1 1
+threatens true
+damageType "Slashing"
+damage 3 12
+criticalRange 98
+criticalMultiplier 3
+attackCost 4200

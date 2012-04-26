@@ -1,0 +1,15 @@
+name "Plate Helmet"
+icon "items/C_Elm03" "#ffffffff"
+subIcon "subIcons/helmet-04" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A helmet made of solid steel plates, providing excellent protection for the wearer's head."
+value "1 GP 9 SP" 1
+weight 1200
+itemType "HELMET"
+quality "Good"
+armorType "Heavy"
+armorClass 4
+armorPenalty 4
+movementPenalty 3

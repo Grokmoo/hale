@@ -1,0 +1,10 @@
+name "Diamond"
+icon "items/I_Fabric" "#ffffffff"
+ingredient true
+quest false
+cursed false
+description "A rare and valuable diamond."
+value "5 GP" 1
+weight 1
+itemType "ITEM"
+quality "Good"

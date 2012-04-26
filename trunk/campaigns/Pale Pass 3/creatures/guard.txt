@@ -1,0 +1,20 @@
+playerCharacter false
+
+name "Guard"
+icon "creatures/human10" "#ffffffff"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+role "Warrior" 5
+attributes 15 10 13 10 10 10
+script "ai/aiStandard"
+
+currencyReward 0 0
+equip "shortspear" Good
+equip "armor_mail_base" Good
+equip "gloves_mail_base" Good
+equip "helmet_mail_base" Good
+equip "boots_mail_base" Good

@@ -1,0 +1,24 @@
+name "Crossbow"
+icon "items/W_XBow01" "#ffffffff"
+subIcon "subIcons/weapon-crossbow01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "The crossbow is simpler to operate than a traditional bow and does respectable damage, but at a lower firing rate.  Unlike other ranged weapons, the user's strength penalty does not apply to Crossbow damage."
+value "3 GP" 1
+weight 1500
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Crossbow"
+weaponType "CROSSBOW"
+weaponSize "twohanded" "Small"
+reach 1 1
+threatens false
+damageType "Piercing"
+damage 2 10
+criticalRange 98
+criticalMultiplier 3
+attackCost 4200
+rangePenalty 18
+maximumRange 100
+maxStrengthBonus 0

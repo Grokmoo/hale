@@ -1,0 +1,21 @@
+name "Morningstar"
+icon "items/W_Mace004" "#ffffffff"
+subIcon "subIcons/weapon-mace01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A long rod typically made of wood with a heavy metal ball attached to one end in order to do crushing damage. The morningstar is essentially a larger version of the mace."
+value "1 GP 8 SP" 1
+weight 3500
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Morningstar"
+weaponType "MELEE"
+weaponSize "onehanded" "Medium"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 6
+criticalRange 97
+criticalMultiplier 2
+attackCost 2800

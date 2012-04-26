@@ -1,0 +1,12 @@
+name "Sling Stone"
+icon "items/S_Sling01" "#ffffffff"
+projectileIcon "subIcons/projectile_bullet01" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A stone for use with a sling."
+value "1 CP" 5
+weight 50
+itemType "AMMO"
+quality "Good"
+weaponType "SLING"

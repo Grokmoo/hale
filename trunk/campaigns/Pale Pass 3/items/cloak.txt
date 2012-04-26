@@ -1,0 +1,11 @@
+name "Cloak"
+icon "items/A_Cloak01" "#ffb8ae46"
+subIcon "subIcons/cloak-01" "#ffb8ae46"
+ingredient false
+quest false
+cursed false
+description "An ordinary cloak which is clasped around the neck."
+value "8 CP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"

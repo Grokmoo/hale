@@ -1,0 +1,12 @@
+name "Sign Post"
+ingredient false
+quest false
+cursed false
+description "A sign post."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+container true
+workbench false
+openicon "null"

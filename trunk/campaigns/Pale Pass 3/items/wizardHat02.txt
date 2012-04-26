@@ -1,0 +1,18 @@
+name "Hat of Sparkling Mind"
+icon "items/C_Hat01" "#ffffffff"
+subIcon "subIcons/helmet-05" "#ffb39abf"
+ingredient false
+quest false
+cursed false
+description "This hat has a powerful enchantment that provides a +2 bonus to intelligence and a +20 bonus to Mental Resistance checks."
+value "5 GP" 1
+weight 800
+itemType "HELMET"
+quality "Exceptional"
+enchantment "entity.addBonus('Int', 'Enhancement', 2);"
+enchantment "entity.addBonus('MentalResistance', 'Enhancement', 20);"
+useButtonText ""
+armorType "None"
+armorClass 0
+armorPenalty 0
+movementPenalty 0

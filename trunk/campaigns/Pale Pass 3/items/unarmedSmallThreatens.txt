@@ -1,0 +1,19 @@
+name "Unarmed Small"
+ingredient false
+quest false
+cursed false
+description "This item has no unique properties."
+value "0 CP" 1
+weight 0
+itemType "WEAPON"
+quality "Good"
+baseWeapon "Unarmed"
+weaponType "MELEE"
+weaponSize "light" "Small"
+reach 1 1
+threatens true
+damageType "Blunt"
+damage 1 2
+criticalRange 98
+criticalMultiplier 2
+attackCost 2800

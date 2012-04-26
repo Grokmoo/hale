@@ -1,0 +1,15 @@
+name "Plate Armor"
+icon "items/A_Armor08" "#ffffffff"
+subIcon "subIcons/armor-01" "#ffdae7c8"
+ingredient false
+quest false
+cursed false
+description "Armor consisting of large steel plates, providing excellent protection but at the expense of some mobility."
+value "2 PP" 1
+weight 15000
+itemType "ARMOR"
+quality "Good"
+armorType "Heavy"
+armorClass 25
+armorPenalty 25
+movementPenalty 20

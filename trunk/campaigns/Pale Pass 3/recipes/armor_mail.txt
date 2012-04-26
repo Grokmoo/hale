@@ -1,0 +1,20 @@
+name "Mail Armor"
+description "Creates mail armor. The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 35
+result "armor_scale_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "leather" 2
+ingredient "thread" 10
+ingredient "coal" 6
+ingredient "bar_iron" 6
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 125 ""
+qualityModifier 145 ""
+qualityModifier 165 ""
