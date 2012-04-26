@@ -8,6 +8,12 @@ addStartLocation 2 13
 addStartLocation 2 12
 addStartLocation 1 12
 
+encounter "treeants" 18 22
+encounter "treeants" 16 33
+encounter "treeants" 31 25
+encounter "treeants" 29 8
+encounter "treeants" 22 16
+encounter "treeantsBoss" 10 5
 
 
 tile base 39 39 base/grass1

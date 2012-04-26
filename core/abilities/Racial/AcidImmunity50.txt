@@ -1,0 +1,8 @@
+name "Acid Immunity 50%"
+type "Racial Abilities"
+description "Some creatures are naturally highly resistant to acid."
+activateable false
+
+icon "icons/naturalArmor"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Acid', 50); parent.applyEffect(effect); }"
