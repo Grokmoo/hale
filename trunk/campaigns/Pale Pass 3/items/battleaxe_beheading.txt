@@ -1,15 +1,16 @@
-name "Axe of Gan Tok"
+name "Battleaxe of Beheading"
 icon "items/W_Axe008" "#ffffffff"
-subIcon "subIcons/weapon-axe02" "#ffdc9696"
+subIcon "subIcons/weapon-axe02" "#ffedb7a0"
 ingredient false
 quest false
 cursed false
-description "A masterfully crafted axe, heirloom of the royal family of the Dwarven city of Gan Tok."
-value "4 PP" 1
+description "This wicked weapon has more frequent and deadly critical hits than an ordinary axe."
+value "2 PP 5 GP" 1
 weight 2400
 itemType "WEAPON"
 quality "Exceptional"
-script "items/axe_dwarven"
+enchantment "entity.addBonus('WeaponCriticalChance', 3);"
+enchantment "entity.addBonus('WeaponCriticalMultiplier', 1);"
 useButtonText ""
 baseWeapon "Battleaxe"
 weaponType "MELEE"

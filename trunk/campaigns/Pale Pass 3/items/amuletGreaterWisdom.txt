@@ -1,0 +1,12 @@
+name "Amulet of Greater Wisdom"
+icon "items/Ac_Necklace03" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A magically enchanted amulet, providing a +2 bonus to the wearer's wisdom."
+value "4 GP 5 SP" 1
+weight 500
+itemType "AMULET"
+quality "Good"
+enchantment "entity.addBonus('Wis', 'Enhancement', 2);"
+useButtonText ""

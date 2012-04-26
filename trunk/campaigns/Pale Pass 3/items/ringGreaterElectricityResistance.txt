@@ -1,0 +1,12 @@
+name "Ring of Greater Protection from Electricity"
+icon "items/Ac_Ring01" "#ff74e5d4"
+ingredient false
+quest false
+cursed false
+description "This ring has a magical enchantment that provides 10 points of Damage Reduction against Electricity."
+value "3 GP 5 SP" 1
+weight 100
+itemType "RING"
+quality "Good"
+enchantment "entity.addDamageReduction('Electrical', 10);"
+useButtonText ""

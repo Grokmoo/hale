@@ -5,7 +5,7 @@ ingredient false
 quest false
 cursed false
 description "These gloves are magically enchanted to provide a +1 bonus to Dexterity, in addition to protection."
-value "1 SP 7 CP" 1
+value "1 GP 8 SP" 1
 weight 400
 itemType "GLOVES"
 quality "Fine"

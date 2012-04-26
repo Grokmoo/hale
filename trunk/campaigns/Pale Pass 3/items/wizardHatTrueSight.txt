@@ -1,0 +1,17 @@
+name "Hat of True Seeing"
+icon "items/C_Hat02" "#ffabd49e"
+subIcon "subIcons/helmet-05" "#ffabd49e"
+ingredient false
+quest false
+cursed false
+description "This hat has an enchantment that provides 20% Concealment Ignoring on all targets."
+value "5 GP 5 SP" 1
+weight 800
+itemType "HELMET"
+quality "Fine"
+enchantment "entity.addBonus('ConcealmentIgnoring', 20);"
+useButtonText ""
+armorType "None"
+armorClass 0
+armorPenalty 0
+movementPenalty 0

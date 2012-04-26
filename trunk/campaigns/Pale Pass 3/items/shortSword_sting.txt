@@ -1,0 +1,23 @@
+name "Sting"
+icon "items/W_Sword010" "#ffffffff"
+subIcon "subIcons/weapon-sword02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A masterfully crafted short sword, this weapon inflicts critical hits much more frequently than an ordinary blade."
+value "1 PP 9 GP" 1
+weight 900
+itemType "WEAPON"
+quality "Phenomenal"
+enchantment "entity.addBonus('WeaponCriticalChance', 10);"
+useButtonText ""
+baseWeapon "Short Sword"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Piercing"
+damage 1 5
+criticalRange 93
+criticalMultiplier 2
+attackCost 2800

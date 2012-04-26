@@ -1,0 +1,13 @@
+name "Cloak of Freezing"
+icon "items/A_Cloak01" "#ffadb3f1"
+subIcon "subIcons/cloak-01" "#ffadb3f1"
+ingredient false
+quest false
+cursed false
+description "Magically enchanted, this cloak grants an additional 20% damage from all ice spells."
+value "4 GP 5 SP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"
+enchantment "entity.addSpellDamageBonus('Cold', 20);"
+useButtonText ""

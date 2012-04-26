@@ -1,0 +1,13 @@
+name "Cloak of Reflexes"
+icon "items/A_Cloak01" "#ffeb86c6"
+subIcon "subIcons/cloak-01" "#ff528eac"
+ingredient false
+quest false
+cursed false
+description "This cloak has a magical enchantment to provide a +10 bonus to the Reflex Resistance."
+value "3 GP" 1
+weight 1000
+itemType "CLOAK"
+quality "Good"
+enchantment "entity.addBonus('ReflexResistance', 10);"
+useButtonText ""

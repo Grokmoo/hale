@@ -5,7 +5,7 @@ ingredient false
 quest false
 cursed false
 description "This hat has a minor enchantment that provides a +1 bonus to Intelligence, although it provides no noticeable protection."
-value "5 SP" 1
+value "1 GP 5 SP" 1
 weight 800
 itemType "HELMET"
 quality "Fine"
