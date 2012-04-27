@@ -10,7 +10,7 @@ drawWithSubIcons true
 skincolor "#ff3f3737"
 clothingcolor "#ffffffff"
 xp 16600
-role "Priest" 14
+role "Priest" 13
 attributes 15 13 14 10 17 10
 script "ai/aiStandard"
 addSkillRanks "Search" 60

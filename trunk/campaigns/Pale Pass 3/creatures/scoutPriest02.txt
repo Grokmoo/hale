@@ -10,15 +10,15 @@ drawWithSubIcons true
 skincolor "#ff3f3737"
 clothingcolor "#ffffffff"
 xp 16600
-role "Priest" 14
+role "Priest" 13
 attributes 15 12 13 10 17 10
 script "ai/aiStandard"
 addSkillRanks "Search" 60
 level 1 addAbility "Resistance"
 level 1 addAbility "DivineAura"
 level 1 addAbility "DivineLuck"
-level 1 addAbility "FlamingWeapon"
 level 1 addAbility "ImproveWeapon"
+level 1 addAbility "FlamingWeapon"
 level 1 addAbility "HardenArmor"
 level 1 addAbility "Cure"
 level 1 addAbility "MassCure"

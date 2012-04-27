@@ -10,7 +10,7 @@ drawWithSubIcons true
 skincolor "#ff4c4343"
 clothingcolor "#ffffffff"
 xp 16600
-role "Mage" 15
+role "Mage" 13
 attributes 12 13 14 18 10 10
 script "ai/aiStandard"
 addSkillRanks "Search" 70
