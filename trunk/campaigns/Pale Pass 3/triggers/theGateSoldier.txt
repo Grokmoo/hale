@@ -1,0 +1,3 @@
+area "The Gate"
+script "triggers/theGateSoldier"
+addPoints   28 4   28 3   28 2
