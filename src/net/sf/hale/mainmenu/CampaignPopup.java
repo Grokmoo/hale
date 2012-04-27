@@ -23,9 +23,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -131,22 +133,6 @@ public class CampaignPopup extends PopupWindow {
 			
 			Map<String, CampaignDescriptor> campaigns = CampaignPopup.getAvailableCampaigns();
 			
-			// add available campaigns to pane Content
-//			for (CampaignDescriptor descriptor : campaigns.values()) {
-//				CampaignSelector selector = new CampaignSelector(descriptor.id, descriptor.name, descriptor.description);
-//				mainH.addWidget(selector);
-//				mainV.addWidget(selector);
-//				
-//				// if we found the current campaign in the list of selections,
-//				// select that campaign
-//				if (Game.curCampaign != null && descriptor.id.equals(Game.curCampaign.getID()) ) {
-//					selected = selector;
-//					textAreaModel.setHtml(selector.description);
-//					selected.setActive(true);
-//					accept.setEnabled(true);
-//				}
-//			}
-			
 			// add available groups to pane content
 			for (CampaignGroupSelector selector : CampaignPopup.getAvailableGroups(campaigns)) {
 				selector.setCallback(CampaignPopup.this);
@@ -220,6 +206,7 @@ public class CampaignPopup extends PopupWindow {
 	private static List<CampaignGroupSelector> getAvailableGroups(Map<String, CampaignDescriptor> campaigns) {
 		List<CampaignGroupSelector> groups = new ArrayList<CampaignGroupSelector>();
 		
+		// find all of the file defined groups in the campaigns/ directory
 		try {
 			for (String fileName : new File("campaigns").list()) {
 				File f = new File("campaigns/" + fileName);
@@ -236,7 +223,23 @@ public class CampaignPopup extends PopupWindow {
 			Logger.appendToErrorLog("Error generating list of campaign groups.", e);
 		}
 		
-		// sort by name
+		// now find the set of all grouped campaigns
+		Set<String> groupedCampaigns = new HashSet<String>();
+		
+		for (CampaignGroupSelector selector : groups) {
+			groupedCampaigns.addAll(selector.getAllCampaignIDs());
+		}
+		
+		// look through all campaigns.  make up a new group for any ungrouped ones
+		for (String campaignID : campaigns.keySet()) {
+			if (groupedCampaigns.contains(campaignID)) continue;
+			
+			CampaignGroupSelector selector = new CampaignGroupSelector(campaigns.get(campaignID));
+			
+			groups.add(selector);
+		}
+		
+		// sort all groups by name
 		Collections.sort(groups, new Comparator<CampaignGroupSelector>() {
 			@Override public int compare(CampaignGroupSelector arg0, CampaignGroupSelector arg1) {
 				return arg0.getCampaignName().compareTo(arg1.getCampaignName());

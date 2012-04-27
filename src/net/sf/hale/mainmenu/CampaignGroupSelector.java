@@ -21,6 +21,7 @@ package net.sf.hale.mainmenu;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ import de.matthiasmann.twl.Widget;
  */
 
 public class CampaignGroupSelector extends ToggleButton implements Runnable {
-	private CampaignGroup group;
+	private final CampaignGroup group;
 	
 	private CampaignPopup callback;
 	
@@ -45,19 +46,47 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	
 	private CampaignSelector selected;
 	
-	/**
-	 * Creates a new group selector widget for the campaign group with the specified ID
-	 * @param id the ID (based on the filename of the group)
-	 */
-	
-	public CampaignGroupSelector(String id, Map<String, CampaignDescriptor> campaigns) {
-		this.group = new CampaignGroup(id, campaigns);
+	private CampaignGroupSelector(CampaignGroup group) {
+		this.group = group;
 		
 		groupName = new Label(group.name);
 		groupName.setTheme("namelabel");
 		add(groupName);
 		
 		addCallback(this);
+	}
+	
+	/**
+	 * Creates a new group selector with a single entry in the group
+	 * @param descriptor the single and default entry for this campaign group
+	 */
+	
+	public CampaignGroupSelector(CampaignDescriptor descriptor) {
+		this(new CampaignGroup(descriptor));
+	}
+	
+	/**
+	 * Creates a new group selector widget for the campaign group with the specified ID
+	 * @param id the ID (based on the filename of the group)
+	 */
+	
+	public CampaignGroupSelector(String id, Map<String, CampaignDescriptor> campaigns) {
+		this(new CampaignGroup(id, campaigns));
+	}
+	
+	/**
+	 * Gets a list of the IDs of all campaigns in this campaign group
+	 * @return the list of campaign IDs
+	 */
+	
+	public List<String> getAllCampaignIDs() {
+		List<String> ids = new ArrayList<String>();
+		
+		for (CampaignDescriptor descriptor : group.entries) {
+			ids.add(descriptor.id);
+		}
+		
+		return ids;
 	}
 	
 	/**
@@ -235,6 +264,12 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 		private final String name;
 		private final CampaignDescriptor defaultEntry;
 		private final List<CampaignDescriptor> entries;
+		
+		private CampaignGroup(CampaignDescriptor entry) {
+			this.name = entry.name;
+			this.defaultEntry = entry;
+			this.entries = Collections.singletonList(entry);
+		}
 		
 		private CampaignGroup(String id, Map<String, CampaignDescriptor> campaigns) {
 			SimpleJSONParser parser = new SimpleJSONParser(new File("campaigns/" + id + ResourceType.JSON.getExtension()));
