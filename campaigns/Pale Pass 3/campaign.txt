@@ -1,4 +1,4 @@
-name "Pale Pass Chapter 3"
+name "Chapter 3"
 startArea "The Gate"
 minPartySize 2
 maxPartySize 4

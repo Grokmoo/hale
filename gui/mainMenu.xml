@@ -317,6 +317,17 @@
 		</theme>
 	</theme>
 	
+	<theme name="campaigngroupselector" ref="-defaults">
+		<param name=""><image>hoverbutton.*</image></param>
+		<param name="border"><border>5</border></param>
+		<param name="minWidth"><int>160</int></param>
+		<param name="minHeight"><int>50</int></param>
+		
+		<theme name="namelabel" ref="labelbigblack"/>
+		
+		<theme name="campaignselector" ref="mainmenubutton"/>
+	</theme>
+	
 	<theme name="campaignpopup" ref="iconbuttongrey">
 		<theme name="content" ref="-defaults">
 			<param name="acceptCancelGap"><int>5</int></param>
@@ -348,9 +359,7 @@
 				<param name="minWidth"><int>250</int></param>
 			
 				<theme name="content" ref="dialoglayout">
-					<theme name="campaignselector" ref="mainmenubutton">
-						<param name="minWidth"><int>150</int></param>
-					</theme>
+					<theme name="campaigngroupselector" ref="campaigngroupselector"/>
 				</theme>
 			</theme>
 		</theme>
