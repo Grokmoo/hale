@@ -1,0 +1,12 @@
+name "Insignia"
+icon "items/E_Bones01" "#ffffffff"
+ingredient false
+quest true
+cursed false
+description "The Insignia from the Commander of the Master's Scout encampment near Aravil."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+script "items/scoutCommanderInsignia"
+useButtonText ""

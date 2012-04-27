@@ -9,9 +9,9 @@ xp 20600
 role "MonsterStrong" 15
 attributes 20 9 19 7 10 10
 script "ai/aiStandard"
-level 1 addAbility "ElectricalImmunity50"
-level 1 addAbility "FireVulnerability25"
 level 1 addAbility "NaturalArmor30"
+level 1 addAbility "FireVulnerability25"
+level 1 addAbility "ElectricalImmunity50"
 level 1 addAbility "ColdImmunity50"
 
 currencyReward 50 120

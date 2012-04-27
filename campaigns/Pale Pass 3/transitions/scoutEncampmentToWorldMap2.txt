@@ -1,0 +1,10 @@
+icon "transition"
+twoWay false
+activated true
+location "Scout Encampment"
+from "Scout Encampment" 38 25
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
