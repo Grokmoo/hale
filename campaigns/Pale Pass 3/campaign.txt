@@ -11,3 +11,5 @@ daysPerMonth 30
 stripStartingCharacters false
 worldMapImage "worldMap"
 addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 60 420
+addLocation "Aravil" "aravilGateToWorldMap" "worldmap/human-city" 300 400
+setTravelTime "The Gate" "Aravil" 24

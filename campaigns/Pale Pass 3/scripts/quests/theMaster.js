@@ -9,3 +9,15 @@ function startQuest(game) {
     
     entry.addText("In order to stop the seemingly endless stream of assassins, you must find and defeat the Master.");
 }
+
+function learnOfArmy(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("The Master's Army")) return;
+	
+	var entry = quest.createSubEntry("The Master's Army");
+	
+	entry.addText("You met a scout who told you that while you were trapped underground, the Master has assembled an army and is now openly opposing the King.");
+	
+	entry.addText("You should travel to Aravil to learn more and help with the fight against the Master.");
+}

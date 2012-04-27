@@ -1,0 +1,10 @@
+icon "transition"
+twoWay false
+activated true
+location "The Gate"
+from "The Gate" 2 12
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
