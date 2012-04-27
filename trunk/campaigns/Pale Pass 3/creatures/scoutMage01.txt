@@ -1,0 +1,29 @@
+playerCharacter false
+
+name "Mage"
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+drawWithSubIcons true
+
+
+skincolor "#ff4c4343"
+clothingcolor "#ffffffff"
+xp 16600
+role "Mage" 15
+attributes 12 13 14 18 10 10
+script "ai/aiStandard"
+addSkillRanks "Search" 70
+level 1 addAbility "PoisonFog"
+level 1 addAbility "ConcealingFog"
+level 1 addAbility "Crush"
+level 1 addAbility "MassCrush"
+level 1 addAbility "Freeze"
+level 1 addAbility "Tremor"
+level 1 addAbility "Deafen"
+level 1 addAbility "Blindness"
+
+currencyReward 100 200
+equip "quarterstaff" Fine
+equip "armor_clothes" Good
+equip "cloak" Good

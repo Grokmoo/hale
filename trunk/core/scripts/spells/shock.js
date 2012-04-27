@@ -48,6 +48,10 @@ function lightningBolt(game, targeter) {
 	var targets = targeter.getAffectedCreatures();
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
+		
+		// don't damage the caster
+		if (target == parent) continue;
+		
 		var damage = game.dice().d12(2) + casterLevel;
 		
 		var targetPosition = target.getPosition();
