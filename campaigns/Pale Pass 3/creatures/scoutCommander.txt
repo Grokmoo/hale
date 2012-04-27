@@ -12,7 +12,7 @@ drawWithSubIcons true
 skincolor "#ff3f3737"
 clothingcolor "#ffffffff"
 xp 16600
-role "Warrior" 15
+role "Warrior" 14
 attributes 17 13 14 13 12 12
 script "ai/aiStandard"
 conversation "conversations/scoutCommander"

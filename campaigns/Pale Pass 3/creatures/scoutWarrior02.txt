@@ -10,7 +10,7 @@ drawWithSubIcons true
 skincolor "#ff40363b"
 clothingcolor "#ffffffff"
 xp 16600
-role "Warrior" 13
+role "Warrior" 12
 attributes 16 13 14 10 10 10
 script "ai/aiStandard"
 addSkillRanks "Search" 60
