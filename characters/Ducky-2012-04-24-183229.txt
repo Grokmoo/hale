@@ -1,4 +1,5 @@
 playerCharacter true
+pregenerated true
 faction "Player"
 name "Ducky"
 portrait "Human/mage+female"
