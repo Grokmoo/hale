@@ -1,4 +1,5 @@
 playerCharacter true
+pregenerated true
 faction "Player"
 name "Merick"
 portrait "Human/FlareMaleHero3"
