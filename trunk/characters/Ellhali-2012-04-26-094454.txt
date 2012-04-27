@@ -50,8 +50,8 @@ equip "arrow" Good
 additem "shortSword" 1 Fine
 additem "arrow" 162 Good
 additem "potionHealing" 1 Good
-quickbarslot 0 Equip "shortSword" "Decent"
-quickbarslot 1 Equip "longbow" "Decent"
+quickbarslot 0 Equip "shortSword" "Superb"
+quickbarslot 1 Equip "longbow" "Superb"
 quickbarslot 2 Ability "RapidShot"
 quickbarslot 3 Ability "Hide"
 quickbarslot 4 Ability "PiercingShot"
