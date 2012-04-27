@@ -1,4 +1,4 @@
-name "Pale Pass Chapter 2"
+name "Chapter 2"
 startArea "Large Cavern"
 minPartySize 2
 maxPartySize 4

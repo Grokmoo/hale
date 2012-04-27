@@ -1,4 +1,4 @@
-name "Pale Pass Chapter 1"
+name "Chapter 1"
 startArea "The Road to Fareach"
 minPartySize 2
 maxPartySize 4
