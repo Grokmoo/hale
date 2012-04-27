@@ -1776,6 +1776,7 @@ tile borders 15 2 borders/grass-se
 tile borders 15 2 borders/grass-se-s
 tile borders 13 2 borders/grass-s
 tile borders 16 1 borders/grass-ne-se
+tile entity 26 39 features/lilies3
 tile entity 6 39 cliffs/concave-br
 tile entity 6 39 cliffs/convex-tl
 tile entity 5 39 cliffs/concave-br
@@ -1798,6 +1799,7 @@ tile entity 13 36 features/foliage01
 tile entity 8 36 cliffs/convex-l
 tile entity 8 36 cliffs/convex-tl
 tile entity 8 36 cliffs/concave-br
+tile entity 28 35 features/lilies4
 tile entity 11 35 features/barrels
 tile entity 10 35 cliffs/convex-tl
 tile entity 10 35 cliffs/concave-br
@@ -1814,6 +1816,7 @@ tile entity 14 33 cliffs/concave-r
 tile entity 13 33 cliffs/convex-tl
 tile entity 13 33 cliffs/concave-br
 tile entity 37 32 features/shrub02
+tile entity 30 32 features/lilies4
 tile entity 21 32 features/shrub03
 tile entity 14 32 cliffs/concave-r
 tile entity 14 32 cliffs/convex-l
@@ -1834,8 +1837,10 @@ tile entity 18 29 features/shrub04
 tile entity 17 29 features/shrub01
 tile entity 13 29 cliffs/concave-r
 tile entity 13 29 cliffs/convex-l
+tile entity 36 28 features/lilies3
 tile entity 12 28 cliffs/convex-bl
 tile entity 12 28 cliffs/concave-tr
+tile entity 36 27 features/lilies2
 tile entity 25 27 features/shrub02
 tile entity 19 27 features/shrub03
 tile entity 15 27 features/shrub05

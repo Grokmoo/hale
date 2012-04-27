@@ -1,6 +1,6 @@
 icon "transition"
 twoWay false
-activated true
+activated false
 location "The Gate"
 from "The Gate" 2 12
 to "World Map" 0 0
