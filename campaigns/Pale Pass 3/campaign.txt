@@ -10,9 +10,18 @@ hoursPerDay 24
 daysPerMonth 30
 stripStartingCharacters false
 worldMapImage "worldMap"
-addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 60 420
-addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/human-city" 300 400
-addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 450 440
+addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 30 420
+addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/human-city" 280 400
+addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 520 440
+addLocation "Aravil North" "null" "worldmap/human-hills" 320 320
+addLocation "Aravil Merchants" "null" "worldmap/tent-fancy-red" 380 400
 setTravelTime "The Gate" "Aravil West Gate" 24
-setTravelTime "The Gate" "Scout Encampment" 36
-setTravelTime "Aravil West Gate" "Scout Encampment" 12
+setTravelTime "The Gate" "Scout Encampment" 42
+setTravelTime "The Gate" "Aravil North" 25
+setTravelTime "The Gate" "Aravil Merchants" 25
+setTravelTime "Aravil West Gate" "Scout Encampment" 18
+setTravelTime "Aravil West Gate" "Aravil North" 1
+setTravelTime "Aravil West Gate" "Aravil Merchants" 1
+setTravelTime "Scout Encampment" "Aravil North" 18
+setTravelTime "Scout Encampment" "Aravil Merchants" 18
+setTravelTime "Aravil North" "Aravil Merchants" 1
