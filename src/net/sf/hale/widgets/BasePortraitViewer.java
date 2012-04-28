@@ -134,16 +134,22 @@ public class BasePortraitViewer extends ToggleButton {
 		invPortraitScale = 1.0f / (float)portraitScale;
 	}
 	
+	@Override public int getPreferredInnerWidth() {
+		if (portraitSprite == null) return 0;
+		else return portraitSprite.getWidth() / portraitScale;
+	}
+	
+	@Override public int getPreferredInnerHeight() {
+		if (portraitSprite == null) return 0;
+		else return portraitSprite.getHeight() / portraitScale;
+	}
+	
 	@Override public int getPreferredWidth() {
-		if (portraitSprite == null) return getBorderHorizontal();
-		
-		return portraitSprite.getWidth() / portraitScale + getBorderHorizontal();
+		return getPreferredInnerWidth() + getBorderHorizontal();
 	}
 	
 	@Override public int getPreferredHeight() {
-		if (portraitSprite == null) return getBorderVertical();
-		
-		return portraitSprite.getHeight() / portraitScale + getBorderVertical();
+		return getPreferredInnerHeight() + getBorderVertical();
 	}
 	
 	// override the default behavior which draws the overlay on top

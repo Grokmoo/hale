@@ -53,6 +53,7 @@ public class ConversationPopup extends PopupWindow {
 	private StringBuilder text;
 	private ArrayList<ResponseWidget> responses;
 	
+	private Label parentName, targetName;
 	private BasePortraitViewer parentPortrait, targetPortrait;
 	
 	private Content content;
@@ -78,11 +79,15 @@ public class ConversationPopup extends PopupWindow {
 		content = new Content();
 		add(content);
 		
-		if (parent.getType() == Entity.Type.CREATURE)
+		if (parent.getType() == Entity.Type.CREATURE) {
 			parentPortrait = new PortraitViewer( (Creature)parent );
-		
-		if (target.getType() == Entity.Type.CREATURE)
+			parentName = new Label(parent.getName());
+		}
+			
+		if (target.getType() == Entity.Type.CREATURE) {
 			targetPortrait = new PortraitViewer( (Creature)target );
+			targetName = new Label(target.getName());
+		}
 	}
 	
 	/**
@@ -207,36 +212,12 @@ public class ConversationPopup extends PopupWindow {
 	}
 	
 	private class PortraitViewer extends BasePortraitViewer {
-		private int nameOverlap;
-		private Label name;
-		
 		private PortraitViewer(Creature creature) {
 			super(creature);
-			
-			name = new Label(creature.getName());
-			name.setTheme("namelabel");
-			add(name);
-		}
-		
-		@Override public int getPreferredHeight() {
-			return super.getPreferredHeight() + name.getPreferredHeight() - nameOverlap;
-		}
-		
-		@Override protected void layout() {
-			super.layout();
-			
-			int centerX = getInnerX() + getInnerWidth() / 2;
-			
-			name.setSize(name.getPreferredWidth(), name.getPreferredHeight());
-			name.setPosition(centerX - name.getWidth() / 2, getInnerY());
-			
-			this.setPortraitY(name.getHeight() - nameOverlap);
 		}
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
-			
-			nameOverlap = themeInfo.getParameter("nameOverlap", 0);
 			
 			// don't show the background image if there is no portrait sprite
 			if (getPortraitSpriteHeight() == 0) {
@@ -270,10 +251,12 @@ public class ConversationPopup extends PopupWindow {
 		private void addWidgets() {
 			if (parentPortrait != null) {
 				add(parentPortrait);
+				add(parentName);
 			}
 			
 			if (targetPortrait != null) {
 				add(targetPortrait);
+				add(targetName);
 			}
 			
 			add(textPane);
@@ -300,16 +283,24 @@ public class ConversationPopup extends PopupWindow {
 			int portraitBottom = getInnerY();
 			
 			if (parentPortrait != null) {
+				parentName.setSize(parentName.getPreferredWidth(), parentName.getPreferredHeight());
+				parentName.setPosition(getInnerX() + 3 * getInnerWidth() / 4 - parentName.getWidth() / 2,
+						getInnerY());
+				
 				parentPortrait.setSize(parentPortrait.getPreferredWidth(), parentPortrait.getPreferredHeight());
 				parentPortrait.setPosition(getInnerX() + 3 * getInnerWidth() / 4 - parentPortrait.getWidth() / 2,
-						getInnerY());
+						parentName.getBottom());
 				portraitBottom = parentPortrait.getBottom();
 			}
 			
 			if (targetPortrait != null) {
+				targetName.setSize(targetName.getPreferredWidth(), targetName.getPreferredHeight());
+				targetName.setPosition(getInnerX() + getInnerWidth() / 4 - targetName.getWidth() / 2,
+						getInnerY());
+				
 				targetPortrait.setSize(targetPortrait.getPreferredWidth(), targetPortrait.getPreferredHeight());
 				targetPortrait.setPosition(getInnerX() + getInnerWidth() / 4 - targetPortrait.getWidth() / 2,
-						getInnerY());
+						targetName.getBottom());
 				portraitBottom = Math.max(portraitBottom, targetPortrait.getBottom());
 			}
 			

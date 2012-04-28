@@ -854,9 +854,9 @@
 				</theme>
 			</theme>
 			
-			<theme name="portraitviewer" ref="portraitviewer">
-				<param name="nameOverlap"><int>5</int></param>
-			</theme>
+			<theme name="label" ref="label"/>
+			
+			<theme name="portraitviewer" ref="portraitviewer"/>
 		</theme>
 	</theme>
 	
