@@ -11,8 +11,8 @@ daysPerMonth 30
 stripStartingCharacters false
 worldMapImage "worldMap"
 addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 60 420
-addLocation "Aravil" "aravilGateToWorldMap" "worldmap/human-city" 300 400
+addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/human-city" 300 400
 addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 450 440
-setTravelTime "The Gate" "Aravil" 24
+setTravelTime "The Gate" "Aravil West Gate" 24
 setTravelTime "The Gate" "Scout Encampment" 36
-setTravelTime "Aravil" "Scout Encampment" 12
+setTravelTime "Aravil West Gate" "Scout Encampment" 12

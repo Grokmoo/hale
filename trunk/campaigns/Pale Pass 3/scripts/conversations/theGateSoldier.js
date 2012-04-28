@@ -58,7 +58,7 @@ function onExit(game, parent, talker, conversation) {
     
     game.runExternalScriptWait("conversations/theGateSoldier", "moveAndRemove", 1.0, parent);
     game.runExternalScript("quests/theMaster", "learnOfArmy");
-    game.revealWorldMapLocation("Aravil");
+    game.revealWorldMapLocation("Aravil West Gate");
     
     conversation.exit();
 }
