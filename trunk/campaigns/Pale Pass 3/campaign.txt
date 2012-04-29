@@ -11,10 +11,10 @@ daysPerMonth 30
 stripStartingCharacters false
 worldMapImage "worldMap"
 addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 30 420
-addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/human-city" 280 400
+addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/city1" 280 400
 addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 520 440
-addLocation "Aravil North" "null" "worldmap/human-hills" 320 320
-addLocation "Aravil Merchants" "null" "worldmap/tent-fancy-red" 380 400
+addLocation "Aravil North" "null" "worldmap/city2" 320 320
+addLocation "Aravil Merchants" "null" "worldmap/city4" 370 400
 setTravelTime "The Gate" "Aravil West Gate" 24
 setTravelTime "The Gate" "Scout Encampment" 42
 setTravelTime "The Gate" "Aravil North" 25

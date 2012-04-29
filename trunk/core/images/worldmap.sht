@@ -47,3 +47,7 @@ image "cactus"   4 4
 image "stones1"   5 4
 image "cactus2"   6 4
 image "lake1"     7 4
+image "city1"     8 4
+image "city2"     0 5
+image "city3"     1 5
+image "city4"     2 5
