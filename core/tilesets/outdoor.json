@@ -340,7 +340,6 @@
 		{ "with" : "Grass Dry", "id" : "BorderPath" },
 		{ "with" : "Leaves", "id" : "BorderPath" },
 		{ "with" : "Grass", "id" : "BorderPath" },
-		{ "with" : "Path Clean", "id" : "BorderPath" },
 		{ "with" : "Path Grass", "id" : "BorderPath" }
 	  ]
 	},

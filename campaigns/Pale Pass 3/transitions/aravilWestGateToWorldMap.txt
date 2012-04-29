@@ -2,7 +2,7 @@ icon "transition"
 twoWay true
 activated true
 location "Aravil West Gate"
-from "Aravil Gate" 2 10
+from "Aravil West Gate" 2 10
 to "World Map" 0 0
 addToPosition 0 0
 addToPosition 0 0
