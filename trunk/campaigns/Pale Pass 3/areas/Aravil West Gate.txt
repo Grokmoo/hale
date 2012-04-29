@@ -417,7 +417,7 @@ tile base 2 6 base/grass4
 tile base 1 6 base/grass0
 tile base 0 6 base/grass1
 tile base 26 5 base/path3
-tile base 25 5 base/path0
+tile base 25 5 base/path3
 tile base 24 5 base/path1
 tile base 23 5 base/path1
 tile base 19 5 base/grass2
@@ -440,11 +440,11 @@ tile base 3 5 base/grass1
 tile base 2 5 base/grass0
 tile base 1 5 base/grass5
 tile base 0 5 base/grass5
-tile base 28 4 base/path0
-tile base 27 4 base/path2
-tile base 26 4 base/path0
-tile base 25 4 base/path3
-tile base 24 4 base/path1
+tile base 28 4 base/path2
+tile base 27 4 base/path1
+tile base 26 4 base/pathclean1
+tile base 25 4 base/pathclean1
+tile base 24 4 base/path3
 tile base 23 4 base/path0
 tile base 22 4 base/path2
 tile base 18 4 base/grass3
@@ -466,11 +466,11 @@ tile base 3 4 base/grass1
 tile base 2 4 base/grass5
 tile base 1 4 base/grass2
 tile base 0 4 base/grass1
-tile base 29 3 base/path1
-tile base 28 3 base/path3
-tile base 27 3 base/path1
-tile base 26 3 base/path2
-tile base 25 3 base/path3
+tile base 29 3 base/path3
+tile base 28 3 base/pathclean0
+tile base 27 3 base/pathclean2
+tile base 26 3 base/path0
+tile base 25 3 base/path1
 tile base 24 3 base/path1
 tile base 23 3 base/path2
 tile base 22 3 base/path3
@@ -494,7 +494,7 @@ tile base 3 3 base/grass4
 tile base 2 3 base/grass5
 tile base 1 3 base/grass6
 tile base 0 3 base/grass6
-tile base 29 2 base/path1
+tile base 29 2 base/pathclean1
 tile base 28 2 base/path2
 tile base 27 2 base/path2
 tile base 25 2 base/path3
@@ -518,7 +518,7 @@ tile base 3 2 base/grass2
 tile base 2 2 base/grass6
 tile base 1 2 base/grass4
 tile base 0 2 base/grass6
-tile base 29 1 base/path1
+tile base 29 1 base/path2
 tile base 22 1 base/path0
 tile base 21 1 base/path2
 tile base 18 1 base/grass1
@@ -641,6 +641,24 @@ tile borders 20 7 borders/path-se-s
 tile borders 19 7 borders/path-se
 tile borders 19 7 borders/path-se-s
 tile borders 21 6 borders/path-ne-se-s
+tile borders 26 5 borders/pathclean-nw
+tile borders 26 5 borders/pathclean-nw-n
+tile borders 25 5 borders/pathclean-n
+tile borders 24 5 borders/pathclean-ne
+tile borders 28 4 borders/pathclean-nw
+tile borders 28 4 borders/pathclean-nw-n
+tile borders 27 4 borders/pathclean-nw
+tile borders 27 4 borders/pathclean-nw-n
+tile borders 24 4 borders/pathclean-se
+tile borders 29 3 borders/pathclean-nw
+tile borders 26 3 borders/pathclean-se
+tile borders 26 3 borders/pathclean-se-s
+tile borders 25 3 borders/pathclean-se
+tile borders 25 3 borders/pathclean-se-s
+tile borders 28 2 borders/pathclean-se
+tile borders 28 2 borders/pathclean-se-s
+tile borders 27 2 borders/pathclean-se
+tile borders 27 2 borders/pathclean-se-s
 tile wall-base 29 9 wall-base/wall
 tile wall-base 28 9 wall-base/wall
 tile wall-base 29 8 wall-base/wall
@@ -719,6 +737,7 @@ tile entity 26 9 walls/wall-stone-n-ne
 tile entity 25 8 walls/wall-stone-n-ne
 tile entity 24 8 walls/wall-stone-n-ne
 tile entity 24 8 features/banner
+tile entity 29 7 walls/wall-stone-n-ne
 tile entity 28 7 walls/wall-stone-n-ne
 tile entity 23 7 walls/wall-stone-ne
 tile entity 27 6 walls/wall-stone-n-ne
@@ -855,6 +874,7 @@ tile ceiling 26 11 trees/treetall02
 tile ceiling 9 10 trees/tree02
 tile ceiling 4 8 trees/tree02
 tile ceiling 2 8 trees/tree02
+tile ceiling 29 7 ceiling/wall-stone-s-sw
 tile ceiling 28 7 ceiling/wall-stone-s-sw
 tile ceiling 7 7 trees/treetall04
 tile ceiling 4 7 trees/tree01
@@ -927,6 +947,7 @@ tile ceiling 24 0 ceiling/building-roof-01
 tile ceiling 23 0 ceiling/building-roof-04
 tile ceiling 23 0 ceiling/building-roof-02
 tile ceiling 22 0 ceiling/building-roof-03
+tile ceiling 21 0 ceiling/wall-stone-sw-ne
 tile ceiling 18 0 trees/treetall01
 tile ceiling 15 0 trees/tree02
 tile ceiling 7 0 trees/treetall03
@@ -959,4 +980,4 @@ elevation 19 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 
 
 opaque  0 0  0 1  0 2  0 4  0 5  0 6  0 7  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 1  1 2  1 3  1 4  1 5  1 6  1 7  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 19  2 0  2 1  2 2  2 4  2 5  2 7  2 8  2 13  2 14  2 15  2 16  2 17  2 18  2 19  3 0  3 14  3 15  3 16  3 17  3 18  3 19  4 0  4 3  4 7  4 8  4 12  4 13  4 15  4 16  4 17  4 18  4 19  5 1  5 4  5 17  5 18  5 19  6 15  6 18  6 19  7 0  7 7  7 12  7 18  7 19  8 3  8 5  8 16  8 18  8 19  9 1  9 10  9 13  9 18  9 19  10 19  11 16  11 18  11 19  12 1  12 2  12 6  12 19  13 3  13 19  14 1  14 19  15 0  15 18  15 19  16 16  16 19  17 1  17 18  17 19  18 0  18 18  18 19  19 0  19 1  19 2  19 3  19 4  19 13  19 19  20 0  20 1  20 2  20 3  20 4  20 5  21 4  21 5  21 18  21 19  22 2  22 5  22 6  22 15  22 16  23 0  23 1  23 2  23 6  23 16  23 18  23 19  24 0  24 1  24 2  24 7  25 0  25 1  25 6  25 7  25 12  25 15  25 18  25 19  26 0  26 1  26 2  26 7  26 8  26 11  26 17  26 18  27 0  27 1  27 5  27 7  27 8  27 11  27 14  28 1  28 5  28 6  28 8  28 9  28 13  28 15  28 16  28 18  28 19  29 4  29 5  29 6  29 8  29 9  29 15  29 19
-impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 1  1 2  1 3  1 4  1 5  1 6  1 7  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 19  2 0  2 1  2 2  2 4  2 5  2 7  2 8  2 13  2 14  2 15  2 16  2 17  2 18  2 19  3 0  3 1  3 2  3 5  3 11  3 14  3 15  3 16  3 17  3 18  3 19  4 0  4 3  4 7  4 8  4 12  4 13  4 15  4 16  4 17  4 18  4 19  5 0  5 1  5 2  5 4  5 13  5 17  5 18  5 19  6 0  6 1  6 15  6 16  6 18  6 19  7 0  7 1  7 7  7 12  7 18  7 19  8 0  8 1  8 3  8 5  8 11  8 16  8 18  8 19  9 0  9 1  9 10  9 13  9 16  9 18  9 19  10 0  10 1  10 19  11 0  11 16  11 18  11 19  12 0  12 1  12 2  12 6  12 17  12 19  13 0  13 1  13 3  13 19  14 0  14 1  14 2  14 19  15 0  15 1  15 18  15 19  16 0  16 1  16 16  16 19  17 0  17 1  17 18  17 19  18 0  18 1  18 18  18 19  19 0  19 1  19 2  19 3  19 4  19 5  19 13  19 17  19 19  20 0  20 1  20 2  20 3  20 4  20 5  20 18  20 19  21 0  21 1  21 3  21 4  21 5  21 18  21 19  22 0  22 1  22 2  22 5  22 15  22 16  22 18  22 19  23 0  23 1  23 2  23 16  23 18  23 19  24 0  24 1  24 2  24 7  24 8  24 19  25 0  25 1  25 6  25 7  25 12  25 15  25 18  25 19  26 0  26 1  26 2  26 6  26 7  26 8  26 11  26 17  26 18  26 19  27 0  27 1  27 5  27 6  27 7  27 8  27 11  27 12  27 14  27 15  27 17  27 18  27 19  28 0  28 1  28 5  28 6  28 8  28 9  28 10  28 11  28 13  28 14  28 15  28 16  28 17  28 18  28 19  29 0  29 1  29 2  29 3  29 4  29 5  29 6  29 7  29 8  29 9  29 10  29 11  29 12  29 13  29 14  29 15  29 16  29 17  29 18  29 19
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 1  1 2  1 3  1 4  1 5  1 6  1 7  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 19  2 0  2 1  2 2  2 4  2 5  2 7  2 8  2 13  2 14  2 15  2 16  2 17  2 18  2 19  3 0  3 1  3 2  3 5  3 11  3 14  3 15  3 16  3 17  3 18  3 19  4 0  4 3  4 7  4 8  4 12  4 13  4 15  4 16  4 17  4 18  4 19  5 0  5 1  5 2  5 4  5 13  5 17  5 18  5 19  6 0  6 1  6 15  6 16  6 18  6 19  7 0  7 1  7 7  7 12  7 18  7 19  8 0  8 1  8 3  8 5  8 11  8 16  8 18  8 19  9 0  9 1  9 10  9 13  9 16  9 18  9 19  10 0  10 1  10 19  11 0  11 16  11 18  11 19  12 0  12 1  12 2  12 6  12 17  12 19  13 0  13 1  13 3  13 19  14 0  14 1  14 2  14 19  15 0  15 1  15 18  15 19  16 0  16 1  16 16  16 19  17 0  17 1  17 18  17 19  18 0  18 1  18 18  18 19  19 0  19 1  19 2  19 3  19 4  19 5  19 13  19 17  19 19  20 0  20 1  20 2  20 3  20 4  20 5  20 18  20 19  21 0  21 1  21 3  21 4  21 5  21 18  21 19  22 0  22 1  22 2  22 5  22 15  22 16  22 18  22 19  23 0  23 1  23 2  23 16  23 18  23 19  24 0  24 1  24 2  24 7  24 8  24 19  25 0  25 1  25 6  25 7  25 12  25 15  25 18  25 19  26 0  26 1  26 2  26 6  26 7  26 8  26 11  26 17  26 18  26 19  27 0  27 1  27 5  27 6  27 7  27 8  27 11  27 12  27 14  27 15  27 17  27 18  27 19  28 0  28 1  28 5  28 6  28 8  28 9  28 10  28 11  28 13  28 14  28 15  28 16  28 17  28 18  28 19  29 0  29 4  29 5  29 6  29 7  29 8  29 9  29 10  29 11  29 12  29 13  29 14  29 15  29 16  29 17  29 18  29 19
