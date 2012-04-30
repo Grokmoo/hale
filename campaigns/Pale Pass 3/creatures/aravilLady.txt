@@ -8,6 +8,8 @@ gender "Male"
 race "Elf"
 immortal true
 unspentSkillPoints 0
+xp 44800
 role "Noble" 18
 attributes 9 14 12 15 14 16
+conversation "conversations/aravilLady"
 

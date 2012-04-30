@@ -1,0 +1,8 @@
+name "Priest"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 65
+sellValuePercentage 135
+respawnhours 24
+additems "PotionsSuperb" 30 PER_ITEM
+additems "ScrollsSuperb" 80 PER_ITEM

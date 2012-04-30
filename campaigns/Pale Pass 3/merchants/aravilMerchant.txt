@@ -1,0 +1,12 @@
+name "Merchant"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 60
+sellValuePercentage 140
+respawnhours 24
+additems "SmithingSupplies" 50 PER_ITEM
+additems "AlchemySupplies" 50 PER_ITEM
+additems "ScrollsSuperb" 40 PER_ITEM
+additems "PotionsSuperb" 40 PER_ITEM
+additems "WeaponsSuperb" 20 PER_ITEM
+additems "ArmorSuperb" 20 PER_ITEM
