@@ -6,6 +6,7 @@ portrait "Dwarf/explorer"
 
 gender "Male"
 race "Dwarf"
+immortal true
 unspentSkillPoints 0
 role "Commoner" 1
 attributes 10 11 12 9 10 10

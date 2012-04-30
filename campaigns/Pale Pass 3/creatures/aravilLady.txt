@@ -1,0 +1,13 @@
+playerCharacter false
+
+name "Lady of Aravil"
+icon "creatures/human25" "#ffffffff"
+portrait "Elf/lady"
+
+gender "Male"
+race "Elf"
+immortal true
+unspentSkillPoints 0
+role "Noble" 18
+attributes 9 14 12 15 14 16
+

@@ -4,6 +4,9 @@ visibilityRadius 8
 unexplored
 
 
+encounter "aravilCastleSouth" 12 21
+encounter "aravilCastleThroneRoom" 20 10
+encounter "aravilCastleNorth" 10 8
 
 item 1 "ruraldoor_SE" 10 7
 item 1 "ruraldoor_SE" 11 6
@@ -220,7 +223,8 @@ tile base 18 12 base/path0
 tile base 17 12 base/path3
 tile base 16 12 base/path2
 tile base 15 12 base/path2
-tile base 13 12 base/path0
+tile base 14 12 base/path3
+tile base 13 12 base/path2
 tile base 12 12 base/path1
 tile base 11 12 base/pathclean1
 tile base 9 12 base/grass1
@@ -238,8 +242,8 @@ tile base 19 11 base/path0
 tile base 18 11 base/path1
 tile base 17 11 base/path2
 tile base 16 11 base/path2
-tile base 15 11 base/path0
-tile base 13 11 base/path0
+tile base 15 11 base/path1
+tile base 13 11 base/path2
 tile base 12 11 base/path1
 tile base 11 11 base/path3
 tile base 10 11 base/path0
@@ -257,8 +261,8 @@ tile base 21 10 base/path1
 tile base 19 10 base/path1
 tile base 18 10 base/path0
 tile base 17 10 base/path3
-tile base 16 10 base/path2
-tile base 15 10 base/path3
+tile base 16 10 base/path3
+tile base 15 10 base/path0
 tile base 13 10 base/path0
 tile base 12 10 base/path2
 tile base 11 10 base/path0
@@ -275,7 +279,6 @@ tile base 23 9 base/pathclean1
 tile base 22 9 base/pathclean0
 tile base 21 9 base/pathclean0
 tile base 17 9 base/path1
-tile base 16 9 base/path3
 tile base 14 9 base/path0
 tile base 13 9 base/path3
 tile base 12 9 base/path2
@@ -297,7 +300,7 @@ tile base 22 8 base/pathclean1
 tile base 20 8 base/pathclean0
 tile base 19 8 base/pathclean0
 tile base 18 8 base/pathclean2
-tile base 15 8 base/path2
+tile base 15 8 base/path3
 tile base 14 8 base/path0
 tile base 13 8 base/path0
 tile base 12 8 base/path2
@@ -767,7 +770,6 @@ tile wall-base 28 12 wall-base/wall
 tile wall-base 27 12 wall-base/wall
 tile wall-base 25 12 wall-base/wall
 tile wall-base 24 12 wall-base/wall
-tile wall-base 14 12 wall-base/wall
 tile wall-base 10 12 wall-base/wall
 tile wall-base 7 12 wall-base/building
 tile wall-base 6 12 wall-base/building
@@ -800,6 +802,7 @@ tile wall-base 27 9 wall-base/wall
 tile wall-base 20 9 wall-base/wall
 tile wall-base 19 9 wall-base/wall
 tile wall-base 18 9 wall-base/wall
+tile wall-base 16 9 wall-base/wall
 tile wall-base 15 9 wall-base/wall
 tile wall-base 11 9 wall-base/wall
 tile wall-base 1 9 wall-base/wall
@@ -927,6 +930,8 @@ tile entity 5 17 walls/building02
 tile entity 5 17 doorsAndWindows/roof-window2-se
 tile entity 3 17 walls/building01
 tile entity 3 17 doorsAndWindows/window-bay-sw
+tile entity 25 16 features/crate
+tile entity 24 16 features/crate
 tile entity 23 16 features/barrels
 tile entity 22 16 features/barrels
 tile entity 19 16 walls/wall-stone-n-ne
@@ -972,6 +977,7 @@ tile entity 2 13 walls/wall-stone-nw-n
 tile entity 26 12 features/lantern-lit
 tile entity 23 12 walls/wall-stone-n-ne
 tile entity 22 12 walls/wall-stone-ne
+tile entity 14 12 walls/wall-stone-n
 tile entity 11 12 walls/wall-stone-nw
 tile entity 9 12 walls/wall-stone-n-ne
 tile entity 8 12 walls/wall-stone-n-ne
@@ -981,6 +987,8 @@ tile entity 4 12 walls/wall-stone-nw-n
 tile entity 4 12 features/shrub03
 tile entity 3 12 walls/wall-stone-nw-n
 tile entity 20 11 walls/wall-stone-n
+tile entity 15 11 walls/wall-stone-nw
+tile entity 13 11 walls/wall-stone-ne
 tile entity 10 11 walls/wall-stone-n
 tile entity 7 11 walls/wall-stone-n-ne
 tile entity 6 11 walls/wall-stone-nw-n-ne
@@ -988,7 +996,7 @@ tile entity 5 11 walls/wall-stone-nw-n
 tile entity 21 10 walls/wall-stone-nw
 tile entity 19 10 walls/wall-stone-n-ne
 tile entity 18 10 walls/wall-stone-n-ne
-tile entity 16 10 walls/wall-stone-nw
+tile entity 16 10 walls/wall-stone-nw-n
 tile entity 15 10 walls/wall-stone-nw-n
 tile entity 15 10 features/lantern-lit
 tile entity 12 10 walls/wall-stone-nw
@@ -1001,8 +1009,7 @@ tile entity 26 9 features/lantern-lit
 tile entity 22 9 walls/wall-stone-nw
 tile entity 21 9 walls/wall-stone-nw-n
 tile entity 21 9 features/dragon-statue
-tile entity 17 9 walls/wall-stone-n-ne
-tile entity 16 9 walls/wall-stone-n-ne
+tile entity 17 9 walls/wall-stone-nw-n-ne
 tile entity 10 9 walls/wall-stone-n-ne
 tile entity 10 9 features/lantern-lit
 tile entity 5 9 features/lantern-lit
@@ -1015,6 +1022,7 @@ tile entity 15 8 walls/wall-stone-n-ne
 tile entity 14 8 walls/wall-stone-n-ne
 tile entity 9 8 walls/wall-stone-n-ne
 tile entity 8 8 walls/wall-stone-n-ne
+tile entity 3 8 features/monolith1
 tile entity 22 7 walls/wall-stone-n-ne
 tile entity 13 7 walls/wall-stone-n-ne
 tile entity 12 7 walls/wall-stone-n-ne
@@ -1031,7 +1039,9 @@ tile entity 15 6 features/lantern-lit
 tile entity 11 6 walls/wall-stone-ne
 tile entity 6 6 walls/wall-stone-n-ne
 tile entity 4 6 walls/wall-stone-nw-n
+tile entity 4 6 features/coffin
 tile entity 3 6 walls/wall-stone-nw-n
+tile entity 3 6 features/coffin
 tile entity 19 5 walls/wall-stone-n-ne
 tile entity 18 5 walls/wall-stone-nw-n-ne
 tile entity 18 5 features/lantern-lit
@@ -1079,6 +1089,7 @@ tile ceiling 9 23 ceiling/building-roof-01
 tile ceiling 8 23 ceiling/building-roof-03
 tile ceiling 8 23 ceiling/building-roof-02
 tile ceiling 7 23 ceiling/building-roof-03
+tile ceiling 0 23 ceiling/building-roof-01
 tile ceiling 29 22 ceiling/wall-stone-sw-ne
 tile ceiling 26 22 ceiling/wall-stone-ne-se
 tile ceiling 24 22 ceiling/building-roof-04
@@ -1098,6 +1109,7 @@ tile ceiling 9 22 ceiling/building-roof-02
 tile ceiling 2 22 ceiling/building-roof-01
 tile ceiling 2 22 ceiling/building-roof-05
 tile ceiling 1 22 ceiling/building-roof-01
+tile ceiling 0 22 ceiling/building-roof-01
 tile ceiling 29 21 ceiling/wall-stone-sw-ne
 tile ceiling 26 21 ceiling/wall-stone-ne-se
 tile ceiling 24 21 ceiling/building-roof-05
@@ -1113,6 +1125,7 @@ tile ceiling 8 21 ceiling/building-roof-04
 tile ceiling 2 21 ceiling/building-roof-01
 tile ceiling 2 21 ceiling/building-roof-05
 tile ceiling 1 21 ceiling/building-roof-01
+tile ceiling 0 21 ceiling/building-roof-01
 tile ceiling 29 20 ceiling/wall-stone-sw-ne
 tile ceiling 26 20 ceiling/wall-stone-n-ne-se-s-fg
 tile ceiling 26 20 ceiling/wall-stone-se
@@ -1250,8 +1263,9 @@ tile ceiling 29 12 ceiling/wall-stone-sw-ne
 tile ceiling 26 12 ceiling/wall-stone-se-s-sw
 tile ceiling 26 12 ceiling/wall-stone-ne-se-s-sw
 tile ceiling 19 12 ceiling/wall-stone-s
-tile ceiling 15 12 ceiling/wall-stone-sw-ne
-tile ceiling 13 12 ceiling/wall-stone-ne-se-s
+tile ceiling 15 12 ceiling/wall-stone-sw
+tile ceiling 14 12 ceiling/wall-stone-s
+tile ceiling 13 12 ceiling/wall-stone-se-s
 tile ceiling 6 12 ceiling/building-roof-05
 tile ceiling 6 12 ceiling/building-roof-01
 tile ceiling 5 12 ceiling/building-roof-01
@@ -1262,8 +1276,6 @@ tile ceiling 26 11 ceiling/wall-stone-ne-se
 tile ceiling 25 11 ceiling/wall-stone-s-sw
 tile ceiling 24 11 ceiling/wall-stone-s-sw
 tile ceiling 22 11 ceiling/wall-stone-se2
-tile ceiling 15 11 ceiling/wall-stone-sw-ne
-tile ceiling 13 11 ceiling/wall-stone-ne-se
 tile ceiling 11 11 ceiling/wall-stone-sw2
 tile ceiling 10 11 ceiling/wall-stone-s-sw
 tile ceiling 5 11 ceiling/building-roof-03
@@ -1273,7 +1285,7 @@ tile ceiling 26 10 ceiling/wall-stone-ne-se
 tile ceiling 23 10 ceiling/wall-stone-s
 tile ceiling 15 10 ceiling/wall-stone-s-sw-ne-n-fg
 tile ceiling 15 10 ceiling/wall-stone-sw
-tile ceiling 13 10 ceiling/wall-stone-ne-se
+tile ceiling 13 10 ceiling/wall-stone-ne-se2
 tile ceiling 9 10 ceiling/wall-stone-s-sw
 tile ceiling 8 10 ceiling/wall-stone-s-sw
 tile ceiling 4 10 ceiling/wall-stone-se-s-sw
@@ -1284,8 +1296,6 @@ tile ceiling 26 9 ceiling/wall-stone-n-ne-se-s-fg
 tile ceiling 26 9 ceiling/wall-stone-se
 tile ceiling 21 9 ceiling/wall-stone-s-sw-ne-n-fg
 tile ceiling 21 9 ceiling/wall-stone-sw
-tile ceiling 16 9 ceiling/wall-stone-sw
-tile ceiling 16 9 ceiling/wall-stone-sw2
 tile ceiling 14 9 ceiling/wall-stone-se-s
 tile ceiling 13 9 ceiling/wall-stone-se
 tile ceiling 12 9 ceiling/wall-stone-sw-ne2
@@ -1303,7 +1313,8 @@ tile ceiling 22 8 ceiling/wall-stone-sw2
 tile ceiling 20 8 ceiling/wall-stone-se-s
 tile ceiling 19 8 ceiling/wall-stone-se-s-sw
 tile ceiling 18 8 ceiling/wall-stone-s-sw
-tile ceiling 15 8 ceiling/wall-stone-s
+tile ceiling 15 8 ceiling/wall-stone-n-ne-se-s-fg
+tile ceiling 15 8 ceiling/wall-stone-se-s
 tile ceiling 12 8 ceiling/wall-stone-sw
 tile ceiling 2 8 ceiling/wall-stone-sw-ne
 tile ceiling 0 8 ceiling/wall-stone-ne-se
@@ -1408,5 +1419,5 @@ elevation 23 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 elevation 24 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
 
 
-opaque  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  0 21  0 22  0 23  0 24  1 0  1 2  1 3  1 4  1 5  1 6  1 7  1 8  1 9  1 11  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 20  1 21  1 22  1 23  2 2  2 3  2 5  2 6  2 10  2 11  2 12  2 20  2 21  2 22  2 23  3 1  3 5  3 10  3 11  3 13  3 15  3 16  3 17  3 19  3 20  3 21  3 22  4 1  4 3  4 5  4 11  4 13  4 14  4 15  4 16  4 17  4 18  5 0  5 4  5 10  5 12  5 13  5 14  5 15  5 16  5 17  6 5  6 10  6 12  6 13  6 14  6 15  6 16  6 17  7 0  7 2  7 5  7 6  7 10  7 12  7 13  7 14  7 15  7 16  7 20  8 7  8 11  8 14  8 16  8 20  8 21  8 24  9 7  9 11  9 19  9 20  9 23  9 24  10 7  10 8  10 10  10 12  10 19  10 20  10 21  10 23  10 24  11 6  11 8  11 9  11 19  11 20  11 22  11 23  11 24  12 6  12 15  12 16  12 20  12 23  12 24  13 5  13 6  13 13  13 15  13 16  13 21  13 24  14 1  14 5  14 6  14 7  14 10  14 11  14 12  14 13  14 14  14 16  14 17  15 1  15 2  15 4  15 5  15 7  15 9  15 14  15 16  15 17  15 22  15 23  16 2  16 4  16 5  16 8  16 15  16 17  16 18  16 22  16 23  16 24  17 2  17 3  17 4  17 8  17 14  17 16  17 17  17 18  17 22  17 23  17 24  18 2  18 3  18 4  18 9  18 14  18 15  18 17  18 18  18 19  18 23  18 24  19 3  19 4  19 9  19 13  19 15  19 17  19 18  19 19  19 23  19 24  20 4  20 5  20 9  20 10  20 16  20 18  20 19  20 24  21 1  21 4  21 5  21 8  21 16  21 18  21 20  21 24  22 5  22 6  22 17  22 21  23 2  23 3  23 5  23 6  23 7  23 11  23 17  23 20  23 21  24 6  24 7  24 12  24 18  24 19  24 21  24 22  25 6  25 7  25 12  25 18  25 21  26 1  26 4  26 7  26 8  26 13  26 19  27 2  27 5  27 7  27 8  27 9  27 10  27 11  27 12  27 13  27 14  27 15  27 16  27 17  27 18  27 19  27 20  27 21  27 22  27 23  27 24  28 8  28 9  28 10  28 11  28 12  28 13  28 14  28 15  28 16  28 17  28 18  28 19  28 20  28 21  28 22  28 23  28 24  29 4  29 5
-impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  0 20  0 21  0 22  0 23  0 24  1 0  1 2  1 3  1 4  1 5  1 6  1 7  1 8  1 9  1 11  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 19  1 20  1 21  1 22  1 23  1 24  2 0  2 2  2 3  2 5  2 6  2 7  2 10  2 11  2 12  2 15  2 20  2 21  2 22  2 23  2 24  3 0  3 1  3 2  3 4  3 5  3 10  3 11  3 13  3 15  3 16  3 17  3 19  3 20  3 21  3 22  3 24  4 0  4 1  4 3  4 5  4 11  4 12  4 13  4 14  4 15  4 16  4 17  4 18  4 24  5 0  5 1  5 4  5 5  5 9  5 10  5 12  5 13  5 14  5 15  5 16  5 17  5 24  6 0  6 5  6 10  6 12  6 13  6 14  6 15  6 16  6 17  6 24  7 0  7 2  7 4  7 5  7 6  7 10  7 12  7 13  7 14  7 15  7 16  7 20  7 24  8 0  8 7  8 11  8 14  8 16  8 20  8 21  8 24  9 0  9 7  9 11  9 19  9 20  9 23  9 24  10 0  10 8  10 9  10 10  10 12  10 19  10 20  10 21  10 23  10 24  11 0  11 8  11 9  11 19  11 20  11 22  11 23  11 24  12 0  12 6  12 15  12 16  12 20  12 23  12 24  13 0  13 4  13 5  13 6  13 13  13 15  13 16  13 21  13 23  13 24  14 0  14 1  14 5  14 6  14 7  14 10  14 11  14 12  14 13  14 14  14 16  14 17  14 23  14 24  15 0  15 1  15 2  15 4  15 5  15 6  15 7  15 9  15 10  15 14  15 16  15 17  15 22  15 23  15 24  16 0  16 2  16 3  16 4  16 5  16 6  16 8  16 14  16 15  16 17  16 18  16 22  16 23  16 24  17 0  17 2  17 3  17 4  17 5  17 8  17 14  17 16  17 17  17 18  17 22  17 23  17 24  18 0  18 2  18 3  18 4  18 5  18 9  18 14  18 15  18 16  18 17  18 18  18 19  18 23  18 24  19 0  19 3  19 4  19 9  19 13  19 14  19 15  19 16  19 17  19 18  19 19  19 23  19 24  20 0  20 4  20 5  20 9  20 10  20 15  20 16  20 18  20 19  20 24  21 0  21 1  21 4  21 5  21 8  21 9  21 15  21 16  21 18  21 20  21 24  22 0  22 5  22 6  22 16  22 17  22 21  22 24  23 0  23 2  23 3  23 5  23 6  23 7  23 11  23 16  23 17  23 20  23 21  23 24  24 0  24 6  24 7  24 8  24 12  24 17  24 18  24 19  24 21  24 22  24 24  25 0  25 6  25 7  25 12  25 17  25 18  25 21  25 24  26 0  26 1  26 4  26 7  26 8  26 9  26 12  26 13  26 18  26 19  26 24  27 0  27 2  27 5  27 7  27 8  27 9  27 10  27 11  27 12  27 13  27 14  27 15  27 16  27 17  27 18  27 19  27 20  27 21  27 22  27 23  27 24  28 0  28 8  28 9  28 10  28 11  28 12  28 13  28 14  28 15  28 16  28 17  28 18  28 19  28 20  28 21  28 22  28 23  28 24  29 0  29 1  29 2  29 3  29 4  29 5  29 6  29 7  29 8  29 9  29 10  29 11  29 12  29 13  29 14  29 15  29 16  29 17  29 18  29 19  29 20  29 21  29 22  29 23  29 24
+opaque  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  0 21  0 22  0 23  0 24  1 0  1 2  1 3  1 4  1 5  1 6  1 7  1 8  1 9  1 11  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 20  1 21  1 22  1 23  2 2  2 3  2 5  2 6  2 10  2 11  2 12  2 20  2 21  2 22  2 23  3 1  3 5  3 10  3 11  3 13  3 15  3 16  3 17  3 19  3 20  3 21  3 22  4 1  4 3  4 5  4 11  4 13  4 14  4 15  4 16  4 17  4 18  5 0  5 4  5 10  5 12  5 13  5 14  5 15  5 16  5 17  6 5  6 10  6 12  6 13  6 14  6 15  6 16  6 17  7 0  7 2  7 5  7 6  7 10  7 12  7 13  7 14  7 15  7 16  7 20  8 7  8 11  8 14  8 16  8 20  8 21  8 24  9 7  9 11  9 19  9 20  9 23  9 24  10 7  10 8  10 10  10 12  10 19  10 20  10 21  10 23  10 24  11 6  11 8  11 9  11 19  11 20  11 22  11 23  11 24  12 6  12 15  12 16  12 20  12 23  12 24  13 5  13 6  13 13  13 15  13 16  13 21  13 24  14 1  14 5  14 6  14 7  14 10  14 11  14 13  14 14  14 16  14 17  15 1  15 2  15 4  15 5  15 7  15 9  15 14  15 16  15 17  15 22  15 23  16 2  16 4  16 5  16 8  16 9  16 15  16 17  16 18  16 22  16 23  16 24  17 2  17 3  17 4  17 8  17 14  17 16  17 17  17 18  17 22  17 23  17 24  18 2  18 3  18 4  18 9  18 14  18 15  18 17  18 18  18 19  18 23  18 24  19 3  19 4  19 9  19 13  19 15  19 17  19 18  19 19  19 23  19 24  20 4  20 5  20 9  20 10  20 16  20 18  20 19  20 24  21 1  21 4  21 5  21 8  21 16  21 18  21 20  21 24  22 5  22 6  22 17  22 21  23 2  23 3  23 5  23 6  23 7  23 11  23 17  23 20  23 21  24 6  24 7  24 12  24 18  24 19  24 21  24 22  25 6  25 7  25 12  25 18  25 21  26 1  26 4  26 7  26 8  26 13  26 19  27 2  27 5  27 7  27 8  27 9  27 10  27 11  27 12  27 13  27 14  27 15  27 16  27 17  27 18  27 19  27 20  27 21  27 22  27 23  27 24  28 8  28 9  28 10  28 11  28 12  28 13  28 14  28 15  28 16  28 17  28 18  28 19  28 20  28 21  28 22  28 23  28 24  29 4  29 5
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  0 20  0 21  0 22  0 23  0 24  1 0  1 2  1 3  1 4  1 5  1 6  1 7  1 8  1 9  1 11  1 12  1 13  1 14  1 15  1 16  1 17  1 18  1 19  1 20  1 21  1 22  1 23  1 24  2 0  2 2  2 3  2 5  2 6  2 7  2 10  2 11  2 12  2 15  2 20  2 21  2 22  2 23  2 24  3 0  3 1  3 2  3 4  3 5  3 6  3 8  3 10  3 11  3 13  3 15  3 16  3 17  3 19  3 20  3 21  3 22  3 24  4 0  4 1  4 3  4 5  4 6  4 11  4 12  4 13  4 14  4 15  4 16  4 17  4 18  4 24  5 0  5 1  5 4  5 5  5 9  5 10  5 12  5 13  5 14  5 15  5 16  5 17  5 24  6 0  6 5  6 10  6 12  6 13  6 14  6 15  6 16  6 17  6 24  7 0  7 2  7 4  7 5  7 6  7 10  7 12  7 13  7 14  7 15  7 16  7 20  7 24  8 0  8 7  8 11  8 14  8 16  8 20  8 21  8 24  9 0  9 7  9 11  9 19  9 20  9 23  9 24  10 0  10 8  10 9  10 10  10 12  10 19  10 20  10 21  10 23  10 24  11 0  11 8  11 9  11 19  11 20  11 22  11 23  11 24  12 0  12 6  12 15  12 16  12 20  12 23  12 24  13 0  13 4  13 5  13 6  13 13  13 15  13 16  13 21  13 23  13 24  14 0  14 1  14 5  14 6  14 7  14 10  14 11  14 13  14 14  14 16  14 17  14 23  14 24  15 0  15 1  15 2  15 4  15 5  15 6  15 7  15 9  15 10  15 14  15 16  15 17  15 22  15 23  15 24  16 0  16 2  16 3  16 4  16 5  16 6  16 8  16 9  16 14  16 15  16 17  16 18  16 22  16 23  16 24  17 0  17 2  17 3  17 4  17 5  17 8  17 14  17 16  17 17  17 18  17 22  17 23  17 24  18 0  18 2  18 3  18 4  18 5  18 9  18 14  18 15  18 16  18 17  18 18  18 19  18 23  18 24  19 0  19 3  19 4  19 9  19 13  19 14  19 15  19 16  19 17  19 18  19 19  19 23  19 24  20 0  20 4  20 5  20 9  20 10  20 15  20 16  20 18  20 19  20 24  21 0  21 1  21 4  21 5  21 8  21 9  21 15  21 16  21 18  21 20  21 24  22 0  22 5  22 6  22 16  22 17  22 21  22 24  23 0  23 2  23 3  23 5  23 6  23 7  23 11  23 16  23 17  23 20  23 21  23 24  24 0  24 6  24 7  24 8  24 12  24 16  24 17  24 18  24 19  24 21  24 22  24 24  25 0  25 6  25 7  25 12  25 16  25 17  25 18  25 21  25 24  26 0  26 1  26 4  26 7  26 8  26 9  26 12  26 13  26 18  26 19  26 24  27 0  27 2  27 5  27 7  27 8  27 9  27 10  27 11  27 12  27 13  27 14  27 15  27 16  27 17  27 18  27 19  27 20  27 21  27 22  27 23  27 24  28 0  28 8  28 9  28 10  28 11  28 12  28 13  28 14  28 15  28 16  28 17  28 18  28 19  28 20  28 21  28 22  28 23  28 24  29 0  29 1  29 2  29 3  29 4  29 5  29 6  29 7  29 8  29 9  29 10  29 11  29 12  29 13  29 14  29 15  29 16  29 17  29 18  29 19  29 20  29 21  29 22  29 23  29 24

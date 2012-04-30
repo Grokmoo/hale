@@ -170,8 +170,10 @@ public class WorldMapViewer extends Widget {
 		removeAllChildren();
 		
 		// first, add the location viewer for the origin (so it is always below other hovers)
-		LocationViewer originViewer = new LocationViewer(origin);
-		add(originViewer);
+		if (origin != null) {
+			LocationViewer originViewer = new LocationViewer(origin);
+			add(originViewer);
+		}
 		
 		// now, add the location viewer for all other locations
 		for (WorldMapLocation location : locations) {

@@ -1,13 +1,14 @@
 playerCharacter false
 
-name "Peasant"
+name "Merchant"
 icon "creatures/human07" "#ffffffff"
-portrait "Human/peasant"
+portrait "Human/fencer"
 
 gender "Male"
 race "Human"
 immortal true
 unspentSkillPoints 0
-role "Commoner" 1
-attributes 10 11 12 9 10 10
+xp 25400
+role "Artisan" 15
+attributes 10 10 10 10 10 10
 
