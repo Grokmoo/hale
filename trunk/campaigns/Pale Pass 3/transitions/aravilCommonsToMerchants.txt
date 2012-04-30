@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Aravil Commons" 38 16
+to "Aravil Merchant District" 1 9
+addToPosition 2 -1
+addToPosition 2 0
+addToPosition 1 -1
+addToPosition 0 0
+addFromPosition -3 0
+addFromPosition -2 1
+addFromPosition -1 0
+addFromPosition 0 0

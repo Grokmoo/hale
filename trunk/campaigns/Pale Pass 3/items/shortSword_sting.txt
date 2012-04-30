@@ -8,7 +8,7 @@ description "A masterfully crafted short sword, this weapon inflicts critical hi
 value "1 PP 9 GP" 1
 weight 900
 itemType "WEAPON"
-quality "Phenomenal"
+quality "Masterwork"
 enchantment "entity.addBonus('WeaponCriticalChance', 10);"
 useButtonText ""
 baseWeapon "Short Sword"

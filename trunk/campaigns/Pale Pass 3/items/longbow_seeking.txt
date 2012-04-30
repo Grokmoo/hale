@@ -8,7 +8,7 @@ description "This longbow is enchanted, causing arrows fired from it to magicall
 value "2 PP 5 GP" 1
 weight 1400
 itemType "WEAPON"
-quality "Phenomenal"
+quality "Masterwork"
 enchantment "entity.addBonus('WeaponAttack', 10);"
 useButtonText ""
 baseWeapon "Longbow"

@@ -13,15 +13,15 @@ worldMapImage "worldMap"
 addLocation "The Gate" "theGateToWorldMap" "worldmap/drake4" 30 420
 addLocation "Aravil West Gate" "aravilWestGateToWorldMap" "worldmap/city1" 280 400
 addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 520 440
-addLocation "Aravil North" "null" "worldmap/city2" 320 320
-addLocation "Aravil Merchants" "null" "worldmap/city4" 370 400
+addLocation "Aravil Castle" "aravilCastleToWorldMap" "worldmap/city2" 320 320
+addLocation "Aravil Merchants" "aravilMerchantsToWorldMap" "worldmap/city4" 370 400
 setTravelTime "The Gate" "Aravil West Gate" 24
 setTravelTime "The Gate" "Scout Encampment" 42
-setTravelTime "The Gate" "Aravil North" 25
+setTravelTime "The Gate" "Aravil Castle" 25
 setTravelTime "The Gate" "Aravil Merchants" 25
 setTravelTime "Aravil West Gate" "Scout Encampment" 18
-setTravelTime "Aravil West Gate" "Aravil North" 1
+setTravelTime "Aravil West Gate" "Aravil Castle" 1
 setTravelTime "Aravil West Gate" "Aravil Merchants" 1
-setTravelTime "Scout Encampment" "Aravil North" 18
+setTravelTime "Scout Encampment" "Aravil Castle" 18
 setTravelTime "Scout Encampment" "Aravil Merchants" 18
-setTravelTime "Aravil North" "Aravil Merchants" 1
+setTravelTime "Aravil Castle" "Aravil Merchants" 1

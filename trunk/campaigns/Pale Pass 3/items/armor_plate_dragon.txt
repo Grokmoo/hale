@@ -8,7 +8,7 @@ description "Armor consisting of the scales of a red dragon, providing excellent
 value "4 PP" 1
 weight 12000
 itemType "ARMOR"
-quality "Phenomenal"
+quality "Masterwork"
 armorType "Heavy"
 armorClass 28
 armorPenalty 20
