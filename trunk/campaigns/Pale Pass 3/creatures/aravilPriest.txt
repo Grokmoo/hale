@@ -11,4 +11,5 @@ unspentSkillPoints 0
 xp 16600
 role "Priest" 13
 attributes 11 10 13 10 17 14
+conversation "conversations/aravilPriest"
 

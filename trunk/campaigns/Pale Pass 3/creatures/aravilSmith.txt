@@ -11,4 +11,5 @@ unspentSkillPoints 0
 xp 25400
 role "Artisan" 15
 attributes 14 10 15 12 13 10
+conversation "conversations/aravilSmith"
 

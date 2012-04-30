@@ -1,0 +1,9 @@
+name "Alchemist"
+usesSpeechSkill true
+confirmOnExit false
+buyValuePercentage 50
+sellValuePercentage 150
+respawnhours 24
+additems "AlchemySupplies" 70 PER_ITEM
+additems "PotionsSuperb" 80 PER_ITEM
+additems "PotionsFine" 50 PER_ITEM

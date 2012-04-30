@@ -15,6 +15,7 @@ clothingcolor "#ffffffff"
 xp 25400
 role "Warrior" 17
 attributes 15 11 13 13 11 11
+conversation "conversations/aravilGuardCaptain"
 
 equip "warhammer" Good
 equip "armor_plate_base" Good

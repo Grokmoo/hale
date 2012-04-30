@@ -8,6 +8,8 @@ gender "Male"
 race "Human"
 immortal true
 unspentSkillPoints 0
+xp 25400
 role "Commoner" 15
 attributes 10 10 10 10 10 10
+conversation "conversations/aravilBarkeep"
 
