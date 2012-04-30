@@ -21,6 +21,7 @@ package net.sf.hale.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -196,12 +197,26 @@ public class AbilityEditor extends DialogLayout {
 		if (index != -1) {
 			currentType = abilityTypesModel.getEntry(index);
 			
+			// create a list of all abilities matching the filter
+			List<Ability> allMatchingAbilities = new ArrayList<Ability>();
 			for (String key : Game.ruleset.getAllAbilityIDs()) {
 				Ability ability = Game.ruleset.getAbility(key);
 				
 				if (ability.getType().equals(currentType)) {
-					abilitiesOfTypeModel.addElement(ability);
+					allMatchingAbilities.add(ability);
 				}
+			}
+			
+			// sort the list alphabetically by ID
+			Collections.sort(allMatchingAbilities, new Comparator<Ability>() {
+				@Override public int compare(Ability arg0, Ability arg1) {
+					return arg0.getID().compareTo(arg1.getID());
+				}
+			});
+			
+			// add the abilities to the model
+			for (Ability ability : allMatchingAbilities) {
+				abilitiesOfTypeModel.addElement(ability);
 			}
 			
 			ownedAbilitiesModel.addElements(abilities.getAbilityInstancesOfType(currentType));

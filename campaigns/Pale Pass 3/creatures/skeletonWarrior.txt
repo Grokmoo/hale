@@ -1,0 +1,27 @@
+playerCharacter false
+
+name "Skeleton"
+icon "creatures/skeleton03" "#ffffffff"
+gender "Male"
+race "Skeleton"
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 25400
+role "Warrior" 15
+attributes 16 13 13 3 10 3
+script "ai/aiStandard"
+level 1 addAbility "DualWieldingMastery"
+level 1 addAbility "ExpertDualWielding"
+level 1 addAbility "DualWielding"
+level 1 addAbility "DualWieldingDefense"
+level 1 addAbility "DamageReduction5"
+
+currencyReward 120 200
+equip "battleaxe" Fine
+equipoffhand "handaxe" Fine
+equip "armor_mail_base" Fine

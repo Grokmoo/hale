@@ -1,0 +1,14 @@
+size 1
+faction "Hostile"
+challenge 150
+randomize true
+numRandomCreatures 4 5
+respawn true
+respawnHours 24
+creature "wraith" 0 0
+creature "skeletonWarrior" -1 -1
+creature "skeletonArcher" 0 -1
+creature "skeletonMage" -1 0
+creature "skeletonArcher" 1 -1
+creature "skeletonWarrior" 0 1
+creature "wraith" 1 0

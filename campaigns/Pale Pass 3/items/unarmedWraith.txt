@@ -1,0 +1,21 @@
+name "Unarmed Wraith"
+ingredient false
+quest false
+cursed false
+description "This item has no unique properties."
+value "0 CP" 1
+weight 0
+itemType "WEAPON"
+quality "Good"
+script "items/unarmedWraith"
+useButtonText ""
+baseWeapon "Unarmed"
+weaponType "MELEE"
+weaponSize "light" "Medium"
+reach 1 1
+threatens true
+damageType "Piercing"
+damage 3 7
+criticalRange 96
+criticalMultiplier 3
+attackCost 2800
