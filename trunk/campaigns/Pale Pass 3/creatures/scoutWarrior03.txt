@@ -22,7 +22,7 @@ equip "gloves_mail_base" Fine
 equip "cloak" Good
 equip "boots_mail_base" Fine
 equip "bolt" Good
-additem "bolt" 44 Good
+additem "bolt" 43 Good
 addloot "LootMagicGood" 10 PER_LIST
 addloot "LootGems" 10 PER_LIST
 addloot "LootCraft" 10 PER_LIST

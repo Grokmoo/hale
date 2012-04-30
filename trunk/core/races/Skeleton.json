@@ -8,7 +8,7 @@
   ],
   
   "iconOffsets" : {
-    "Shield" : [ 22, 12 ],
+    "Shield" : [ 24, 12 ],
 	"OffHandWeapon" : [ 28, 7 ],
 	"MainHandWeapon" : [ 1, 8 ]
   }

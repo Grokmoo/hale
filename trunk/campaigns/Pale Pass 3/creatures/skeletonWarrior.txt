@@ -1,6 +1,6 @@
 playerCharacter false
 
-name "Skeleton"
+name "Skeleton Warrior"
 icon "creatures/skeleton03" "#ffffffff"
 gender "Male"
 race "Skeleton"
@@ -12,7 +12,7 @@ drawWithSubIcons true
 skincolor "#ffffffff"
 clothingcolor "#ffffffff"
 xp 25400
-role "Warrior" 15
+role "Warrior" 14
 attributes 16 13 13 3 10 3
 script "ai/aiStandard"
 level 1 addAbility "DualWieldingMastery"

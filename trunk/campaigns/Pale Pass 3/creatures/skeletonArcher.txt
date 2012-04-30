@@ -1,6 +1,6 @@
 playerCharacter false
 
-name "Skeleton"
+name "Skeleton Archer"
 icon "creatures/skeleton04" "#ffffffff"
 gender "Male"
 race "Skeleton"
@@ -12,7 +12,7 @@ drawWithSubIcons true
 skincolor "#ffffffff"
 clothingcolor "#ffffffff"
 xp 25400
-role "Warrior" 15
+role "Warrior" 14
 attributes 14 18 13 3 10 3
 script "ai/aiStandard"
 level 1 addAbility "PreciseShot"
@@ -29,4 +29,4 @@ currencyReward 120 200
 equip "longbow" Fine
 equip "armor_mail_base" Fine
 equip "arrow" Good
-additem "arrow" 48 Good
+additem "arrow" 46 Good
