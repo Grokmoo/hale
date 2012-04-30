@@ -8,7 +8,7 @@ description "This warhammer does tremendous crushing damage with every blow."
 value "2 PP 1 GP" 1
 weight 3800
 itemType "WEAPON"
-quality "Exceptional"
+quality "Phenomenal"
 enchantment "entity.addStandaloneDamageBonus('Blunt', 2, 6);"
 useButtonText ""
 baseWeapon "Warhammer"

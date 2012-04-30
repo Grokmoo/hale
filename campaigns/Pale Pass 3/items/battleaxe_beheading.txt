@@ -8,7 +8,7 @@ description "This wicked weapon has more frequent and deadly critical hits than 
 value "2 PP 5 GP" 1
 weight 2400
 itemType "WEAPON"
-quality "Exceptional"
+quality "Phenomenal"
 enchantment "entity.addBonus('WeaponCriticalChance', 3);"
 enchantment "entity.addBonus('WeaponCriticalMultiplier', 1);"
 useButtonText ""

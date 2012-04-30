@@ -169,7 +169,14 @@ public class WorldMapViewer extends Widget {
 	public void updateLocations(List<WorldMapLocation> locations) {
 		removeAllChildren();
 		
+		// first, add the location viewer for the origin (so it is always below other hovers)
+		LocationViewer originViewer = new LocationViewer(origin);
+		add(originViewer);
+		
+		// now, add the location viewer for all other locations
 		for (WorldMapLocation location : locations) {
+			if (location == origin) continue;
+			
 			LocationViewer viewer = new LocationViewer(location);
 			add(viewer);
 		}
