@@ -4,6 +4,8 @@ visibilityRadius 8
 unexplored
 
 
+encounter "aravilMerchantsNE" 21 7
+encounter "aravilMerchantsCenter" 12 9
 
 item 1 "ruraldoor_SW" 24 5
 item 1 "ruraldoor_SW" 25 5

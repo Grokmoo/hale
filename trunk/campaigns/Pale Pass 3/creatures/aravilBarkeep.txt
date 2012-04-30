@@ -1,0 +1,13 @@
+playerCharacter false
+
+name "Barkeep"
+icon "creatures/human17" "#ffffffff"
+portrait "Human/duelist"
+
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+role "Commoner" 15
+attributes 10 10 10 10 10 10
+

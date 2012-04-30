@@ -1,0 +1,23 @@
+playerCharacter false
+
+name "Captain of the Guard"
+portrait "Human/deoran"
+
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+drawWithSubIcons true
+hairicon "subIcons/hair011" "#ff53412f"
+
+skincolor "#fff4f5b6"
+clothingcolor "#ffffffff"
+xp 25400
+role "Warrior" 17
+attributes 15 11 13 13 11 11
+
+equip "warhammer" Good
+equip "armor_plate_base" Good
+equip "gloves_mail_base" Good
+equip "helmet_plate_base" Good
+equip "boots_mail_base" Good

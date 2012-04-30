@@ -1,0 +1,14 @@
+playerCharacter false
+
+name "Priest"
+icon "creatures/human05" "#ffffffff"
+portrait "Human/mage-light"
+
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+xp 16600
+role "Priest" 13
+attributes 11 10 13 10 17 14
+

@@ -4,6 +4,11 @@ visibilityRadius 8
 unexplored
 
 
+encounter "aravilCommonsNW" 10 9
+encounter "aravilCommonsNE" 22 8
+encounter "aravilCommonsSW" 12 21
+encounter "aravilCommonsSE" 29 17
+encounter "aravilCommonsTemple" 32 5
 
 
 tile base 39 29 base/grass4

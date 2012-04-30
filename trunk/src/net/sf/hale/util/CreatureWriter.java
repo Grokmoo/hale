@@ -110,7 +110,7 @@ public class CreatureWriter {
 			}
 			
 			out.write("gender \"" + c.getGender().toString() + "\""); out.newLine();
-			out.write("race \"" + c.getRace().getName() + "\""); out.newLine();
+			out.write("race \"" + c.getRace().getID() + "\""); out.newLine();
 			
 			if (c.isImmortal()) {
 				out.write("immortal true");

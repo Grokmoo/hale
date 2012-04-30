@@ -1,0 +1,8 @@
+size 5
+faction "Neutral"
+challenge 0
+creature "aravilPriest" -5 -3
+creature "peasant03" 0 -3
+creature "peasant02" 4 -2
+creature "peasant10" 3 2
+creature "peasant07" -1 4
