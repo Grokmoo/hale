@@ -1,7 +1,7 @@
 playerCharacter false
 
-name "Skeleton Priest"
-icon "creatures/skeleton01" "#ffffffff"
+name "Skeleton Fire Mage"
+icon "creatures/skeleton02" "#ffeaab7b"
 gender "Male"
 race "Skeleton"
 unspentSkillPoints 0
@@ -12,25 +12,19 @@ drawWithSubIcons true
 skincolor "#ffffffff"
 clothingcolor "#ffffffff"
 xp 25400
-role "Priest" 14
-attributes 10 13 15 10 16 10
+role "Mage" 15
+attributes 10 13 15 18 10 10
 script "ai/aiStandard"
-level 1 addAbility "AcidSplash"
+level 1 addAbility "FlamingFingers"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Fireball"
+level 1 addAbility "Meteor"
 level 1 addAbility "Curse"
 level 1 addAbility "MassCurse"
 level 1 addAbility "FlamingWeapon"
 level 1 addAbility "ImproveWeapon"
-level 1 addAbility "Blindness"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "PhysicalVulnerability"
 level 1 addAbility "Vulnerability"
-level 1 addAbility "Cure"
-level 1 addAbility "MassRegeneration"
-level 1 addAbility "Regeneration"
-level 1 addAbility "MassCure"
 
 currencyReward 100 200
-equip "crossbow" Fine
-equip "armor_mail_base" Fine
-equip "bolt" Good
-additem "bolt" 45 Good

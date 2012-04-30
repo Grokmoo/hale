@@ -1,7 +1,7 @@
 playerCharacter false
 
-name "Skeleton Priest"
-icon "creatures/skeleton01" "#ffffffff"
+name "Skeleton Divine"
+icon "creatures/skeleton02" "#ffd3f0f4"
 gender "Male"
 race "Skeleton"
 unspentSkillPoints 0
@@ -12,15 +12,18 @@ drawWithSubIcons true
 skincolor "#ffffffff"
 clothingcolor "#ffffffff"
 xp 25400
-role "Priest" 14
-attributes 10 13 15 10 16 10
+role "Priest" 15
+attributes 14 12 15 10 18 14
 script "ai/aiStandard"
-level 1 addAbility "AcidSplash"
+level 1 addAbility "ProficiencyTowerShields"
+level 1 addAbility "PositiveEnergy"
+level 1 addAbility "Leadership"
+level 1 addAbility "Enfeeble"
 level 1 addAbility "Curse"
 level 1 addAbility "MassCurse"
-level 1 addAbility "FlamingWeapon"
-level 1 addAbility "ImproveWeapon"
-level 1 addAbility "Blindness"
+level 1 addAbility "ShieldCombat"
+level 1 addAbility "ShieldDefense"
+level 1 addAbility "Haste"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "PhysicalVulnerability"
 level 1 addAbility "Vulnerability"
@@ -30,7 +33,8 @@ level 1 addAbility "Regeneration"
 level 1 addAbility "MassCure"
 
 currencyReward 100 200
-equip "crossbow" Fine
-equip "armor_mail_base" Fine
-equip "bolt" Good
-additem "bolt" 45 Good
+equip "mace" Fine
+equip "shield_tower_base" Fine
+equip "armor_plate_base" Fine
+equip "gloves_mail_base" Fine
+equip "boots_mail_base" Fine
