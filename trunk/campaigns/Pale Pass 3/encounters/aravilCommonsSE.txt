@@ -6,4 +6,4 @@ creature "peasant01" 1 3
 creature "peasant04" 4 -3
 creature "aravilGateGuard" -1 -3
 creature "aravilGateGuard" -5 -1
-creature "aravilGuardCaptain" -3 -2
+creature "aravilGuardCaptain" -2 -1

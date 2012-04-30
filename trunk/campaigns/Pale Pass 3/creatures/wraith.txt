@@ -1,0 +1,17 @@
+playerCharacter false
+
+name "Wraith"
+icon "creatures/spectre" "#ffffffff"
+gender "Male"
+race "Ghost"
+unspentSkillPoints 0
+xp 30900
+role "Monster" 16
+attributes 14 22 12 6 10 7
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor30"
+level 1 addAbility "PhysicalImmunity75"
+level 1 addAbility "SpellResistance30"
+
+currencyReward 100 200
+equip "unarmedWraith" Good

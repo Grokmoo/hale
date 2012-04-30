@@ -1,0 +1,8 @@
+name "Physical Immunity 75%"
+type "Racial Abilities"
+description "Some creatures are naturally highly resistant to physical damage."
+activateable false
+
+icon "icons/naturalArmor"
+
+script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Physical', 50); parent.applyEffect(effect); }"
