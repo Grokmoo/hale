@@ -75,3 +75,18 @@ image stone2       7 2
 image stone3       6 3
 image stone4       7 3
 image stone5       7 4
+
+image snow0        7 5
+image snow1        7 6
+image snow2        6 7
+
+image ice0         7 7
+image ice1         0 8
+image ice2         1 8
+image ice3         2 8
+image ice4         3 8
+image ice5         4 8
+
+image snowhills0   5 8
+image snowhills1   6 8
+image snowhills2   7 8
