@@ -1,0 +1,3 @@
+area "Aravil Commons"
+script "triggers/aravilCommons"
+addPoints

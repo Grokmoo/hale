@@ -24,6 +24,18 @@ function learnOfArmy(game) {
     entry.addText("You should travel to Aravil to learn more and help with the fight against the Master.");
 }
 
+function learnOfTomb(game) {
+    var quest = game.getQuestEntry("The Master");
+    
+    if (quest.hasSubEntry("The Tomb of Narkel")) return;
+    
+    quest.setCurrentSubEntriesCompleted();
+    
+    var entry = quest.createSubEntry("The Tomb of Narkel");
+    
+    entry.addText("You spoke with the leader of Aravil about your adventures against the Master.  She asked you to travel to the Tomb of an ancient warrior, Narkel, and see if you can uncover anything about how to stop the Master.");
+}
+
 function narkel(game) {
     var quest = game.getQuestEntry("The Master");
     
