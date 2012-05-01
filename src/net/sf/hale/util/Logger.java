@@ -90,7 +90,7 @@ public class Logger {
 	 * @param exception the exception generating the stack trace to display
 	 */
 	
-	public static void appendToErrorLog(String context, Exception exception) {
+	public static void appendToErrorLog(String context, Throwable exception) {
 		if (Game.config.isDebugModeEnabled()) {
 			System.err.println(context);
 			exception.printStackTrace();

@@ -91,7 +91,7 @@ public abstract class AnimationBase implements Saveable {
 	}
 	
 	private String getColorString(java.awt.Color color) {
-		return '#' + Integer.toHexString(color.getRGB());
+		return '#' + String.format("%08x", color.getRGB());
 	}
 	
 	public AnimationBase(int halfWidth, int halfHeight) {

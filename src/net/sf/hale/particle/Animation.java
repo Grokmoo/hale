@@ -80,16 +80,17 @@ public class Animation extends AnimationBase implements Animated {
 	}
 	
 	public static Animated load(SimpleJSONObject data) throws LoadGameException {
-		int frameDuration = data.get("frameDuration", 0);
+		float frameDuration = data.get("frameDuration", 0.0f);
 		String sprite = data.get("texture", null);
 		
 		Animation animation = new Animation(sprite, frameDuration);
+		animation.frames.clear();
 		
 		// do the superclass loading
 		animation.loadBase(data);
 		
 		animation.drawingMode = DrawingMode.valueOf(data.get("drawingMode", null));
-		animation.currentFrameIndex = data.get("currentFrameIndex", 0);
+		animation.currentFrameIndex = data.get("currentFrame", 0);
 		animation.numLoops = data.get("numLoops", 0);
 		
 		for (SimpleJSONArrayEntry entry : data.getArray("frames")) {
@@ -100,11 +101,11 @@ public class Animation extends AnimationBase implements Animated {
 			float texCoordStartY = entryData.get("texCoordStartY", 0.0f);
 			float texCoordEndX = entryData.get("texCoordEndX", 0.0f);
 			float texCoordEndY = entryData.get("texCoordEndY", 0.0f);
-			
+
 			AnimationFrame frame = animation.new AnimationFrame(texCoordStartX, texCoordStartY,
 					texCoordEndX, texCoordEndY, initialDuration);
 			frame.duration = entryData.get("duration", 0.0f);
-			
+
 			animation.frames.add(frame);			
 		}
 		
