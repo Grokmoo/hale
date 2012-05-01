@@ -322,7 +322,6 @@
 		{ "with" : "Grass", "id" : "BorderSnow" },
 		{ "with" : "Stone", "id" : "BorderSnow" },
 		{ "with" : "Ice", "id" : "BorderSnow" },
-		{ "with" : "Snow Hills", "id" : "BorderSnow" }
 	  ]
 	},
 	"Ice" : {
@@ -344,7 +343,6 @@
 		{ "with" : "Leaves", "id" : "BorderIce" },
 		{ "with" : "Grass", "id" : "BorderIce" },
 		{ "with" : "Stone", "id" : "BorderIce" },
-		{ "with" : "Snow Hills", "id" : "BorderIce" }
 	  ]
 	},
 	"Snow Hills" : {
@@ -362,7 +360,10 @@
 		{ "with" : "Grass Dry", "id" : "BorderSnowHills" },
 		{ "with" : "Leaves", "id" : "BorderSnowHills" },
 		{ "with" : "Grass", "id" : "BorderSnowHills" },
-		{ "with" : "Stone", "id" : "BorderSnowHills" }
+		{ "with" : "Stone", "id" : "BorderSnowHills" },
+		{ "with" : "Ice", "id" : "BorderSnowHills" },
+		{ "with" : "Snow", "id" : "BorderSnowHills" },
+		{ "with" : "Hills", "id" : "BorderSnowHills" }
 	  ]
 	},
     "Stone" : {
@@ -577,7 +578,10 @@
 		{ "with" : "Desert", "id" : "BorderWall" },
 		{ "with" : "Hills", "id" : "BorderWall" },
 		{ "with" : "Desert Hills", "id" : "BorderWall" },
-		{ "with" : "Stone", "id" : "BorderWall" }
+		{ "with" : "Stone", "id" : "BorderWall" },
+		{ "with" : "Snow", "id" : "BorderWall" },
+		{ "with" : "Ice", "id" : "BorderWall" },
+		{ "with" : "Snow Hills", "id" : "BorderWall" }
 	  ]
 	},
 	"Building" : {
@@ -599,6 +603,9 @@
 		{ "with" : "Hills", "id" : "BorderBuilding" },
 		{ "with" : "Desert Hills", "id" : "BorderBuilding" },
 		{ "with" : "Stone", "id" : "BorderBuilding" },
+		{ "with" : "Snow", "id" : "BorderBuilding" },
+		{ "with" : "Ice", "id" : "BorderBuilding" },
+		{ "with" : "Snow Hills", "id" : "BorderBuilding" },
 		{ "with" : "Building", "id" : "BorderBuildingSelf" }
 	  ]
 	}
