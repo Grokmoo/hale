@@ -3,7 +3,7 @@ icon "items/I_Key04" "#ffffffff"
 ingredient false
 quest true
 cursed false
-description "This is the key you found in the first level of the Tomb of Narkel."
+description "This is the key you found on the first level of the Tomb of Narkel."
 value "0 CP" 1
 weight 25
 itemType "ITEM"
