@@ -6,9 +6,9 @@ numRandomCreatures 4 5
 respawn true
 respawnHours 24
 creature "skeletonArcher" 0 -1
-creature "skeletonWarrior" -1 -1
 creature "skeletonChampion" 1 -1
 creature "skeletonChampion02" 1 0
 creature "skeletonDivine" 0 0
 creature "skeletonFireMage" -1 0
 creature "skeletonMage" 0 1
+creature "wraithDread" -1 -1
