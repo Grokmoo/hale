@@ -22,6 +22,7 @@ package net.sf.hale.quickbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -44,6 +45,8 @@ public class QuickbarViewer extends DialogLayout {
 	private Label currentIndexLabel;
 	
 	private int currentIndex;
+	
+	private Button expand;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -96,11 +99,30 @@ public class QuickbarViewer extends DialogLayout {
 			mainV.addWidget(button);
 		}
 		
+		expand = new Button();
+		expand.setTheme("expandbutton");
+		expand.addCallback(new Runnable() {
+			@Override public void run() {
+				showQuickbarPopup();
+			}
+		});
+		mainH.addWidget(expand);
+		mainV.addWidget(expand);
+		
 		this.setHorizontalGroup(mainH);
 		this.setVerticalGroup(mainV);
 		
 		setCurrentIndex(1);
 		setQuickbar(quickbar);
+	}
+	
+	/**
+	 * Displays the popup showing the entire quickbar (with all slots) to the user
+	 */
+	
+	public void showQuickbarPopup() {
+		QuickbarPopup popup = new QuickbarPopup(Game.mainViewer, this);
+		popup.openPopup();
 	}
 	
 	private int getIndexWrapAround(int index) {
