@@ -19,6 +19,7 @@
 
 package net.sf.hale.util;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -268,8 +269,12 @@ public class SimpleJSONObject {
 		} else if (obj instanceof Double) {
 			usedKeys.add(key);
 			return ((Double)obj).floatValue();
+		} else if (obj instanceof BigDecimal) {
+			usedKeys.add(key);
+			return ((BigDecimal)obj).floatValue();
 		} else {
-			Logger.appendToWarningLog("In resource " + objectID + ": \"" + key + "\" is not a float.");
+			Logger.appendToWarningLog("In resource " + objectID + ": \"" + key + "\" is not a float, is " +
+					obj.getClass().getCanonicalName());
 			return defaultValue;
 		}
 	}

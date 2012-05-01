@@ -486,6 +486,7 @@
 		<theme name="showinvalidpartiesbutton" ref="checkbutton">
 			<param name="text"><string>Show Invalid Parties</string></param>
 			<param name="minWidth"><int>150</int></param>
+			<param name="tooltip"><string>Show parties that do not meet the requirements for this campaign</string></param>
 		</theme>
 		
 		<theme name="characterslabel" ref="labelbigred">

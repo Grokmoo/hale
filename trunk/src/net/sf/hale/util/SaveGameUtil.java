@@ -85,6 +85,8 @@ public class SaveGameUtil {
 		} catch (IllegalAccessException e) {
 			throw new LoadGameException("Error loading object, method load is not accessible.");
 		} catch (InvocationTargetException e) {
+			Logger.appendToErrorLog("Error loading object.", e.getCause());
+			
 			throw new LoadGameException("Error loading object, method load constructor error");
 		}
 	}
