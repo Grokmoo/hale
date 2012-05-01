@@ -64,6 +64,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	
 	private QuickbarSlot dragSlotToAdd;
 	
+	private boolean disabledExceptActivate;
+	
 	/**
 	 * Creates a new QuickbarSlotButton that can be used to activate a QuickbarSlot.
 	 * 
@@ -86,6 +88,25 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		this.add(primaryLabel);
 		
 		this.color = Color.WHITE;
+	}
+	
+	/**
+	 * Sets whether or not the label showing the viewer index is shown
+	 * @param show
+	 */
+	
+	public void setShowIndexLabel(boolean show) {
+		indexLabel.setVisible(show);
+	}
+	
+	/**
+	 * Sets whether all actions except for the basic left click should be disabled
+	 * @param disable whether all actions (show right click menu, drag & drop) except
+	 * for left click activate are disabled
+	 */
+	
+	public void setDisabledExceptActivate(boolean disable) {
+		this.disabledExceptActivate = disable;
 	}
 	
 	@Override protected void layout() {
@@ -182,6 +203,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 				activateSlot(getRight(), getY());
 				break;
 			case Event.MOUSE_RBUTTON:
+				if (disabledExceptActivate) break;
+				
 				createRightClickMenu(getRight(), getY());
 				break;
 			}
@@ -285,7 +308,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	}
 	
 	/**
-	 * A callback for use in activating a QuickbarSlot
+	 * A callback for use in activating a QuickbarSlot. this callback can be used
+	 * instead of the normal left click activate for this slot
 	 * @author Jared Stephen
 	 *
 	 */
