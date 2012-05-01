@@ -192,3 +192,24 @@ image stone-nw  3 12
 image stone-s   4 12
 image stone-se  5 12
 image stone-sw  6 12
+
+image ice-n   7 12
+image ice-ne  8 12
+image ice-nw  9 12
+image ice-s  10 12
+image ice-se 11 12
+image ice-sw 12 12
+
+image snow-n   0 13
+image snow-ne  1 13
+image snow-nw  2 13
+image snow-s   3 13
+image snow-se  4 13
+image snow-sw  5 13
+
+image snowhills-n   6 13
+image snowhills-ne  7 13
+image snowhills-nw  8 13
+image snowhills-s   9 13
+image snowhills-se 10 13
+image snowhills-sw 11 13
