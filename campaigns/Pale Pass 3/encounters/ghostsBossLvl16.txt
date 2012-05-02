@@ -1,0 +1,8 @@
+size 2
+faction "Hostile"
+challenge 160
+creature "wraithKing" -2 0
+creature "wraithDread" 0 -2
+creature "wraithDread" 0 2
+creature "wraithDread" 2 1
+creature "wraithDread" 2 -1

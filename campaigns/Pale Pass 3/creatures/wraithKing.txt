@@ -1,0 +1,27 @@
+playerCharacter false
+
+name "King Wraith"
+icon "creatures/ghost01" "#ffffffff"
+gender "Male"
+race "Ghost"
+unspentSkillPoints 0
+xp 30900
+role "Priest" 20
+attributes 17 25 10 6 19 7
+script "ai/aiStandard"
+level 1 addAbility "Enfeeble"
+level 1 addAbility "Curse"
+level 1 addAbility "MassParalyze"
+level 1 addAbility "Sleep"
+level 1 addAbility "MassCurse"
+level 1 addAbility "Paralyze"
+level 1 addAbility "Slow"
+level 1 addAbility "Breach"
+level 1 addAbility "Blindness"
+level 1 addAbility "NaturalArmor30"
+level 1 addAbility "SpellResistance50"
+level 1 addAbility "PhysicalImmunity75"
+
+currencyReward 120 240
+equip "unarmedWraith" Good
+addloot "DropWraithKing" 100 PER_ITEM

@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated false
+from "Aravil Commons" 11 23
+to "Abandoned House" 3 1
+addToPosition 1 1
+addToPosition 1 0
+addToPosition 0 1
+addToPosition 0 0
+addFromPosition -1 -2
+addFromPosition 0 -1
+addFromPosition -1 -1
+addFromPosition 0 0
