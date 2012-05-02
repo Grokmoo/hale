@@ -1,0 +1,10 @@
+name "Wraith Essence"
+icon "items/I_IronBall" "#ffffffff"
+ingredient false
+quest true
+cursed false
+description "The Essence of the powerful wraith you fought in the Abandoned House in Aravil."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"

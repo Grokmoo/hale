@@ -1,0 +1,10 @@
+size 1
+faction "Hostile"
+challenge 150
+randomize true
+numRandomCreatures 3 4
+creature "wraith" -1 -1
+creature "wraith" 0 -1
+creature "wraithDread" 1 0
+creature "wraithDread" 1 -1
+creature "wraithDread" 0 0
