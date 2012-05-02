@@ -16,18 +16,33 @@ addLocation "Scout Encampment" "scoutEncampmentToWorldMap" "worldmap/camp" 520 4
 addLocation "Aravil Castle" "aravilCastleToWorldMap" "worldmap/city2" 320 320
 addLocation "Aravil Merchants" "aravilMerchantsToWorldMap" "worldmap/city4" 370 400
 addLocation "Tomb of Narkel" "tombEntranceToWorldMap" "worldmap/drake2" 535 280
+addLocation "Greenrange Forest" "greenrangeForestToWorldMap" "worldmap/deciduous-summer-4" 140 250
+addLocation "Greenrange Canyon" "null" "worldmap/deciduous-fall-2" 10 260
 setTravelTime "The Gate" "Aravil West Gate" 24
 setTravelTime "The Gate" "Scout Encampment" 42
-setTravelTime "The Gate" "Aravil Castle" 25
-setTravelTime "The Gate" "Aravil Merchants" 25
+setTravelTime "The Gate" "Aravil Castle" 24
+setTravelTime "The Gate" "Aravil Merchants" 24
 setTravelTime "The Gate" "Tomb of Narkel" 42
+setTravelTime "The Gate" "Greenrange Forest" 18
+setTravelTime "The Gate" "Greenrange Canyon" 22
 setTravelTime "Aravil West Gate" "Scout Encampment" 18
 setTravelTime "Aravil West Gate" "Aravil Castle" 1
 setTravelTime "Aravil West Gate" "Aravil Merchants" 1
 setTravelTime "Aravil West Gate" "Tomb of Narkel" 18
+setTravelTime "Aravil West Gate" "Greenrange Forest" 24
+setTravelTime "Aravil West Gate" "Greenrange Canyon" 28
 setTravelTime "Scout Encampment" "Aravil Castle" 18
 setTravelTime "Scout Encampment" "Aravil Merchants" 18
 setTravelTime "Scout Encampment" "Tomb of Narkel" 36
+setTravelTime "Scout Encampment" "Greenrange Forest" 42
+setTravelTime "Scout Encampment" "Greenrange Canyon" 46
 setTravelTime "Aravil Castle" "Aravil Merchants" 1
 setTravelTime "Aravil Castle" "Tomb of Narkel" 18
+setTravelTime "Aravil Castle" "Greenrange Forest" 24
+setTravelTime "Aravil Castle" "Greenrange Canyon" 28
 setTravelTime "Aravil Merchants" "Tomb of Narkel" 18
+setTravelTime "Aravil Merchants" "Greenrange Forest" 24
+setTravelTime "Aravil Merchants" "Greenrange Canyon" 28
+setTravelTime "Tomb of Narkel" "Greenrange Forest" 42
+setTravelTime "Tomb of Narkel" "Greenrange Canyon" 46
+setTravelTime "Greenrange Forest" "Greenrange Canyon" 4

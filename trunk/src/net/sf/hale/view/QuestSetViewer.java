@@ -166,6 +166,15 @@ public class QuestSetViewer extends Widget {
 			
 			this.entry = entry;
 		}
+		
+		@Override public void update() {
+			super.update();
+			
+			if (entry.getNumSubEntries() < 2)
+				this.setExpandContractVisible(false);
+			else
+				this.setExpandContractVisible(true);
+		}
 
 		@Override public int getPreferredHeight() {
 			return getTextArea().getPreferredHeight() + getButtonHeight() + getBorderVertical();
