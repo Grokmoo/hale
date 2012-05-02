@@ -1,6 +1,7 @@
 name "Mace of Crushing"
 icon "items/W_Mace009" "#ffebac72"
 subIcon "subIcons/weapon-mace02" "#ffebac72"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

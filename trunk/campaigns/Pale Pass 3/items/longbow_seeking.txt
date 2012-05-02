@@ -1,6 +1,7 @@
 name "Seeking Longbow"
 icon "items/W_Bow08" "#ffffffff"
 subIcon "subIcons/weapon-bow02" "#ffedb7a0"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

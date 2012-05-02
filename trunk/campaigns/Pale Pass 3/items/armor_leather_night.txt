@@ -1,6 +1,7 @@
 name "Night Armor"
 icon "items/A_Clothing02" "#ff4b2806"
 subIcon "subIcons/armor-04" "#ff4b2806"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

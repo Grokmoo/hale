@@ -1,6 +1,7 @@
 name "Sting"
 icon "items/W_Sword010" "#ffffffff"
 subIcon "subIcons/weapon-sword02" "#ffffffff"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

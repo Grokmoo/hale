@@ -48,6 +48,7 @@ function convo06(game, parent, target, conversation) {
     
     conversation.addText("So the story goes, his big stash is still somewhere out there in them woods.  Probably close to his old cave hideout, but no one knows where.");
     
+	game.activateTransition("greenrangeForestToCave");
     game.put("theSmugglerQuestStarted", true);
     game.runExternalScript("quests/theSmuggler", "startQuest");
     
