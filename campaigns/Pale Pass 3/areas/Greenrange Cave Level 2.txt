@@ -5,9 +5,10 @@ unexplored
 
 
 
-item 1 "chest_epic" 5 7
 item 1 "chest_weapon_superb" 7 6
 item 1 "chest_weapon_superb" 2 8
+item 1 "chest02" 5 7
+item 1 "shortSword_sting" 5 7
 
 tile 0 6 8 layer0/floor5
 tile 0 4 8 layer0/floor
