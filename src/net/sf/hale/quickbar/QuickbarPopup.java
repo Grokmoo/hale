@@ -22,6 +22,7 @@ package net.sf.hale.quickbar;
 
 import net.sf.hale.Game;
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.Widget;
 
@@ -95,6 +96,18 @@ public class QuickbarPopup extends PopupWindow {
 			
 			setHorizontalGroup(mainH);
 			setVerticalGroup(mainV);
+		}
+		
+		@Override protected boolean handleEvent(Event evt) {
+			if (evt.getType() == Event.Type.KEY_PRESSED) {
+				switch (evt.getKeyCode()) {
+				case Event.KEY_Q:
+					QuickbarPopup.this.closePopup();
+					break;
+				}
+			}
+			
+			return super.handleEvent(evt);
 		}
 	}
 

@@ -128,6 +128,21 @@ public abstract class ExpandableWidget extends Widget {
 	protected abstract void appendDescriptionDetails(StringBuilder sb);
 	
 	/**
+	 * If false, neither the expand or contract button will be shown.  If true,
+	 * the currently active button will be shown
+	 */
+	
+	public void setExpandContractVisible(boolean visible) {
+		if (!visible) {
+			expand.setVisible(false);
+			contract.setVisible(false);
+		} else {
+			expand.setVisible(!expanded);
+			contract.setVisible(expanded);
+		}
+	}
+	
+	/**
 	 * Updates the current description shown for this Widget
 	 */
 	
