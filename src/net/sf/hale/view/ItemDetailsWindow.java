@@ -225,7 +225,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 	private void appendItemString(Item item, StringBuilder sb) {
 		sb.append("<table style=\"font-family: vera; vertical-align: middle; margin-bottom: 1em;\">");
 		
-		if (item.hasQuality()) {
+		if (item.hasQualityDescription()) {
 			sb.append("<tr><td style=\"width: 10ex;\">");
 			sb.append("Quality");
 			sb.append("</td><td style=\"font-family: vera-red\">");

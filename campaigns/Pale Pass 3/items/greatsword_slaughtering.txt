@@ -1,6 +1,7 @@
 name "Greatsword of Slaughter"
 icon "items/W_Sword005" "#ffffffff"
 subIcon "subIcons/weapon-sword07" "#ffbbfcf9"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

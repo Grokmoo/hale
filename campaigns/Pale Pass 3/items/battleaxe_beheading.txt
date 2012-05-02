@@ -1,6 +1,7 @@
 name "Battleaxe of Beheading"
 icon "items/W_Axe008" "#ffffffff"
 subIcon "subIcons/weapon-axe02" "#ffedb7a0"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

@@ -1,6 +1,7 @@
 name "The Chilling Blade"
 icon "items/W_Sword017" "#ffffffff"
 subIcon "subIcons/weapon-sword03" "#ff67f5e1"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

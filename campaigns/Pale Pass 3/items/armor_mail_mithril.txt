@@ -1,6 +1,7 @@
 name "Mithril Mail Armor"
 icon "items/A_Armor07" "#ffffffff"
 subIcon "subIcons/armor-05" "#ffc2c4b5"
+forceNoQuality true
 ingredient false
 quest false
 cursed false

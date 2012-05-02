@@ -561,7 +561,7 @@ public class Item extends Entity implements Referenceable {
 		setFullName();
 	}
 	
-	public boolean hasQuality() {
+	public boolean hasQualityDescription() {
 		if (forceNoQuality) return false;
 		
 		switch (itemType) {
@@ -573,7 +573,7 @@ public class Item extends Entity implements Referenceable {
 	}
 	
 	private void setFullName() {
-		if (hasQuality())
+		if (hasQualityDescription())
 			fullName = getQuality().getName() + " " + name;
 		else
 			fullName = name;

@@ -1,0 +1,194 @@
+size 10 10
+tileset cave
+visibilityRadius 6
+unexplored
+
+
+
+item 1 "chest_epic" 5 7
+item 1 "chest_weapon_superb" 7 6
+item 1 "chest_weapon_superb" 2 8
+
+tile 0 6 8 layer0/floor5
+tile 0 4 8 layer0/floor
+tile 0 3 8 layer0/floor
+tile 0 2 8 layer0/floor
+tile 0 7 7 layer0/floor
+tile 0 6 7 layer0/floor6
+tile 0 5 7 layer0/floor
+tile 0 4 7 layer0/floor4
+tile 0 3 7 layer0/floor4
+tile 0 2 7 layer0/floor2
+tile 0 7 6 layer0/floor
+tile 0 6 6 layer0/floor
+tile 0 5 6 layer0/floor
+tile 0 4 6 layer0/floor4
+tile 0 3 6 layer0/floor
+tile 0 2 6 layer0/floor
+tile 0 7 5 layer0/floor
+tile 0 6 5 layer0/floor3
+tile 0 5 5 layer0/floor
+tile 0 4 5 layer0/floor
+tile 0 3 5 layer0/floor
+tile 0 2 5 layer0/floor
+tile 0 0 5 layer0/chasm
+tile 0 7 4 layer0/floor
+tile 0 6 4 layer0/floor
+tile 0 5 4 layer0/floor3
+tile 0 4 4 layer0/floor4
+tile 0 3 4 layer0/floor
+tile 0 2 4 layer0/chasm
+tile 0 1 4 layer0/chasm
+tile 0 0 4 layer0/chasm
+tile 0 5 3 layer0/floor
+tile 0 4 3 layer0/floor2
+tile 0 3 3 layer0/chasm
+tile 0 2 3 layer0/chasm
+tile 0 1 3 layer0/chasm
+tile 0 0 3 layer0/chasm
+tile 0 6 2 layer0/chasm
+tile 0 5 2 layer0/chasm
+tile 0 4 2 layer0/chasm
+tile 0 3 2 layer0/chasm
+tile 0 2 2 layer0/chasm
+tile 0 1 2 layer0/chasm
+tile 0 0 2 layer0/chasm
+tile 0 7 1 layer0/chasm
+tile 0 6 1 layer0/chasm
+tile 0 5 1 layer0/chasm
+tile 0 4 1 layer0/chasm
+tile 0 3 1 layer0/chasm
+tile 0 2 1 layer0/chasm
+tile 0 1 1 layer0/chasm
+tile 0 0 1 layer0/chasm
+tile 0 7 0 layer0/chasm
+tile 0 6 0 layer0/chasm
+tile 0 5 0 layer0/chasm
+tile 0 4 0 layer0/chasm
+tile 0 3 0 layer0/chasm
+tile 0 2 0 layer0/chasm
+tile 0 1 0 layer0/chasm
+tile 0 0 0 layer0/chasm
+tile 2 0 5 layer2/chasm-concave-tl
+tile 2 0 5 layer2/chasm-convex-br
+tile 2 2 4 layer2/chasm-concave-tl
+tile 2 2 4 layer2/chasm-convex-br
+tile 2 1 4 layer2/chasm-concave-tl
+tile 2 1 4 layer2/chasm-convex-br
+tile 2 3 3 layer2/chasm-concave-l
+tile 2 3 3 layer2/chasm-convex-br
+tile 2 3 3 layer2/chasm-convex-r
+tile 2 6 2 layer2/chasm-concave-tl
+tile 2 6 2 layer2/chasm-convex-br
+tile 2 5 2 layer2/chasm-concave-tl
+tile 2 5 2 layer2/chasm-convex-bl
+tile 2 5 2 layer2/chasm-convex-br
+tile 2 4 2 layer2/chasm-concave-tr
+tile 2 3 2 layer2/chasm-concave-tl
+tile 2 7 1 layer2/chasm-concave-l
+tile 2 7 1 layer2/chasm-convex-br
+tile 2 7 1 layer2/chasm-convex-r
+tile 2 7 0 layer2/chasm-convex-r
+tile 3 9 9 layer3/wall-rough3
+tile 3 8 9 layer3/wall-rough3
+tile 3 7 9 layer3/wall-rough
+tile 3 6 9 layer3/wall-rough
+tile 3 5 9 layer3/wall-rough3
+tile 3 4 9 layer3/wall-rough
+tile 3 3 9 layer3/wall-rough3
+tile 3 2 9 layer3/wall-rough
+tile 3 1 9 layer3/wall-rough
+tile 3 0 9 layer3/wall-rough2
+tile 3 9 8 layer3/wall-rough2
+tile 3 8 8 layer3/wall-rough3
+tile 3 7 8 layer3/wall-rough2
+tile 3 5 8 layer3/wall-rough2
+tile 3 1 8 layer3/wall-rough
+tile 3 0 8 layer3/wall-rough2
+tile 3 9 7 layer3/wall-rough2
+tile 3 8 7 layer3/wall-rough
+tile 3 1 7 layer3/wall-rough2
+tile 3 0 7 layer3/wall-rough
+tile 3 9 6 layer3/wall-rough3
+tile 3 8 6 layer3/wall-rough2
+tile 3 1 6 layer3/wall-rough2
+tile 3 0 6 layer3/wall-rough
+tile 3 9 5 layer3/wall-rough2
+tile 3 8 5 layer3/wall-rough3
+tile 3 1 5 layer3/wall-rough
+tile 3 9 4 layer3/wall-rough2
+tile 3 8 4 layer3/wall-rough2
+tile 3 9 3 layer3/wall-rough
+tile 3 8 3 layer3/wall-rough
+tile 3 7 3 layer3/wall-rough
+tile 3 6 3 layer3/wall-rough3
+tile 3 9 2 layer3/wall-rough
+tile 3 8 2 layer3/wall-rough
+tile 3 7 2 layer3/wall-rough3
+tile 3 9 1 layer3/wall-rough2
+tile 3 8 1 layer3/wall-rough2
+tile 3 9 0 layer3/wall-rough3
+tile 3 8 0 layer3/wall-rough2
+tile 4 6 8 features/barrels
+tile 4 4 8 features/barrels
+tile 4 3 8 features/barrel
+tile 4 2 8 layer4/wall-rough-concave-l
+tile 4 8 7 layer4/wall-rough-convex-l
+tile 4 7 7 layer4/wall-rough-concave-r
+tile 4 7 7 features/barrels
+tile 4 4 7 features/crate
+tile 4 2 7 layer4/wall-rough-concave-l
+tile 4 1 7 layer4/wall-rough-convex-r
+tile 4 8 6 layer4/wall-rough-convex-l
+tile 4 7 6 layer4/wall-rough-concave-r
+tile 4 2 6 layer4/wall-rough-concave-l
+tile 4 2 6 features/barrels
+tile 4 1 6 layer4/wall-rough-convex-r
+tile 4 8 5 layer4/wall-rough-convex-l
+tile 4 7 5 layer4/wall-rough-concave-r
+tile 4 7 5 features/barrels
+tile 4 1 5 layer4/wall-rough-convex-r
+tile 4 7 4 layer4/wall-rough-concave-tr
+tile 4 7 4 layer4/wall-rough-concave-r
+tile 4 7 4 features/crate
+tile 4 6 4 layer4/wall-rough-concave-tr
+tile 4 7 3 layer4/wall-rough-convex-bl
+tile 4 6 3 layer4/wall-rough-convex-bl
+tile 4 6 3 layer4/wall-rough-convex-l
+tile 4 8 1 layer4/wall-rough-convex-l
+tile 4 7 1 layer4/wall-rough-concave-r
+tile 4 7 0 layer4/wall-rough-concave-r
+tile 5 4 9 layer5/wall-rough-convex-tl
+tile 5 2 9 layer5/wall-rough-convex-tr
+tile 5 7 8 layer5/wall-rough-convex-tl
+tile 5 6 8 layer5/wall-rough-concave-bl
+tile 5 6 8 layer5/wall-rough-concave-br
+tile 5 5 8 layer5/wall-rough-convex-tr
+tile 5 5 8 layer5/wall-rough-convex-tl
+tile 5 4 8 layer5/wall-rough-concave-br
+tile 5 3 8 layer5/wall-rough-concave-bl
+tile 5 3 8 layer5/wall-rough-concave-br
+tile 5 2 8 layer5/wall-rough-concave-bl
+tile 5 7 7 layer5/wall-rough-concave-br
+tile 5 1 5 layer5/wall-rough-convex-tr
+tile 5 1 5 layer5/wall-rough-convex-tl
+tile 5 0 5 layer5/wall-rough-concave-br
+tile 5 6 3 layer5/wall-rough-convex-tl
+tile 5 7 2 layer5/wall-rough-convex-tl
+tile 5 6 2 layer5/wall-rough-concave-br
+tile 5 7 1 layer5/wall-rough-concave-br
+
+elevation 0 0 0 0 0 0 0 0 0 0 0 
+elevation 1 0 0 0 0 0 0 0 0 0 0 
+elevation 2 0 0 0 0 0 0 0 0 0 0 
+elevation 3 0 0 0 0 0 0 0 0 0 0 
+elevation 4 0 0 0 0 0 0 0 0 0 0 
+elevation 5 0 0 0 0 0 0 0 0 0 0 
+elevation 6 0 0 0 0 0 0 0 0 0 0 
+elevation 7 0 0 0 0 0 0 0 0 0 0 
+elevation 8 0 0 0 0 0 0 0 0 0 0 
+elevation 9 0 0 0 0 0 0 0 0 0 0 
+
+
+opaque  0 6  0 7  0 8  0 9  1 5  1 6  1 7  1 8  2 9  3 9  4 9  5 8  6 3  6 9  7 2  7 3  7 8  8 0  8 1  8 2  8 4  8 5  8 6  8 7  8 8
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  1 0  1 1  1 2  1 3  1 4  1 5  1 6  1 7  1 8  1 9  2 0  2 1  2 2  2 3  2 4  2 6  2 9  3 0  3 1  3 2  3 3  3 8  3 9  4 0  4 1  4 2  4 7  4 8  4 9  5 0  5 1  5 2  5 8  5 9  6 0  6 1  6 2  6 3  6 8  6 9  7 0  7 1  7 2  7 3  7 4  7 5  7 7  7 8  7 9  8 0  8 1  8 2  8 4  8 5  8 6  8 7  8 8  8 9  9 0  9 1  9 2  9 3  9 4  9 5  9 6  9 7  9 8  9 9
