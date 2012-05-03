@@ -99,6 +99,14 @@ public class AreaTrigger implements Referenceable, Saveable {
 		readAreaTriggerFile(id);
 	}
 	
+	public boolean hasAreaLoaded() {
+		return areaLoaded;
+	}
+	
+	public boolean hasPlayerEntered() {
+		return enteredByPlayer;
+	}
+	
 	public void checkOnAreaLoad(AreaTransition transition) {
 		if (script == null) {
 			areaLoaded = true;

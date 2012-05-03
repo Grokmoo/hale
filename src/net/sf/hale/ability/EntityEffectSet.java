@@ -145,21 +145,22 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	 * Creates an EntityEffectSet that is a copy of the specified
 	 * EntityEffectSet, containing copies of all Effects in that set.
 	 * @param other the EntityEffectSet to copy
+	 * @param target the target for all newly copied effects
 	 */
 	
-	public EntityEffectSet(EntityEffectSet other) {
+	public EntityEffectSet(EntityEffectSet other, EffectTarget target) {
 		this();
 		
 		for (Effect effect : other.effectsNoActiveScript) {
-			this.effectsNoActiveScript.add(new Effect(effect));
+			this.effectsNoActiveScript.add(new Effect(effect, target));
 		}
 		
 		for (Effect effect : other.effectsWithActiveScript) {
-			this.effectsWithActiveScript.add(new Effect(effect));
+			this.effectsWithActiveScript.add(new Effect(effect, target));
 		}
 		
 		for (Aura aura : other.auras) {
-			this.auras.add(new Aura(aura));
+			this.auras.add(new Aura(aura, target));
 		}
 	}
 	

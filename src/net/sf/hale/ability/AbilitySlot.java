@@ -209,9 +209,7 @@ public class AbilitySlot implements Saveable {
 		this.parent = parent;
 		
 		activeEffects = new ArrayList<Effect>();
-		for (Effect effect : other.activeEffects) {
-			activeEffects.add(new Effect(effect));
-		}
+		// don't copy active effects from other ability slot
 	}
 	
 	/**
