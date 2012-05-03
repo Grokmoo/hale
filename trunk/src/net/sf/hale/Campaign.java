@@ -220,6 +220,8 @@ public class Campaign {
 		
 		this.curArea = refHandler.getArea(data.get("currentArea", null));
 		
+		// clear existing triggers by reloading them
+		loadTriggers();
 		for (SimpleJSONArrayEntry entry : data.getArray("triggers")) {
 			SimpleJSONObject entryData = entry.getObject();
 			
@@ -228,6 +230,8 @@ public class Campaign {
 			this.getTrigger(id).load(entryData);
 		}
 		
+		// clear existing transitions by reloading them
+		this.loadAreaTransitions();
 		for (SimpleJSONArrayEntry entry : data.getArray("transitions")) {
 			SimpleJSONObject entryData = entry.getObject();
 			
@@ -437,23 +441,6 @@ public class Campaign {
 		scriptState = new ScriptState();
 		
 		customRelationships = new ArrayList<Faction.CustomRelationship>();
-	}
-	
-	/**
-	 * Clears most campaign related data (transitions, triggers, encounters, merchants)
-	 * but not all data, such as party data
-	 */
-	
-	public void clear() {
-		areas.clear();
-		transitions.clear();
-		triggers.clear();
-		encounters.clear();
-		merchants.clear();
-		worldMapLocations.clear();
-		createdItems.clear();
-		tilesets.clear();
-		scriptState = new ScriptState();
 	}
 	
 	public void addCustomRelationship(Faction.CustomRelationship cr) {
