@@ -1,0 +1,12 @@
+size 2
+faction "Hostile"
+challenge 110
+randomize true
+numRandomCreatures 3 4
+respawn true
+respawnHours 24
+creature "wolfgiant" -1 -1
+creature "wolfgiant" 1 -1
+creature "wolfgiant" 1 0
+creature "wolfgiant" 0 1
+creature "wolfgiant" -1 0

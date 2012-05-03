@@ -211,11 +211,14 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 		for (int i = 0; i < effects.size(); i++) {
 			Effect effect = effects.get(i);
 			
-			if (effect.getRoundsRemaining() == 0) continue;
+			// only effects with a specified duration (meaning rounds remaining not equal to zero)
+			// can be removed
+			boolean removable = effect.getRoundsRemaining() != 0;
+			
 			if (effect.getSlot() != null) continue;
 			
 			effect.elapseRounds(rounds);
-			if (effect.getRoundsRemaining() < 1) {
+			if (removable && effect.getRoundsRemaining() < 1) {
 				parent.removeEffect(effect);
 				i--;
 			}

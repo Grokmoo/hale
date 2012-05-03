@@ -1,0 +1,15 @@
+name "Journal"
+icon "items/W_Book01" "#ffffffff"
+forceNoQuality true
+ingredient false
+quest false
+cursed false
+description "This is the Journal you found in the farmhouse in the Greenrange Forest."
+value "0 CP" 1
+weight 500
+itemType "ITEM"
+quality "Good"
+script "items/readBook"
+conversation "conversations/farmhouseJournal"
+useButtonText "Read"
+useAPCost 4000

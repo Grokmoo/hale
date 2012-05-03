@@ -25,3 +25,6 @@ currencyReward 120 200
 equip "battleaxe" Fine
 equipoffhand "handaxe" Fine
 equip "armor_mail_base" Fine
+addloot "LootGems" 10 PER_LIST
+addloot "LootCraft" 10 PER_LIST
+addloot "LootPotionsFine" 10 PER_LIST

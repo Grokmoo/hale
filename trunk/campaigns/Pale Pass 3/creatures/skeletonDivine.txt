@@ -21,9 +21,9 @@ level 1 addAbility "Leadership"
 level 1 addAbility "Enfeeble"
 level 1 addAbility "Curse"
 level 1 addAbility "MassCurse"
+level 1 addAbility "Haste"
 level 1 addAbility "ShieldCombat"
 level 1 addAbility "ShieldDefense"
-level 1 addAbility "Haste"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "PhysicalVulnerability"
 level 1 addAbility "Vulnerability"
@@ -38,3 +38,6 @@ equip "shield_tower_base" Fine
 equip "armor_plate_base" Fine
 equip "gloves_mail_base" Fine
 equip "boots_mail_base" Fine
+addloot "LootCraft" 10 PER_LIST
+addloot "LootGems" 10 PER_LIST
+addloot "LootScrollsSuperb" 20 PER_LIST

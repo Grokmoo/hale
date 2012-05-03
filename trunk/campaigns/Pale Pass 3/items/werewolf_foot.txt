@@ -1,0 +1,12 @@
+name "Werewolf Foot"
+icon "items/I_BatWing" "#ffffffff"
+ingredient false
+quest true
+cursed false
+description "The foot of a powerful werewolf.  You should take this to the captain of the guard of Aravil."
+value "0 CP" 1
+weight 1000
+itemType "ITEM"
+quality "Good"
+script "items/werewolfFoot"
+useButtonText ""

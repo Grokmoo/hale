@@ -1,0 +1,9 @@
+{ "name" : "Werewolf",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedClaw",
+  
+  "racialTypes" : [
+    "Humanoid", "Lycanthrope"
+  ]
+}
