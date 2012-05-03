@@ -234,10 +234,10 @@ public class Effect extends Scriptable implements Saveable {
 	 * @param other the Effect to copy
 	 */
 	
-	public Effect(Effect other) {
+	public Effect(Effect other, EffectTarget target) {
 		super(other);
 		
-		this.target = other.target;
+		this.target = target;
 		this.bonuses = new BonusList(other.bonuses);
 		this.duration = other.duration;
 		this.title = other.title;

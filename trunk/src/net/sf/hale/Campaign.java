@@ -439,6 +439,23 @@ public class Campaign {
 		customRelationships = new ArrayList<Faction.CustomRelationship>();
 	}
 	
+	/**
+	 * Clears most campaign related data (transitions, triggers, encounters, merchants)
+	 * but not all data, such as party data
+	 */
+	
+	public void clear() {
+		areas.clear();
+		transitions.clear();
+		triggers.clear();
+		encounters.clear();
+		merchants.clear();
+		worldMapLocations.clear();
+		createdItems.clear();
+		tilesets.clear();
+		scriptState = new ScriptState();
+	}
+	
 	public void addCustomRelationship(Faction.CustomRelationship cr) {
 		customRelationships.add(cr);
 	}

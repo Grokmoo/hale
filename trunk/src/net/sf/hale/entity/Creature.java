@@ -513,12 +513,12 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 	@Override public void resetAll() {
 		super.resetAll();
 		
-		elapseRounds(1);
-		
 		if (!this.isDead()) {
 			this.temporaryHP = 0;
 			this.currentHP = this.statManager.get(Stat.MaxHP);
 		}
+		
+		elapseRounds(1);
 	}
 	
 	@Override public void newEncounter() {

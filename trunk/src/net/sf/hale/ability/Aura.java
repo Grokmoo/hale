@@ -74,10 +74,11 @@ public class Aura extends Effect {
 	/**
 	 * Creates an exact copy of the specified Aura
 	 * @param other the Aura being copied
+	 * @param target
 	 */
 	
-	public Aura(Aura other) {
-		super(other);
+	public Aura(Aura other, EffectTarget target) {
+		super(other, target);
 		
 		this.maxRadius = other.maxRadius;
 		this.minRadius = other.minRadius;

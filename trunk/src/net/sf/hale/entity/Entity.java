@@ -144,7 +144,7 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 		this.iconColor = e.iconColor;
 		this.drawOnlyHandSubIcons = e.drawOnlyHandSubIcons;
 		
-		effects = new EntityEffectSet(e.effects);
+		effects = new EntityEffectSet(e.effects, this);
 	}
 	
 	public Entity(String id, String icon, int x, int y) {
