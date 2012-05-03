@@ -4,7 +4,16 @@ visibilityRadius 8
 unexplored
 
 
+encounter "scoutsLvl14" 50 12
+encounter "scoutsLvl14" 41 14
+encounter "scoutsLvl14" 48 4
+encounter "wolvesGiantLvl11" 6 15
+encounter "wolvesGiantLvl11" 28 5
+encounter "wolvesGiantLvl11" 8 5
 
+item 1 "chest_superb" 53 12
+item 1 "chest_lock_superb" 52 10
+item 1 "armorstand_superb" 42 17
 
 tile base 69 19 base/grass1
 tile base 68 19 base/grass3
@@ -1677,6 +1686,7 @@ tile entity 48 14 cliffs/concave-r
 tile entity 48 14 cliffs/convex-l
 tile entity 44 14 cliffs/concave-l
 tile entity 44 14 cliffs/convex-r
+tile entity 43 14 features/campfire
 tile entity 38 14 cliffs/concave-r
 tile entity 37 14 cliffs/concave-br
 tile entity 37 14 cliffs/convex-tl
@@ -1726,6 +1736,7 @@ tile entity 48 13 cliffs/concave-r
 tile entity 48 13 cliffs/convex-l
 tile entity 44 13 cliffs/concave-l
 tile entity 44 13 cliffs/convex-r
+tile entity 43 13 features/box01
 tile entity 38 13 cliffs/concave-br
 tile entity 38 13 cliffs/convex-l
 tile entity 38 13 cliffs/convex-tl
@@ -1784,6 +1795,7 @@ tile entity 58 11 cliffs/concave-r
 tile entity 58 11 cliffs/convex-l
 tile entity 54 11 cliffs/concave-l
 tile entity 54 11 cliffs/convex-r
+tile entity 53 11 features/barrel
 tile entity 43 11 cliffs/concave-l
 tile entity 40 11 cliffs/concave-br
 tile entity 40 11 cliffs/convex-tl
@@ -1835,6 +1847,7 @@ tile entity 58 10 cliffs/concave-r
 tile entity 58 10 cliffs/convex-l
 tile entity 54 10 cliffs/concave-l
 tile entity 54 10 cliffs/convex-r
+tile entity 53 10 features/barrels
 tile entity 47 10 cliffs/convex-bl
 tile entity 47 10 cliffs/concave-tr
 tile entity 46 10 cliffs/convex-bl
@@ -1868,6 +1881,7 @@ tile entity 54 9 cliffs/convex-tr
 tile entity 54 9 cliffs/concave-bl
 tile entity 52 9 cliffs/concave-br
 tile entity 52 9 cliffs/concave-bl
+tile entity 51 9 features/barrels
 tile entity 50 9 cliffs/concave-br
 tile entity 50 9 cliffs/concave-bl
 tile entity 48 9 cliffs/concave-bl
@@ -2245,8 +2259,8 @@ tile entity 10 2 cliffs/concave-br
 tile entity 10 2 cliffs/convex-tl
 tile entity 9 2 cliffs/concave-br
 tile entity 9 2 cliffs/concave-bl
-tile entity 8 2 cliffs/convex-tr
 tile entity 8 2 cliffs/concave-bl
+tile entity 8 2 cliffs/convex-tr
 tile entity 6 2 cliffs/concave-br
 tile entity 6 2 cliffs/concave-bl
 tile entity 4 2 cliffs/convex-tl
@@ -2267,11 +2281,13 @@ tile entity 23 1 cliffs/convex-tl
 tile entity 23 1 cliffs/convex-tr
 tile entity 11 1 cliffs/convex-tl
 tile entity 11 1 cliffs/convex-tr
-tile entity 7 1 cliffs/convex-tl
-tile entity 7 1 cliffs/convex-tr
+tile entity 7 1 cliffs/concave-l
+tile entity 7 1 cliffs/concave-r
 tile entity 5 1 cliffs/convex-tl
 tile entity 5 1 cliffs/convex-tr
 tile entity 67 0 cliffs/convex-l
+tile entity 7 0 cliffs/convex-l
+tile entity 7 0 cliffs/convex-r
 tile ceiling 45 18 trees/treetall01
 tile ceiling 38 18 trees/tree01
 tile ceiling 35 18 trees/treetall02
@@ -2348,7 +2364,7 @@ tile ceiling 19 1 trees/tree04
 tile ceiling 3 1 trees/treetall04
 tile ceiling 57 0 trees/treetall04
 
-elevation 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 
+elevation 0 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 
 elevation 1 1 1 1 1 1 0 1 0 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1 0 0 0 
 elevation 2 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 1 1 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 
 elevation 3 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 
@@ -2371,4 +2387,4 @@ elevation 19 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0
 
 
 opaque  1 3  2 14  2 16  3 1  3 10  4 12  4 17  5 8  9 7  9 17  10 13  10 18  12 8  12 14  14 18  16 2  16 8  17 3  17 18  18 14  19 1  20 8  20 14  23 2  23 18  24 7  24 13  26 2  26 18  28 1  28 14  28 18  29 10  29 12  30 14  31 17  32 8  33 3  33 5  33 8  35 18  36 14  38 11  38 18  39 2  40 2  40 8  42 7  43 5  45 16  45 18  46 2  46 11  46 12  47 6  47 14  47 16  49 17  50 8  53 7  53 9  54 15  55 11  56 8  57 0  57 13  61 1  61 8  61 17  62 4  62 6  62 15  65 9  65 14  67 9
-impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 3  1 19  2 0  2 4  2 5  2 8  2 14  2 16  2 19  3 0  3 1  3 2  3 8  3 9  3 10  3 13  3 14  3 15  3 17  3 19  4 0  4 2  4 7  4 9  4 12  4 13  4 17  4 19  5 0  5 8  5 9  5 11  5 12  5 19  6 0  6 2  6 9  6 19  7 0  7 1  7 8  7 19  8 0  8 2  8 9  8 19  9 0  9 2  9 7  9 8  9 12  9 13  9 17  9 19  10 0  10 2  10 9  10 13  10 14  10 18  10 19  11 0  11 1  11 8  11 19  12 0  12 2  12 8  12 9  12 14  12 15  12 19  13 0  13 2  13 8  13 14  13 19  14 0  14 3  14 9  14 14  14 18  14 19  15 0  15 2  15 9  15 14  15 19  16 0  16 2  16 3  16 8  16 9  16 15  16 19  17 0  17 3  17 9  17 14  17 18  17 19  18 0  18 3  18 9  18 14  18 15  18 19  19 0  19 1  19 2  19 9  19 19  20 0  20 2  20 8  20 9  20 14  20 15  20 19  21 0  21 2  21 8  21 14  21 19  22 0  22 2  22 9  22 14  22 19  23 0  23 1  23 2  23 8  23 14  23 18  23 19  24 0  24 2  24 7  24 9  24 13  24 14  24 19  25 0  25 2  25 8  25 14  25 19  26 0  26 2  26 3  26 7  26 8  26 15  26 18  26 19  27 0  27 2  27 14  27 19  28 0  28 1  28 2  28 11  28 14  28 15  28 18  28 19  29 0  29 2  29 10  29 12  29 15  29 19  30 0  30 3  30 5  30 6  30 7  30 8  30 9  30 14  30 15  30 19  31 0  31 2  31 3  31 12  31 13  31 14  31 17  32 0  32 8  32 10  32 11  32 12  32 18  32 19  33 0  33 3  33 5  33 8  33 9  34 0  34 2  34 5  34 6  34 7  34 8  34 9  34 13  34 14  34 19  35 0  35 2  35 3  35 4  35 11  35 14  35 18  36 0  36 2  36 14  36 15  37 0  37 2  37 9  37 14  38 0  38 3  38 11  38 13  38 14  38 18  39 0  39 2  39 3  39 7  39 11  39 12  40 0  40 2  40 3  40 8  40 11  41 0  41 3  41 10  42 0  42 2  42 3  42 7  42 9  42 10  43 0  43 2  43 5  43 7  43 8  43 11  43 16  43 17  43 19  44 0  44 2  44 3  44 6  44 8  44 12  44 13  44 14  44 15  44 19  45 0  45 2  45 8  45 16  45 18  45 19  46 0  46 2  46 8  46 11  46 12  46 19  47 0  47 2  47 6  47 8  47 14  47 16  47 17  47 19  48 0  48 2  48 9  48 12  48 13  48 14  48 15  48 16  48 17  48 19  49 0  49 2  49 8  49 16  49 17  49 19  50 0  50 2  50 8  50 9  50 19  51 0  51 2  51 8  51 19  52 0  52 2  52 5  52 6  52 9  52 19  53 0  53 1  53 7  53 8  53 9  53 14  53 15  53 19  54 0  54 2  54 9  54 10  54 11  54 12  54 13  54 15  54 16  54 19  55 0  55 1  55 11  55 15  55 19  56 0  56 2  56 5  56 6  56 7  56 8  56 16  56 19  57 0  57 1  57 8  57 13  57 14  57 15  57 19  58 0  58 2  58 10  58 11  58 12  58 13  58 14  58 19  59 0  59 1  59 2  59 6  59 7  59 8  59 19  60 0  60 2  60 4  60 5  60 9  60 19  61 0  61 1  61 2  61 8  61 9  61 17  61 19  62 0  62 4  62 6  62 9  62 10  62 15  62 19  63 0  63 6  63 7  63 10  63 19  64 0  64 6  64 11  64 15  64 19  65 0  65 3  65 4  65 5  65 9  65 10  65 14  65 19  66 0  66 3  66 10  66 19  67 0  67 1  67 2  67 9  67 10  67 19  68 0  68 11  68 19  69 0  69 1  69 2  69 3  69 4  69 5  69 6  69 7  69 8  69 9  69 10  69 11  69 12  69 13  69 14  69 15  69 16  69 17  69 18  69 19
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 3  1 19  2 0  2 4  2 5  2 8  2 14  2 16  2 19  3 0  3 1  3 2  3 8  3 9  3 10  3 13  3 14  3 15  3 17  3 19  4 0  4 2  4 7  4 9  4 12  4 13  4 17  4 19  5 0  5 8  5 9  5 11  5 12  5 19  6 0  6 2  6 9  6 19  7 0  7 1  7 8  7 19  8 0  8 2  8 9  8 19  9 0  9 2  9 7  9 8  9 12  9 13  9 17  9 19  10 0  10 2  10 9  10 13  10 14  10 18  10 19  11 0  11 1  11 8  11 19  12 0  12 2  12 8  12 9  12 14  12 15  12 19  13 0  13 2  13 8  13 14  13 19  14 0  14 3  14 9  14 14  14 18  14 19  15 0  15 2  15 9  15 14  15 19  16 0  16 2  16 3  16 8  16 9  16 15  16 19  17 0  17 3  17 9  17 14  17 18  17 19  18 0  18 3  18 9  18 14  18 15  18 19  19 0  19 1  19 2  19 9  19 19  20 0  20 2  20 8  20 9  20 14  20 15  20 19  21 0  21 2  21 8  21 14  21 19  22 0  22 2  22 9  22 14  22 19  23 0  23 1  23 2  23 8  23 14  23 18  23 19  24 0  24 2  24 7  24 9  24 13  24 14  24 19  25 0  25 2  25 8  25 14  25 19  26 0  26 2  26 3  26 7  26 8  26 15  26 18  26 19  27 0  27 2  27 14  27 19  28 0  28 1  28 2  28 11  28 14  28 15  28 18  28 19  29 0  29 2  29 10  29 12  29 15  29 19  30 0  30 3  30 5  30 6  30 7  30 8  30 9  30 14  30 15  30 19  31 0  31 2  31 3  31 12  31 13  31 14  31 17  31 19  32 0  32 8  32 10  32 11  32 12  32 18  32 19  33 0  33 3  33 5  33 8  33 9  33 19  34 0  34 2  34 5  34 6  34 7  34 8  34 9  34 13  34 14  34 19  35 0  35 2  35 3  35 4  35 11  35 14  35 18  35 19  36 0  36 2  36 14  36 15  36 19  37 0  37 2  37 9  37 14  37 19  38 0  38 3  38 11  38 13  38 14  38 18  38 19  39 0  39 2  39 3  39 7  39 11  39 12  39 19  40 0  40 2  40 3  40 8  40 11  40 19  41 0  41 3  41 10  41 19  42 0  42 2  42 3  42 7  42 9  42 10  42 19  43 0  43 2  43 5  43 7  43 8  43 11  43 13  43 14  43 16  43 17  43 19  44 0  44 2  44 3  44 6  44 8  44 12  44 13  44 14  44 15  44 19  45 0  45 2  45 8  45 16  45 18  45 19  46 0  46 2  46 8  46 11  46 12  46 19  47 0  47 2  47 6  47 8  47 14  47 16  47 17  47 19  48 0  48 2  48 9  48 12  48 13  48 14  48 15  48 16  48 17  48 19  49 0  49 2  49 8  49 16  49 17  49 19  50 0  50 2  50 8  50 9  50 19  51 0  51 2  51 8  51 9  51 19  52 0  52 2  52 5  52 6  52 9  52 19  53 0  53 1  53 7  53 8  53 9  53 10  53 11  53 14  53 15  53 19  54 0  54 2  54 9  54 10  54 12  54 13  54 15  54 16  54 19  55 0  55 1  55 11  55 15  55 19  56 0  56 2  56 5  56 6  56 7  56 8  56 16  56 19  57 0  57 1  57 8  57 13  57 14  57 15  57 19  58 0  58 2  58 10  58 11  58 12  58 13  58 14  58 19  59 0  59 1  59 2  59 6  59 7  59 8  59 19  60 0  60 2  60 4  60 5  60 9  60 19  61 0  61 1  61 2  61 8  61 9  61 17  61 19  62 0  62 4  62 6  62 9  62 10  62 15  62 19  63 0  63 6  63 7  63 10  63 19  64 0  64 6  64 11  64 15  64 19  65 0  65 3  65 4  65 5  65 9  65 10  65 14  65 19  66 0  66 3  66 10  66 19  67 0  67 1  67 2  67 9  67 10  67 19  68 0  68 11  68 19  69 0  69 1  69 2  69 3  69 4  69 5  69 6  69 7  69 8  69 9  69 10  69 11  69 12  69 13  69 14  69 15  69 16  69 17  69 18  69 19

@@ -29,4 +29,7 @@ currencyReward 120 200
 equip "longbow" Fine
 equip "armor_mail_base" Fine
 equip "arrow" Good
-additem "arrow" 46 Good
+additem "arrow" 45 Good
+addloot "LootGems" 10 PER_LIST
+addloot "LootCraft" 10 PER_LIST
+addloot "LootPotionsFine" 10 PER_LIST

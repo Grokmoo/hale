@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated false
+from "Greenrange Forest" 15 5
+to "Farmhouse" 14 9
+addToPosition -1 -2
+addToPosition -1 -1
+addToPosition 0 -1
+addToPosition 0 0
+addFromPosition 1 1
+addFromPosition 1 0
+addFromPosition 0 1
+addFromPosition 0 0

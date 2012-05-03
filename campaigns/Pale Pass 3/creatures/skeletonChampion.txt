@@ -25,3 +25,7 @@ equip "greataxe" Fine
 equip "armor_plate_base" Fine
 equip "gloves_mail_base" Fine
 equip "boots_mail_base" Fine
+addloot "LootGems" 10 PER_LIST
+addloot "LootMagicGreater" 5 PER_LIST
+addloot "LootPotionsFine" 10 PER_LIST
+addloot "LootCraft" 10 PER_LIST

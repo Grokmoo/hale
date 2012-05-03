@@ -1,0 +1,19 @@
+playerCharacter false
+
+name "Werewolf"
+icon "creatures/werewolf01" "#ffffffff"
+gender "Male"
+race "Werewolf"
+unspentSkillPoints 0
+xp 7900
+role "MonsterStrong" 15
+attributes 19 17 18 10 10 10
+script "ai/aiStandard"
+conversation "conversations/farmhouseWerewolf"
+addSkillRanks "Search" 80
+level 1 addAbility "Regeneration20"
+
+currencyReward 100 200
+addloot "LootCraft" 10 PER_LIST
+addloot "LootGems" 10 PER_LIST
+addloot "LootMagicGreater" 5 PER_LIST

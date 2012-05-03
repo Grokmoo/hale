@@ -21,10 +21,13 @@ level 1 addAbility "Fireball"
 level 1 addAbility "Meteor"
 level 1 addAbility "Curse"
 level 1 addAbility "MassCurse"
-level 1 addAbility "ImproveWeapon"
 level 1 addAbility "FlamingWeapon"
+level 1 addAbility "ImproveWeapon"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "PhysicalVulnerability"
 level 1 addAbility "Vulnerability"
 
 currencyReward 100 200
+addloot "LootScrollsSuperb" 10 PER_LIST
+addloot "LootCraft" 10 PER_LIST
+addloot "LootGems" 10 PER_LIST

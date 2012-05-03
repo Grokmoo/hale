@@ -1,0 +1,20 @@
+playerCharacter false
+
+name "Greater Werewolf"
+icon "creatures/werewolf02" "#ffffffff"
+gender "Male"
+race "Werewolf"
+unspentSkillPoints 0
+xp 7900
+role "MonsterStrong" 18
+attributes 21 18 20 10 10 10
+script "ai/aiStandard"
+addSkillRanks "Search" 80
+level 1 addAbility "Regeneration30"
+
+currencyReward 150 250
+equip "unarmedClaw" Exceptional
+addloot "LootCraft" 10 PER_LIST
+addloot "LootGems" 10 PER_LIST
+addloot "LootMagicGreater" 5 PER_LIST
+addloot "Drop_GreaterWerewolf" 100 PER_ITEM

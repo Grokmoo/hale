@@ -18,8 +18,8 @@ script "ai/aiStandard"
 level 1 addAbility "AcidSplash"
 level 1 addAbility "Curse"
 level 1 addAbility "MassCurse"
-level 1 addAbility "FlamingWeapon"
 level 1 addAbility "ImproveWeapon"
+level 1 addAbility "FlamingWeapon"
 level 1 addAbility "Blindness"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "PhysicalVulnerability"
@@ -33,4 +33,7 @@ currencyReward 100 200
 equip "crossbow" Fine
 equip "armor_mail_base" Fine
 equip "bolt" Good
-additem "bolt" 45 Good
+additem "bolt" 44 Good
+addloot "LootScrollsSuperb" 10 PER_LIST
+addloot "LootCraft" 10 PER_LIST
+addloot "LootGems" 10 PER_LIST
