@@ -87,6 +87,7 @@ function convo12(game, parent, target, conversation) {
     conversation.addResponse("Farewell, Narkel.", "onExit");
     
     parent.put("alreadyTalked", true);
+	game.put("narkelQuestComplete", true);
     game.runExternalScript("quests/theMaster", "narkel");
 }
 

@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Lake Renarel Center" 24 1
+to "Demon Gate" 9 18
+addToPosition 0 -1
+addToPosition -1 -1
+addToPosition 1 -1
+addToPosition 0 0
+addFromPosition 0 3
+addFromPosition 0 2
+addFromPosition 0 1
+addFromPosition 0 0

@@ -1,0 +1,13 @@
+icon "transition"
+twoWay true
+activated true
+from "Lake Renarel" 1 22
+to "Lake Renarel Center" 48 35
+addToPosition -2 0
+addToPosition -1 -1
+addToPosition -1 0
+addToPosition 0 0
+addFromPosition 2 0
+addFromPosition 1 -1
+addFromPosition 1 0
+addFromPosition 0 0
