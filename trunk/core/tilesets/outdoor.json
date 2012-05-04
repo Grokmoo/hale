@@ -50,86 +50,86 @@
 	    { "id" : "features/altar", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/altar-evil", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Archery Target" : {
 	  "tiles" : [ { "id" : "features/archery-target", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Barrels" : {
 	  "tiles" : [
 	    { "id" : "features/barrel", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/barrels", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Well" : {
 	  "tiles" : [ { "id" : "features/well", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Crate" : {
 	  "tiles" : [ { "id" : "features/crate", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Bones" : {
 	  "passable" : true,
 	  "tiles" : [ { "id" : "features/bones", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Bonestack" : {
 	  "tiles" : [ { "id" : "features/bonestack", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Bonespike" : {
 	  "tiles" : [ { "id" : "features/bonespike", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Lantern" : {
 	  "tiles" : [
 	    { "id" : "features/lantern", "layer" : "entity", "probability" : 1 },
 	    { "id" : "features/lantern-lit", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Cage" : {
 	  "tiles" : [ { "id" : "features/cage", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Coffin" : {
 	  "tiles" : [ { "id" : "features/coffin", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Bars SE-NW" : {
 	  "tiles" : [ { "id" : "features/bars-se-nw", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Bars SW-NE" : {
 	  "tiles" : [ { "id" : "features/bars-sw-ne", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Statue" : {
 	  "tiles" : [ { "id" : "features/dragon-statue", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Practice Dummy" : {
 	  "tiles" : [ { "id" : "features/practice-dummy", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Jar" : {
 	  "tiles" : [
 	    { "id" : "features/jar-large", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/jar-small", "layer" : "entity", "probability" : 1 }
       ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Banner" : {
 	  "tiles" : [ { "id" : "features/banner", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Mushrooms" : {
 	  "passable" : true,
 	  "tiles" : [ { "id" : "features/mushrooms", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Coins" : {
 	  "passable" : true,
@@ -138,14 +138,14 @@
 		{ "id" : "features/coins-medium", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/coins-small", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Nest" : {
 	  "tiles" : [
 	    { "id" : "features/nest-empty", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/nest", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Boulder" : {
 	  "tiles" : [
@@ -154,7 +154,7 @@
 		{ "id" : "features/boulder3", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/boulder4", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Monolith" : {
 	  "tiles" : [
@@ -163,7 +163,7 @@
 		{ "id" : "features/monolith3", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/monolith4", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Foliage" : {
 	  "passable" : true,
@@ -173,7 +173,7 @@
 		{ "id" : "features/foliage03", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/foliage04", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Shrub" : {
 	  "tiles" : [
@@ -184,7 +184,7 @@
 		{ "id" : "features/shrub05", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/shrub06", "layer" : "entity", "probability" : 1 },
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Desert Plants" : {
 	  "passable" : true,
@@ -194,33 +194,33 @@
 		{ "id" : "features/desertplant2", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/desertplant3", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Anvil" : {
 	  "tiles" : [ { "id" : "features/anvil", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Chopping Block" : {
 	  "tiles" : [ { "id" : "features/chopblock", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Wood Pile" : {
 	  "tiles" : [
 	    { "id" : "features/firewood1", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/firewood2", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Campfire" : {
 	  "tiles" : [ { "id" : "features/campfire", "layer" : "entity", "probability" : 1 } ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Small Box" : {
 	  "tiles" : [
 	    { "id" : "features/box01", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/box02", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Giant Mushroom" : {
 		"transparent" : false,
@@ -232,7 +232,7 @@
 		  { "id" : "trees/mushroom05", "layer" : "ceiling", "probability" : 1 },
 		  { "id" : "trees/mushroom06", "layer" : "ceiling", "probability" : 1 }
 		],
-		"terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone" ]
+		"terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Stone", "Snow" ]
 	},
 	"Tree" : {
 	  "transparent" : false,
@@ -246,7 +246,7 @@
 		{ "id" : "trees/treetall03", "layer" : "ceiling", "probability" : 1 },
 		{ "id" : "trees/treetall04", "layer" : "ceiling", "probability" : 1 }
       ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Palm Tree" : {
 	  "tiles" : [
@@ -255,7 +255,7 @@
 		{ "id" : "trees/palmtree03", "layer" : "ceiling", "probability" : 1 },
 		{ "id" : "trees/palmtree04", "layer" : "ceiling", "probability" : 1 }
       ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Dead Tree" : {
 	  "tiles" : [
@@ -264,7 +264,7 @@
 		{ "id" : "trees/deadtree03", "layer" : "ceiling", "probability" : 1 },
 		{ "id" : "trees/deadtree04", "layer" : "ceiling", "probability" : 1 }
       ],
-	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert" ]
+	  "terrainTypes" : [ "Path", "Path Clean", "Path Grass", "Dirt", "Grass Dry", "Leaves", "Grass", "Desert", "Snow" ]
 	},
 	"Door SW" : {
 	  "tiles" : [ { "id" : "doorsAndWindows/door-sw", "layer" : "entity", "probability" : 1 } ],

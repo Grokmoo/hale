@@ -52,4 +52,20 @@ function narkel(game) {
     entry.addText("If the focus is destroyed, the Master should be removed from this plane.  Unfortunately, Narkell did not know where the focus would be.");
     
     entry.addText("His only clues were that the focus must be a large and pure crystal, and that the Master would most likely keep it close to him.");
+	
+	entry.addText("You should speak to the Lady of Aravil about what you have discovered.");
+}
+
+function learnOfGate(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("Renarel Lake")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("Renarel Lake");
+	
+	entry.addText("You have learned of an infernal gate that the Master is using to summon an army of demons.");
+	
+	entry.addText("Travel to Renarel Lake and kill the mages that are powering the gate.");
 }

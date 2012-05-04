@@ -1,0 +1,14 @@
+icon "transition"
+twoWay true
+activated true
+location "Lake Renarel"
+from "Lake Renarel" 35 28
+to "World Map" 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addToPosition 0 0
+addFromPosition 0 -2
+addFromPosition -1 -2
+addFromPosition 0 -1
+addFromPosition 0 0
