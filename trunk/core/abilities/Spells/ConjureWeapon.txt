@@ -25,4 +25,4 @@ aiPriority 5
 
 addPrereq Stat CasterLevel 7
 
-addPrereq Ability ConjureArmor
+addPrereq Ability Shield

@@ -106,6 +106,8 @@
 		<param name="two-up"><image>connector-up-two</image></param>
 		<param name="three-up"><image>connector-up-three</image></param>
 		<param name="three-down"><image>connector-down-three</image></param>
+		<param name="four-up"><image>connector-up-four</image></param>
+		<param name="four-down"><image>connector-down-four</image></param>
 		<param name="through"><image>connector-through</image></param>
 	</theme>
 	

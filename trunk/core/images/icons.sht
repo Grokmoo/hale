@@ -225,7 +225,7 @@ image trainIntelligence2 15 11
 image songOfSlaying      16 11
 
 image fortifyHealth          0 12
-image conjureArmorSet        1 12
+
 image poisonFog              2 12
 image acidSplash             3 12
 image haste                  4 12

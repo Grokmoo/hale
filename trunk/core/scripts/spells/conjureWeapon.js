@@ -73,7 +73,7 @@ function onTargetSelect(game, targeter, weaponID) {
 	weapon.recomputeBonuses();
 	game.campaign().addCreatedItem(weaponID, weapon);
 	
-	target.getInventory().addItemAndEquip(weapon);
+	
 	
 	// create an effect to keep track of the weapon
 	var effect = targeter.getSlot().createEffect("effects/conjureItem");
@@ -81,7 +81,25 @@ function onTargetSelect(game, targeter, weaponID) {
 	effect.setTitle("Conjured Weapon");
 	effect.put("itemID", conjuredID);
 	
+	// keep track of the old item to re-equip it if possible
+	var oldItem = target.getInventory().getEquippedMainHand();
+	if (oldItem != null) {
+		effect.put("oldItemID", oldItem.getID());
+		effect.put("oldItemQuality", oldItem.getQuality().getName());
+	}
+	
+	// if weapon is two handed, check the off hand slot to be re-equipped
+	if (!weapon.canWieldInOneHand(target)) {
+		var oldItem2 = target.getInventory().getEquippedOffHand();
+		if (oldItem2 != null) {
+			effect.put("oldItem2ID", oldItem2.getID());
+			effect.put("oldItem2Quality", oldItem2.getQuality().getName());
+		}
+	}
+	
 	target.applyEffect(effect);
+	
+	target.getInventory().addItemAndEquip(weapon);
 	
 	// animate the new item initially
 	if (weaponID == "longbow" || weaponID == "shortbow") {

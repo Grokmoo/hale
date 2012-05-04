@@ -24,5 +24,4 @@ aiPriority 1
 
 addPrereq Stat CasterLevel 10
 
-addPrereq Ability RestoreMorale
-addPrereq Ability RemoveParalysis
+addPrereq Ability Renewal
