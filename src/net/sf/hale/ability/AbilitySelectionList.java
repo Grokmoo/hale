@@ -207,6 +207,12 @@ public class AbilitySelectionList {
 		/** Connects one upper grid point to three lower ones */
 		ThreeDown,
 		
+		/** Connects one lower grid point to four upper ones */
+		FourUp,
+		
+		/** Connects one upper grid point to four lower ones */
+		FourDown,
+		
 		/** Connects vertically all the way through a grid position */
 		Through
 	}

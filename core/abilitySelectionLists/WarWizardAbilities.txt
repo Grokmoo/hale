@@ -4,7 +4,7 @@ add "ImproveWeapon"  0.5 0
 add "FlamingWeapon"  0.0 2
 add "HardenArmor"    1.0 1
 add "ResistWeapons"  1.0 2
-add "DeflectProjectiles" 1.5 3
+add "DeflectProjectiles" 2.0 3
 add "AbsorbEnergy"     2.5 0
 add "ResistSpells"     3.0 2
 
@@ -16,35 +16,38 @@ connect 2.5 0 TwoDown
 connect 2.0 1 Through
 connect 2.0 1 OneDown
 connect 2.0 2 Through
-connect 1.5 3 TwoUp
+connect 2.0 2 OneDown
+
 connect 3.0 1 OneDown
 connect 3.0 1 Through
 
 
 add "Shield"            5.5 0
-add "ConjureArmor"      4.5 1
-add "ConjureArmorSet"   5.0 2
+add "ConjureArmor"      5.0 1
 add "ConjureWeapon"     4.0 2
-add "ElementalShield"   5.5 3
+add "ElementalShield"   6.0 3
 
-connect 5.5 0 ThreeDown
-connect 4.5 1 TwoDown
-connect 5.5 1 Through
-connect 5.5 1 OneDown
-connect 5.5 2 Through
-connect 5.5 2 OneDown
+connect 5.5 0 FourDown
+connect 4.0 1 OneDown
+connect 4.0 1 Through
+connect 6.0 1 Through
+connect 6.0 1 OneDown
+connect 6.0 2 Through
+connect 6.0 2 OneDown
 
 add EnergyImmunity 3.0 4
 add Invulnerability 1.5 4
-add WarShield       6.5 2
-add Juggernaut      7.5 3
+add WarShield       7.0 2
+add Juggernaut      8.0 3
 
 connect 3 2 OneDown
 connect 3 3 OneDown
 connect 3 3 Through
 
-connect 1.5 3 OneDown
+connect 1.0 2 OneDown
+connect 1.0 3 Through
+connect 1.5 4 TwoUp
 
-connect 6.5 1 OneDown
-connect 6.5 1 Through
+connect 7.0 1 OneDown
+connect 7.0 1 Through
 

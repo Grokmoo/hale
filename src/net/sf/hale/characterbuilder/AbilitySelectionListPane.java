@@ -202,10 +202,10 @@ public class AbilitySelectionListPane extends Widget {
 			float posY = gridSize * point.y;
 			
 			switch (viewer.connector.getType()) {
-			case OneUp: case TwoUp: case ThreeUp:
+			case OneUp: case TwoUp: case ThreeUp: case FourUp:
 				posY -= viewer.getHeight();
 				break;
-			case OneDown: case TwoDown: case ThreeDown:
+			case OneDown: case TwoDown: case ThreeDown: case FourDown:
 				posY += buttonHeight;
 				break;
 			}
@@ -243,6 +243,12 @@ public class AbilitySelectionListPane extends Widget {
 				break;
 			case ThreeDown:
 				setBackground(themeInfo.getImage("three-down"));
+				break;
+			case FourUp:
+				setBackground(themeInfo.getImage("four-up"));
+				break;
+			case FourDown:
+				setBackground(themeInfo.getImage("four-down"));
 				break;
 			case Through:
 				setBackground(themeInfo.getImage("through"));

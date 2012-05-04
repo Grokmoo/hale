@@ -5,7 +5,7 @@ add "FlamingWeapon"  0.0 2
 add "HardenArmor"    1.0 1
 add "ResistWeapons"  1.0 2
 
-add "DeflectProjectiles" 1.5 3
+add "DeflectProjectiles" 2.0 3
 
 add "AbsorbEnergy"     2.5 0
 add "ResistSpells"     3.0 2
@@ -30,11 +30,10 @@ connect 2.5 0 TwoDown
 connect 2.0 1 Through
 connect 2.0 1 OneDown
 connect 2.0 2 Through
+connect 2.0 2 OneDown
 
 connect 3.0 1 Through
 connect 3.0 1 OneDown
-
-connect 1.5 3 TwoUp
 
 connect 4.5 1 TwoDown
 connect 5 2 Through

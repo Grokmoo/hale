@@ -24,7 +24,6 @@ rangeType Touch
 aiPower 40
 aiPriority 9
 
-addPrereq Ability ResistWeapons
 addPrereq Ability AbsorbEnergy
 
 addPrereq Stat CasterLevel 10
