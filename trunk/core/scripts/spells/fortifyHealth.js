@@ -12,7 +12,7 @@ function onTargetSelect(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 
-	var duration = parseInt(game.dice().rand(5, 10));
+	var duration = parseInt(game.dice().randInt(5, 10));
 
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
@@ -20,7 +20,7 @@ function onTargetSelect(game, targeter) {
 	if (!spell.checkSpellFailure(parent)) return;
 	
 	// compute the amount of healing
-	var healing = 5 + game.dice().rand(casterLevel, casterLevel * 3);
+	var healing = 5 + game.dice().randInt(casterLevel, casterLevel * 3);
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setTitle(spell.getName());

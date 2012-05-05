@@ -45,7 +45,7 @@ function onTargetSelect(game, targeter) {
 function performCrush(game, parent, target, spell) {
 	var casterLevel = parent.getCasterLevel();
 	// compute the amount of damage to apply
-	var damage = game.dice().rand(7, 14) + casterLevel;
+	var damage = game.dice().randInt(7, 14) + casterLevel;
    
 	var g1 = game.getBaseParticleGenerator("inwardBurst");
 	g1.setPosition(target.getPosition());

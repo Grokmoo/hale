@@ -7,7 +7,7 @@ function onRoundElapsed(game, effect) {
 	
 	// optionally support random amount of damage
 	if (minDamage != null && maxDamage != null) {
-		damage = game.dice().rand(minDamage, maxDamage);
+		damage = game.dice().randInt(minDamage, maxDamage);
 	}
 	
 	var slot = effect.getSlot();

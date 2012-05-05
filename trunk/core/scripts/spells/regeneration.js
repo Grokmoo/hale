@@ -62,9 +62,9 @@ function applyEffect(game, targeter, target, spell, duration) {
 	var casterLevel = parent.getCasterLevel();
 	
 	if (parent.getAbilities().has("MonstrousRegeneration")) {
-		var healingLeft = game.dice().rand(6 * casterLevel, 12 * casterLevel);
+		var healingLeft = game.dice().randInt(6 * casterLevel, 12 * casterLevel);
 	} else {
-		var healingLeft = game.dice().rand(4 * casterLevel, 8 * casterLevel);
+		var healingLeft = game.dice().randInt(4 * casterLevel, 8 * casterLevel);
 	}
 	
 	var effect = targeter.getSlot().createEffect("effects/regeneration");

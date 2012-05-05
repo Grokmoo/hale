@@ -5,7 +5,7 @@ function onActivate(game, slot) {
 }
 
 function onTargetSelect(game, targeter) {
-	var duration = game.dice().rand(3, 6);
+	var duration = game.dice().randInt(3, 6);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();

@@ -1,0 +1,36 @@
+playerCharacter false
+
+name "Blue Demon"
+icon "creatures/demon04" "#ffffffff"
+gender "Male"
+race "Demon"
+unspentSkillPoints 0
+xp 63300
+role "Priest" 18
+attributes 14 19 14 12 16 13
+script "ai/aiStandard"
+level 1 addAbility "FastSpellRecovery1"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "Shield"
+level 1 addAbility "DualWieldingMastery"
+level 1 addAbility "ExpertDualWielding"
+level 1 addAbility "DualWielding"
+level 1 addAbility "DualWieldingDefense"
+level 1 addAbility "Freeze"
+level 1 addAbility "Storm"
+level 1 addAbility "ProficiencySmallSwords"
+level 1 addAbility "WarShield"
+level 1 addAbility "HardenArmor"
+level 1 addAbility "Haste"
+level 1 addAbility "ResistWeapons"
+level 1 addAbility "ColdImmunity50"
+level 1 addAbility "DamageReduction5"
+level 1 addAbility "ImmobilizationImmunity"
+level 1 addAbility "Regeneration10"
+
+currencyReward 180 280
+equip "shortSword" Superb
+equipoffhand "shortSword" Superb
+addloot "LootCraft" 5 PER_LIST
+addloot "LootGems" 20 PER_LIST
+addloot "LootPotionsExceptional" 10 PER_LIST

@@ -1,0 +1,14 @@
+name "Armor Stand"
+icon "items/I_Bag_02" "#ffffffff"
+ingredient false
+quest false
+cursed false
+description "A stand typically used to hold armor."
+value "0 CP" 1
+weight 0
+itemType "ITEM"
+quality "Good"
+container true
+addloot "ArmorExceptional" 100 PER_LIST
+workbench false
+openicon "items/Z_armorstandEmpty"

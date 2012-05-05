@@ -12,7 +12,7 @@ function onTargetSelect(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 	
-	var duration = game.dice().rand(5, 10);
+	var duration = game.dice().randInt(5, 10);
 	
 	// cast the spell
 	targeter.getSlot().setActiveRoundsLeft(duration);

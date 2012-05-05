@@ -1,0 +1,19 @@
+playerCharacter false
+
+name "Conduit Mage"
+icon "creatures/human21" "#ffffffff"
+portrait "Human/necromancer"
+
+gender "Male"
+race "Human"
+unspentSkillPoints 0
+xp 63300
+role "Mage" 20
+attributes 10 14 14 18 10 10
+script "ai/demonGateMage"
+conversation "conversations/demonGateMage"
+level 1 addAbility "NaturalArmor30"
+level 1 addAbility "SpellResistance30"
+level 1 addAbility "PhysicalImmunity50"
+
+currencyReward 150 250

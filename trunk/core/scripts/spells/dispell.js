@@ -58,7 +58,7 @@ function onTargetSelect(game, targeter) {
 		var modifier = spell.getSpellLevel(parent) * 2 + parentAttr + modifierBonus;
 		
 		// attempt the dispell
-		var roll = game.dice().rand(-4, 4) + modifier - dc;
+		var roll = game.dice().randInt(-4, 4) + modifier - dc;
 		
 		if (roll > 0) {
 			// the dispell was successful

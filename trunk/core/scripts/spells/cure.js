@@ -52,7 +52,7 @@ function massCure(game, targeter) {
 	for (var i = 0; i < targets.size(); i++) {
 		showHealAnimation(game, targets.get(i));
    
-		var healing = game.dice().rand(casterLevel, casterLevel * 3);
+		var healing = game.dice().randInt(casterLevel, casterLevel * 3);
 		spell.applyHealing(parent, targets.get(i), healing);
 	}
 }

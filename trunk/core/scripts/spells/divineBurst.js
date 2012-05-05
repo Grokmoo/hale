@@ -42,7 +42,7 @@ function applyEffect(game, parent, target, slot) {
 	var spell = slot.getAbility();
 
 	if (target.getRace().hasRacialType("Undead")) {
-		var damage = game.dice().rand(1, 10) + parent.getCasterLevel();
+		var damage = game.dice().randInt(1, 10) + parent.getCasterLevel();
 		spell.applyDamage(parent, target, damage, "Divine");
 	}
 	

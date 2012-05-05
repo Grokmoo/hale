@@ -787,6 +787,10 @@ public class ScriptInterface {
 		Game.interfaceLocker.clear();
 	}
 	
+	public void scrollToPosition(int x, int y) {
+		Game.areaViewer.addDelayedScrollToScreenPoint(new Point(x, y).toScreen());
+	}
+	
 	public void scrollToCreature(String entityID) {
 		Game.areaViewer.addDelayedScrollToCreature(Game.curCampaign.curArea.getEntityWithID(entityID));
 	}

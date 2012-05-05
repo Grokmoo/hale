@@ -1,0 +1,3 @@
+area "Demon Gate"
+script "triggers/demonGate"
+addPoints

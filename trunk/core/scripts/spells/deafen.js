@@ -68,7 +68,7 @@ function applySilence(game, spell, targeter) {
 
 function applyDeafen(game, parent, target, spell, targeter) {
 	if ( !target.physicalResistanceCheck(spell.getCheckDifficulty(parent)) ) {
-		var duration = game.dice().rand(3, 5);
+		var duration = game.dice().randInt(3, 5);
 		
 		var effect = targeter.getSlot().createEffect();
 		effect.setDuration(duration);

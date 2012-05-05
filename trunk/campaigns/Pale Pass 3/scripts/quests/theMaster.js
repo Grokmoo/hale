@@ -69,3 +69,17 @@ function learnOfGate(game) {
 	
 	entry.addText("Travel to Renarel Lake and kill the mages that are powering the gate.");
 }
+
+function gateComplete(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("The Demon Gate")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("The Demon Gate");
+	
+	entry.addText("You defeated the mages responsible for summoning the demons, and the gate's conduit has been severed.");
+	
+	entry.addText("You should return to the Lady of Aravil to plan your next move.");
+}
