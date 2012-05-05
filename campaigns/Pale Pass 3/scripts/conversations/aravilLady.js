@@ -1,6 +1,10 @@
 function startConversation(game, parent, target, conversation) {
-	if (game.get("demonGateComplete") != null) {
-		conversation.addText("You are back!  I trust you succeeded in shutting down the gate.");
+	if (parent.get("armyComplete") != null) {
+		conversation.addText("Good luck, my friend.");
+		
+		conversation.addResponse("Farewell.", "onExit");
+	} else if (game.get("demonGateComplete") != null) {
+		conversation.addText("You have returned!  I trust you succeeded in shutting down the gate.");
 		
 		conversation.addResponse("<span style=\"font-family: red;\">Continue</span>", "army01");
 	} else if (parent.get("renarelQuestRecieved") != null) {
@@ -41,9 +45,28 @@ function startConversation(game, parent, target, conversation) {
 }
 
 function army01(game, parent, target, conversation) {
-	conversation.addText("INSERT TEXT");
+	conversation.addText("Your timing is excellent.  I have just recieved word that our scouts have made a major breakthrough in determining the location of the Master's hidden base, as well as the focus crystal.");
+	
+	conversation.addText("Even as we speak, our army should be setting up a forward camp.");
+	
+	conversation.addResponse("<span style=\"font-family: red;\">Continue</span>", "army02");
+}
+
+function army02(game, parent, target, conversation) {
+	conversation.addText("You should head there immediately.  Find and speak with my general there.");
+	
+	conversation.addText("With your skill and knowledge of the Master's forces, you may be our best hope of defeating him.");
+	
+	conversation.addResponse("<span style=\"font-family: red;\">Continue</span>", "army03");
+}
+
+function army03(game, parent, target, conversation) {
+	conversation.addText("Good luck, my friend.");
 	
 	conversation.addResponse("Farewell.", "onExit");
+	
+	game.runExternalScript("quests/theMaster", "learnOfArmy");
+	parent.put("armyComplete", true);
 }
 
 function renarel01(game, parent, target, conversation) {

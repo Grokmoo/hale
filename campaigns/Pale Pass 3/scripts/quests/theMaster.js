@@ -83,3 +83,15 @@ function gateComplete(game) {
 	
 	entry.addText("You should return to the Lady of Aravil to plan your next move.");
 }
+
+function learnOfArmy(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("Army Camp")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("Army Camp");
+	
+	entry.addText("You learned from the Lady of Aravil that her scouts have located the Master's base and hopefully the focus crystal as well.  Head north to meet up with the army, and speak to the General in charge there.");
+}
