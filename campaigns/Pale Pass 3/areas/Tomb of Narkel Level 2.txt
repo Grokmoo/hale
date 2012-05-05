@@ -31,8 +31,10 @@ item 1 "ruraldoor_SW" 9 31
 item 1 "ruraldoor_SE" 9 17
 item 1 "chest_superb" 33 10
 item 1 "narkelLvl2_door2Key" 33 10
+item 1 "armor_leather_night" 33 10
 item 1 "chest_superb" 5 34
 item 1 "narkelLvl2_door1Key" 5 34
+item 1 "armor_mail_mithril" 5 34
 item 1 "chest_superb" 36 2
 item 1 "chest_lock_superb" 19 17
 item 1 "chest_lock_superb" 4 35

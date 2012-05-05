@@ -60,6 +60,10 @@ public class Dice {
 		return generator.nextFloat() * range + min;
 	}
 	
+	public int randInt(int min, int max) {
+		return rand(min, max);
+	}
+	
 	public int rand(int min, int max) {
 		int range = max - min + 1;
 		

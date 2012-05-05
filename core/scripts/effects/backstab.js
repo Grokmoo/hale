@@ -8,7 +8,7 @@ function onAttack(game, attack, effect) {
 	
 	var charLevel = attacker.getRoles().getLevel("Rogue");
 	
-	var extraDamage = 3 + game.dice().rand(charLevel / 2, charLevel);
+	var extraDamage = 3 + game.dice().randInt(charLevel / 2, charLevel);
 	var extraAttack = 10 + charLevel;
 	
 	if (mastery) {

@@ -4,7 +4,7 @@ function onRemove(game, effect) {
 	if (!target.getAbilities().has("SteadfastRage")) {
 		var newEffect = effect.getSlot().createEffect();
 		newEffect.setTitle("Rage Exhaustion");
-		newEffect.setDuration(game.dice().rand(3, 6));
+		newEffect.setDuration(game.dice().randInt(3, 6));
 	
 		newEffect.getBonuses().addPenalty('Str', 'Stackable', -2);
 		newEffect.getBonuses().addPenalty('ActionPoint', 'Stackable', -25);

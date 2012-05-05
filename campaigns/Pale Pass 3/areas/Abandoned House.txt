@@ -15,6 +15,8 @@ item 1 "chest_lock_superb" 2 15
 item 1 "chest_lock_lvl15" 13 13
 item 1 "chest_superb" 16 6
 item 1 "chest_weapon_superb" 4 9
+item 1 "chest02" 2 17
+item 1 "longbow_seeking" 2 17
 
 tile floor 10 18 floor/wood0
 tile floor 9 18 floor/wood2

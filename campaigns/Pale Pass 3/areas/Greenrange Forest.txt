@@ -4,7 +4,20 @@ visibilityRadius 8
 unexplored
 
 
+encounter "treeants" 45 10
+encounter "treeants" 32 20
+encounter "treeants" 8 18
+encounter "treeants" 40 3
+encounter "scoutsLvl14" 5 33
+encounter "treeants" 15 26
+encounter "treeants" 30 34
+encounter "treeants" 48 28
 
+item 1 "chest_lock_superb" 53 1
+item 1 "chest_superb" 54 3
+item 1 "chest_weapon_superb" 54 24
+item 1 "armorstand_superb" 55 24
+item 1 "chest_superb" 11 24
 
 tile base 59 39 base/grass6
 tile base 58 39 base/grass6

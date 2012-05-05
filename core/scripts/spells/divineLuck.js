@@ -11,7 +11,7 @@ function onTargetSelect(game, targeter) {
 	var parent = targeter.getParent();
 	var casterLevel = parent.getCasterLevel();
 	
-	var duration = parseInt(game.dice().rand(5, 10));
+	var duration = parseInt(game.dice().randInt(5, 10));
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();

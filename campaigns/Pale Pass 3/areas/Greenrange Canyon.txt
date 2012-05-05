@@ -14,6 +14,7 @@ encounter "wolvesGiantLvl11" 8 5
 item 1 "chest_superb" 53 12
 item 1 "chest_lock_superb" 52 10
 item 1 "armorstand_superb" 42 17
+item 1 "chest_lock_lvl15" 4 14
 
 tile base 69 19 base/grass1
 tile base 68 19 base/grass3

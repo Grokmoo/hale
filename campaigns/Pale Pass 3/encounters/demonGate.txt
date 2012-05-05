@@ -1,0 +1,7 @@
+size 4
+faction "Neutral"
+challenge 0
+creature "demonGateMage" -2 3
+creature "demonGateMage" 2 3
+creature "demonGateMage" -2 -3
+creature "demonGateMage" 2 -3

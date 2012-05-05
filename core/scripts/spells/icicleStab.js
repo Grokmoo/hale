@@ -25,7 +25,7 @@ function onTargetSelect(game, targeter) {
 	
 	var targets = targeter.getAffectedCreatures();
 	for (var i = 0; i < targets.size(); i++) {
-		var damage = game.dice().rand(1, 10) + casterLevel;
+		var damage = game.dice().randInt(1, 10) + casterLevel;
 		
 		var delay = targets.get(i).getPosition().screenDistance(parent.getPosition()) / g1.getSpeed();
 		

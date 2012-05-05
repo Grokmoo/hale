@@ -1,5 +1,9 @@
 function startConversation(game, parent, target, conversation) {
-	if (parent.get("renarelQuestRecieved") != null) {
+	if (game.get("demonGateComplete") != null) {
+		conversation.addText("You are back!  I trust you succeeded in shutting down the gate.");
+		
+		conversation.addResponse("<span style=\"font-family: red;\">Continue</span>", "army01");
+	} else if (parent.get("renarelQuestRecieved") != null) {
 		conversation.addText("Travel to Renarel Lake and shutdown the infernal gate there.");
 		
 		conversation.addResponse("Farewell.", "onExit");
@@ -34,6 +38,12 @@ function startConversation(game, parent, target, conversation) {
         conversation.addResponse("We wish to help you with the fight against the Master.", "convo02");
         conversation.addResponse("Not at the moment.  Farewell.", "onExit");
     }
+}
+
+function army01(game, parent, target, conversation) {
+	conversation.addText("INSERT TEXT");
+	
+	conversation.addResponse("Farewell.", "onExit");
 }
 
 function renarel01(game, parent, target, conversation) {
