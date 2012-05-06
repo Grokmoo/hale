@@ -796,7 +796,16 @@ tile entity 13 0 cliffs/convex-l
 tile ceiling 24 19 trees/deadtree03
 tile ceiling 16 18 trees/deadtree01
 tile ceiling 20 17 trees/deadtree04
+tile ceiling 8 16 trees/deadtree04
+tile ceiling 23 15 trees/deadtree04
 tile ceiling 1 14 trees/deadtree04
+tile ceiling 6 11 trees/deadtree04
+tile ceiling 2 10 trees/deadtree03
+tile ceiling 3 9 trees/deadtree04
+tile ceiling 2 8 trees/deadtree02
+tile ceiling 20 7 trees/deadtree04
+tile ceiling 2 5 trees/deadtree02
+tile ceiling 6 4 trees/deadtree02
 tile ceiling 1 4 trees/deadtree04
 tile ceiling 6 1 trees/deadtree01
 
@@ -823,4 +832,4 @@ elevation 19 1 1 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
 
 opaque
-impass  1 4  1 6  1 7  1 8  1 9  1 10  1 14  2 2  2 3  2 6  2 12  2 16  2 17  2 18  2 19  3 1  3 4  3 5  3 15  3 19  4 2  4 14  4 15  4 19  5 1  6 1  6 2  7 2  8 2  9 2  10 2  11 2  12 2  13 0  13 1  14 0  14 1  15 0  15 1  16 0  16 1  16 2  16 18  17 0  17 1  17 2  18 1  18 2  18 3  19 3  20 3  20 4  20 17  21 2  21 3  21 4  22 3  22 4  23 3  23 4  24 3  24 4  24 19  25 3  25 4  26 4  26 5  27 3  27 4
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 8  0 9  0 10  0 11  0 12  0 13  0 14  0 15  0 16  0 17  0 18  0 19  1 0  1 4  1 6  1 7  1 8  1 10  1 14  1 19  2 0  2 2  2 3  2 5  2 6  2 8  2 10  2 12  2 16  2 17  2 18  2 19  3 0  3 1  3 4  3 5  3 9  3 15  3 19  4 0  4 2  4 14  4 15  4 19  5 0  5 1  5 19  6 0  6 1  6 2  6 4  6 11  6 19  7 0  7 2  7 19  8 0  8 2  8 16  8 19  9 0  9 2  9 19  10 0  10 2  10 19  11 0  11 2  11 19  12 0  12 2  12 19  13 0  13 1  13 19  14 0  14 1  14 19  15 0  15 1  15 19  16 0  16 1  16 2  16 18  16 19  17 0  17 1  17 2  17 19  18 0  18 1  18 2  18 3  18 19  19 0  19 3  19 19  20 0  20 3  20 4  20 7  20 17  20 19  21 0  21 2  21 3  21 4  21 19  22 0  22 3  22 4  22 19  23 0  23 3  23 4  23 15  23 19  24 0  24 3  24 4  24 19  25 0  25 3  25 4  25 19  26 0  26 4  26 5  26 19  27 0  27 1  27 2  27 3  27 4  27 5  27 6  27 7  27 8  27 9  27 10  27 11  27 12  27 13  27 14  27 15  27 16  27 17  27 18  27 19
