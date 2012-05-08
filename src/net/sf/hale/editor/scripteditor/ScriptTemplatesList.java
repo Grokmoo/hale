@@ -187,7 +187,7 @@ public class ScriptTemplatesList {
 		Template template = templates.get(type.toString()).get(templateID);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("\nfunction ");
+		sb.append("function ");
 		sb.append(template.function);
 		
 		sb.append("(");

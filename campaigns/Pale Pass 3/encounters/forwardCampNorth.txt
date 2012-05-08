@@ -1,0 +1,9 @@
+size 5
+faction "Neutral"
+challenge 0
+creature "aravilSoldier" 4 -3
+creature "aravilSoldier" 5 -2
+creature "aravilSoldier" -1 -5
+creature "aravilSoldier" -3 -1
+creature "aravilSoldier" -3 0
+creature "aravilArmyGeneral" 0 -3

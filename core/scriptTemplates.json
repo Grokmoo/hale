@@ -14,7 +14,7 @@
 	  "function" : "onExit",
 	  "arguments" : [ "game", "parent", "talker", "conversation" ],
 	  "content" : [
-	    "conversation.exit()"
+	    "conversation.exit();"
 	  ]
 	},
 	

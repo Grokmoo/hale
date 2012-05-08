@@ -95,3 +95,15 @@ function learnOfArmy(game) {
 	
 	entry.addText("You learned from the Lady of Aravil that her scouts have located the Master's base and hopefully the focus crystal as well.  Head north to meet up with the army, and speak to the General in charge there.");
 }
+
+function theFocusCrystal(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("The Focus Crystal")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("The Focus Crystal");
+	
+	entry.addText("Apparently, the focus crystal currently lies in the enemy army's camp.  The Aravil army will continue to fight the army on the front lines, while you attack from the rear.  You must find and destroy the focus crystal.");
+}
