@@ -1,0 +1,21 @@
+playerCharacter false
+
+name "Archer"
+icon "creatures/human10" "#ffffffff"
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+xp 13200
+role "Warrior" 12
+attributes 13 16 12 10 10 10
+
+equip "longbow" Fine
+equip "arrow" Good
+additem "arrow" 49 Good

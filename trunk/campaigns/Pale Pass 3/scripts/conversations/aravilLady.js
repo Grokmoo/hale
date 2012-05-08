@@ -65,6 +65,7 @@ function army03(game, parent, target, conversation) {
 	
 	conversation.addResponse("Farewell.", "onExit");
 	
+	game.revealWorldMapLocation("Army Camp");
 	game.runExternalScript("quests/theMaster", "learnOfArmy");
 	parent.put("armyComplete", true);
 }

@@ -1,0 +1,20 @@
+playerCharacter false
+
+name "General"
+icon "creatures/human22" "#ffffffff"
+portrait "Human/halberdier"
+
+gender "Male"
+race "Human"
+immortal true
+unspentSkillPoints 0
+drawOnlyHandSubIcons true
+drawWithSubIcons true
+
+
+skincolor "#ffffffff"
+clothingcolor "#ffffffff"
+role "Warrior" 18
+attributes 14 11 15 14 12 13
+conversation "conversations/aravilArmyGeneral"
+
