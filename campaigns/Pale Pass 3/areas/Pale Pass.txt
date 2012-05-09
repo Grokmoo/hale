@@ -4,7 +4,24 @@ visibilityRadius 8
 unexplored
 
 
+encounter "demonsLvl20" 18 56
+encounter "demonsLvl20" 18 47
+encounter "demonsLvl20" 5 39
+encounter "demonsLvl20" 14 37
+encounter "demonsLvl20" 23 37
+encounter "demonsLvl20" 22 22
+encounter "demonsLvl20" 6 17
+encounter "demonsLvl20" 19 9
 
+item 1 "chest_exceptional" 14 56
+item 1 "chest_lock_exceptional" 13 40
+item 1 "armorstand_exceptional" 15 40
+item 1 "armorstand_exceptional" 24 20
+item 1 "chest_exceptional" 23 19
+item 1 "armorstand_exceptional" 23 11
+item 1 "chest02" 24 11
+item 1 "longsword_chillingBlade" 24 11
+item 1 "chest_lock_exceptional" 22 12
 
 tile base 29 64 base/snow1
 tile base 28 64 base/snow0
@@ -1783,7 +1800,7 @@ tile base 26 5 base/snow0
 tile base 25 5 base/snow0
 tile base 24 5 base/snow2
 tile base 23 5 base/snow1
-tile base 22 5 base/snow1
+tile base 22 5 base/snow2
 tile base 21 5 base/snow2
 tile base 20 5 base/snow1
 tile base 19 5 base/snow2
@@ -1811,11 +1828,11 @@ tile base 28 4 base/snow2
 tile base 27 4 base/snow1
 tile base 26 4 base/snow1
 tile base 25 4 base/snow0
-tile base 24 4 base/snow1
+tile base 24 4 base/snow0
 tile base 23 4 base/snow1
 tile base 22 4 base/snow2
-tile base 21 4 base/snow1
-tile base 20 4 base/snow0
+tile base 21 4 base/snow0
+tile base 20 4 base/snow1
 tile base 19 4 base/snow0
 tile base 18 4 base/snow1
 tile base 17 4 base/snow2
@@ -1841,11 +1858,11 @@ tile base 28 3 base/snow2
 tile base 27 3 base/snow0
 tile base 26 3 base/snow0
 tile base 25 3 base/snow0
-tile base 24 3 base/snow2
+tile base 24 3 base/snow1
 tile base 23 3 base/snow0
 tile base 22 3 base/snow0
-tile base 21 3 base/snow0
-tile base 20 3 base/snow1
+tile base 21 3 base/snow1
+tile base 20 3 base/snow0
 tile base 19 3 base/snow0
 tile base 18 3 base/snow0
 tile base 17 3 base/snow2
@@ -1871,11 +1888,11 @@ tile base 28 2 base/snow0
 tile base 27 2 base/snow2
 tile base 26 2 base/snow2
 tile base 25 2 base/snow0
-tile base 24 2 base/snow1
+tile base 24 2 base/snow0
 tile base 23 2 base/snow0
-tile base 22 2 base/snow0
-tile base 21 2 base/snow1
-tile base 20 2 base/snow2
+tile base 22 2 base/snow1
+tile base 21 2 base/snow0
+tile base 20 2 base/snow1
 tile base 19 2 base/snow0
 tile base 18 2 base/snow0
 tile base 17 2 base/snow1
@@ -1903,9 +1920,9 @@ tile base 26 1 base/snow2
 tile base 25 1 base/snow1
 tile base 24 1 base/snow2
 tile base 23 1 base/snow0
-tile base 22 1 base/snow0
-tile base 21 1 base/snow2
-tile base 20 1 base/snow1
+tile base 22 1 base/dirt5
+tile base 21 1 base/snow0
+tile base 20 1 base/snow0
 tile base 19 1 base/snow0
 tile base 18 1 base/snow2
 tile base 17 1 base/snow2
@@ -1931,11 +1948,11 @@ tile base 28 0 base/snow0
 tile base 27 0 base/snow1
 tile base 26 0 base/snow0
 tile base 25 0 base/snow1
-tile base 24 0 base/snow0
-tile base 23 0 base/snow0
-tile base 22 0 base/snow1
-tile base 21 0 base/snow1
-tile base 20 0 base/snow0
+tile base 24 0 base/snow1
+tile base 23 0 base/dirt2
+tile base 22 0 base/dirt5
+tile base 21 0 base/dirt4
+tile base 20 0 base/snow2
 tile base 19 0 base/snow0
 tile base 18 0 base/snow2
 tile base 17 0 base/snow0
@@ -1956,73 +1973,1370 @@ tile base 3 0 base/snow1
 tile base 2 0 base/snow2
 tile base 1 0 base/snow1
 tile base 0 0 base/snow1
+tile borders 22 1 borders/snow-se
+tile borders 22 1 borders/snow-s
+tile borders 22 1 borders/snow-sw
+tile borders 23 0 borders/snow-s
+tile borders 23 0 borders/snow-se
+tile borders 23 0 borders/snow-ne
+tile borders 21 0 borders/snow-s
+tile borders 21 0 borders/snow-sw
+tile borders 21 0 borders/snow-nw
+tile entity 23 64 cliffs/concave-r
+tile entity 12 64 cliffs/convex-l
+tile entity 12 64 cliffs/convex-tl
+tile entity 12 64 cliffs/concave-br
+tile entity 8 64 cliffs/concave-l
+tile entity 8 64 cliffs/convex-r
+tile entity 7 64 cliffs/concave-l
+tile entity 3 64 cliffs/concave-r
+tile entity 24 63 cliffs/concave-br
+tile entity 24 63 cliffs/convex-tl
+tile entity 23 63 cliffs/concave-br
+tile entity 23 63 cliffs/convex-l
+tile entity 23 63 cliffs/convex-tl
+tile entity 20 63 cliffs/concave-br
+tile entity 20 63 cliffs/concave-bl
+tile entity 18 63 cliffs/concave-br
+tile entity 18 63 cliffs/convex-tl
+tile entity 17 63 cliffs/concave-br
+tile entity 17 63 cliffs/concave-bl
+tile entity 16 63 cliffs/convex-tl
+tile entity 16 63 cliffs/convex-tr
+tile entity 15 63 cliffs/concave-br
+tile entity 15 63 cliffs/concave-bl
+tile entity 14 63 cliffs/convex-tr
+tile entity 14 63 cliffs/concave-bl
+tile entity 13 63 cliffs/concave-r
+tile entity 8 63 cliffs/concave-tl
+tile entity 7 63 cliffs/concave-l
+tile entity 7 63 cliffs/convex-r
+tile entity 4 63 cliffs/concave-r
+tile entity 3 63 cliffs/concave-br
+tile entity 3 63 cliffs/convex-l
+tile entity 3 63 cliffs/convex-tl
+tile entity 2 63 cliffs/concave-br
+tile entity 2 63 cliffs/convex-tl
+tile entity 1 63 cliffs/concave-br
+tile entity 1 63 cliffs/concave-bl
+tile entity 0 63 cliffs/concave-l
+tile entity 26 62 cliffs/concave-r
+tile entity 25 62 cliffs/concave-br
+tile entity 25 62 cliffs/convex-tl
+tile entity 22 62 cliffs/concave-r
+tile entity 21 62 cliffs/concave-br
+tile entity 21 62 cliffs/convex-tl
+tile entity 19 62 cliffs/convex-tl
+tile entity 19 62 cliffs/convex-tr
+tile entity 13 62 cliffs/convex-l
+tile entity 13 62 cliffs/convex-tl
+tile entity 13 62 cliffs/convex-tr
+tile entity 10 62 cliffs/concave-l
+tile entity 10 62 cliffs/convex-br
+tile entity 10 62 cliffs/convex-r
+tile entity 9 62 cliffs/concave-tl
+tile entity 9 62 cliffs/convex-br
+tile entity 8 62 cliffs/concave-tl
+tile entity 8 62 cliffs/convex-br
+tile entity 7 62 cliffs/concave-tl
+tile entity 4 62 cliffs/concave-r
+tile entity 4 62 cliffs/convex-l
+tile entity 3 62 cliffs/concave-r
+tile entity 0 62 cliffs/concave-l
+tile entity 0 62 cliffs/convex-r
+tile entity 26 61 cliffs/concave-br
+tile entity 26 61 cliffs/convex-l
+tile entity 26 61 cliffs/convex-tl
+tile entity 24 61 cliffs/concave-br
+tile entity 24 61 cliffs/concave-bl
+tile entity 22 61 cliffs/concave-br
+tile entity 22 61 cliffs/convex-l
+tile entity 22 61 cliffs/convex-tl
+tile entity 12 61 cliffs/concave-tl
+tile entity 12 61 cliffs/convex-bl
+tile entity 12 61 cliffs/convex-br
+tile entity 10 61 cliffs/concave-tl
+tile entity 9 61 cliffs/concave-l
+tile entity 9 61 cliffs/convex-br
+tile entity 9 61 cliffs/convex-r
+tile entity 4 61 cliffs/concave-r
+tile entity 4 61 cliffs/convex-l
+tile entity 3 61 cliffs/concave-r
+tile entity 3 61 cliffs/convex-l
+tile entity 0 61 cliffs/concave-l
+tile entity 0 61 cliffs/convex-r
+tile entity 28 60 cliffs/concave-r
+tile entity 27 60 cliffs/concave-br
+tile entity 27 60 cliffs/convex-tl
+tile entity 26 60 cliffs/concave-r
+tile entity 25 60 cliffs/concave-br
+tile entity 25 60 cliffs/convex-tl
+tile entity 23 60 cliffs/convex-tl
+tile entity 23 60 cliffs/convex-tr
+tile entity 18 60 cliffs/concave-tl
+tile entity 18 60 cliffs/convex-bl
+tile entity 18 60 cliffs/convex-br
+tile entity 16 60 cliffs/concave-tl
+tile entity 16 60 cliffs/convex-bl
+tile entity 16 60 cliffs/convex-br
+tile entity 14 60 cliffs/concave-tl
+tile entity 14 60 cliffs/convex-br
+tile entity 13 60 cliffs/concave-tl
+tile entity 13 60 cliffs/convex-br
+tile entity 11 60 cliffs/concave-tr
+tile entity 10 60 cliffs/concave-tl
+tile entity 10 60 cliffs/convex-br
+tile entity 9 60 cliffs/concave-tl
+tile entity 4 60 cliffs/concave-r
+tile entity 4 60 cliffs/convex-l
+tile entity 3 60 cliffs/concave-r
+tile entity 3 60 cliffs/convex-l
+tile entity 0 60 cliffs/concave-l
+tile entity 0 60 cliffs/convex-r
+tile entity 28 59 cliffs/concave-r
+tile entity 28 59 cliffs/convex-l
+tile entity 26 59 cliffs/concave-br
+tile entity 26 59 cliffs/convex-l
+tile entity 26 59 cliffs/convex-tl
+tile entity 20 59 cliffs/concave-tl
+tile entity 20 59 cliffs/convex-br
+tile entity 19 59 cliffs/concave-tl
+tile entity 19 59 cliffs/convex-br
+tile entity 17 59 cliffs/concave-tr
+tile entity 16 59 cliffs/concave-tl
+tile entity 16 59 cliffs/convex-bl
+tile entity 16 59 cliffs/convex-br
+tile entity 15 59 cliffs/concave-tr
+tile entity 14 59 cliffs/concave-tl
+tile entity 14 59 cliffs/convex-br
+tile entity 13 59 cliffs/concave-tl
+tile entity 13 59 cliffs/convex-bl
+tile entity 13 59 cliffs/convex-br
+tile entity 12 59 cliffs/concave-tr
+tile entity 11 59 cliffs/concave-tl
+tile entity 11 59 cliffs/convex-br
+tile entity 2 59 cliffs/convex-bl
+tile entity 2 59 cliffs/concave-tr
+tile entity 0 59 cliffs/concave-tl
+tile entity 28 58 cliffs/convex-l
+tile entity 28 58 cliffs/convex-tl
+tile entity 28 58 cliffs/concave-br
+tile entity 27 58 cliffs/concave-r
+tile entity 22 58 cliffs/concave-tl
+tile entity 22 58 cliffs/convex-br
+tile entity 21 58 cliffs/concave-tl
+tile entity 21 58 cliffs/convex-br
+tile entity 20 58 cliffs/concave-tl
+tile entity 20 58 cliffs/convex-bl
+tile entity 20 58 cliffs/convex-br
+tile entity 18 58 cliffs/concave-tl
+tile entity 18 58 cliffs/convex-br
+tile entity 17 58 cliffs/concave-tl
+tile entity 17 58 cliffs/convex-br
+tile entity 15 58 cliffs/concave-tr
+tile entity 3 58 cliffs/concave-r
+tile entity 3 58 cliffs/convex-bl
+tile entity 3 58 cliffs/convex-l
+tile entity 3 58 cliffs/concave-tr
+tile entity 1 58 cliffs/concave-tr
+tile entity 29 57 cliffs/convex-tl
+tile entity 28 57 cliffs/concave-br
+tile entity 28 57 cliffs/convex-tl
+tile entity 27 57 cliffs/concave-br
+tile entity 27 57 cliffs/convex-l
+tile entity 27 57 cliffs/convex-tl
+tile entity 24 57 cliffs/concave-l
+tile entity 24 57 cliffs/convex-br
+tile entity 24 57 cliffs/convex-r
+tile entity 23 57 cliffs/concave-tl
+tile entity 23 57 cliffs/convex-br
+tile entity 22 57 cliffs/concave-tl
+tile entity 22 57 cliffs/convex-br
+tile entity 21 57 cliffs/concave-tl
+tile entity 21 57 cliffs/convex-br
+tile entity 19 57 cliffs/concave-tr
+tile entity 12 57 cliffs/concave-br
+tile entity 12 57 cliffs/convex-tl
+tile entity 11 57 cliffs/concave-br
+tile entity 11 57 cliffs/concave-bl
+tile entity 10 57 cliffs/convex-tr
+tile entity 10 57 cliffs/concave-bl
+tile entity 3 57 cliffs/concave-r
+tile entity 3 57 cliffs/convex-l
+tile entity 29 56 cliffs/convex-tl
+tile entity 24 56 cliffs/concave-tl
+tile entity 23 56 cliffs/concave-l
+tile entity 23 56 cliffs/convex-br
+tile entity 23 56 cliffs/convex-r
+tile entity 13 56 cliffs/concave-r
+tile entity 12 56 cliffs/concave-r
+tile entity 11 56 cliffs/concave-br
+tile entity 11 56 cliffs/concave-bl
+tile entity 10 56 cliffs/concave-l
+tile entity 9 56 cliffs/concave-l
+tile entity 3 56 cliffs/concave-r
+tile entity 3 56 cliffs/convex-l
+tile entity 25 55 cliffs/concave-l
+tile entity 25 55 cliffs/convex-br
+tile entity 25 55 cliffs/convex-r
+tile entity 24 55 cliffs/concave-l
+tile entity 24 55 cliffs/convex-br
+tile entity 24 55 cliffs/convex-r
+tile entity 23 55 cliffs/concave-tl
+tile entity 14 55 cliffs/concave-br
+tile entity 14 55 cliffs/concave-bl
+tile entity 13 55 cliffs/concave-r
+tile entity 13 55 cliffs/convex-l
+tile entity 12 55 cliffs/concave-r
+tile entity 12 55 cliffs/convex-l
+tile entity 10 55 cliffs/concave-l
+tile entity 10 55 cliffs/convex-r
+tile entity 9 55 cliffs/concave-l
+tile entity 9 55 cliffs/convex-r
+tile entity 8 55 cliffs/concave-br
+tile entity 8 55 cliffs/convex-tl
+tile entity 7 55 cliffs/concave-br
+tile entity 7 55 cliffs/concave-bl
+tile entity 6 55 cliffs/convex-tr
+tile entity 6 55 cliffs/concave-bl
+tile entity 4 55 cliffs/concave-br
+tile entity 4 55 cliffs/concave-bl
+tile entity 3 55 cliffs/concave-r
+tile entity 3 55 cliffs/convex-l
+tile entity 26 54 cliffs/concave-tl
+tile entity 26 54 cliffs/convex-br
+tile entity 25 54 cliffs/concave-tl
+tile entity 24 54 cliffs/concave-tl
+tile entity 18 54 cliffs/concave-br
+tile entity 18 54 cliffs/concave-bl
+tile entity 16 54 cliffs/concave-br
+tile entity 16 54 cliffs/convex-tl
+tile entity 15 54 cliffs/concave-br
+tile entity 15 54 cliffs/convex-tl
+tile entity 14 54 cliffs/concave-br
+tile entity 14 54 cliffs/concave-bl
+tile entity 13 54 cliffs/convex-l
+tile entity 13 54 cliffs/convex-tl
+tile entity 13 54 cliffs/convex-tr
+tile entity 12 54 cliffs/convex-l
+tile entity 12 54 cliffs/convex-tl
+tile entity 12 54 cliffs/concave-br
+tile entity 10 54 cliffs/concave-bl
+tile entity 10 54 cliffs/convex-r
+tile entity 10 54 cliffs/convex-tr
+tile entity 9 54 cliffs/convex-r
+tile entity 9 54 cliffs/convex-tl
+tile entity 9 54 cliffs/convex-tr
+tile entity 8 54 cliffs/concave-br
+tile entity 8 54 cliffs/convex-tl
+tile entity 7 54 cliffs/concave-br
+tile entity 7 54 cliffs/concave-bl
+tile entity 6 54 cliffs/concave-l
+tile entity 5 54 cliffs/convex-tl
+tile entity 5 54 cliffs/convex-tr
+tile entity 3 54 cliffs/convex-l
+tile entity 3 54 cliffs/convex-tl
+tile entity 3 54 cliffs/convex-tr
+tile entity 27 53 cliffs/concave-l
+tile entity 27 53 cliffs/convex-br
+tile entity 27 53 cliffs/convex-r
+tile entity 25 53 cliffs/concave-l
+tile entity 25 53 cliffs/convex-br
+tile entity 25 53 cliffs/convex-r
+tile entity 20 53 cliffs/concave-r
+tile entity 19 53 cliffs/concave-br
+tile entity 19 53 cliffs/convex-tl
+tile entity 18 53 cliffs/concave-br
+tile entity 18 53 cliffs/concave-bl
+tile entity 17 53 cliffs/convex-tl
+tile entity 17 53 cliffs/convex-tr
+tile entity 16 53 cliffs/concave-br
+tile entity 16 53 cliffs/convex-tl
+tile entity 15 53 cliffs/concave-br
+tile entity 15 53 cliffs/convex-tl
+tile entity 13 53 cliffs/concave-l
+tile entity 13 53 cliffs/concave-r
+tile entity 9 53 cliffs/convex-tl
+tile entity 9 53 cliffs/convex-tr
+tile entity 6 53 cliffs/concave-tl
+tile entity 27 52 cliffs/concave-l
+tile entity 27 52 cliffs/convex-r
+tile entity 26 52 cliffs/concave-l
+tile entity 26 52 cliffs/convex-br
+tile entity 26 52 cliffs/convex-r
+tile entity 25 52 cliffs/concave-tl
+tile entity 20 52 cliffs/concave-r
+tile entity 20 52 cliffs/convex-l
+tile entity 19 52 cliffs/concave-r
+tile entity 17 52 cliffs/concave-l
+tile entity 17 52 cliffs/concave-r
+tile entity 14 52 cliffs/concave-tl
+tile entity 14 52 cliffs/convex-br
+tile entity 13 52 cliffs/concave-tl
+tile entity 12 52 cliffs/concave-tr
+tile entity 11 52 cliffs/concave-tl
+tile entity 11 52 cliffs/convex-bl
+tile entity 11 52 cliffs/convex-br
+tile entity 10 52 cliffs/convex-bl
+tile entity 10 52 cliffs/concave-tr
+tile entity 8 52 cliffs/concave-tl
+tile entity 8 52 cliffs/convex-br
+tile entity 7 52 cliffs/concave-tl
+tile entity 7 52 cliffs/convex-br
+tile entity 6 52 cliffs/concave-tl
+tile entity 6 52 cliffs/convex-bl
+tile entity 6 52 cliffs/convex-br
+tile entity 27 51 cliffs/concave-l
+tile entity 27 51 cliffs/convex-r
+tile entity 26 51 cliffs/concave-l
+tile entity 26 51 cliffs/convex-r
+tile entity 18 51 cliffs/concave-tr
+tile entity 17 51 cliffs/concave-tl
+tile entity 16 51 cliffs/concave-tr
+tile entity 15 51 cliffs/concave-tl
+tile entity 15 51 cliffs/convex-br
+tile entity 14 51 cliffs/concave-tl
+tile entity 14 51 cliffs/convex-br
+tile entity 13 51 cliffs/concave-tl
+tile entity 13 51 cliffs/convex-bl
+tile entity 13 51 cliffs/convex-br
+tile entity 12 51 cliffs/concave-tr
+tile entity 11 51 cliffs/concave-tl
+tile entity 11 51 cliffs/convex-bl
+tile entity 11 51 cliffs/convex-br
+tile entity 10 51 cliffs/convex-bl
+tile entity 10 51 cliffs/concave-tr
+tile entity 9 51 cliffs/concave-tr
+tile entity 8 51 cliffs/concave-tl
+tile entity 8 51 cliffs/convex-br
+tile entity 7 51 cliffs/concave-tl
+tile entity 7 51 cliffs/convex-br
+tile entity 5 51 cliffs/convex-bl
+tile entity 5 51 cliffs/concave-tr
+tile entity 4 51 cliffs/concave-tr
+tile entity 3 51 cliffs/concave-r
+tile entity 3 51 cliffs/concave-tl
+tile entity 3 51 cliffs/convex-bl
+tile entity 3 51 cliffs/convex-br
+tile entity 3 51 cliffs/convex-l
+tile entity 27 50 cliffs/concave-l
+tile entity 27 50 cliffs/convex-r
+tile entity 26 50 cliffs/concave-l
+tile entity 26 50 cliffs/convex-r
+tile entity 19 50 cliffs/convex-bl
+tile entity 19 50 cliffs/concave-tr
+tile entity 18 50 cliffs/concave-tr
+tile entity 17 50 cliffs/concave-tl
+tile entity 17 50 cliffs/convex-bl
+tile entity 17 50 cliffs/convex-br
+tile entity 16 50 cliffs/concave-tr
+tile entity 15 50 cliffs/concave-tl
+tile entity 15 50 cliffs/convex-br
+tile entity 9 50 cliffs/concave-tr
+tile entity 3 50 cliffs/concave-r
+tile entity 3 50 cliffs/convex-l
+tile entity 27 49 cliffs/concave-l
+tile entity 27 49 cliffs/convex-r
+tile entity 26 49 cliffs/concave-l
+tile entity 26 49 cliffs/convex-r
+tile entity 2 49 cliffs/convex-bl
+tile entity 2 49 cliffs/convex-l
+tile entity 2 49 cliffs/convex-tl
+tile entity 2 49 cliffs/concave-br
+tile entity 2 49 cliffs/concave-tr
+tile entity 27 48 cliffs/concave-l
+tile entity 27 48 cliffs/convex-r
+tile entity 26 48 cliffs/concave-l
+tile entity 26 48 cliffs/convex-r
+tile entity 3 48 cliffs/concave-r
+tile entity 27 47 cliffs/concave-l
+tile entity 27 47 cliffs/convex-r
+tile entity 26 47 cliffs/convex-r
+tile entity 26 47 cliffs/convex-tr
+tile entity 26 47 cliffs/concave-bl
+tile entity 3 47 cliffs/concave-r
+tile entity 3 47 cliffs/convex-l
+tile entity 27 46 cliffs/convex-r
+tile entity 27 46 cliffs/convex-tr
+tile entity 27 46 cliffs/concave-bl
+tile entity 26 46 cliffs/convex-tr
+tile entity 26 46 cliffs/concave-bl
+tile entity 25 46 cliffs/convex-tr
+tile entity 25 46 cliffs/concave-bl
+tile entity 24 46 cliffs/convex-tr
+tile entity 24 46 cliffs/concave-bl
+tile entity 14 46 cliffs/concave-br
+tile entity 14 46 cliffs/concave-bl
+tile entity 12 46 cliffs/concave-br
+tile entity 12 46 cliffs/concave-bl
+tile entity 10 46 cliffs/concave-br
+tile entity 10 46 cliffs/concave-bl
+tile entity 3 46 cliffs/concave-r
+tile entity 3 46 cliffs/convex-l
+tile entity 29 45 cliffs/concave-r
+tile entity 29 45 cliffs/convex-bl
+tile entity 29 45 cliffs/convex-l
+tile entity 25 45 cliffs/convex-tr
+tile entity 25 45 cliffs/concave-bl
+tile entity 24 45 cliffs/convex-tr
+tile entity 24 45 cliffs/concave-bl
+tile entity 23 45 cliffs/convex-tr
+tile entity 23 45 cliffs/concave-bl
+tile entity 22 45 cliffs/concave-l
+tile entity 16 45 cliffs/concave-r
+tile entity 15 45 cliffs/concave-br
+tile entity 15 45 cliffs/convex-tl
+tile entity 13 45 cliffs/convex-tl
+tile entity 13 45 cliffs/convex-tr
+tile entity 12 45 cliffs/concave-br
+tile entity 12 45 cliffs/concave-bl
+tile entity 11 45 cliffs/convex-tl
+tile entity 11 45 cliffs/convex-tr
+tile entity 9 45 cliffs/convex-tr
+tile entity 9 45 cliffs/concave-bl
+tile entity 8 45 cliffs/convex-tl
+tile entity 8 45 cliffs/convex-tr
+tile entity 7 45 cliffs/concave-br
+tile entity 7 45 cliffs/concave-bl
+tile entity 6 45 cliffs/concave-l
+tile entity 3 45 cliffs/concave-r
+tile entity 3 45 cliffs/convex-l
+tile entity 28 44 cliffs/concave-r
+tile entity 28 44 cliffs/convex-bl
+tile entity 28 44 cliffs/convex-l
+tile entity 28 44 cliffs/concave-tr
+tile entity 23 44 cliffs/concave-l
+tile entity 22 44 cliffs/concave-l
+tile entity 22 44 cliffs/convex-r
+tile entity 16 44 cliffs/concave-r
+tile entity 16 44 cliffs/convex-l
+tile entity 14 44 cliffs/concave-br
+tile entity 14 44 cliffs/convex-tl
+tile entity 13 44 cliffs/concave-br
+tile entity 13 44 cliffs/convex-tl
+tile entity 11 44 cliffs/convex-tr
+tile entity 11 44 cliffs/concave-bl
+tile entity 10 44 cliffs/convex-tr
+tile entity 10 44 cliffs/concave-bl
+tile entity 6 44 cliffs/concave-l
+tile entity 6 44 cliffs/convex-r
+tile entity 3 44 cliffs/concave-r
+tile entity 3 44 cliffs/convex-l
+tile entity 28 43 cliffs/concave-br
+tile entity 28 43 cliffs/convex-l
+tile entity 28 43 cliffs/convex-tl
+tile entity 24 43 cliffs/concave-l
+tile entity 24 43 cliffs/convex-br
+tile entity 24 43 cliffs/convex-r
+tile entity 23 43 cliffs/concave-tl
+tile entity 22 43 cliffs/concave-tl
+tile entity 18 43 cliffs/concave-br
+tile entity 18 43 cliffs/convex-tl
+tile entity 17 43 cliffs/concave-br
+tile entity 17 43 cliffs/concave-bl
+tile entity 16 43 cliffs/convex-l
+tile entity 16 43 cliffs/convex-tl
+tile entity 16 43 cliffs/convex-tr
+tile entity 15 43 cliffs/concave-r
+tile entity 9 43 cliffs/convex-tr
+tile entity 9 43 cliffs/concave-bl
+tile entity 8 43 cliffs/concave-l
+tile entity 6 43 cliffs/concave-l
+tile entity 6 43 cliffs/convex-r
+tile entity 3 43 cliffs/concave-r
+tile entity 3 43 cliffs/convex-l
+tile entity 29 42 cliffs/concave-r
+tile entity 24 42 cliffs/concave-tl
+tile entity 23 42 cliffs/concave-l
+tile entity 23 42 cliffs/convex-br
+tile entity 23 42 cliffs/convex-r
+tile entity 19 42 cliffs/concave-r
+tile entity 15 42 cliffs/concave-r
+tile entity 15 42 cliffs/convex-l
+tile entity 12 42 cliffs/concave-tl
+tile entity 12 42 cliffs/convex-bl
+tile entity 12 42 cliffs/convex-br
+tile entity 8 42 cliffs/concave-l
+tile entity 8 42 cliffs/convex-r
+tile entity 6 42 cliffs/concave-l
+tile entity 6 42 cliffs/convex-r
+tile entity 3 42 cliffs/concave-r
+tile entity 3 42 cliffs/convex-l
+tile entity 29 41 cliffs/concave-r
+tile entity 29 41 cliffs/convex-l
+tile entity 26 41 cliffs/concave-tl
+tile entity 26 41 cliffs/convex-br
+tile entity 25 41 cliffs/concave-tl
+tile entity 25 41 cliffs/convex-br
+tile entity 24 41 cliffs/concave-tl
+tile entity 24 41 cliffs/convex-br
+tile entity 23 41 cliffs/concave-tl
+tile entity 19 41 cliffs/concave-r
+tile entity 19 41 cliffs/convex-l
+tile entity 14 41 cliffs/concave-tr
+tile entity 13 41 cliffs/concave-tl
+tile entity 13 41 cliffs/convex-br
+tile entity 12 41 cliffs/concave-r
+tile entity 12 41 cliffs/concave-tl
+tile entity 12 41 cliffs/convex-bl
+tile entity 12 41 cliffs/convex-br
+tile entity 12 41 cliffs/convex-l
+tile entity 11 41 cliffs/concave-tr
+tile entity 11 41 cliffs/concave-r
+tile entity 11 41 cliffs/convex-bl
+tile entity 11 41 cliffs/convex-l
+tile entity 8 41 cliffs/concave-tl
+tile entity 6 41 cliffs/concave-tl
+tile entity 2 41 cliffs/concave-r
+tile entity 2 41 cliffs/convex-bl
+tile entity 2 41 cliffs/convex-l
+tile entity 2 41 cliffs/concave-tr
+tile entity 28 40 cliffs/concave-tr
+tile entity 27 40 cliffs/concave-tl
+tile entity 27 40 cliffs/convex-br
+tile entity 26 40 cliffs/concave-l
+tile entity 26 40 cliffs/convex-br
+tile entity 26 40 cliffs/convex-r
+tile entity 25 40 cliffs/concave-tl
+tile entity 25 40 cliffs/convex-br
+tile entity 20 40 cliffs/concave-r
+tile entity 19 40 cliffs/concave-br
+tile entity 19 40 cliffs/convex-l
+tile entity 19 40 cliffs/convex-tl
+tile entity 18 40 cliffs/concave-br
+tile entity 18 40 cliffs/concave-bl
+tile entity 16 40 cliffs/concave-l
+tile entity 16 40 cliffs/convex-br
+tile entity 16 40 cliffs/convex-r
+tile entity 15 40 cliffs/concave-tl
+tile entity 15 40 cliffs/convex-bl
+tile entity 15 40 cliffs/convex-br
+tile entity 14 40 cliffs/concave-tr
+tile entity 13 40 cliffs/concave-tl
+tile entity 13 40 cliffs/convex-br
+tile entity 12 40 cliffs/concave-r
+tile entity 12 40 cliffs/convex-l
+tile entity 11 40 cliffs/concave-r
+tile entity 11 40 cliffs/convex-l
+tile entity 9 40 cliffs/concave-l
+tile entity 9 40 cliffs/convex-br
+tile entity 9 40 cliffs/convex-r
+tile entity 8 40 cliffs/concave-l
+tile entity 8 40 cliffs/convex-br
+tile entity 8 40 cliffs/convex-r
+tile entity 7 40 cliffs/concave-tl
+tile entity 7 40 cliffs/convex-br
+tile entity 2 40 cliffs/concave-r
+tile entity 2 40 cliffs/convex-l
+tile entity 26 39 cliffs/concave-l
+tile entity 26 39 cliffs/convex-r
+tile entity 20 39 cliffs/concave-r
+tile entity 20 39 cliffs/convex-l
+tile entity 19 39 cliffs/concave-r
+tile entity 17 39 cliffs/concave-l
+tile entity 16 39 cliffs/concave-l
+tile entity 16 39 cliffs/convex-r
+tile entity 12 39 cliffs/concave-r
+tile entity 12 39 cliffs/convex-l
+tile entity 11 39 cliffs/concave-r
+tile entity 11 39 cliffs/convex-l
+tile entity 9 39 cliffs/concave-l
+tile entity 9 39 cliffs/convex-r
+tile entity 8 39 cliffs/convex-r
+tile entity 8 39 cliffs/convex-tr
+tile entity 8 39 cliffs/concave-bl
+tile entity 2 39 cliffs/concave-br
+tile entity 2 39 cliffs/convex-l
+tile entity 2 39 cliffs/convex-tl
+tile entity 26 38 cliffs/concave-l
+tile entity 26 38 cliffs/convex-r
+tile entity 20 38 cliffs/concave-r
+tile entity 20 38 cliffs/convex-l
+tile entity 19 38 cliffs/concave-r
+tile entity 19 38 cliffs/convex-l
+tile entity 17 38 cliffs/concave-l
+tile entity 17 38 cliffs/convex-r
+tile entity 16 38 cliffs/concave-l
+tile entity 16 38 cliffs/convex-r
+tile entity 10 38 cliffs/concave-r
+tile entity 10 38 cliffs/concave-tr
+tile entity 9 38 cliffs/concave-br
+tile entity 9 38 cliffs/concave-tl
+tile entity 9 38 cliffs/concave-bl
+tile entity 8 38 cliffs/concave-l
+tile entity 7 38 cliffs/concave-l
+tile entity 3 38 cliffs/concave-r
+tile entity 26 37 cliffs/concave-l
+tile entity 26 37 cliffs/convex-r
+tile entity 20 37 cliffs/concave-r
+tile entity 20 37 cliffs/convex-l
+tile entity 19 37 cliffs/concave-r
+tile entity 19 37 cliffs/convex-l
+tile entity 17 37 cliffs/concave-l
+tile entity 17 37 cliffs/convex-r
+tile entity 16 37 cliffs/concave-l
+tile entity 16 37 cliffs/convex-r
+tile entity 11 37 cliffs/concave-r
+tile entity 11 37 cliffs/convex-bl
+tile entity 11 37 cliffs/convex-l
+tile entity 11 37 cliffs/concave-tr
+tile entity 10 37 cliffs/concave-r
+tile entity 10 37 cliffs/convex-l
+tile entity 8 37 cliffs/concave-l
+tile entity 8 37 cliffs/convex-r
+tile entity 7 37 cliffs/concave-l
+tile entity 7 37 cliffs/convex-r
+tile entity 3 37 cliffs/concave-r
+tile entity 3 37 cliffs/convex-l
+tile entity 26 36 cliffs/convex-r
+tile entity 26 36 cliffs/convex-tr
+tile entity 26 36 cliffs/concave-bl
+tile entity 20 36 cliffs/concave-r
+tile entity 20 36 cliffs/convex-l
+tile entity 19 36 cliffs/concave-r
+tile entity 19 36 cliffs/convex-l
+tile entity 17 36 cliffs/concave-l
+tile entity 17 36 cliffs/convex-r
+tile entity 16 36 cliffs/convex-r
+tile entity 16 36 cliffs/convex-tr
+tile entity 16 36 cliffs/concave-bl
+tile entity 11 36 cliffs/concave-r
+tile entity 11 36 cliffs/convex-l
+tile entity 10 36 cliffs/concave-r
+tile entity 10 36 cliffs/convex-l
+tile entity 8 36 cliffs/concave-l
+tile entity 8 36 cliffs/convex-r
+tile entity 7 36 cliffs/concave-l
+tile entity 7 36 cliffs/convex-r
+tile entity 3 36 cliffs/concave-r
+tile entity 3 36 cliffs/convex-l
+tile entity 25 35 cliffs/concave-l
+tile entity 20 35 cliffs/concave-r
+tile entity 20 35 cliffs/convex-l
+tile entity 19 35 cliffs/concave-r
+tile entity 19 35 cliffs/convex-l
+tile entity 17 35 cliffs/convex-r
+tile entity 17 35 cliffs/convex-tr
+tile entity 17 35 cliffs/concave-bl
+tile entity 16 35 cliffs/concave-l
+tile entity 15 35 cliffs/concave-l
+tile entity 11 35 cliffs/concave-r
+tile entity 11 35 cliffs/convex-l
+tile entity 10 35 cliffs/concave-r
+tile entity 10 35 cliffs/convex-l
+tile entity 8 35 cliffs/concave-l
+tile entity 8 35 cliffs/convex-r
+tile entity 7 35 cliffs/concave-l
+tile entity 7 35 cliffs/convex-r
+tile entity 3 35 cliffs/concave-r
+tile entity 3 35 cliffs/convex-l
+tile entity 25 34 cliffs/concave-l
+tile entity 25 34 cliffs/convex-r
+tile entity 18 34 cliffs/convex-bl
+tile entity 18 34 cliffs/concave-tr
+tile entity 16 34 cliffs/concave-tl
+tile entity 15 34 cliffs/concave-l
+tile entity 15 34 cliffs/convex-r
+tile entity 11 34 cliffs/concave-r
+tile entity 11 34 cliffs/convex-l
+tile entity 8 34 cliffs/concave-tl
+tile entity 7 34 cliffs/concave-l
+tile entity 7 34 cliffs/convex-r
+tile entity 3 34 cliffs/concave-r
+tile entity 3 34 cliffs/convex-l
+tile entity 25 33 cliffs/concave-l
+tile entity 25 33 cliffs/convex-r
+tile entity 19 33 cliffs/convex-bl
+tile entity 19 33 cliffs/concave-tr
+tile entity 18 33 cliffs/convex-bl
+tile entity 18 33 cliffs/concave-tr
+tile entity 17 33 cliffs/concave-tr
+tile entity 16 33 cliffs/concave-tl
+tile entity 16 33 cliffs/convex-br
+tile entity 15 33 cliffs/concave-tl
+tile entity 10 33 cliffs/convex-bl
+tile entity 10 33 cliffs/concave-tr
+tile entity 9 33 cliffs/concave-tr
+tile entity 8 33 cliffs/concave-tl
+tile entity 8 33 cliffs/convex-br
+tile entity 7 33 cliffs/concave-tl
+tile entity 3 33 cliffs/concave-r
+tile entity 3 33 cliffs/convex-l
+tile entity 25 32 cliffs/concave-l
+tile entity 25 32 cliffs/convex-r
+tile entity 17 32 cliffs/concave-tr
+tile entity 9 32 cliffs/concave-tr
+tile entity 3 32 cliffs/concave-r
+tile entity 3 32 cliffs/convex-l
+tile entity 28 31 cliffs/concave-r
+tile entity 27 31 cliffs/concave-bl
+tile entity 27 31 cliffs/concave-br
+tile entity 26 31 cliffs/convex-tr
+tile entity 26 31 cliffs/concave-bl
+tile entity 25 31 cliffs/convex-r
+tile entity 25 31 cliffs/convex-tr
+tile entity 25 31 cliffs/concave-bl
+tile entity 24 31 cliffs/convex-tr
+tile entity 24 31 cliffs/concave-bl
+tile entity 18 31 cliffs/concave-br
+tile entity 18 31 cliffs/concave-bl
+tile entity 6 31 cliffs/concave-br
+tile entity 6 31 cliffs/concave-bl
+tile entity 4 31 cliffs/concave-br
+tile entity 4 31 cliffs/concave-bl
+tile entity 3 31 cliffs/concave-r
+tile entity 3 31 cliffs/convex-l
+tile entity 28 30 cliffs/concave-r
+tile entity 28 30 cliffs/convex-l
+tile entity 25 30 cliffs/convex-tr
+tile entity 25 30 cliffs/concave-bl
+tile entity 24 30 cliffs/convex-tr
+tile entity 24 30 cliffs/concave-bl
+tile entity 23 30 cliffs/convex-tr
+tile entity 23 30 cliffs/concave-bl
+tile entity 22 30 cliffs/convex-tl
+tile entity 22 30 cliffs/convex-tr
+tile entity 21 30 cliffs/concave-br
+tile entity 21 30 cliffs/concave-bl
+tile entity 20 30 cliffs/convex-tl
+tile entity 20 30 cliffs/convex-tr
+tile entity 19 30 cliffs/concave-br
+tile entity 19 30 cliffs/convex-tl
+tile entity 18 30 cliffs/concave-br
+tile entity 18 30 cliffs/concave-bl
+tile entity 17 30 cliffs/convex-tr
+tile entity 17 30 cliffs/concave-bl
+tile entity 16 30 cliffs/concave-l
+tile entity 10 30 cliffs/concave-br
+tile entity 10 30 cliffs/convex-tl
+tile entity 9 30 cliffs/concave-br
+tile entity 9 30 cliffs/concave-bl
+tile entity 8 30 cliffs/convex-tl
+tile entity 8 30 cliffs/convex-tr
+tile entity 7 30 cliffs/concave-br
+tile entity 7 30 cliffs/convex-tl
+tile entity 5 30 cliffs/convex-tl
+tile entity 5 30 cliffs/convex-tr
+tile entity 3 30 cliffs/convex-l
+tile entity 3 30 cliffs/convex-tl
+tile entity 3 30 cliffs/convex-tr
+tile entity 23 29 cliffs/convex-tr
+tile entity 23 29 cliffs/concave-bl
+tile entity 22 29 cliffs/convex-tl
+tile entity 22 29 cliffs/convex-tr
+tile entity 21 29 cliffs/concave-br
+tile entity 21 29 cliffs/concave-bl
+tile entity 20 29 cliffs/concave-l
+tile entity 19 29 cliffs/concave-r
+tile entity 17 29 cliffs/concave-l
+tile entity 16 29 cliffs/concave-l
+tile entity 16 29 cliffs/convex-r
+tile entity 11 29 cliffs/concave-r
+tile entity 10 29 cliffs/concave-r
+tile entity 9 29 cliffs/concave-br
+tile entity 9 29 cliffs/concave-bl
+tile entity 8 29 cliffs/convex-tr
+tile entity 8 29 cliffs/concave-bl
+tile entity 28 28 cliffs/concave-r
+tile entity 27 28 cliffs/concave-br
+tile entity 27 28 cliffs/convex-bl
+tile entity 27 28 cliffs/convex-l
+tile entity 27 28 cliffs/convex-tl
+tile entity 27 28 cliffs/concave-tr
+tile entity 20 28 cliffs/concave-tl
+tile entity 18 28 cliffs/concave-tr
+tile entity 17 28 cliffs/concave-tl
+tile entity 16 28 cliffs/concave-tl
+tile entity 12 28 cliffs/concave-r
+tile entity 11 28 cliffs/convex-l
+tile entity 11 28 cliffs/convex-tl
+tile entity 11 28 cliffs/concave-br
+tile entity 10 28 cliffs/convex-l
+tile entity 10 28 cliffs/convex-tl
+tile entity 10 28 cliffs/concave-br
+tile entity 7 28 cliffs/concave-l
+tile entity 28 27 cliffs/concave-r
+tile entity 28 27 cliffs/convex-l
+tile entity 22 27 cliffs/concave-tl
+tile entity 22 27 cliffs/convex-br
+tile entity 21 27 cliffs/concave-tl
+tile entity 21 27 cliffs/convex-br
+tile entity 20 27 cliffs/concave-tl
+tile entity 20 27 cliffs/convex-br
+tile entity 19 27 cliffs/concave-tl
+tile entity 19 27 cliffs/convex-bl
+tile entity 19 27 cliffs/convex-br
+tile entity 18 27 cliffs/concave-tr
+tile entity 17 27 cliffs/concave-tl
+tile entity 17 27 cliffs/convex-br
+tile entity 12 27 cliffs/concave-br
+tile entity 12 27 cliffs/convex-l
+tile entity 12 27 cliffs/convex-tl
+tile entity 11 27 cliffs/concave-r
+tile entity 7 27 cliffs/concave-l
+tile entity 7 27 cliffs/convex-r
+tile entity 23 26 cliffs/concave-l
+tile entity 23 26 cliffs/convex-br
+tile entity 23 26 cliffs/convex-r
+tile entity 22 26 cliffs/concave-l
+tile entity 22 26 cliffs/convex-br
+tile entity 22 26 cliffs/convex-r
+tile entity 21 26 cliffs/concave-tl
+tile entity 21 26 cliffs/convex-br
+tile entity 14 26 cliffs/concave-br
+tile entity 14 26 cliffs/convex-tl
+tile entity 13 26 cliffs/convex-tl
+tile entity 13 26 cliffs/concave-br
+tile entity 12 26 cliffs/concave-br
+tile entity 12 26 cliffs/convex-tl
+tile entity 11 26 cliffs/convex-l
+tile entity 11 26 cliffs/convex-tl
+tile entity 11 26 cliffs/concave-br
+tile entity 7 26 cliffs/convex-r
+tile entity 7 26 cliffs/convex-tr
+tile entity 7 26 cliffs/concave-bl
+tile entity 6 26 cliffs/convex-tr
+tile entity 6 26 cliffs/concave-bl
+tile entity 27 25 cliffs/convex-bl
+tile entity 27 25 cliffs/concave-tr
+tile entity 26 25 cliffs/convex-bl
+tile entity 26 25 cliffs/concave-tr
+tile entity 24 25 cliffs/concave-tl
+tile entity 24 25 cliffs/convex-br
+tile entity 23 25 cliffs/concave-tl
+tile entity 22 25 cliffs/concave-tl
+tile entity 16 25 cliffs/concave-br
+tile entity 16 25 cliffs/convex-tl
+tile entity 15 25 cliffs/concave-br
+tile entity 15 25 cliffs/convex-tl
+tile entity 14 25 cliffs/concave-r
+tile entity 13 25 cliffs/concave-br
+tile entity 13 25 cliffs/convex-tl
+tile entity 5 25 cliffs/concave-l
+tile entity 25 24 cliffs/concave-tr
+tile entity 24 24 cliffs/concave-tl
+tile entity 24 24 cliffs/convex-br
+tile entity 23 24 cliffs/concave-tl
+tile entity 23 24 cliffs/convex-br
+tile entity 18 24 cliffs/concave-br
+tile entity 18 24 cliffs/convex-tl
+tile entity 17 24 cliffs/concave-br
+tile entity 17 24 cliffs/convex-tl
+tile entity 16 24 cliffs/concave-br
+tile entity 16 24 cliffs/concave-bl
+tile entity 14 24 cliffs/convex-l
+tile entity 14 24 cliffs/convex-tl
+tile entity 14 24 cliffs/concave-br
+tile entity 5 24 cliffs/concave-l
+tile entity 5 24 cliffs/convex-r
+tile entity 25 23 cliffs/concave-l
+tile entity 25 23 cliffs/convex-br
+tile entity 25 23 cliffs/convex-r
+tile entity 19 23 cliffs/concave-r
+tile entity 18 23 cliffs/concave-r
+tile entity 17 23 cliffs/concave-br
+tile entity 17 23 cliffs/convex-tl
+tile entity 15 23 cliffs/convex-tl
+tile entity 15 23 cliffs/convex-tr
+tile entity 6 23 cliffs/concave-tl
+tile entity 6 23 cliffs/convex-br
+tile entity 5 23 cliffs/concave-tl
+tile entity 25 22 cliffs/concave-l
+tile entity 25 22 cliffs/convex-r
+tile entity 19 22 cliffs/concave-r
+tile entity 19 22 cliffs/convex-l
+tile entity 7 22 cliffs/concave-l
+tile entity 7 22 cliffs/convex-br
+tile entity 7 22 cliffs/convex-r
+tile entity 6 22 cliffs/concave-l
+tile entity 6 22 cliffs/convex-br
+tile entity 6 22 cliffs/convex-r
+tile entity 5 22 cliffs/concave-tl
+tile entity 5 22 cliffs/convex-bl
+tile entity 5 22 cliffs/convex-br
+tile entity 4 22 cliffs/concave-r
+tile entity 4 22 cliffs/convex-bl
+tile entity 4 22 cliffs/convex-l
+tile entity 4 22 cliffs/concave-tr
+tile entity 25 21 cliffs/concave-l
+tile entity 25 21 cliffs/convex-r
+tile entity 18 21 cliffs/convex-bl
+tile entity 18 21 cliffs/concave-tr
+tile entity 17 21 cliffs/convex-bl
+tile entity 17 21 cliffs/concave-tr
+tile entity 16 21 cliffs/convex-bl
+tile entity 16 21 cliffs/concave-tr
+tile entity 8 21 cliffs/concave-tl
+tile entity 8 21 cliffs/convex-br
+tile entity 7 21 cliffs/concave-tl
+tile entity 6 21 cliffs/concave-tl
+tile entity 4 21 cliffs/concave-r
+tile entity 4 21 cliffs/convex-l
+tile entity 25 20 cliffs/concave-l
+tile entity 25 20 cliffs/convex-r
+tile entity 17 20 cliffs/convex-bl
+tile entity 17 20 cliffs/concave-tr
+tile entity 16 20 cliffs/convex-bl
+tile entity 16 20 cliffs/concave-tr
+tile entity 15 20 cliffs/convex-bl
+tile entity 15 20 cliffs/concave-tr
+tile entity 14 20 cliffs/concave-tr
+tile entity 13 20 cliffs/concave-tl
+tile entity 13 20 cliffs/convex-bl
+tile entity 13 20 cliffs/convex-br
+tile entity 12 20 cliffs/concave-tr
+tile entity 11 20 cliffs/concave-tl
+tile entity 11 20 cliffs/convex-bl
+tile entity 11 20 cliffs/convex-br
+tile entity 10 20 cliffs/concave-tr
+tile entity 9 20 cliffs/concave-tl
+tile entity 9 20 cliffs/convex-br
+tile entity 8 20 cliffs/concave-tl
+tile entity 8 20 cliffs/convex-br
+tile entity 7 20 cliffs/concave-tl
+tile entity 7 20 cliffs/convex-br
+tile entity 25 19 cliffs/concave-l
+tile entity 25 19 cliffs/convex-r
+tile entity 24 19 cliffs/concave-bl
+tile entity 24 19 cliffs/concave-br
+tile entity 15 19 cliffs/convex-bl
+tile entity 15 19 cliffs/concave-tr
+tile entity 14 19 cliffs/concave-tr
+tile entity 13 19 cliffs/concave-tl
+tile entity 13 19 cliffs/convex-bl
+tile entity 13 19 cliffs/convex-br
+tile entity 12 19 cliffs/concave-tr
+tile entity 11 19 cliffs/concave-tl
+tile entity 11 19 cliffs/convex-bl
+tile entity 11 19 cliffs/convex-br
+tile entity 10 19 cliffs/concave-tr
+tile entity 9 19 cliffs/concave-tl
+tile entity 9 19 cliffs/convex-br
+tile entity 3 19 cliffs/concave-r
+tile entity 3 19 cliffs/convex-bl
+tile entity 3 19 cliffs/convex-l
+tile entity 3 19 cliffs/concave-tr
+tile entity 25 18 cliffs/convex-r
+tile entity 25 18 cliffs/convex-tl
+tile entity 25 18 cliffs/convex-tr
+tile entity 23 18 cliffs/concave-bl
+tile entity 23 18 cliffs/convex-tr
+tile entity 22 18 cliffs/convex-tr
+tile entity 22 18 cliffs/concave-bl
+tile entity 3 18 cliffs/concave-r
+tile entity 3 18 cliffs/convex-l
+tile entity 22 17 cliffs/concave-br
+tile entity 22 17 cliffs/concave-bl
+tile entity 21 17 cliffs/convex-tr
+tile entity 21 17 cliffs/concave-bl
+tile entity 20 17 cliffs/convex-tr
+tile entity 20 17 cliffs/concave-bl
+tile entity 18 17 cliffs/concave-br
+tile entity 18 17 cliffs/convex-tl
+tile entity 17 17 cliffs/concave-br
+tile entity 17 17 cliffs/concave-bl
+tile entity 16 17 cliffs/convex-tr
+tile entity 16 17 cliffs/concave-bl
+tile entity 14 17 cliffs/concave-br
+tile entity 14 17 cliffs/convex-tl
+tile entity 13 17 cliffs/concave-bl
+tile entity 13 17 cliffs/concave-br
+tile entity 12 17 cliffs/convex-tl
+tile entity 12 17 cliffs/convex-tr
+tile entity 11 17 cliffs/concave-br
+tile entity 11 17 cliffs/concave-bl
+tile entity 10 17 cliffs/convex-tr
+tile entity 10 17 cliffs/concave-bl
+tile entity 3 17 cliffs/concave-r
+tile entity 3 17 cliffs/convex-l
+tile entity 24 16 cliffs/convex-tl
+tile entity 24 16 cliffs/concave-br
+tile entity 23 16 cliffs/concave-br
+tile entity 23 16 cliffs/convex-tl
+tile entity 21 16 cliffs/convex-tr
+tile entity 21 16 cliffs/concave-bl
+tile entity 20 16 cliffs/convex-tr
+tile entity 20 16 cliffs/concave-bl
+tile entity 19 16 cliffs/convex-tl
+tile entity 19 16 cliffs/convex-tr
+tile entity 15 16 cliffs/convex-tl
+tile entity 15 16 cliffs/convex-tr
+tile entity 9 16 cliffs/concave-l
+tile entity 3 16 cliffs/concave-r
+tile entity 3 16 cliffs/convex-l
+tile entity 26 15 cliffs/convex-tl
+tile entity 26 15 cliffs/concave-br
+tile entity 25 15 cliffs/concave-br
+tile entity 25 15 cliffs/convex-tl
+tile entity 19 15 cliffs/concave-l
+tile entity 10 15 cliffs/concave-tl
+tile entity 10 15 cliffs/convex-br
+tile entity 9 15 cliffs/concave-tl
+tile entity 4 15 cliffs/convex-tl
+tile entity 4 15 cliffs/concave-br
+tile entity 3 15 cliffs/convex-l
+tile entity 3 15 cliffs/convex-tl
+tile entity 3 15 cliffs/concave-br
+tile entity 28 14 cliffs/convex-tl
+tile entity 28 14 cliffs/concave-br
+tile entity 27 14 cliffs/concave-br
+tile entity 27 14 cliffs/convex-tl
+tile entity 19 14 cliffs/concave-l
+tile entity 19 14 cliffs/convex-r
+tile entity 18 14 cliffs/concave-l
+tile entity 18 14 cliffs/convex-br
+tile entity 18 14 cliffs/convex-r
+tile entity 17 14 cliffs/concave-tl
+tile entity 17 14 cliffs/convex-bl
+tile entity 17 14 cliffs/convex-br
+tile entity 16 14 cliffs/concave-tr
+tile entity 15 14 cliffs/concave-tl
+tile entity 15 14 cliffs/convex-bl
+tile entity 15 14 cliffs/convex-br
+tile entity 14 14 cliffs/concave-tr
+tile entity 13 14 cliffs/concave-tl
+tile entity 13 14 cliffs/convex-bl
+tile entity 13 14 cliffs/convex-br
+tile entity 12 14 cliffs/concave-tr
+tile entity 11 14 cliffs/concave-tl
+tile entity 11 14 cliffs/convex-br
+tile entity 6 14 cliffs/concave-br
+tile entity 6 14 cliffs/convex-tl
+tile entity 5 14 cliffs/concave-br
+tile entity 5 14 cliffs/convex-tl
+tile entity 4 14 cliffs/concave-br
+tile entity 4 14 cliffs/convex-tl
+tile entity 3 14 cliffs/concave-br
+tile entity 3 14 cliffs/concave-bl
+tile entity 2 14 cliffs/convex-tr
+tile entity 2 14 cliffs/concave-bl
+tile entity 29 13 cliffs/convex-tl
+tile entity 24 13 cliffs/concave-l
+tile entity 24 13 cliffs/convex-br
+tile entity 24 13 cliffs/convex-r
+tile entity 23 13 cliffs/concave-tl
+tile entity 23 13 cliffs/convex-bl
+tile entity 23 13 cliffs/convex-br
+tile entity 22 13 cliffs/concave-tr
+tile entity 21 13 cliffs/concave-tl
+tile entity 21 13 cliffs/convex-bl
+tile entity 21 13 cliffs/convex-br
+tile entity 20 13 cliffs/concave-tr
+tile entity 19 13 cliffs/concave-tl
+tile entity 18 13 cliffs/concave-tl
+tile entity 8 13 cliffs/convex-tl
+tile entity 8 13 cliffs/concave-br
+tile entity 7 13 cliffs/concave-br
+tile entity 7 13 cliffs/convex-tl
+tile entity 6 13 cliffs/concave-br
+tile entity 6 13 cliffs/convex-tl
+tile entity 5 13 cliffs/concave-br
+tile entity 5 13 cliffs/convex-tl
+tile entity 1 13 cliffs/concave-l
+tile entity 24 12 cliffs/concave-tl
+tile entity 23 12 cliffs/concave-l
+tile entity 23 12 cliffs/convex-bl
+tile entity 23 12 cliffs/convex-br
+tile entity 23 12 cliffs/convex-r
+tile entity 22 12 cliffs/concave-tr
+tile entity 21 12 cliffs/concave-tl
+tile entity 21 12 cliffs/convex-bl
+tile entity 21 12 cliffs/convex-br
+tile entity 20 12 cliffs/concave-tr
+tile entity 19 12 cliffs/concave-tl
+tile entity 19 12 cliffs/convex-br
+tile entity 9 12 cliffs/concave-r
+tile entity 8 12 cliffs/concave-r
+tile entity 7 12 cliffs/concave-br
+tile entity 7 12 cliffs/convex-tl
+tile entity 1 12 cliffs/concave-l
+tile entity 1 12 cliffs/convex-r
+tile entity 26 11 cliffs/concave-tl
+tile entity 26 11 cliffs/convex-br
+tile entity 25 11 cliffs/concave-tl
+tile entity 25 11 cliffs/convex-br
+tile entity 24 11 cliffs/concave-tl
+tile entity 24 11 cliffs/convex-br
+tile entity 23 11 cliffs/concave-tl
+tile entity 10 11 cliffs/concave-br
+tile entity 10 11 cliffs/convex-tl
+tile entity 9 11 cliffs/concave-br
+tile entity 9 11 cliffs/convex-l
+tile entity 9 11 cliffs/convex-tl
+tile entity 8 11 cliffs/concave-br
+tile entity 8 11 cliffs/convex-l
+tile entity 8 11 cliffs/convex-tl
+tile entity 4 11 cliffs/concave-l
+tile entity 4 11 cliffs/convex-bl
+tile entity 4 11 cliffs/convex-br
+tile entity 4 11 cliffs/convex-r
+tile entity 2 11 cliffs/concave-tl
+tile entity 2 11 cliffs/convex-br
+tile entity 1 11 cliffs/concave-tl
+tile entity 27 10 cliffs/concave-l
+tile entity 27 10 cliffs/convex-br
+tile entity 27 10 cliffs/convex-r
+tile entity 26 10 cliffs/concave-l
+tile entity 26 10 cliffs/convex-br
+tile entity 26 10 cliffs/convex-r
+tile entity 25 10 cliffs/concave-tl
+tile entity 25 10 cliffs/convex-br
+tile entity 12 10 cliffs/concave-r
+tile entity 11 10 cliffs/concave-br
+tile entity 11 10 cliffs/convex-tl
+tile entity 10 10 cliffs/concave-br
+tile entity 10 10 cliffs/convex-tl
+tile entity 9 10 cliffs/concave-br
+tile entity 9 10 cliffs/convex-tl
+tile entity 4 10 cliffs/concave-tl
+tile entity 3 10 cliffs/concave-tr
+tile entity 27 9 cliffs/concave-l
+tile entity 27 9 cliffs/convex-r
+tile entity 26 9 cliffs/concave-l
+tile entity 26 9 cliffs/convex-r
+tile entity 12 9 cliffs/convex-l
+tile entity 12 9 cliffs/convex-tl
+tile entity 12 9 cliffs/concave-br
+tile entity 11 9 cliffs/concave-r
+tile entity 6 9 cliffs/concave-l
+tile entity 6 9 cliffs/convex-br
+tile entity 6 9 cliffs/convex-r
+tile entity 5 9 cliffs/concave-tl
+tile entity 5 9 cliffs/convex-br
+tile entity 27 8 cliffs/concave-l
+tile entity 27 8 cliffs/convex-r
+tile entity 26 8 cliffs/concave-l
+tile entity 26 8 cliffs/convex-r
+tile entity 14 8 cliffs/concave-br
+tile entity 14 8 cliffs/convex-tl
+tile entity 13 8 cliffs/concave-br
+tile entity 13 8 cliffs/convex-tl
+tile entity 12 8 cliffs/concave-br
+tile entity 12 8 cliffs/convex-tl
+tile entity 11 8 cliffs/concave-br
+tile entity 11 8 cliffs/convex-l
+tile entity 11 8 cliffs/convex-tl
+tile entity 6 8 cliffs/concave-tl
+tile entity 3 8 cliffs/concave-l
+tile entity 3 8 cliffs/convex-bl
+tile entity 3 8 cliffs/convex-br
+tile entity 3 8 cliffs/convex-r
+tile entity 2 8 cliffs/convex-bl
+tile entity 2 8 cliffs/concave-tr
+tile entity 0 8 cliffs/concave-tl
+tile entity 0 8 cliffs/convex-br
+tile entity 27 7 cliffs/concave-l
+tile entity 27 7 cliffs/convex-r
+tile entity 26 7 cliffs/concave-l
+tile entity 26 7 cliffs/convex-r
+tile entity 15 7 cliffs/concave-r
+tile entity 13 7 cliffs/concave-r
+tile entity 8 7 cliffs/concave-tl
+tile entity 8 7 cliffs/convex-br
+tile entity 7 7 cliffs/concave-tl
+tile entity 7 7 cliffs/convex-br
+tile entity 4 7 cliffs/concave-l
+tile entity 4 7 cliffs/convex-br
+tile entity 4 7 cliffs/convex-r
+tile entity 3 7 cliffs/concave-tl
+tile entity 1 7 cliffs/concave-tr
+tile entity 27 6 cliffs/concave-l
+tile entity 27 6 cliffs/convex-r
+tile entity 26 6 cliffs/convex-r
+tile entity 26 6 cliffs/convex-tr
+tile entity 26 6 cliffs/concave-bl
+tile entity 16 6 cliffs/convex-tl
+tile entity 16 6 cliffs/concave-br
+tile entity 15 6 cliffs/concave-br
+tile entity 15 6 cliffs/convex-l
+tile entity 15 6 cliffs/convex-tl
+tile entity 14 6 cliffs/concave-br
+tile entity 14 6 cliffs/convex-tl
+tile entity 13 6 cliffs/concave-br
+tile entity 13 6 cliffs/convex-l
+tile entity 13 6 cliffs/convex-tl
+tile entity 9 6 cliffs/concave-l
+tile entity 9 6 cliffs/convex-br
+tile entity 9 6 cliffs/convex-r
+tile entity 8 6 cliffs/concave-l
+tile entity 8 6 cliffs/convex-bl
+tile entity 8 6 cliffs/convex-br
+tile entity 8 6 cliffs/convex-r
+tile entity 4 6 cliffs/concave-tl
+tile entity 29 5 cliffs/concave-r
+tile entity 29 5 cliffs/convex-bl
+tile entity 29 5 cliffs/convex-l
+tile entity 27 5 cliffs/convex-r
+tile entity 27 5 cliffs/convex-tr
+tile entity 27 5 cliffs/concave-bl
+tile entity 26 5 cliffs/concave-l
+tile entity 25 5 cliffs/concave-l
+tile entity 17 5 cliffs/concave-r
+tile entity 16 5 cliffs/concave-r
+tile entity 15 5 cliffs/concave-br
+tile entity 15 5 cliffs/convex-tl
+tile entity 12 5 cliffs/convex-bl
+tile entity 12 5 cliffs/convex-br
+tile entity 12 5 cliffs/convex-r
+tile entity 12 5 cliffs/convex-tr
+tile entity 12 5 cliffs/concave-bl
+tile entity 10 5 cliffs/concave-tl
+tile entity 10 5 cliffs/convex-br
+tile entity 9 5 cliffs/concave-tl
+tile entity 8 5 cliffs/concave-tl
+tile entity 7 5 cliffs/convex-bl
+tile entity 7 5 cliffs/concave-tr
+tile entity 6 5 cliffs/concave-tr
+tile entity 5 5 cliffs/concave-tl
+tile entity 5 5 cliffs/convex-br
+tile entity 29 4 cliffs/concave-r
+tile entity 29 4 cliffs/convex-l
+tile entity 26 4 cliffs/convex-r
+tile entity 26 4 cliffs/convex-tr
+tile entity 26 4 cliffs/concave-bl
+tile entity 25 4 cliffs/convex-r
+tile entity 25 4 cliffs/convex-tr
+tile entity 25 4 cliffs/concave-bl
+tile entity 24 4 cliffs/concave-l
+tile entity 18 4 cliffs/concave-r
+tile entity 17 4 cliffs/convex-l
+tile entity 17 4 cliffs/convex-tl
+tile entity 17 4 cliffs/concave-br
+tile entity 16 4 cliffs/convex-l
+tile entity 16 4 cliffs/convex-tl
+tile entity 16 4 cliffs/concave-br
+tile entity 11 4 cliffs/concave-tr
+tile entity 11 4 cliffs/convex-tr
+tile entity 11 4 cliffs/concave-bl
+tile entity 10 4 cliffs/concave-l
+tile entity 9 4 cliffs/concave-l
+tile entity 9 4 cliffs/convex-br
+tile entity 9 4 cliffs/convex-r
+tile entity 29 3 cliffs/concave-r
+tile entity 29 3 cliffs/convex-l
+tile entity 25 3 cliffs/concave-l
+tile entity 24 3 cliffs/concave-l
+tile entity 24 3 cliffs/convex-r
+tile entity 18 3 cliffs/concave-br
+tile entity 18 3 cliffs/convex-l
+tile entity 18 3 cliffs/convex-tl
+tile entity 17 3 cliffs/concave-r
+tile entity 10 3 cliffs/concave-tl
+tile entity 9 3 cliffs/concave-l
+tile entity 9 3 cliffs/convex-r
+tile entity 29 2 cliffs/concave-r
+tile entity 29 2 cliffs/convex-l
+tile entity 25 2 cliffs/concave-l
+tile entity 25 2 cliffs/convex-r
+tile entity 24 2 cliffs/concave-bl
+tile entity 24 2 cliffs/convex-r
+tile entity 24 2 cliffs/convex-tr
+tile entity 20 2 cliffs/concave-br
+tile entity 20 2 cliffs/convex-tl
+tile entity 19 2 cliffs/concave-br
+tile entity 19 2 cliffs/convex-tl
+tile entity 18 2 cliffs/concave-br
+tile entity 18 2 cliffs/convex-tl
+tile entity 17 2 cliffs/concave-br
+tile entity 17 2 cliffs/convex-l
+tile entity 17 2 cliffs/convex-tl
+tile entity 12 2 cliffs/concave-l
+tile entity 12 2 cliffs/convex-br
+tile entity 12 2 cliffs/convex-r
+tile entity 11 2 cliffs/concave-tl
+tile entity 11 2 cliffs/convex-br
+tile entity 10 2 cliffs/concave-tl
+tile entity 10 2 cliffs/convex-br
+tile entity 9 2 cliffs/concave-tl
+tile entity 28 1 cliffs/convex-bl
+tile entity 28 1 cliffs/concave-tr
+tile entity 26 1 cliffs/concave-tl
+tile entity 26 1 cliffs/convex-br
+tile entity 25 1 cliffs/concave-tl
+tile entity 23 1 cliffs/concave-l
+tile entity 21 1 cliffs/concave-r
+tile entity 20 1 cliffs/concave-r
+tile entity 19 1 cliffs/convex-tl
+tile entity 19 1 cliffs/concave-br
+tile entity 12 1 cliffs/concave-tl
+tile entity 11 1 cliffs/concave-l
+tile entity 11 1 cliffs/convex-br
+tile entity 11 1 cliffs/convex-r
+tile entity 27 0 cliffs/concave-tr
+tile entity 23 0 cliffs/convex-r
+tile entity 21 0 cliffs/convex-l
+tile entity 14 0 cliffs/convex-br
+tile entity 13 0 cliffs/concave-tl
+tile entity 13 0 cliffs/convex-br
+tile entity 12 0 cliffs/convex-br
+tile entity 11 0 cliffs/concave-tl
 
-elevation 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 3 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 5 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 7 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 8 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 9 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 10 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 11 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 13 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 14 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 15 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 16 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 17 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 18 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 19 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 20 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 21 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 22 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 23 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 24 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 25 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 26 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 27 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 28 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 29 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 30 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 31 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 32 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 33 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 34 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 35 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 36 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 37 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 38 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 39 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 40 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 41 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 42 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 43 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 44 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 45 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 46 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 47 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 48 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 49 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 50 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 51 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 52 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 53 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 54 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 55 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 56 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 57 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 58 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 59 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 60 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 61 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 62 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 63 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
-elevation 64 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+elevation 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 2 2 2 2 2 1 0 0 0 1 1 1 1 1 1 
+elevation 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 1 0 0 0 1 1 1 2 1 1 
+elevation 2 0 0 0 0 0 0 0 0 0 0 0 1 1 2 2 2 2 1 1 0 0 0 0 0 0 1 2 2 2 1 
+elevation 3 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 1 0 0 0 0 0 0 0 1 2 2 2 1 
+elevation 4 0 0 0 0 0 0 0 0 0 0 1 1 2 2 2 2 1 0 0 0 0 0 0 0 0 0 1 2 2 1 
+elevation 5 0 0 0 0 0 0 0 0 0 1 1 2 1 2 2 1 1 0 0 0 0 0 0 0 0 0 1 1 2 1 
+elevation 6 0 0 0 0 0 1 1 1 0 1 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 7 0 0 0 0 0 1 1 1 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 8 0 1 0 0 1 1 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 9 1 1 1 1 1 1 1 2 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 10 1 1 1 1 1 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 11 1 1 1 2 1 2 2 2 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 2 2 2 
+elevation 12 1 1 2 2 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 
+elevation 13 1 1 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 2 2 2 2 1 
+elevation 14 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 2 2 2 1 1 1 
+elevation 15 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 2 2 2 2 2 1 1 1 1 1 
+elevation 16 1 1 1 0 0 0 0 0 0 0 1 1 1 1 1 0 1 1 1 0 1 1 2 1 1 1 1 1 1 1 
+elevation 17 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 
+elevation 18 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 1 1 
+elevation 19 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 20 1 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 21 1 1 1 1 0 0 0 1 1 2 2 2 2 2 2 2 1 1 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 22 1 1 1 1 0 0 0 1 2 2 2 2 2 2 2 2 2 2 1 0 0 0 0 0 0 0 1 1 1 1 
+elevation 23 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 1 2 1 1 0 0 0 0 0 0 0 1 1 1 1 
+elevation 24 1 1 1 1 1 1 2 2 2 2 2 2 2 2 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1 1 
+elevation 25 1 1 1 1 1 1 2 2 2 2 2 2 2 1 1 0 0 0 0 0 0 0 0 1 1 2 1 1 1 1 
+elevation 26 1 1 1 1 1 1 1 1 2 2 2 1 1 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 1 
+elevation 27 1 1 1 1 1 1 1 1 2 2 2 1 0 0 0 0 0 0 0 0 0 1 1 2 2 2 2 2 1 1 
+elevation 28 1 1 1 1 1 1 1 1 2 2 1 0 0 0 0 0 0 1 1 1 1 2 2 2 2 2 2 1 1 1 
+elevation 29 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 2 1 1 1 1 1 2 2 2 2 1 1 
+elevation 30 1 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 1 2 2 1 1 
+elevation 31 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 32 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 33 1 1 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 1 1 1 1 
+elevation 34 1 1 1 0 0 0 0 0 1 2 1 0 0 0 0 0 1 2 1 1 0 0 0 0 0 0 1 1 1 1 
+elevation 35 1 1 1 0 0 0 0 0 1 2 1 0 0 0 0 0 1 1 2 1 0 0 0 0 0 0 1 1 1 1 
+elevation 36 1 1 1 0 0 0 0 0 1 2 1 0 0 0 0 0 0 1 2 1 0 0 0 0 0 0 0 1 1 1 
+elevation 37 1 1 1 0 0 0 0 0 1 2 1 0 0 0 0 0 0 1 2 1 0 0 0 0 0 0 0 1 1 1 
+elevation 38 1 1 1 0 0 0 0 0 1 1 1 1 0 0 0 0 0 1 2 1 0 0 0 0 0 0 0 1 1 1 
+elevation 39 1 1 0 0 0 0 0 0 0 1 2 1 0 0 0 0 0 1 2 1 0 0 0 0 0 0 0 1 1 1 
+elevation 40 1 1 0 0 0 0 0 0 0 1 2 1 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 1 1 1 
+elevation 41 1 1 0 0 0 0 0 1 1 2 2 1 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 2 2 1 
+elevation 42 1 1 1 0 0 0 0 1 1 2 2 2 1 2 2 1 1 1 1 0 0 0 0 0 1 2 2 2 2 1 
+elevation 43 1 1 1 0 0 0 0 1 1 1 2 2 2 2 2 1 0 0 0 0 0 0 0 1 1 2 2 2 1 1 
+elevation 44 1 1 1 0 0 0 0 1 1 1 1 1 2 1 1 1 0 0 0 0 0 0 0 1 2 2 2 2 1 1 
+elevation 45 1 1 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 0 0 1 1 2 2 2 1 
+elevation 46 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 2 2 
+elevation 47 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 48 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 49 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 50 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 
+elevation 51 1 1 1 0 0 0 0 0 0 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 1 2 2 
+elevation 52 1 1 1 1 1 1 0 1 1 2 1 1 1 1 1 2 2 1 2 1 0 0 0 0 0 0 0 1 2 2 
+elevation 53 1 1 1 1 1 1 1 2 2 1 2 2 2 1 2 1 1 0 1 0 0 0 0 0 0 0 1 1 2 2 
+elevation 54 1 1 1 0 1 0 1 1 1 0 1 2 1 0 1 0 0 0 0 0 0 0 0 0 0 1 1 2 2 2 
+elevation 55 1 1 1 0 0 0 0 0 0 0 1 2 1 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 
+elevation 56 1 1 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 2 2 2 2 1 
+elevation 57 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 2 2 1 1 0 
+elevation 58 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 2 2 2 2 1 0 0 
+elevation 59 1 2 1 1 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 1 1 2 2 2 2 2 1 1 0 0 
+elevation 60 1 2 2 1 0 0 0 0 0 0 0 1 1 1 1 2 1 2 1 2 2 2 2 1 2 1 1 0 0 0 
+elevation 61 1 2 2 1 0 0 0 0 0 0 1 2 1 2 2 2 2 2 2 2 2 2 1 1 1 1 0 0 0 0 
+elevation 62 1 2 2 1 0 0 0 0 0 1 1 2 2 1 2 2 2 2 2 1 2 1 1 1 1 0 0 0 0 0 
+elevation 63 1 1 1 0 0 0 0 0 1 2 2 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 
+elevation 64 1 1 1 0 0 0 0 0 1 2 2 2 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 
 
 
 opaque
-impass
+impass  0 0  0 1  0 2  0 3  0 4  0 5  0 6  0 7  0 60  0 61  0 62  0 63  1 0  1 12  1 13  1 63  2 0  2 14  2 39  2 40  2 41  2 49  2 63  3 0  3 8  3 14  3 15  3 16  3 17  3 18  3 19  3 30  3 31  3 32  3 33  3 34  3 35  3 36  3 37  3 38  3 42  3 43  3 44  3 45  3 46  3 47  3 48  3 50  3 51  3 54  3 55  3 56  3 57  3 58  3 60  3 61  3 62  3 63  3 64  4 0  4 7  4 11  4 14  4 15  4 21  4 22  4 31  4 55  4 60  4 61  4 62  4 63  4 64  5 0  5 13  5 14  5 24  5 25  5 30  5 54  5 64  6 0  6 9  6 13  6 14  6 22  6 26  6 31  6 42  6 43  6 44  6 45  6 54  6 55  6 64  7 0  7 12  7 13  7 22  7 26  7 27  7 28  7 30  7 34  7 35  7 36  7 37  7 38  7 45  7 54  7 55  7 63  7 64  8 0  8 6  8 11  8 12  8 13  8 29  8 30  8 35  8 36  8 37  8 38  8 39  8 40  8 42  8 43  8 45  8 54  8 55  8 64  9 0  9 3  9 4  9 6  9 10  9 11  9 12  9 16  9 29  9 30  9 38  9 39  9 40  9 43  9 45  9 53  9 54  9 55  9 56  9 61  10 0  10 4  10 10  10 11  10 17  10 28  10 29  10 30  10 35  10 36  10 37  10 38  10 44  10 46  10 54  10 55  10 56  10 57  10 62  11 1  11 4  11 8  11 9  11 10  11 17  11 26  11 27  11 28  11 29  11 34  11 35  11 36  11 37  11 39  11 40  11 41  11 44  11 45  11 56  11 57  12 2  12 5  12 8  12 9  12 10  12 17  12 26  12 27  12 28  12 39  12 40  12 41  12 45  12 46  12 54  12 55  12 56  12 57  12 64  13 6  13 7  13 8  13 17  13 25  13 26  13 44  13 45  13 53  13 54  13 55  13 56  13 62  13 63  14 6  14 8  14 17  14 24  14 25  14 26  14 44  14 46  14 54  14 55  14 63  15 5  15 6  15 7  15 16  15 23  15 25  15 34  15 35  15 42  15 43  15 45  15 53  15 54  15 63  16 4  16 5  16 6  16 17  16 24  16 25  16 29  16 30  16 35  16 36  16 37  16 38  16 39  16 40  16 43  16 44  16 45  16 53  16 54  16 63  17 2  17 3  17 4  17 5  17 17  17 23  17 24  17 29  17 30  17 35  17 36  17 37  17 38  17 39  17 43  17 52  17 53  17 63  18 2  18 3  18 4  18 14  18 17  18 23  18 24  18 30  18 31  18 40  18 43  18 53  18 54  18 63  19 1  19 2  19 14  19 15  19 16  19 22  19 23  19 29  19 30  19 35  19 36  19 37  19 38  19 39  19 40  19 41  19 42  19 52  19 53  19 62  20 1  20 2  20 16  20 17  20 29  20 30  20 35  20 36  20 37  20 38  20 39  20 40  20 52  20 53  20 63  21 0  21 1  21 16  21 17  21 29  21 30  21 62  22 17  22 18  22 26  22 29  22 30  22 44  22 45  22 61  22 62  23 0  23 1  23 12  23 16  23 18  23 26  23 29  23 30  23 42  23 44  23 45  23 56  23 60  23 63  23 64  24 2  24 3  24 4  24 13  24 16  24 19  24 30  24 31  24 43  24 45  24 46  24 55  24 57  24 61  24 63  24 64  25 2  25 3  25 4  25 5  25 15  25 18  25 19  25 20  25 21  25 22  25 23  25 30  25 31  25 32  25 33  25 34  25 35  25 45  25 46  25 53  25 55  25 60  25 62  25 64  26 4  26 5  26 6  26 7  26 8  26 9  26 10  26 15  26 31  26 36  26 37  26 38  26 39  26 40  26 46  26 47  26 48  26 49  26 50  26 51  26 52  26 59  26 60  26 61  26 62  26 64  27 5  27 6  27 7  27 8  27 9  27 10  27 14  27 28  27 31  27 46  27 47  27 48  27 49  27 50  27 51  27 52  27 53  27 57  27 58  27 60  27 64  28 14  28 27  28 28  28 30  28 31  28 43  28 44  28 57  28 58  28 59  28 60  28 64  29 2  29 3  29 4  29 5  29 13  29 41  29 42  29 45  29 56  29 57  29 58  29 59  29 60  29 61  29 62  29 63  29 64
