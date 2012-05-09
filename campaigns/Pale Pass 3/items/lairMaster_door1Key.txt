@@ -1,0 +1,10 @@
+name "Key"
+icon "items/I_Leaf" "#ffffffff"
+ingredient false
+quest true
+cursed false
+description "A key you found in the Lair of the Master."
+value "0 CP" 1
+weight 10
+itemType "ITEM"
+quality "Good"
