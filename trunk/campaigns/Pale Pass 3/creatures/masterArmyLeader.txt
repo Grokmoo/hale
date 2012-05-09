@@ -1,28 +1,29 @@
 playerCharacter false
 
-name "Warrior"
+name "General"
+portrait "Human/lieutenant"
+
 gender "Male"
 race "Human"
 unspentSkillPoints 0
 drawWithSubIcons true
 
 
-skincolor "#ff3f3737"
+skincolor "#ff4c4343"
 clothingcolor "#ffffffff"
 xp 16600
-role "Warrior" 17
-attributes 16 13 14 10 10 10
+role "Warrior" 19
+attributes 20 13 17 10 10 10
 script "ai/aiStandard"
+conversation "conversations/masterArmyLeader"
 addSkillRanks "Search" 60
 
-currencyReward 100 200
-equip "crossbow" Superb
+currencyReward 150 280
+equip "greatsword" Superb
 equip "armor_plate_base" Superb
 equip "gloves_mail_base" Superb
 equip "cloak" Good
 equip "boots_mail_base" Superb
-equip "bolt" Good
-additem "bolt" 37 Good
+addloot "LootPotionsFine" 10 PER_LIST
 addloot "LootMagicGood" 10 PER_LIST
 addloot "LootGems" 10 PER_LIST
-addloot "LootCraft" 10 PER_LIST

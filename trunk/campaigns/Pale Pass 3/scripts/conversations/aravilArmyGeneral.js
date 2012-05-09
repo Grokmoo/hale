@@ -1,5 +1,14 @@
 function startConversation(game, parent, target, conversation) {
-	if (parent.get("attackQuestGiven") != null) {
+	if (parent.get("finalQuestRecieved") != null) {
+		conversation.addText("You must travel to the Pale Pass and defeat the Master.  Good luck.");
+		
+		conversation.addResponse("Farewell.", "onExit");
+	} else if (game.get("focusCrystalLost") != null) {
+		conversation.addText("You are back, but the Master's armies are still here.  What happened?");
+		
+		conversation.addResponse("The crystal was already gone by the time we got there.", "crystal02");
+		
+	} else if (parent.get("attackQuestGiven") != null) {
 		conversation.addText("Good luck, friends.");
 		
 		conversation.addResponse("Farewell.", "onExit");
@@ -8,6 +17,53 @@ function startConversation(game, parent, target, conversation) {
 	
 		conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "convo02");
 	}
+}
+
+function crystal02(game, parent, target, conversation) {
+	conversation.addText("Blast!  We were so close to having it!  Do you have any clue where the crystal is now?");
+	
+	conversation.addResponse("Apparently the Master has it now.", "crystal03");
+}
+
+function crystal03(game, parent, target, conversation) {
+	conversation.addText("So it has come to this, then.");
+	
+	conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "crystal04");
+}
+
+function crystal04(game, parent, target, conversation) {
+	conversation.addText("Observing the enemy troop movements, we believe we have pinned down the location of their main base.  It is sure to be where the Master and the crystal are located.");
+	
+	conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "crystal05");
+}
+
+function crystal05(game, parent, target, conversation) {
+	conversation.addText("It is north of here, in the frozen Pale Pass.");
+	
+	game.revealWorldMapLocation("Pale Pass");
+	
+	conversation.addText("The Master is sure to be guarding the crystal, but our only hope seems to be in destroying it.");
+	
+	conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "crystal06");
+}
+
+function crystal06(game, parent, target, conversation) {
+	conversation.addText("The Master's armies grow stronger by the day.  We will continue the fight here, but I don't know how much longer we can hold them.");
+	
+	conversation.addText("You must head to the Pale Pass, and then find a way to defeat the Master.");
+	
+	conversation.addResponse("<span style=\"font-family: red\">Continue</span>", "crystal07");
+}
+
+function crystal07(game, parent, target, conversation) {
+	conversation.addText("It is likely that his base will be guarded by his most powerful demons, so make sure you are ready.");
+	
+	conversation.addText("Good luck.");
+	
+	parent.put("finalQuestRecieved", true);
+	game.runExternalScript("quests/theMaster", "palePass");
+	
+	conversation.addResponse("Good luck to you, general.  Farewell.", "onExit");
 }
 
 function convo02(game, parent, target, conversation) {

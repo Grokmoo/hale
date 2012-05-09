@@ -107,3 +107,27 @@ function theFocusCrystal(game) {
 	
 	entry.addText("Apparently, the focus crystal currently lies in the enemy army's camp.  The Aravil army will continue to fight the army on the front lines, while you attack from the rear.  You must find and destroy the focus crystal.");
 }
+
+function crystalLost(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("Crystal Lost")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("Crystal Lost");
+	
+	entry.addText("Unfortunately, you arrived at the enemy camp too late to claim the crystal.  You should return to the Aravil Army Camp to figure out your next move.");
+}
+
+function palePass(game) {
+	var quest = game.getQuestEntry("The Master");
+	
+	if (quest.hasSubEntry("Pale Pass")) return;
+	
+	quest.setCurrentSubEntriesCompleted();
+	
+	var entry = quest.createSubEntry("Pale Pass");
+	
+	entry.addText("You have learned that the Master's base of operations is located to the north, in the Pale Pass.  You must travel there, destroy the focus crystal, and defeat the evil Master once and for all.");
+}

@@ -1,0 +1,17 @@
+size 2
+faction "Hostile"
+challenge 190
+randomize true
+numRandomCreatures 5 5
+respawn true
+respawnHours 24
+creature "masterWarrior01" -1 1
+creature "masterWarrior02" 0 2
+creature "masterWarrior03" 1 1
+creature "demonGreen" -1 -2
+creature "demonBlue" 1 -2
+creature "demonEye" 0 -2
+creature "demonRed" 0 -1
+creature "hellHound" -2 1
+creature "hellHound" 2 1
+creature "hellHound" -1 0

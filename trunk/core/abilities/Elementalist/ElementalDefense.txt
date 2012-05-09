@@ -1,5 +1,5 @@
 name "Elemental Defense"
-type "Elemental Abilities"
+type "Elementalist Abilities"
 description "You have worked with elemental magic so much that you have gained a natural immunity to it.  You gain a 10% Damage Immunity to Fire, Cold, and Electrical damage."
 activateable false
 
