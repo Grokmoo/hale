@@ -89,7 +89,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	private final Button editorButton;
 	private final Button updateButton;
 	private final Button optionsButton;
-	
+	private final Button creditsButton;
 	private final Button exitButton;
 	
 	private final Button releaseNotesButton;
@@ -164,6 +164,21 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         	}
         });
         this.add(editorButton);
+        
+        creditsButton = new Button();
+        creditsButton.setTheme("creditsbutton");
+        creditsButton.addCallback(new Runnable() {
+        	@Override public void run() {
+        		try {
+					HTMLPopup popup = new HTMLPopup(new File("docs/Contributors.html"), MainMenu.this);
+					popup.setSize(640, 480);
+					popup.openPopupCentered();
+				} catch (IOException e) {
+					Logger.appendToErrorLog("Error retrieving contributors file", e);
+				}
+        	}
+        });
+        this.add(creditsButton);
         
         updateButton = new Button();
         updateButton.setTheme("updatebutton");
@@ -330,7 +345,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		newGameButton.setSize(newGameButton.getPreferredWidth(), newGameButton.getPreferredHeight());
 		loadGameButton.setSize(loadGameButton.getPreferredWidth(), loadGameButton.getPreferredHeight());
 		editorButton.setSize(editorButton.getPreferredWidth(), editorButton.getPreferredHeight());
-		
+		creditsButton.setSize(creditsButton.getPreferredWidth(), creditsButton.getPreferredHeight());
 		optionsButton.setSize(optionsButton.getPreferredWidth(), optionsButton.getPreferredHeight());
 		exitButton.setSize(exitButton.getPreferredWidth(), exitButton.getPreferredHeight());
 		
@@ -344,7 +359,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		newGameButton.setPosition((resX - newGameButton.getWidth()) / 2, campaignButton.getBottom() + buttonGap);
 		loadGameButton.setPosition((resX - loadGameButton.getWidth()) / 2, newGameButton.getBottom() + buttonGap);
 		editorButton.setPosition((resX - editorButton.getWidth()) / 2, loadGameButton.getBottom() + buttonGap);
-		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
+		creditsButton.setPosition((resX - creditsButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
+		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, creditsButton.getBottom() + buttonGap);
 		exitButton.setPosition((resX - exitButton.getWidth()) / 2, optionsButton.getBottom() + buttonGap);
 		
 		campaignLabel.setSize(campaignLabel.getPreferredWidth(), campaignLabel.getPreferredHeight());
