@@ -1,4 +1,12 @@
-size 4
+size 5
 faction "Neutral"
 challenge 0
 creature "focusCrystal" 0 0
+creature "theMaster" -5 2
+creature "demonSlayer" -5 1
+creature "demonSlayer" -4 3
+creature "demonBlue" 0 4
+creature "demonGreen" 0 -4
+creature "demonRed" -4 -2
+creature "demonSlayer" 4 2
+creature "demonEye" 4 -2
