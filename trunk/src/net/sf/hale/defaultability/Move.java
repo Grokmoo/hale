@@ -233,9 +233,12 @@ public class Move implements DefaultAbility {
 		this.mover = Game.interfaceLocker.addMove(parent, computedPath, provoke);
 		mover.addCallbacks(callbacks);
 		
-		if (parent.isPlayerSelectable() && !Game.isInTurnMode() &&
-				Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
-			movePartyInFormation(parent);
+		if (parent.isPlayerSelectable()) {
+			mover.setBackground(true);
+			
+			if (!Game.isInTurnMode() && Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
+				movePartyInFormation(parent);
+			}
 		}
 	}
 	
