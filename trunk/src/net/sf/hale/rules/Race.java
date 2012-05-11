@@ -75,6 +75,8 @@ public class Race {
 	
 	private final int baseStr, baseDex, baseCon, baseInt, baseWis, baseCha;
 	
+	private final boolean showDetailedDescription;
+	
 	public Race(String id) {
 		SimpleJSONParser parser = new SimpleJSONParser("races/" + id, ResourceType.JSON);
 		
@@ -89,6 +91,7 @@ public class Race {
 		this.descriptionFile = parser.get("descriptionFile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
 		this.icon = parser.get("icon", null);
 		this.playerSelectable = parser.get("playerSelectable", false);
+		this.showDetailedDescription = parser.get("showDetailedDescription", true);
 		
 		if (parser.containsKey("baseAttributes")) {
 			SimpleJSONArray attrArray = parser.getArray("baseAttributes");
@@ -239,6 +242,8 @@ public class Race {
 	public String getRandomFemaleName() {
 		return getRandomFromList(randomFemaleNames);
 	}
+	
+	public boolean showDetailedDescription() { return showDetailedDescription; }
 	
 	public String getMaleClothesIcon() { return maleClothesIcon; }
 	public String getFemaleClothesIcon() { return femaleClothesIcon; }

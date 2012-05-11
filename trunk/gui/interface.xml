@@ -8,8 +8,11 @@
 			<param name=""><image>iconbuttonblack.*</image></param>
 			<param name="border"><border>5,5,5,5</border></param>
 			
-			<theme name="closebutton" ref="button">
+			<theme name="closebutton" ref="-defaults">
+				<param name=""><image>hoverbutton.*</image></param>
 				<param name="text"><string>Continue</string></param>
+				<param name="border"><border>background.border</border></param>
+				<param name="textAlignment"><enum type="alignment">center</enum></param>
 			</theme>
 			
 			<theme name="scrollpane" ref="scrollpane">
