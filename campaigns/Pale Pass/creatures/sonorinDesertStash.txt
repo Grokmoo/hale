@@ -2,7 +2,7 @@ playerCharacter false
 
 name "Boulder"
 gender "Male"
-race "Human"
+race "Object"
 immortal true
 unspentSkillPoints 0
 attributes 10 10 10 10 10 10

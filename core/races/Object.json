@@ -1,0 +1,11 @@
+{ "name" : "Object",
+  "size" : "Medium",
+  "baseMovementCost" : 1000,
+  "unarmedWeapon" : "unarmedMedium",
+  
+  "racialTypes" : [
+    "Inanimate"
+  ],
+  
+  "showDetailedDescription" : false
+}

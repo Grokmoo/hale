@@ -79,7 +79,18 @@ import net.sf.hale.widgets.HTMLPopup;
 import de.matthiasmann.twl.Button;
 
 public class ScriptInterface {
+	/**
+	 * This is a debugging tool.  When false, random encounters will not
+	 * spawn, which makes traveling through areas much quicker
+	 */
+	
+	public static boolean SpawnRandomEncounters = true;
+	
 	public static AIScriptInterface ai;
+	
+	public static void setEncounterSpawningEnabled(boolean enable) {
+		ScriptInterface.SpawnRandomEncounters = enable;
+	}
 	
 	/**
 	 * Writes the current content of the messages box on the bottom right of the screen to a file

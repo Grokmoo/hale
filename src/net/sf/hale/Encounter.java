@@ -181,6 +181,52 @@ public class Encounter implements Referenceable, Saveable {
 		}
 	}
 	
+	private void spawnRandom() {
+		int numCreatures;
+		if (minRandomCreatures == maxRandomCreatures)
+			numCreatures = minRandomCreatures;
+		else
+			numCreatures = Game.dice.rand(minRandomCreatures, maxRandomCreatures);
+
+		int max = this.baseCreatures.size() - 1;
+		for (int index = 0; index < numCreatures; index++) {
+			Creature c = new Creature(this.baseCreatures.get(Game.dice.rand(0, max)));
+			c.setEncounter(this);
+			c.resetAll();
+			
+			// give up eventually if we can't find a spot
+			for (int count = 0; count < 100; count++) {
+				int r = Game.dice.rand(0, this.size);
+				int i = Game.dice.rand(0, r * 6);
+
+				Point p = AreaUtil.convertPolarToGrid(areaPosition, r, i);
+				
+				if (area.isPassable(p.x, p.y) && area.getCreatureAtGridPoint(p) == null &&
+					area.getDoorAtGridPoint(p) == null) {
+					c.setPosition(p.x, p.y);
+					area.getEntities().addEntity(c);
+					areaCreatures.add(c);
+					break;
+				}
+			}
+		}
+	}
+	
+	private void spawnFixed() {
+		for (Creature c : baseCreatures) {
+			int cx = areaPosition.x + c.getX();
+			int cy = areaPosition.y + c.getY();
+			
+			if (c.getX() % 2 != 0 && areaPosition.x % 2 != 0) cy += 1;
+
+			c.setPosition(cx, cy);
+			c.setEncounter(this);
+			c.resetAll();
+			area.getEntities().addEntity(c);
+			areaCreatures.add(c);
+		}
+	}
+	
 	private void spawnCreatures() {
 		for (Creature c : areaCreatures) {
 			area.getEntities().removeEntity(c);
@@ -190,53 +236,15 @@ public class Encounter implements Referenceable, Saveable {
 		this.lastSpawnRounds = Game.curCampaign.getDate().getTotalRoundsElapsed();
 		
 		if (this.randomize) {
-			int numCreatures;
-			if (minRandomCreatures == maxRandomCreatures)
-				numCreatures = minRandomCreatures;
-			else
-				numCreatures = Game.dice.rand(minRandomCreatures, maxRandomCreatures);
-
-			int max = this.baseCreatures.size() - 1;
-			for (int index = 0; index < numCreatures; index++) {
-				Creature c = new Creature(this.baseCreatures.get(Game.dice.rand(0, max)));
-				c.setEncounter(this);
-				c.resetAll();
-				
-				// give up eventually if we can't find a spot
-				for (int count = 0; count < 100; count++) {
-					int r = Game.dice.rand(0, this.size);
-					int i = Game.dice.rand(0, r * 6);
-
-					Point p = AreaUtil.convertPolarToGrid(areaPosition, r, i);
-					
-					if (area.isPassable(p.x, p.y) && area.getCreatureAtGridPoint(p) == null &&
-						area.getDoorAtGridPoint(p) == null) {
-						c.setPosition(p.x, p.y);
-						area.getEntities().addEntity(c);
-						areaCreatures.add(c);
-						break;
-					}
-				}
+			if (ScriptInterface.SpawnRandomEncounters) {
+				spawnRandom();
 			}
-			
 		} else {
-			for (Creature c : baseCreatures) {
-				int cx = areaPosition.x + c.getX();
-				int cy = areaPosition.y + c.getY();
-				
-				if (c.getX() % 2 != 0 && areaPosition.x % 2 != 0) cy += 1;
-
-				c.setPosition(cx, cy);
-				c.setEncounter(this);
-				c.resetAll();
-				area.getEntities().addEntity(c);
-				areaCreatures.add(c);
-			}
+			spawnFixed();
 		}
 		
 		this.canAwardXP = true;
 	}
-	
 	
 	public void checkForRespawn() {
 		if (this.area == null || !this.respawn) return;

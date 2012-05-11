@@ -99,9 +99,7 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityViewer
 		creature.removeViewer(this);
 	}
 	
-	private static String getTextAreaContent(Creature creature) {
-		StringBuilder sb = new StringBuilder();
-		
+	private static void appendDetails(Creature creature, StringBuilder sb) {
 		sb.append("<div style=\"font-family: vera;\">");
 		sb.append(creature.getGender()).append(' ');
 		sb.append("<span style=\"font-family: vera-blue;\">").append(creature.getRace().getName()).append("</span>");
@@ -137,8 +135,21 @@ public class CreatureDetailsWindow extends GameSubWindow implements EntityViewer
 			sb.append("<div style=\"margin-bottom: 1em; font-family: vera;\"><p>Off hand</p>");
 			sb.append("<div style=\"font-family: vera-italic-blue\">");
 			sb.append(offHand.getName()).append("</div></div>");
-
 		}
+		
+	}
+	
+	private static String getTextAreaContent(Creature creature) {
+		StringBuilder sb = new StringBuilder();
+		
+		if (creature.getRace().showDetailedDescription()) {
+			appendDetails(creature, sb);
+		} else {
+			sb.append("<div style=\"font-family: vera-blue;\">");
+			sb.append(creature.getRace().getName());
+			sb.append("</div>");
+		}
+		
 		
 		synchronized(creature.getEffects()) {
 			for (Effect effect : creature.getEffects()) {
