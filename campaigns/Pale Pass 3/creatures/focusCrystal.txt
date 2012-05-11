@@ -5,11 +5,14 @@ icon "creatures/crystal" "#ffffffff"
 gender "Male"
 race "Object"
 unspentSkillPoints 0
+xp 63300
 role "MonsterStrong" 20
 attributes 1 10 20 1 1 1
-level 1 addAbility "FireImmunity50"
+script "ai/focusCrystal"
 level 1 addAbility "SlashingImmunity50"
 level 1 addAbility "PiercingImmunity50"
 level 1 addAbility "DamageReduction5"
 level 1 addAbility "ElectricalImmunity100"
+level 1 addAbility "FireImmunity50"
+level 1 addAbility "CriticalHitImmunity"
 

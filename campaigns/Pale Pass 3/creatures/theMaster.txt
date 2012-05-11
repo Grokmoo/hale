@@ -1,0 +1,51 @@
+playerCharacter false
+
+name "The Master"
+icon "creatures/theMaster" "#ffffffff"
+portrait "Monster/shadow"
+
+gender "Male"
+race "Demon"
+unspentSkillPoints 0
+xp 139100
+role "Priest" 25
+attributes 16 16 24 22 13 15
+script "ai/theMaster"
+conversation "conversations/theMaster"
+addSkillRanks "Search" 100
+level 1 addAbility "Shield"
+level 1 addAbility "ElementalShield"
+level 1 addAbility "ProficientCasting"
+level 1 addAbility "FastSpellRecovery1"
+level 1 addAbility "MeleeCasting"
+level 1 addAbility "IcicleStab"
+level 1 addAbility "Shock"
+level 1 addAbility "LightningBolt"
+level 1 addAbility "FlamingFingers"
+level 1 addAbility "Firebolt"
+level 1 addAbility "Fireball"
+level 1 addAbility "Meteor"
+level 1 addAbility "Enfeeble"
+level 1 addAbility "MassParalyze"
+level 1 addAbility "Curse"
+level 1 addAbility "Sleep"
+level 1 addAbility "MassCurse"
+level 1 addAbility "Paralyze"
+level 1 addAbility "Slow"
+level 1 addAbility "ProficiencyLargeSwords"
+level 1 addAbility "Chameleon"
+level 1 addAbility "Haste"
+level 1 addAbility "MassChameleon"
+level 1 addAbility "DamageReduction10"
+level 1 addAbility "SpellResistance30"
+level 1 addAbility "MonstrousRegeneration"
+level 1 addAbility "Cure"
+level 1 addAbility "MassRegeneration"
+level 1 addAbility "Regeneration"
+level 1 addAbility "MassCure"
+
+equip "greatsword" Good
+equip "armor_plateheavy_base" Masterwork
+equip "gloves_plate_base" Masterwork
+equip "helmet_plate_base" Masterwork
+equip "boots_plate_base" Masterwork
