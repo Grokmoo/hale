@@ -5,19 +5,20 @@ icon "creatures/demon02" "#ffffffff"
 gender "Male"
 race "Demon"
 unspentSkillPoints 0
+xp 74700
 role "Warrior" 21
-attributes 18 15 19 10 10 10
+attributes 16 15 19 10 10 10
 script "ai/aiStandard"
 addSkillRanks "Search" 80
-level 1 addAbility "Flurry"
 level 1 addAbility "DualStrike"
+level 1 addAbility "Flurry"
 level 1 addAbility "DualWieldingMastery"
-level 1 addAbility "DualWieldingDefense"
 level 1 addAbility "ExpertDualWielding"
 level 1 addAbility "DualWielding"
+level 1 addAbility "DualWieldingDefense"
 level 1 addAbility "NaturalArmor30"
 level 1 addAbility "SpellResistance30"
 
 currencyReward 200 320
-equip "unarmedClaw" Superb
-equipoffhand "unarmedClaw" Superb
+equip "unarmedClaw" Good
+equipoffhand "unarmedClaw" Good

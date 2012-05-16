@@ -295,8 +295,11 @@ public class ScriptConsole extends GameSubWindow {
 			if (evt.getType() == Event.Type.MOUSE_CLICKED)
 				return false;
 			
-			if (evt.getKeyCode() == Event.KEY_GRAVE)
-				return true;
+			if (evt.getType() == Event.Type.KEY_PRESSED) {
+				if (Game.mainViewer.getKeyBindings().checkToggleScriptConsole(evt.getKeyCode())) {
+					return true;
+				}
+			}
 			
 			boolean returnValue = super.handleEvent(evt);
 			
