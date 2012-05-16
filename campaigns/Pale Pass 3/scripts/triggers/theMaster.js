@@ -10,5 +10,5 @@ function onPlayerEnterFirstTime(game, player, trigger) {
     game.lockInterface(3.0);
     game.runExternalScriptWait("triggers/theMaster", "startConvo", 1.0, player);
     
-    game.revealArea(37, 7, 5, 0);
+    game.revealArea(37, 7, 6, 0);
 }
