@@ -28,6 +28,7 @@ import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.rules.CombatRunner;
+import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
 /**
@@ -318,7 +319,11 @@ public class MovementHandler {
 		}
 		
 		private void animateMovement(Point dest) {
-			EntityMovementAnimation animation = new EntityMovementAnimation(creature, dest);
+			Point curScreen = AreaUtil.convertGridToScreen(creature.getPosition());
+			Point destScreen = AreaUtil.convertGridToScreen(dest);
+			
+			EntityMovementAnimation animation = new EntityMovementAnimation(creature,
+					destScreen.x - curScreen.x, destScreen.y - curScreen.y, 0, 0);
 			creature.addOffsetAnimation(animation);
 			Game.particleManager.addEntityOffsetAnimation(animation);
 		}
@@ -405,7 +410,10 @@ public class MovementHandler {
 			// allow player to move all the way back to their initial position
 			path.add(initialPosition);
 			
-			// TODO smoothly animate moving to an empty tile
+			// save the initial screen position
+			Point initialScreen = creature.getScreenPosition();
+			int initialX = initialScreen.x + creature.getAnimatingOffsetPoint().x;
+			int initialY = initialScreen.y + creature.getAnimatingOffsetPoint().y;
 			
 			for (int index = lastIndex; index < path.size(); index++) {
 				Point p = path.get(index);
@@ -435,9 +443,25 @@ public class MovementHandler {
 						creature.setVisibility(false);
 					}
 					
-					return;
+					break;
 				}
 			}
+			
+			// figure out the animation to smoothly move the player to the new point
+			Point newScreen = creature.getScreenPosition();
+			
+			int deltaX = initialX - newScreen.x;
+			int deltaY = initialY - newScreen.y;
+			
+			EntityMovementAnimation animation = new EntityMovementAnimation(creature,
+					-deltaX, -deltaY, deltaX, deltaY);
+			creature.addOffsetAnimation(animation);
+			Game.particleManager.addEntityOffsetAnimation(animation);
+			
+			// set the initial animating offset so that if the frame is drawn
+			// before the animation starts, there is no "jump"
+			creature.getAnimatingOffsetPoint().x = deltaX;
+			creature.getAnimatingOffsetPoint().y = deltaY;
 		}
 	}
 }

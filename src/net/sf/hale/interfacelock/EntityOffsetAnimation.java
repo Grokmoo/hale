@@ -68,8 +68,7 @@ public abstract class EntityOffsetAnimation {
 	}
 	
 	/**
-	 * Immediately ends this animation.  This EntityOffsetAnimation will not
-	 * modify the entityOffset after this method call.
+	 * Ends this animation.  The animation may take some time to perform some "cleanup"
 	 */
 	
 	public void cancel() {

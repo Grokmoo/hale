@@ -21,8 +21,6 @@ package net.sf.hale.interfacelock;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Entity;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
 
 /**
  * An EntityOffsetAnimation that moves an entity from one tile to an
@@ -33,34 +31,39 @@ import net.sf.hale.util.Point;
 
 public class EntityMovementAnimation extends EntityOffsetAnimation {
 	private Entity mover;
-	private int initialX, initialY;
+	private int initialGridX, initialGridY;
 	
 	private float duration;
 	private float elapsed;
 	private float xPerSecond, yPerSecond;
 	
+	private int xOffset, yOffset;
+	
 	/**
 	 * Create a new Animation moving the specified entity to the destination point
 	 * over Game.config.getCombatDelay() milliseconds
 	 * @param mover the entity being moved
-	 * @param destination the destination grid point
+	 * @param deltaX the change in the amount of x screen coordinates
+	 * @param deltaY the change in the amount of y screen coordinates
+	 * @param xOffset the base x value
+	 * @param yOffset the base y value
 	 */
 	
-	public EntityMovementAnimation(Entity mover, Point destination) {
+	public EntityMovementAnimation(Entity mover, int deltaX, int deltaY, int xOffset, int yOffset) {
 		super(mover.getAnimatingOffsetPoint());
 		
 		this.mover = mover;
-		this.initialX = mover.getX();
-		this.initialY = mover.getY();
+		this.initialGridX = mover.getX();
+		this.initialGridY = mover.getY();
 		
-		Point curScreen = AreaUtil.convertGridToScreen(mover.getPosition());
-		Point destScreen = AreaUtil.convertGridToScreen(destination);
+		this.xOffset = xOffset;
+		this.yOffset = yOffset;
 		
 		duration = Game.config.getCombatDelay() / 1000.0f;
 		elapsed = 0.0f;
 		
-		xPerSecond = (destScreen.x - curScreen.x) / duration;
-		yPerSecond = (destScreen.y - curScreen.y) / duration;
+		xPerSecond = deltaX / duration;
+		yPerSecond = deltaY / duration;
 		
 		duration += 0.025f;
 	}
@@ -68,11 +71,11 @@ public class EntityMovementAnimation extends EntityOffsetAnimation {
 	@Override protected boolean runAnimation(float seconds) {
 		elapsed += seconds;
 		
-		if (elapsed > duration || initialX != mover.getX() || initialY != mover.getY()) {
+		if (elapsed > duration || elapsed < 0.0 || initialGridX != mover.getX() || initialGridY != mover.getY()) {
 			resetOffset();
 			return true;
 		} else {
-			setOffset(xPerSecond * elapsed, yPerSecond * elapsed);
+			setOffset(xOffset + xPerSecond * elapsed, yOffset + yPerSecond * elapsed);
 			return false;
 		}
 	}
