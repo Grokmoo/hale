@@ -100,10 +100,8 @@ public class QuickbarPopup extends PopupWindow {
 		
 		@Override protected boolean handleEvent(Event evt) {
 			if (evt.getType() == Event.Type.KEY_PRESSED) {
-				switch (evt.getKeyCode()) {
-				case Event.KEY_Q:
+				if (Game.mainViewer.getKeyBindings().isCloseQuickbarPopupKey(evt.getKeyCode())) {
 					QuickbarPopup.this.closePopup();
-					break;
 				}
 			}
 			

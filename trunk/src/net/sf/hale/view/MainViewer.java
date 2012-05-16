@@ -26,6 +26,7 @@ import java.util.List;
 
 import net.sf.hale.AreaListener;
 import net.sf.hale.Game;
+import net.sf.hale.Keybindings;
 import net.sf.hale.QuestEntry;
 import net.sf.hale.ScriptInterface;
 import net.sf.hale.entity.Creature;
@@ -33,7 +34,6 @@ import net.sf.hale.entity.Entity;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
 import net.sf.hale.mainmenu.ConfirmQuitPopup;
-import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.mainmenu.MainMenuAction;
 import net.sf.hale.quickbar.QuickbarViewer;
 import net.sf.hale.resource.SpriteManager;
@@ -84,14 +84,13 @@ public class MainViewer extends DesktopArea {
 	public final ContainerWindow containerWindow;
 	public final MerchantWindow merchantWindow;
 	public final CraftingWindow craftingWindow;
+	public final ScriptConsole scriptConsole;
 	
 	private final MessageBox messageBox;
 	private final QuickbarViewer quickbarViewer;
 	private final PortraitArea portraitArea;
 	private final InitiativeTicker ticker;
 	private final MainPane mainPane;
-	
-	private final ScriptConsole scriptConsole;
 	
 	private final RightClickMenu menu;
 	private final EntityMouseover mouseOver;
@@ -102,7 +101,11 @@ public class MainViewer extends DesktopArea {
 	private final List<OverHeadFadeAway> fadeAways;
 	private final List<OverHeadFadeAway> fadeAwaysToAdd;
 	
+	private Keybindings keyBindings;
+	
 	private MainMenuAction action;
+	
+	public int mouseX, mouseY;
 	
 	public MainViewer() {
 		Game.mainViewer = this;
@@ -160,6 +163,9 @@ public class MainViewer extends DesktopArea {
         targeterDescriptionModel = new HTMLTextAreaModel();
         targeterDescription = new TextAreaNoInput(targeterDescriptionModel);
         targeterDescription.setTheme("targeterdescription");
+        
+        // create the default key bindings
+        keyBindings = new Keybindings();
 	}
 	
 	private void addWidgets() {
@@ -522,6 +528,10 @@ public class MainViewer extends DesktopArea {
 		return messageBox.getContents();
 	}
 	
+	public Keybindings getKeyBindings() {
+		return keyBindings;
+	}
+	
 	public void quickSave() {
 		Game.mainViewer.updateInterface();
 		
@@ -543,72 +553,13 @@ public class MainViewer extends DesktopArea {
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
+		mouseX = evt.getMouseX();
+		mouseY = evt.getMouseY();
+		
 		if (evt.getType() == Event.Type.KEY_PRESSED) {
 			if (!scriptConsole.hasKeyboardFocus()) {
-				switch (evt.getKeyCode()) {
-				case Event.KEY_C:
-					characterWindow.setVisible(!characterWindow.isVisible());
-					break;
-				case Event.KEY_I:
-					inventoryWindow.setVisible(!inventoryWindow.isVisible());
-					break;
-				case Event.KEY_L:
-					logWindow.setVisible(!logWindow.isVisible());
-					break;
-				case Event.KEY_M:
-					miniMapWindow.setVisible(!miniMapWindow.isVisible());
-					break;
-				case Event.KEY_Q:
-					quickbarViewer.showQuickbarPopup();
-					break;
-				case Event.KEY_X:
-					mainPane.cancelAllOrders();
-					break;
-				case Event.KEY_ESCAPE:
-					InGameMenu menu = new InGameMenu(Game.mainViewer);
-					menu.openPopupCentered();
-					break;
-				case Event.KEY_SPACE:
-					if (mainPane.isEndTurnEnabled()) Game.areaListener.nextTurn();
-					break;
-				case Event.KEY_F5:
-					quickSave();
-					break;
-				case Event.KEY_1:
-					quickbarViewer.getButtonAtViewIndex(0).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_2:
-					quickbarViewer.getButtonAtViewIndex(1).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_3:
-					quickbarViewer.getButtonAtViewIndex(2).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_4:
-					quickbarViewer.getButtonAtViewIndex(3).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_5:
-					quickbarViewer.getButtonAtViewIndex(4).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_6:
-					quickbarViewer.getButtonAtViewIndex(5).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_7:
-					quickbarViewer.getButtonAtViewIndex(6).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_8:
-					quickbarViewer.getButtonAtViewIndex(7).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_9:
-					quickbarViewer.getButtonAtViewIndex(8).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				case Event.KEY_0:
-					quickbarViewer.getButtonAtViewIndex(9).activateSlot(evt.getMouseX() - 2, evt.getMouseY() - 25);
-					break;
-				}
-			}
-			
-			if (evt.getKeyCode() == Event.KEY_GRAVE) {
-				scriptConsole.setVisible(!scriptConsole.isVisible());
+				keyBindings.fireKeyEvent(evt.getKeyCode());
+				return true;
 			}
 		}
 		
