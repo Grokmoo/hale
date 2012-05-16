@@ -157,7 +157,10 @@ public class ParticleManager {
 	}
 	
 	public void add(Animated animated) {
-		animationsToAdd.add(animated);
+		synchronized(animationsToAdd) {
+			animationsToAdd.add(animated);
+		}
+		
 		animated.initialize();
 	}
 	
@@ -195,21 +198,23 @@ public class ParticleManager {
 			}
 		}
 		
-		for (Animated animation : animationsToAdd) {
-			animation.cacheSprite();
-			
-			if (animation.isDrawable()) {
-				switch (animation.getDrawingMode()) {
-				case BelowEntities:
-					activeBelowAnimations.add(animation);
-					break;
-				case AboveEntities:
-					activeAboveAnimations.add(animation);
-					break;
+		synchronized(animationsToAdd) {
+			for (Animated animation : animationsToAdd) {
+				animation.cacheSprite();
+
+				if (animation.isDrawable()) {
+					switch (animation.getDrawingMode()) {
+					case BelowEntities:
+						activeBelowAnimations.add(animation);
+						break;
+					case AboveEntities:
+						activeAboveAnimations.add(animation);
+						break;
+					}
 				}
 			}
+			animationsToAdd.clear();
 		}
-		animationsToAdd.clear();
 		
 		lastTime = curTime;
 	}

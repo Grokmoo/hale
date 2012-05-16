@@ -4,6 +4,10 @@ function onRoundElapsed(game, effect) {
 	// don't heal if target is at full health
 	if (effect.getTarget().stats().getMaxHP() == effect.getTarget().getCurrentHP())
 		return;
+		
+	// don't attempt heal if target is dead
+	if (effect.getTarget().isDead())
+		return;
 	
 	effect.getTarget().healDamage(damage);
 }

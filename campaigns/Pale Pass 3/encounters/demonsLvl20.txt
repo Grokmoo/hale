@@ -15,4 +15,3 @@ creature "demonGreen" -1 -2
 creature "demonRed" 1 -2
 creature "demonEye" 0 -1
 creature "demonSlayer" -2 0
-creature "demonSlayer" 2 0
