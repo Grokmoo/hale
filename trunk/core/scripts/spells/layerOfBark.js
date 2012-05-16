@@ -12,7 +12,7 @@ function onTargetSelect(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	var casterLevel = parent.getCasterLevel();
 	
-	var duration = parseInt(3 + casterLevel / 3);
+	var duration = parseInt(1 + casterLevel / 4);
 	
 	// cast the spell
 	targeter.getSlot().setActiveRoundsLeft(duration);

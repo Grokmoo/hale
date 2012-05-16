@@ -12,5 +12,5 @@ door true
 doorTransparent "false"
 openicon "doors/rural_gate-sw-open"
 lock 0
-key "narkelLvl1_door1"
+key "narkelLvl1_doorKey"
 keyRequired true

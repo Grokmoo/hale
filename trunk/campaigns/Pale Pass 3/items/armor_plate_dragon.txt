@@ -1,6 +1,6 @@
 name "Dragon Armor"
 icon "items/A_Armor05" "#ffffffff"
-subIcon "subIcons/armor-01" "#fff4bf8e"
+subIcon "subIcons/armor-01" "#ffff6a2d"
 forceNoQuality true
 ingredient false
 quest false

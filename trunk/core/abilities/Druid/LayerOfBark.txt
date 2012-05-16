@@ -1,6 +1,6 @@
 name "Layer of Bark"
 type "Druid Abilities"
-description "The caster touches a single target.  That target becomes enveloped in magically enchanced bark.  The bark absorbs 75% of all Physical damage on the target for 3 rounds plus one round per 3 caster levels.  However, the target also suffers a 25% increased vulnerability to fire."
+description "The caster touches a single target.  That target becomes enveloped in magically enchanced bark.  The bark absorbs 75% of all Physical damage on the target for 1 round plus one round per 4 caster levels.  However, the target also suffers a 25% increased vulnerability to fire."
 activateable true
 fixed true
 cooldown 11
