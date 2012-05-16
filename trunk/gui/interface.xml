@@ -161,6 +161,11 @@
 			<param name="overlay"><image>singlemovementicon</image></param>
 			<param name="tooltip"><string>Single Character Movement Mode</string></param>
 		</theme>
+		
+		<theme name="stopbutton" ref="mainpanebutton">
+			<param name="overlay"><image>stopicon</image></param>
+			<param name="tooltip"><string>[X] Cancel all orders</string></param>
+		</theme>
     </theme>
 	
 	<theme name="quickbarslotbutton" ref="iconbutton">

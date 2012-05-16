@@ -561,6 +561,9 @@ public class MainViewer extends DesktopArea {
 				case Event.KEY_Q:
 					quickbarViewer.showQuickbarPopup();
 					break;
+				case Event.KEY_X:
+					mainPane.cancelAllOrders();
+					break;
 				case Event.KEY_ESCAPE:
 					InGameMenu menu = new InGameMenu(Game.mainViewer);
 					menu.openPopupCentered();

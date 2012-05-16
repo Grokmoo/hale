@@ -47,6 +47,8 @@ public class MainPane extends Widget {
 	
 	private final ToggleButton partyMovement, singleMovement;
 	
+	private final Button stop;
+	
 	private int buttonGap;
 	private int rowGap;
 	
@@ -116,6 +118,23 @@ public class MainPane extends Widget {
 		});
 		singleMovement.setTheme("singlemovementbutton");
 		add(singleMovement);
+		
+		stop = new Button();
+		stop.setTheme("stopbutton");
+		stop.addCallback(new Runnable() {
+			@Override public void run() {
+				cancelAllOrders();
+			}
+		});
+		add(stop);
+	}
+	
+	/**
+	 * Cancels all currently pending movement orders.  Used by the "stop" button
+	 */
+	
+	public void cancelAllOrders() {
+		Game.interfaceLocker.interruptMovement();
 	}
 	
 	private void setMovementMode() {
@@ -157,9 +176,11 @@ public class MainPane extends Widget {
 		
 		partyMovement.setSize(partyMovement.getPreferredWidth(), partyMovement.getPreferredHeight());
 		singleMovement.setSize(singleMovement.getPreferredWidth(), singleMovement.getPreferredHeight());
+		stop.setSize(stop.getPreferredWidth(), stop.getPreferredHeight());
 		
 		partyMovement.setPosition(windowButtons[4].getX(), windowButtons[4].getBottom() + rowGap);
 		singleMovement.setPosition(partyMovement.getRight() + buttonGap, partyMovement.getY());
+		stop.setPosition(windowButtons[0].getX(), partyMovement.getY());
 		
 		endTurn.setSize(endTurn.getPreferredWidth(), endTurn.getPreferredHeight());
 		

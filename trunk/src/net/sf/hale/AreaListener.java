@@ -53,7 +53,6 @@ public class AreaListener {
 	private final Point mouseDragStart = new Point(false);
 	
 	private boolean mouseClickedWithoutDragging = true;
-	private boolean ignoreNextButtonUp = false;
 	
 	private TargeterManager targeterManager;
 	
@@ -179,11 +178,7 @@ public class AreaListener {
 		case MOUSE_BTNDOWN:
 			mouseClickedWithoutDragging = true;
 			
-			if (isPartyMoving()) {
-				// cancel movement
-				Game.interfaceLocker.interruptMovement();
-				ignoreNextButtonUp = true;
-			} else if (evt.getMouseButton() == Event.MOUSE_RBUTTON) {
+			if (!isPartyMoving() && evt.getMouseButton() == Event.MOUSE_RBUTTON) {
 				if (targeterManager.isInTargetMode()) {
 					targeterManager.getCurrentTargeter().showMenu(evt.getMouseX() - 2, evt.getMouseY() - 25);
 				} else if (Game.interfaceLocker.locked()) {
@@ -195,11 +190,6 @@ public class AreaListener {
 			}
 			break;
 		case MOUSE_BTNUP:
-			if (ignoreNextButtonUp) {
-				ignoreNextButtonUp = false;
-				break;
-			}
-			
 			if (evt.getMouseButton() != Event.MOUSE_LBUTTON) break; 
 
 			if (mouseDragStart.valid) {

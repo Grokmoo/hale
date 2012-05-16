@@ -250,9 +250,6 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 	public void cancelOffsetAnimation() {
 		if (curOffsetAnimation != null)
 			curOffsetAnimation.cancel();
-		
-		animatingOffset.x = 0;
-		animatingOffset.y = 0;
 	}
 	
 	public void addOffsetAnimation(EntityOffsetAnimation animation) {
