@@ -192,8 +192,11 @@ public class AreaListener {
 		case MOUSE_BTNUP:
 			if (evt.getMouseButton() != Event.MOUSE_LBUTTON) break; 
 
+			
 			if (mouseDragStart.valid) {
 				mouseDragStart.valid = false;
+			} else if (isPartyMoving() && mouseClickedWithoutDragging) {
+				Game.mainViewer.getMainPane().cancelAllOrders();
 			} else if (targeterManager.isInTargetMode() && mouseClickedWithoutDragging) {
 				targeterManager.getCurrentTargeter().performLeftClickAction();
 			} else if (curMouseCondition != null && mouseClickedWithoutDragging) {
