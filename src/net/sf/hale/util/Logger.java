@@ -46,7 +46,7 @@ public class Logger {
 	 */
 	
 	public static void appendToWarningLog(String context) {
-		if (Game.config.isWarningModeEnabled()) {
+		if (Game.config == null || Game.config.isWarningModeEnabled()) {
 			System.out.println(context);
 		}
 		
@@ -65,7 +65,7 @@ public class Logger {
 	 */
 	
 	public static void appendToErrorLog(String context) {
-		if (Game.config.isDebugModeEnabled()) {
+		if (Game.config == null || Game.config.isDebugModeEnabled()) {
 			System.err.println(context);
 		}
 		
@@ -91,7 +91,7 @@ public class Logger {
 	 */
 	
 	public static void appendToErrorLog(String context, Throwable exception) {
-		if (Game.config.isDebugModeEnabled()) {
+		if (Game.config == null || Game.config.isDebugModeEnabled()) {
 			System.err.println(context);
 			exception.printStackTrace();
 		}

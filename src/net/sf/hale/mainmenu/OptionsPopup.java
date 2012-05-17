@@ -22,6 +22,9 @@ package net.sf.hale.mainmenu;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import org.lwjgl.opengl.DisplayMode;
 
@@ -31,6 +34,7 @@ import net.sf.hale.util.Logger;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ComboBox;
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ToggleButton;
@@ -75,33 +79,63 @@ public class OptionsPopup extends PopupWindow {
 	
 	private void writeConfigToFile(int resX, int resY, int edResX, int edResY,
 			boolean fullscreen, int tooltipDelay, int combatDelay) {
-		File fout = new File("config.txt");
+		File fout = new File("config.json");
 		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(fout));
 			
-			out.write("ResolutionX " + resX); out.newLine();
-			out.write("ResolutionY " + resY); out.newLine();
-			out.write("Fullscreen " + fullscreen); out.newLine();
-			out.write("EditorResolutionX " + edResX); out.newLine();
-			out.write("EditorResolutionY " + edResY); out.newLine();
-			out.write("ShowFPS " + Game.config.showFPS()); out.newLine();
-			out.write("CapFPS " + Game.config.capFPS()); out.newLine();
-			out.write("TooltipDelay " + tooltipDelay); out.newLine();
-			out.write("CombatDelay " + combatDelay); out.newLine();
-			out.write("ScriptConsoleEnabled " + Game.config.isScriptConsoleEnabled()); out.newLine();
-			out.write("DebugMode " + Game.config.isDebugModeEnabled()); out.newLine();
+			out.write("{"); out.newLine();
 			
+			writeSimpleKey(out, "Resolution", "[ " + resX + ", " + resY + " ]", 1);
+			writeSimpleKey(out, "Fullscreen", Boolean.toString(fullscreen), 1);
+			writeSimpleKey(out, "EditorResolution", "[ " + edResX + ", " + edResY + " ]", 1);
+			writeSimpleKey(out, "ShowFPS", Boolean.toString(Game.config.showFPS()), 1);
+			writeSimpleKey(out, "CapFPS", Boolean.toString(Game.config.capFPS()), 1);
+			writeSimpleKey(out, "TooltipDelay", Integer.toString(tooltipDelay), 1);
+			writeSimpleKey(out, "CombatDelay", Integer.toString(combatDelay), 1);
+			writeSimpleKey(out, "ScriptConsoleEnabled", Boolean.toString(Game.config.isScriptConsoleEnabled()), 1);
+			writeSimpleKey(out, "DebugMode", Boolean.toString(Game.config.isDebugModeEnabled()), 1);
+			writeSimpleKey(out, "WarningMode", Boolean.toString(Game.config.isWarningModeEnabled()), 1);
+			writeSimpleKey(out, "CheckForUpdatesInterval", Long.toString(Game.config.getCheckForUpdatesInterval()), 1);
 			if (Game.config.randSeedSet()) {
-				out.write("RandSeed " + Game.config.getRandSeed()); out.newLine();
-			} else {
-				out.write("# RandSeed 1"); out.newLine();
+				writeSimpleKey(out, "RandSeed", Long.toString(Game.config.getRandSeed()), 1);
 			}
+			
+			out.write("  \"Keybindings\" : {"); out.newLine();
+			
+			// get the list of all keyboard actions, sorted alphabetically
+			List<String> keyNames = Game.config.getKeyActionNames();
+			Collections.sort(keyNames);
+			
+			// write the keyboard bindings
+			for (String key : keyNames) {
+				int keyCode = Game.config.getKeyForAction(key);
+				String keyName = Event.getKeyNameForCode(keyCode);
+				
+				writeSimpleKey(out, key, "\"" + keyName + "\"", 2);
+			}
+			
+			out.write("  }"); out.newLine();
+			
+			out.write("}"); out.newLine();
 			
 			out.close();
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error writing config file.", e);
 		}
+	}
+	
+	private void writeSimpleKey(BufferedWriter out, String key, String value, int indent) throws IOException {
+		for (int i = 0; i < indent; i++) {
+			out.write("  ");
+		}
+		
+		out.write("\"");
+		out.write(key);
+		out.write("\" : ");
+		out.write(value);
+		out.write(",");
+		out.newLine();
 	}
 	
 	private class Content extends DialogLayout {

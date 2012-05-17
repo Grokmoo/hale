@@ -22,6 +22,7 @@ package net.sf.hale.quickbar;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Game;
+import net.sf.hale.Keybindings;
 import net.sf.hale.Sprite;
 import net.sf.hale.view.DragTarget;
 import net.sf.hale.view.DropTarget;
@@ -79,7 +80,12 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		this.viewer = viewer;
 		this.index = index;
 		
-		indexLabel = new Label(Integer.toString((index + 1) % Quickbar.SlotsAtOnce));
+		// key the keyboard mapping character
+		int slotKeyboardMapping = index % Quickbar.SlotsAtOnce;
+		int keyCode = Game.config.getKeyForAction(Keybindings.UseQuickbarSlot + Integer.toString(slotKeyboardMapping));
+		String keyChar = Event.getKeyNameForCode(keyCode);
+		
+		indexLabel = new Label(keyChar);
 		indexLabel.setTheme("indexlabel");
 		this.add(indexLabel);
 		

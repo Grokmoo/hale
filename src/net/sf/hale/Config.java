@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -32,12 +35,16 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 
-import net.sf.hale.util.FileKeyMap;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
 /**
  * The class containing global configuration variables, such as screen resolution
@@ -76,6 +83,8 @@ public class Config {
 	private final long checkForUpdatesInterval;
 	
 	private final String versionID;
+	
+	private final Map<String, Integer> keyBindingActions; 
 	
 	/**
 	 * Returns the amount of time the game should wait between checking for updates
@@ -202,55 +211,106 @@ public class Config {
 	public String getVersionID() { return versionID; }
 	
 	/**
-	 * Creates a new Config from the config.txt file
+	 * Returns the integer keyboard code associated with the given action
+	 * @param actionName
+	 * @return the integer key code
+	 */
+	
+	public int getKeyForAction(String actionName) {
+		Integer key = keyBindingActions.get(actionName);
+		
+		if (key == null)
+			throw new IllegalArgumentException("Keyboard Action " + actionName + " not found");
+		else
+			return key.intValue();
+	}
+	
+	/**
+	 * Returns the list of all keyboard action names in this config.  The list is
+	 * not sorted
+	 * @return the list of keyboard action names
+	 */
+	
+	public List<String> getKeyActionNames() {
+		List<String> names = new ArrayList<String>();
+		
+		for (String key : keyBindingActions.keySet()) {
+			names.add(key);
+		}
+		
+		return names;
+	}
+	
+	/**
+	 * Creates a new Config from the config.json file
 	 */
 	
 	public Config() {
-		File configFile = new File("config.txt");
-		
-		// create the config file if it does not already exist
-		if (!configFile.isFile()) {
-			createConfigFile();
-		}
-		
-		FileKeyMap map = new FileKeyMap(configFile);
-		
-		resolutionX = map.getValue("resolutionx", 800);
-		resolutionY = map.getValue("resolutiony", 600);
-		fullscreen = map.getValue("fullscreen", false);
-		showFPS = map.getValue("showfps", false);
-		capFPS = map.getValue("capfps", true);
-		editorResolutionX = map.getValue("editorresolutionx", 800);
-		editorResolutionY = map.getValue("editorresolutiony", 600);
-		scriptConsoleEnabled = map.getValue("scriptconsoleenabled", false);
-		debugMode = map.getValue("debugmode", false);
-		warningMode = map.getValue("warningmode", false);
-		toolTipDelay = map.getValue("tooltipdelay", 400);
-		combatDelay = map.getValue("combatdelay", 150);
-		checkForUpdatesInterval = map.getValue("checkforupdatesinterval", 31536000000l);
-		
-		if (map.has("randseed")) {
-			randSeedSet = true;
-			randSeed = map.getValue("randseed", 0l);
-		} else {
-			randSeedSet = false;
-			randSeed = 0l;
-		}
-		
+		// determine system type
 		String osString = System.getProperty("os.name").toLowerCase();
 		
 		if (osString.contains("win")) osType = OSType.Windows;
 		else if (osString.contains("mac")) osType = OSType.Mac;
 		else osType = OSType.Unix;
 		
-		map.checkUnusedKeys();
-		
 		versionID = FileUtil.getHalfMD5Sum(new File("hale.jar"));
+		
+		
+		File configFile = new File("config.json");
+		
+		// create the config file if it does not already exist
+		if (!configFile.isFile()) {
+			createConfigFile();
+		}
+		
+		SimpleJSONParser parser = new SimpleJSONParser(configFile);
+		
+		SimpleJSONArray resArray = parser.getArray("Resolution");
+		Iterator<SimpleJSONArrayEntry> iter = resArray.iterator();
+		
+		resolutionX = iter.next().getInt(800);
+		resolutionY = iter.next().getInt(600);
+		
+		fullscreen = parser.get("Fullscreen", false);
+		
+		SimpleJSONArray edResArray = parser.getArray("EditorResolution");
+		iter = edResArray.iterator();
+		
+		editorResolutionX = iter.next().getInt(800);
+		editorResolutionY = iter.next().getInt(600);
+		
+		showFPS = parser.get("ShowFPS", false);
+		capFPS = parser.get("CapFPS", false);
+		toolTipDelay = parser.get("TooltipDelay", 400);
+		combatDelay = parser.get("CombatDelay", 150);
+		scriptConsoleEnabled = parser.get("ScriptConsoleEnabled", false);
+		debugMode = parser.get("DebugMode", false);
+		warningMode = parser.get("WarningMode", false);
+		checkForUpdatesInterval = parser.get("CheckForUpdatesInterval", 86400000);
+		
+		if (parser.containsKey("RandomSeed")) {
+			randSeedSet = true;
+			randSeed = parser.get("RandomSeed", 0);
+		} else {
+			randSeedSet = false;
+			randSeed = 0l;
+		}
+		
+		keyBindingActions = new HashMap<String, Integer>();
+		
+		SimpleJSONObject bindingsObject = parser.getObject("Keybindings");
+		for (String bindingName : bindingsObject.keySet()) {
+			String keyboardKey = bindingsObject.get(bindingName, null);
+			
+			keyBindingActions.put(bindingName, Event.getKeyCodeForName(keyboardKey));
+		}
+		
+		parser.warnOnUnusedKeys();
 	}
 	
 	private void createConfigFile() {
 		try {
-			FileUtil.copyFile(new File("docs/defaultConfig.txt"), new File("config.txt"));
+			FileUtil.copyFile(new File("docs/defaultConfig.json"), new File("config.json"));
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error creating configuration file.", e);
 		}
