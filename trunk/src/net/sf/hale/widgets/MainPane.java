@@ -20,12 +20,12 @@
 package net.sf.hale.widgets;
 
 import net.sf.hale.Game;
+import net.sf.hale.Keybindings;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.interfacelock.MovementHandler;
-import net.sf.hale.mainmenu.InGameMenu;
-import net.sf.hale.view.GameSubWindow;
 
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
@@ -41,13 +41,13 @@ import de.matthiasmann.twl.renderer.AnimationState.StateKey;
 public class MainPane extends Widget {
 	public static final StateKey STATE_NOTIFICATION = StateKey.get("notification");
 	
-	private final Button endTurn;
+	private final HotKeyButton endTurn;
 	
-	private final Button[] windowButtons;
+	private final HotKeyButton[] windowButtons;
 	
 	private final ToggleButton partyMovement, singleMovement;
 	
-	private final Button stop;
+	private final HotKeyButton stop;
 	
 	private int buttonGap;
 	private int rowGap;
@@ -59,34 +59,34 @@ public class MainPane extends Widget {
 	public MainPane() {
 		this.setTheme("mainpane");
 		
-		windowButtons = new Button[5];
+		windowButtons = new HotKeyButton[5];
 		
-		windowButtons[0] = new Button();
+		windowButtons[0] = new HotKeyButton();
 		windowButtons[0].setTheme("menubutton");
-		windowButtons[0].addCallback(new OpenMenuCallback());
+		windowButtons[0].addHotKeyBinding(new Keybindings.ShowMenu());
 		
-		windowButtons[1] = new Button();
+		windowButtons[1] = new HotKeyButton();
 		windowButtons[1].setTheme("characterbutton");
-		windowButtons[1].addCallback(new ToggleWindowCallback(Game.mainViewer.characterWindow));
+		windowButtons[1].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
 		
-		windowButtons[2] = new Button();
+		windowButtons[2] = new HotKeyButton();
 		windowButtons[2].setTheme("inventorybutton");
-		windowButtons[2].addCallback(new ToggleWindowCallback(Game.mainViewer.inventoryWindow));
+		windowButtons[2].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		
-		windowButtons[3] = new Button();
+		windowButtons[3] = new HotKeyButton();
 		windowButtons[3].setTheme("mapbutton");
-		windowButtons[3].addCallback(new ToggleWindowCallback(Game.mainViewer.miniMapWindow));
+		windowButtons[3].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
 		
 		windowButtons[4] = new LogButton();
-		windowButtons[4].addCallback(new ToggleWindowCallback(Game.mainViewer.logWindow));
+		windowButtons[4].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
 		
 		for (Button button : windowButtons) {
 			add(button);
 		}
 		
-		endTurn = new Button();
+		endTurn = new HotKeyButton();
 		endTurn.setTheme("endturnbutton");
-		endTurn.addCallback(new EndTurnCallback());
+		endTurn.addHotKeyBinding(new Keybindings.EndTurn());
 		add(endTurn);
 		
 		partyMovement = new ToggleButton();
@@ -119,13 +119,9 @@ public class MainPane extends Widget {
 		singleMovement.setTheme("singlemovementbutton");
 		add(singleMovement);
 		
-		stop = new Button();
+		stop = new HotKeyButton();
 		stop.setTheme("stopbutton");
-		stop.addCallback(new Runnable() {
-			@Override public void run() {
-				cancelAllOrders();
-			}
-		});
+		stop.addHotKeyBinding(new Keybindings.CancelMovement());
 		add(stop);
 	}
 	
@@ -232,7 +228,7 @@ public class MainPane extends Widget {
 			!Game.areaListener.getTargeterManager().isInTargetMode();
 	}
 	
-	private class LogButton extends Button {
+	private class LogButton extends HotKeyButton {
 		private String notificationTooltip;
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
@@ -252,28 +248,24 @@ public class MainPane extends Widget {
 		}
 	}
 	
-	private class ToggleWindowCallback implements Runnable {
-		private final GameSubWindow window;
+	private class HotKeyButton extends Button {
+		private Keybindings.Binding binding;
 		
-		private ToggleWindowCallback(GameSubWindow window) {
-			this.window = window;
+		private void addHotKeyBinding(Keybindings.Binding binding) {
+			this.binding = binding;
+			super.addCallback(binding);
 		}
 		
-		@Override public void run() {
-			window.setVisible(!window.isVisible());
-		}
-	}
-	
-	private class EndTurnCallback implements Runnable {
-		@Override public void run() {
-			Game.areaListener.nextTurn();
-		}
-	}
-	
-	private class OpenMenuCallback implements Runnable {
-		@Override public void run() {
-			InGameMenu menu = new InGameMenu(Game.mainViewer);
-			menu.openPopupCentered();
+		@Override protected void applyTheme(ThemeInfo themeInfo) {
+			super.applyTheme(themeInfo);
+			
+			String tooltip = themeInfo.getParameter("tooltip", (String)null);
+			
+			String actionName = binding.getActionName();
+			int key = Game.config.getKeyForAction(actionName);
+			String keyChar = Event.getKeyNameForCode(key);
+			
+			setTooltipContent("[" + keyChar + "] " + tooltip);
 		}
 	}
 }

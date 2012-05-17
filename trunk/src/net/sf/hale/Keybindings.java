@@ -19,13 +19,15 @@
 
 package net.sf.hale;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.quickbar.Quickbar;
+import net.sf.hale.util.Logger;
 
-import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Widget;
 
 /**
@@ -35,35 +37,52 @@ import de.matthiasmann.twl.Widget;
  */
 
 public class Keybindings {
-	private final int closeQuickbarPopup;
-	private final int closeScriptConsole;
-	private Map<Integer, Binding> bindings;
+	public static final String UseQuickbarSlot = "UseQuickbarSlot";
+	
+	private Map<Integer, Binding> bindingsByKey;
 	
 	/**
 	 * Creates a new Keybindings object with the default bindings.  This must be initialized
-	 * after the mainviewer
+	 * after the mainviewer.  Keybinding actions are mapped based on the values stored in the
+	 * current config
 	 */
 	
 	public Keybindings() {
-		bindings = new HashMap<Integer, Binding>();
+		// create the list of all bindings
+		List<Binding> bindings = new ArrayList<Binding>();
 		
-		closeQuickbarPopup = Event.KEY_Q;
-		closeScriptConsole = Event.KEY_GRAVE;
-		
-		bindings.put(Event.KEY_C, new ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
-		bindings.put(Event.KEY_I, new ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
-		bindings.put(Event.KEY_L, new ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
-		bindings.put(Event.KEY_M, new ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
-		bindings.put(Event.KEY_Q, new ToggleQuickbarPopup());
-		bindings.put(Event.KEY_GRAVE, new ToggleWindow(Game.mainViewer.scriptConsole, "ScriptConsole"));
-		bindings.put(Event.KEY_X, new CancelMovement());
-		bindings.put(Event.KEY_ESCAPE, new ShowMenu());
-		bindings.put(Event.KEY_SPACE, new EndTurn());
-		bindings.put(Event.KEY_F5, new Quicksave());
+		bindings.add(new ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
+		bindings.add(new ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
+		bindings.add(new ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
+		bindings.add(new ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
+		bindings.add(new ToggleQuickbarPopup());
+		bindings.add(new ToggleWindow(Game.mainViewer.scriptConsole, "ScriptConsole"));
+		bindings.add(new CancelMovement());
+		bindings.add(new ShowMenu());
+		bindings.add(new EndTurn());
+		bindings.add(new Quicksave());
 		
 		for (int i = 0; i < Quickbar.SlotsAtOnce; i++) {
-			// this will bind to KEY_(i + 1) (KEY_2 for i = 1, KEY_3 for i = 2, etc)
-			bindings.put(Event.KEY_1 + i, new ActivateQuickbarSlot(i));
+			bindings.add(new UseQuickbarSlot(i));
+		}
+		
+		// now find the keyboard key for each binding from the config
+		
+		bindingsByKey = new HashMap<Integer, Binding>();
+		
+		for (Binding binding : bindings) {
+			try {
+				int keyCode = Game.config.getKeyForAction(binding.getActionName());
+				
+				if (bindingsByKey.containsKey(keyCode)) {
+					Logger.appendToWarningLog("Warning: duplicate key binding for " + bindingsByKey.get(keyCode).getActionName() +
+							", " + binding.getActionName());
+				}
+				
+				bindingsByKey.put(keyCode, binding);
+			} catch (Exception e) {
+				Logger.appendToWarningLog("Warning: No key binding exists for action " + binding.getActionName());
+			}
 		}
 	}
 	
@@ -75,7 +94,7 @@ public class Keybindings {
 	 */
 	
 	public boolean isCloseQuickbarPopupKey(int key) {
-		return key == closeQuickbarPopup;
+		return key == Game.config.getKeyForAction("ToggleQuickbarPopup");
 	}
 	
 	/**
@@ -86,8 +105,8 @@ public class Keybindings {
 	 */
 	
 	public boolean checkToggleScriptConsole(int key) {
-		if (key == closeScriptConsole) {
-			new ToggleWindow(Game.mainViewer.scriptConsole, "ScriptConsole").run();
+		if (key == Game.config.getKeyForAction("ToggleScriptConsole")) {
+			bindingsByKey.get(key).run();
 			return true;
 		} else {
 			return false;
@@ -101,11 +120,17 @@ public class Keybindings {
 	 */
 	
 	public void fireKeyEvent(int key) {
-		if (bindings.containsKey(key))
-			bindings.get(key).run();
+		if (bindingsByKey.containsKey(key))
+			bindingsByKey.get(key).run();
 	}
 	
-	private abstract class Binding implements Runnable {
+	/**
+	 * A base class for a callback providing a key action name
+	 * @author Jared
+	 *
+	 */
+	
+	public static abstract class Binding implements Runnable {
 		
 		/**
 		 * Returns the descriptive action name for this binding, used in the
@@ -118,11 +143,23 @@ public class Keybindings {
 		}
 	}
 	
-	private class ToggleWindow extends Binding {
+	/**
+	 * A callback for toggling a window
+	 * @author Jared
+	 *
+	 */
+	
+	public static class ToggleWindow extends Binding {
 		private final Widget window;
 		private final String windowName;
 		
-		private ToggleWindow(Widget window, String windowName) {
+		/**
+		 * Creates a new ToggleWindow callback for the specified window with the specified name
+		 * @param window
+		 * @param windowName
+		 */
+		
+		public ToggleWindow(Widget window, String windowName) {
 			this.window = window;
 			this.windowName = windowName;
 		}
@@ -136,47 +173,83 @@ public class Keybindings {
 		}
 	}
 	
-	private class ToggleQuickbarPopup extends Binding {
+	/**
+	 * A callback for toggling the quickbar
+	 * @author Jared
+	 *
+	 */
+	
+	public static class ToggleQuickbarPopup extends Binding {
 		@Override public void run() {
 			Game.mainViewer.getQuickbarViewer().showQuickbarPopup();
 		}
 	}
 	
-	private class CancelMovement extends Binding {
+	/**
+	 * A Callback for canceling all current movement
+	 * @author Jared
+	 *
+	 */
+	
+	public static class CancelMovement extends Binding {
 		@Override public void run() {
 			Game.mainViewer.getMainPane().cancelAllOrders();
 		}
 	}
 	
-	private class ShowMenu extends Binding {
+	/**
+	 * A callback for showing the in game menu
+	 * @author Jared
+	 *
+	 */
+	
+	public static class ShowMenu extends Binding {
 		@Override public void run() {
 			InGameMenu menu = new InGameMenu(Game.mainViewer);
 			menu.openPopupCentered();
 		}
 	}
 	
-	private class EndTurn extends Binding {
+	/**
+	 * A callback for ending the current turn with the end turn button
+	 * @author Jared
+	 *
+	 */
+	
+	public static class EndTurn extends Binding {
 		@Override public void run() {
 			if (Game.mainViewer.getMainPane().isEndTurnEnabled())
 				Game.areaListener.nextTurn();
 		}
 	}
 	
-	private class Quicksave extends Binding {
+	/**
+	 * A callback to perform a quicksave
+	 * @author Jared
+	 *
+	 */
+	
+	public static class Quicksave extends Binding {
 		@Override public void run() {
 			Game.mainViewer.quickSave();
 		}
 	}
 	
-	private class ActivateQuickbarSlot extends Binding {
+	/**
+	 * A callback for using a specified quickbar slot
+	 * @author Jared
+	 *
+	 */
+	
+	public static class UseQuickbarSlot extends Binding {
 		private final int index;
 		
-		private ActivateQuickbarSlot(int index) {
+		private UseQuickbarSlot(int index) {
 			this.index = index;
 		}
 		
 		@Override public String getActionName() {
-			return "ActivateQuickbarSlot" + index;
+			return "UseQuickbarSlot" + index;
 		}
 		
 		@Override public void run() {
