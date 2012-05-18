@@ -60,16 +60,19 @@ function onTargetSelect(game, targeter, id) {
 	
 	if (parent.getAbilities().has("ImprovedSummon")) {
 		var bonusLevels = parseInt( 2 * (casterLevel - 10) / 3 );
-		
-		if (bonusLevels > 0) {
-			var roleSet = creature.getRoles();
-			roleSet.addLevels(roleSet.getBaseRole(), bonusLevels);
-		}
+	} else {
+		var bonusLevels = parseInt( (casterLevel - 12) / 2);
+	}
+	
+	if (bonusLevels > 0) {
+		var roleSet = creature.getRoles();
+		roleSet.addLevels(roleSet.getBaseRole(), bonusLevels);
 	}
 	
 	// set this if we want direct player control of the creature, otherwise the
 	// creature will follow in party follow mode and use its AI in combat mode
 	// creature.setPlayerSelectable(true);
 	
+	// this will reset the creature's hit points to maximum
 	creature.resetAll();
 }

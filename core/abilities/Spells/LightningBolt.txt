@@ -1,6 +1,6 @@
 name "Lightning Bolt"
 type "Evocation"
-description "Lightning Bolt upgrades your Shock spell.  All creatures within 10 feet of the caster take 8 to 16 plus one per caster level damage."
+description "Lightning Bolt upgrades your Shock spell.  You select a target hostile up to 20 feet away.  All creatures within 10 feet of the target take 8 to 16 plus one per caster level damage."
 activateable false
 
 icon "icons/lightningBolt"

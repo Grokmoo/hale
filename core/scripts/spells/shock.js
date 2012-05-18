@@ -1,8 +1,10 @@
 function onActivate(game, slot) {
 	if (slot.getParent().getAbilities().has("LightningBolt")) {
+		var creatures = game.ai.getVisibleCreaturesWithinRange(slot.getParent(), "Hostile", 20);
+
 		var targeter = game.createCircleTargeter(slot);
 		targeter.setRadius(2);
-		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.addAllowedCreatures(creatures);
 		targeter.activate();
 	} else {
 		var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Hostile");
@@ -48,9 +50,6 @@ function lightningBolt(game, targeter) {
 	var targets = targeter.getAffectedCreatures();
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
-		
-		// don't damage the caster
-		if (target == parent) continue;
 		
 		var damage = game.dice().d12(2) + casterLevel;
 		

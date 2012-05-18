@@ -11,7 +11,7 @@ function onRoundElapsed(game, effect) {
 		
 		if (hasLightning) checkLightning(game, effect, target);
 		
-		var damage = parseInt(game.dice().d4(2) + casterLevel / 2);
+		var damage = parseInt(game.dice().d6(1) + casterLevel / 3);
 		
 		spell.applyDamage(parent, target, damage, "Cold");
 	}

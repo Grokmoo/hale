@@ -17,7 +17,7 @@ function onActivate(game, slot) {
 function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var duration = game.dice().randInt(5, 10);
+	var duration = game.dice().randInt(4, 8);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
@@ -75,7 +75,7 @@ function bolsterAlly(game, targeter, target, duration) {
 	var casterLevel = parent.getCasterLevel();
 	
 	if (parent.getAbilities().has("Enfeeble")) {
-		var attrPenalty = 3 + parseInt(casterLevel / 6);
+		var attrPenalty = 2 + parseInt(casterLevel / 6);
 	
 		var effect = targeter.getSlot().createEffect();
 		effect.setDuration(duration);
