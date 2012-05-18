@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.Keybindings;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.widgets.HotKeyButton;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
@@ -46,7 +48,7 @@ public class QuickbarViewer extends DialogLayout {
 	
 	private int currentIndex;
 	
-	private Button expand;
+	private HotKeyButton expand;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -99,13 +101,9 @@ public class QuickbarViewer extends DialogLayout {
 			mainV.addWidget(button);
 		}
 		
-		expand = new Button();
+		expand = new HotKeyButton();
 		expand.setTheme("expandbutton");
-		expand.addCallback(new Runnable() {
-			@Override public void run() {
-				showQuickbarPopup();
-			}
-		});
+		expand.setHotKeyBinding(new Keybindings.ToggleQuickbarPopup());
 		mainH.addWidget(expand);
 		mainV.addWidget(expand);
 		

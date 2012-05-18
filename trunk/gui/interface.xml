@@ -151,6 +151,12 @@
 			<param name="tooltip"><string>Logbook and Recipes</string></param>
 		</theme>
 		
+		<theme name="movementmodebutton" ref="mainpanebutton">
+			<param name="partyicon"><image>partymovementicon</image></param>
+			<param name="singleicon"><image>singlemovementicon</image></param>
+			<param name="tooltip"><string>Toggle Movement Mode</string></param>
+		</theme>
+		
 		<theme name="partymovementbutton" ref="mainpanebutton">
 			<param name="overlay"><image>partymovementicon</image></param>
 			<param name="tooltip"><string>Party Movement Mode</string></param>
@@ -195,7 +201,7 @@
 			<param name=""><image>hoverbutton.*</image></param>
 			<param name="border"><border>5</border></param>
 			<param name="text"><string>+</string></param>
-			<param name="tooltip"><string>Show all [Q]uickbar slots</string></param>
+			<param name="tooltip"><string>Show all Quickbar slots</string></param>
 		</theme>
 	</theme>
 	

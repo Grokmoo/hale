@@ -27,6 +27,7 @@ import java.util.Map;
 import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.quickbar.Quickbar;
 import net.sf.hale.util.Logger;
+import net.sf.hale.interfacelock.MovementHandler;
 
 import de.matthiasmann.twl.Widget;
 
@@ -61,6 +62,7 @@ public class Keybindings {
 		bindings.add(new ShowMenu());
 		bindings.add(new EndTurn());
 		bindings.add(new Quicksave());
+		bindings.add(new ToggleMovementMode());
 		
 		for (int i = 0; i < Quickbar.SlotsAtOnce; i++) {
 			bindings.add(new UseQuickbarSlot(i));
@@ -180,6 +182,24 @@ public class Keybindings {
 	public static class ToggleQuickbarPopup extends Binding {
 		@Override public void run() {
 			Game.mainViewer.getQuickbarViewer().showQuickbarPopup();
+		}
+	}
+	
+	/**
+	 * A callback for toggling the current movement mode
+	 * @author Jared
+	 *
+	 */
+	
+	public static class ToggleMovementMode extends Binding {
+		@Override public void run() {
+			if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
+				Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Single);
+			} else {
+				Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Party);
+			}
+			
+			Game.mainViewer.getMainPane().setMovementModeIcon();
 		}
 	}
 	
