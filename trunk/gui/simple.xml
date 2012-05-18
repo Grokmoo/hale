@@ -6,6 +6,8 @@
     Author     : Matthias Mann
 --><themes>
     <images file="guiElements.png" format="RGBA">
+		<area name="panebackground" xywh="448,192,64,64" tiled="true"/>
+	
         <area name="-borderA" border="3" xywh="0,0,9,9" splitx="L3,R3" splity="T3,B3"/>
         <area name="-borderB" border="3" xywh="10,0,9,9" splitx="L3,R3" splity="T3,B3"/>
         <area name="-borderC" border="3" xywh="20,0,9,9" splitx="L3,R3" splity="T3,B3"/>
