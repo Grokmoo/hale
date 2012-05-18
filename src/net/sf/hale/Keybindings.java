@@ -71,17 +71,15 @@ public class Keybindings {
 		bindingsByKey = new HashMap<Integer, Binding>();
 		
 		for (Binding binding : bindings) {
-			try {
-				int keyCode = Game.config.getKeyForAction(binding.getActionName());
-				
-				if (bindingsByKey.containsKey(keyCode)) {
-					Logger.appendToWarningLog("Warning: duplicate key binding for " + bindingsByKey.get(keyCode).getActionName() +
-							", " + binding.getActionName());
-				}
-				
+			int keyCode = Game.config.getKeyForAction(binding.getActionName());
+			
+			if (bindingsByKey.containsKey(keyCode)) {
+				Logger.appendToWarningLog("Warning: duplicate key binding for " + bindingsByKey.get(keyCode).getActionName() +
+						", " + binding.getActionName());
+			}
+			
+			if (keyCode != -1) {
 				bindingsByKey.put(keyCode, binding);
-			} catch (Exception e) {
-				Logger.appendToWarningLog("Warning: No key binding exists for action " + binding.getActionName());
 			}
 		}
 	}

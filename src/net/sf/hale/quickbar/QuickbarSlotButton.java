@@ -83,9 +83,14 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		// key the keyboard mapping character
 		int slotKeyboardMapping = index % Quickbar.SlotsAtOnce;
 		int keyCode = Game.config.getKeyForAction(Keybindings.UseQuickbarSlot + Integer.toString(slotKeyboardMapping));
-		String keyChar = Event.getKeyNameForCode(keyCode);
 		
-		indexLabel = new Label(keyChar);
+		if (keyCode != -1) {
+			String keyChar = Event.getKeyNameForCode(keyCode);
+			indexLabel = new Label(keyChar);
+		} else {
+			indexLabel = new Label();
+		}
+		
 		indexLabel.setTheme("indexlabel");
 		this.add(indexLabel);
 		

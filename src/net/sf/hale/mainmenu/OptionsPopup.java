@@ -23,8 +23,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.opengl.DisplayMode;
 
@@ -37,6 +40,7 @@ import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PopupWindow;
+import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.Widget;
@@ -78,7 +82,7 @@ public class OptionsPopup extends PopupWindow {
 	 */
 	
 	private void writeConfigToFile(int resX, int resY, int edResX, int edResY,
-			boolean fullscreen, int tooltipDelay, int combatDelay) {
+			boolean fullscreen, int tooltipDelay, int combatDelay, Map<String, String> keyBindings) {
 		File fout = new File("config.json");
 		
 		try {
@@ -103,16 +107,11 @@ public class OptionsPopup extends PopupWindow {
 			
 			out.write("  \"Keybindings\" : {"); out.newLine();
 			
-			// get the list of all keyboard actions, sorted alphabetically
-			List<String> keyNames = Game.config.getKeyActionNames();
-			Collections.sort(keyNames);
-			
-			// write the keyboard bindings
-			for (String key : keyNames) {
-				int keyCode = Game.config.getKeyForAction(key);
-				String keyName = Event.getKeyNameForCode(keyCode);
+			// write out keybindings
+			for (String actionName : keyBindings.keySet()) {
+				String keyName = keyBindings.get(actionName);
 				
-				writeSimpleKey(out, key, "\"" + keyName + "\"", 2);
+				writeSimpleKey(out, actionName, "\"" + keyName + "\"", 2);
 			}
 			
 			out.write("  }"); out.newLine();
@@ -139,7 +138,7 @@ public class OptionsPopup extends PopupWindow {
 	}
 	
 	private class Content extends DialogLayout {
-		private Label title, editorTitle;
+		private Label title, keybindingsTitle, editorTitle;
 		private Button accept, cancel;
 		
 		private final ToggleButton fullscreen;
@@ -150,6 +149,8 @@ public class OptionsPopup extends PopupWindow {
 		private final ComboBox<String> editorModesBox;
 		private final Label modesTitle, tooltipTitle, tooltipUnits, editorModesTitle;
 		private final Label combatSpeedTitle, combatSpeedUnits;
+		private final ScrollPane keyBindingsPane;
+		private final KeyBindingsContent keyBindingsContent;
 		
 		private Group mainH, mainV;
 		
@@ -199,6 +200,18 @@ public class OptionsPopup extends PopupWindow {
 			combatSpeedUnits = new Label();
 			combatSpeedUnits.setTheme("combatspeedunitslabel");
 			addHorizontalWidgets(combatSpeedTitle, combatSpeed, combatSpeedUnits);
+			
+			mainV.addGap(DialogLayout.LARGE_GAP);
+			
+			keybindingsTitle = new Label();
+			keybindingsTitle.setTheme("keybindingslabel");
+			addHorizontalWidgets(keybindingsTitle);
+			
+			keyBindingsContent = new KeyBindingsContent();
+			keyBindingsPane = new ScrollPane(keyBindingsContent);
+			keyBindingsPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
+			keyBindingsPane.setTheme("keybindingspane");
+			addHorizontalWidgets(keyBindingsPane);
 			
 			mainV.addGap(DialogLayout.LARGE_GAP);
 			
@@ -283,6 +296,18 @@ public class OptionsPopup extends PopupWindow {
 		}
 		
 		private void applySettings() {
+			// get the set of key bindings that is currently being shown in the UI
+			Map<String, String> keyBindings = new LinkedHashMap<String, String>();
+			
+			for (KeyBindWidget widget : keyBindingsContent.widgets) {
+				if (widget.keyBinding.getText() != null) {
+					keyBindings.put(widget.actionName, widget.keyBinding.getText());
+				} else {
+					keyBindings.put(widget.actionName, "");
+				}
+			}
+			
+			
 			DisplayMode mode = Game.allDisplayModes.get(this.modesBox.getSelected());
 			boolean fullscreen = this.fullscreen.isActive();
 			
@@ -297,7 +322,7 @@ public class OptionsPopup extends PopupWindow {
 			combatSpeed *= 50;
 			
 			writeConfigToFile(mode.getWidth(), mode.getHeight(), edMode.getWidth(),
-					edMode.getHeight(), fullscreen, tooltipDelay, combatSpeed);
+					edMode.getHeight(), fullscreen, tooltipDelay, combatSpeed, keyBindings);
 			
 			if (mode.getWidth() == Game.config.getResolutionX() && mode.getHeight() == Game.config.getResolutionY() &&
 					fullscreen == Game.config.getFullscreen()) {
@@ -308,6 +333,91 @@ public class OptionsPopup extends PopupWindow {
 			
 			Game.config = new Config();
 			mainMenu.restartMenu();
+		}
+	}
+	
+	private class KeyBindingsContent extends DialogLayout {
+		private List<KeyBindWidget> widgets;
+		
+		private KeyBindingsContent() {
+			widgets = new ArrayList<KeyBindWidget>();
+			
+			Group mainH = createParallelGroup();
+			Group mainV = createSequentialGroup();
+			
+			List<String> actions = Game.config.getKeyActionNames();
+			Collections.sort(actions);
+			
+			for (String actionName : actions) {
+				KeyBindWidget widget = new KeyBindWidget(actionName);
+				mainH.addWidget(widget);
+				mainV.addWidget(widget);
+				
+				widgets.add(widget);
+			}
+			
+			setHorizontalGroup(mainH);
+			setVerticalGroup(mainV);
+		}
+	}
+	
+	private class KeyBindWidget extends Widget implements KeyBindPopup.Callback {
+		private Label actionLabel;
+		private Button keyBinding;
+		
+		private String actionName;
+		
+		private KeyBindWidget(String actionName) {
+			this.actionName = actionName;
+			
+			actionLabel = new Label(actionName);
+			actionLabel.setTheme("actionlabel");
+			add(actionLabel);
+			
+			int keyCode = Game.config.getKeyForAction(actionName);
+			String keyChar = Event.getKeyNameForCode(keyCode);
+			
+			keyBinding = new Button(keyChar);
+			keyBinding.addCallback(new Runnable() {
+				@Override public void run() {
+					showKeyBindPopup();
+				}
+			});
+			keyBinding.setTheme("keybindingbutton");
+			add(keyBinding);
+		}
+		
+		private void showKeyBindPopup() {
+			KeyBindPopup popup = new KeyBindPopup(KeyBindWidget.this, KeyBindWidget.this);
+			popup.openPopupCentered();
+		}
+		
+		@Override public int getPreferredInnerHeight() {
+			return Math.max(actionLabel.getPreferredHeight(), keyBinding.getPreferredHeight());
+		}
+		
+		@Override protected void layout() {
+			actionLabel.setSize(actionLabel.getPreferredWidth(), actionLabel.getPreferredHeight());
+			keyBinding.setSize(keyBinding.getPreferredWidth(), keyBinding.getPreferredHeight());
+			
+			actionLabel.setPosition(getInnerX(), getInnerY() + getInnerHeight() / 2 - actionLabel.getHeight() / 2);
+			keyBinding.setPosition(actionLabel.getRight(), getInnerY() + getInnerHeight() / 2 - keyBinding.getHeight() / 2);
+		}
+
+		@Override public void keyBound(int keyCode) {
+			String keyChar = Event.getKeyNameForCode(keyCode);
+			
+			// bind the key for this widget
+			keyBinding.setText(keyChar);
+			
+			// check for conflicts with the key
+			for (KeyBindWidget widget : content.keyBindingsContent.widgets) {
+				if (widget == this) continue;
+				
+				if ( keyChar.equals(widget.keyBinding.getText()) ) {
+					widget.keyBinding.setText("");
+				}
+			}
 		}
 	}
 }

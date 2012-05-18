@@ -229,22 +229,8 @@ public class MainPane extends Widget {
 	}
 	
 	private class LogButton extends HotKeyButton {
-		private String notificationTooltip;
-		
-		@Override protected void applyTheme(ThemeInfo themeInfo) {
-			super.applyTheme(themeInfo);
-			
-			notificationTooltip = themeInfo.getParameter("notificationTooltip", (String)null);
-		}
-		
 		private void setNotification(boolean notification) {
 			getAnimationState().setAnimationState(STATE_NOTIFICATION, notification);
-			
-			if (notification) {
-				setTooltipContent(notificationTooltip);
-			} else {
-				setTooltipContent(getThemeTooltipContent());
-			}
 		}
 	}
 	
@@ -263,9 +249,11 @@ public class MainPane extends Widget {
 			
 			String actionName = binding.getActionName();
 			int key = Game.config.getKeyForAction(actionName);
-			String keyChar = Event.getKeyNameForCode(key);
+			if (key != -1) {
+				String keyChar = Event.getKeyNameForCode(key);
 			
-			setTooltipContent("[" + keyChar + "] " + tooltip);
+				setTooltipContent("[" + keyChar + "] " + tooltip);
+			}
 		}
 	}
 }
