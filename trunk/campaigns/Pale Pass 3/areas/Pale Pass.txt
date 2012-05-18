@@ -22,6 +22,14 @@ item 1 "armorstand_exceptional" 23 11
 item 1 "chest02" 24 11
 item 1 "longsword_chillingBlade" 24 11
 item 1 "chest_lock_exceptional" 22 12
+item 1 "flameTrap" 11 58
+item 1 "freezeTrap" 5 45
+item 1 "rockTrap" 15 33
+item 1 "rockTrap" 11 33
+item 1 "lightningTrap" 17 26
+item 1 "freezeTrap" 11 18
+item 1 "acidTrap" 15 10
+item 1 "acidTrap" 18 7
 
 tile base 29 64 base/snow1
 tile base 28 64 base/snow0

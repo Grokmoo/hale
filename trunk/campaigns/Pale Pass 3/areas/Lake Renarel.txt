@@ -13,6 +13,9 @@ item 1 "armorstand_superb" 29 3
 item 1 "chest_superb" 28 3
 item 1 "chest_superb" 17 12
 item 1 "chest_lock_superb" 18 16
+item 1 "acidTrap" 11 15
+item 1 "freezeTrap" 30 19
+item 1 "freezeTrap" 6 15
 
 tile base 39 29 base/snow2
 tile base 38 29 base/snow0

@@ -10,6 +10,8 @@ encounter "undeadLvl15" 23 6
 
 item 1 "chest_lock_superb" 25 17
 item 1 "chest_superb" 26 18
+item 1 "spikeTrap" 4 13
+item 1 "spikeTrap" 13 14
 
 tile base 29 24 base/dirt6
 tile base 28 24 base/dirt3

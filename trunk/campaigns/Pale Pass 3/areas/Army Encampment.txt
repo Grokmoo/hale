@@ -29,6 +29,13 @@ item 1 "greatsword_slaughtering" 55 29
 item 1 "armor_plate_dragon" 55 29
 item 1 "armorstand_exceptional" 54 28
 item 1 "chest_exceptional" 52 28
+item 1 "freezeTrap" 9 14
+item 1 "acidTrap" 21 12
+item 1 "acidTrap" 47 8
+item 1 "freezeTrap" 12 34
+item 1 "lightningTrap" 13 35
+item 1 "acidTrap" 42 35
+item 1 "freezeTrap" 44 36
 
 tile base 59 49 base/snow0
 tile base 58 49 base/snow2
