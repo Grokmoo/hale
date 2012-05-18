@@ -15,6 +15,9 @@ item 1 "chest_superb" 53 12
 item 1 "chest_lock_superb" 52 10
 item 1 "armorstand_superb" 42 17
 item 1 "chest_lock_lvl15" 4 14
+item 1 "flameTrap" 53 17
+item 1 "freezeTrap" 54 3
+item 1 "lightningTrap" 37 15
 
 tile base 69 19 base/grass1
 tile base 68 19 base/grass3

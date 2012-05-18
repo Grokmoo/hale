@@ -31,6 +31,11 @@ item 1 "chest_weapon_superb" 16 20
 item 1 "ruraldoor_SW" 15 4
 item 1 "ruraldoor_SW" 13 10
 item 1 "ruraldoor_SE" 9 4
+item 1 "acidTrap" 3 9
+item 1 "freezeTrap" 21 15
+item 1 "flameTrap" 20 8
+item 1 "spikeTrap" 17 22
+item 1 "spikeTrap" 19 21
 
 tile base 29 29 base/path1
 tile base 28 29 base/path0

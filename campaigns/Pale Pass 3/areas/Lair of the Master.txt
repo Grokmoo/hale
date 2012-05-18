@@ -29,6 +29,15 @@ item 1 "chest_lock_exceptional" 9 36
 item 1 "chest_weapon_exceptional" 8 36
 item 1 "chest_weapon_exceptional" 34 36
 item 1 "armorstand_exceptional" 35 36
+item 1 "acidTrap" 15 5
+item 1 "acidTrap" 39 20
+item 1 "freezeTrap" 42 34
+item 1 "freezeTrap" 24 40
+item 1 "acidTrap" 24 41
+item 1 "acidTrap" 7 29
+item 1 "flameTrap" 7 22
+item 1 "lightningTrap" 10 21
+item 1 "rockTrap" 4 21
 
 tile 0 10 49 layer0/path
 tile 0 9 49 layer0/path1

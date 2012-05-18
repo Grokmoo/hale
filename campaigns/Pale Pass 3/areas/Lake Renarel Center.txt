@@ -14,6 +14,10 @@ item 1 "chest_lock_exceptional" 43 4
 item 1 "chest_weapon_superb" 44 5
 item 1 "armorstand_superb" 34 10
 item 1 "chest_superb" 33 10
+item 1 "freezeTrap" 26 33
+item 1 "freezeTrap" 9 21
+item 1 "freezeTrap" 22 9
+item 1 "flameTrap" 24 10
 
 tile base 49 39 base/water2
 tile base 48 39 base/water0

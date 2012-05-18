@@ -15,6 +15,9 @@ item 1 "armorstand_superb" 20 21
 item 1 "chest_lock_superb" 27 21
 item 1 "chest02" 19 21
 item 1 "mace_crushing" 19 21
+item 1 "rockTrap" 29 5
+item 1 "lightningTrap" 20 29
+item 1 "freezeTrap" 22 30
 
 tile base 39 39 base/grass0
 tile base 38 39 base/grass6

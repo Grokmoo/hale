@@ -6,6 +6,8 @@ unexplored
 
 encounter "greenrangeChasm" 5 10
 
+item 1 "lightningTrap" 9 8
+item 1 "spikeTrap" 8 6
 
 tile 0 10 15 layer0/hills-variation
 tile 0 9 15 layer0/hills-variation

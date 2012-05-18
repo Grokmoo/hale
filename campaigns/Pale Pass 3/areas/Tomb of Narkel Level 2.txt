@@ -43,6 +43,14 @@ item 1 "armorstand_superb" 3 21
 item 1 "chest_lock_superb" 2 24
 item 1 "chest_superb" 11 25
 item 1 "chest_weapon_superb" 24 27
+item 1 "acidTrap" 27 13
+item 1 "flameTrap" 20 8
+item 1 "flameTrap" 25 3
+item 1 "spikeTrap" 7 20
+item 1 "spikeTrap" 6 21
+item 1 "freezeTrap" 14 27
+item 1 "lightningTrap" 31 29
+item 1 "flameTrap" 35 33
 
 tile base 39 39 base/path0
 tile base 38 39 base/path3
