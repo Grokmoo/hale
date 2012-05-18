@@ -110,10 +110,10 @@ public class MenuNewCampaign extends MenuElement implements Runnable {
 			}
 			
 			// copy over default creatures
-			for (String creatureID : ResourceManager.getCoreResourcesInDirectory("creatures")) {
-				String fileContents = ResourceManager.getCoreResourceAsString(creatureID);
-				FileUtil.writeStringToFile(new File(dir.getPath() + "/" + creatureID), fileContents);
-			}
+//			for (String creatureID : ResourceManager.getCoreResourcesInDirectory("creatures")) {
+//				String fileContents = ResourceManager.getCoreResourceAsString(creatureID);
+//				FileUtil.writeStringToFile(new File(dir.getPath() + "/" + creatureID), fileContents);
+//			}
 			
 			// copy over default item scripts
 			for (String scriptID : ResourceManager.getCoreResourcesInDirectory("scripts/items")) {

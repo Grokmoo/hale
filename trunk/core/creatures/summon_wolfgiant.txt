@@ -1,0 +1,13 @@
+playerCharacter false
+
+name "Giant Wolf"
+icon "creatures/wolf-dire" "#ffffffff"
+gender "Male"
+race "LargeAnimal"
+unspentSkillPoints 0
+role "Monster" 1
+attributes 21 10 17 3 10 10
+script "ai/aiStandard"
+level 1 addAbility "NaturalArmor30"
+
+equip "largeClaw" Superb
