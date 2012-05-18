@@ -25,6 +25,7 @@ import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.interfacelock.InterfaceLock;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.widgets.EntityMouseover;
@@ -283,6 +284,8 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		
 		
 		this.screenShake = shake;
+		
+		Game.interfaceLocker.add(new InterfaceLock(Game.curCampaign.party.getSelected(), 600));
 	}
 	
 	/**
