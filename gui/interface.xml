@@ -104,11 +104,13 @@
 	</theme>
 	
 	<theme name="mainpane" ref="-defaults">
+		<param name="background"><image>panebackground</image></param>
+	
 		<param name="minHeight"><int>160</int></param>
 		<param name="buttonGap"><int>1</int></param>
 		<param name="rowGap"><int>5</int></param>
 	
-        <param name=""><image>iconbuttonblack.*</image></param>
+        
         <param name="border"><border>5,5,5,5</border></param>
 
 		<theme name="endturnbutton" ref="button">
@@ -287,7 +289,7 @@
 	<theme name="portraitarea" ref="scrollpane">
 		<param name="portraitGap"><int>1</int></param>
 	
-        <param name="background"><image>-borderJ</image></param>
+        <param name="background"><image>panebackground</image></param>
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
 		
 		<theme name="content" ref="-defaults">

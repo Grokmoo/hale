@@ -139,8 +139,8 @@ public class MainPane extends Widget {
 		movementMode.setSize(movementMode.getPreferredWidth(), movementMode.getPreferredHeight());
 		stop.setSize(stop.getPreferredWidth(), stop.getPreferredHeight());
 		
-		movementMode.setPosition(windowButtons[4].getX(), windowButtons[4].getBottom() + rowGap);
-		stop.setPosition(windowButtons[0].getX(), movementMode.getY());
+		movementMode.setPosition(windowButtons[1].getX(), windowButtons[1].getBottom() + rowGap);
+		stop.setPosition(windowButtons[0].getX(), windowButtons[0].getBottom() + rowGap);
 		
 		endTurn.setSize(endTurn.getPreferredWidth(), endTurn.getPreferredHeight());
 		
