@@ -1,0 +1,18 @@
+playerCharacter false
+
+name "Water Elemental"
+icon "creatures/elemental" "#ff33cbb5"
+gender "Male"
+race "Elemental"
+unspentSkillPoints 0
+role "Monster" 1
+attributes 17 19 17 1 10 10
+script "ai/aiStandard"
+level 1 addAbility "SlashingImmunity50"
+level 1 addAbility "ColdImmunity100"
+level 1 addAbility "PiercingImmunity50"
+level 1 addAbility "DamageReduction5"
+level 1 addAbility "NaturalArmor10"
+level 1 addAbility "CriticalHitImmunity"
+
+equip "unarmedWaterElemental" Good

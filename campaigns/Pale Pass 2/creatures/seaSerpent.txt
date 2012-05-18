@@ -5,6 +5,7 @@ icon "creatures/serpent" "#ffffffff"
 gender "Male"
 race "LargeAnimal"
 unspentSkillPoints 0
+xp 7900
 role "Monster" 10
 attributes 17 20 15 3 5 9
 script "ai/aiStandard"

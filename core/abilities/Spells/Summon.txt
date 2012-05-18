@@ -1,6 +1,6 @@
 name "Summon"
 type "Conjuration"
-description "A single animal appears at the targeted location and acts immediately after the caster ends their turn.  The animal is friendly, following the caster and attacking hostile creatures for 3 rounds plus 1 round per two caster levels or until reduced to 0 or fewer hit points.  The caster has no direct control over the summoned creature.  Summoned creatures gain one additional creature level for every two caster levels, starting at caster level 14.  More creatures become available as your caster level increases:<ul style=\"margin-top: 1em;\"><li>4. Rat</li><li>5. Small Wolf</li><li>6. Tiger</li><li>7. Medium Wolf</li><li>8. Bear</li><li>9. Sabretooth</li><li>10. Large Wolf</li><li>11. Giant Spider</li><li>12. Yeti</li><li>13. Giant Wolf</li></ul>"
+description "A single animal appears at the targeted location and acts immediately after the caster ends their turn.  The animal is friendly, following the caster and attacking hostile creatures for 3 rounds plus 1 round per two caster levels or until reduced to 0 or fewer hit points.  The caster has no direct control over the summoned creature.  Summoned creatures have a creature level equal to your caster level minus 4.  More creatures become available as your caster level increases:<ul style=\"margin-top: 1em;\"><li>4. Wolf</li><li>6. Tiger</li><li>8. Bear</li><li>10. Giant Spider</li><li>12. Yeti</li></ul>"
 activateable true
 fixed true
 cooldown 9
@@ -26,4 +26,4 @@ addPrereq Stat CasterLevel 4
 
 upgrade "SummonElemental" "With Summon Elemental, you gain additional choices for summoned creatures.  You can now summon powerful elemental spirits of Fire, Water, Air, and Earth."
 
-upgrade "ImprovedSummon" "With Improved Summon, all of your summoned creatures become more powerful.  For every 3 caster levels you gain beyond 10th, all summoned creatures gain an additional 2 creature levels."
+upgrade "ImprovedSummon" "With Improved Summon, all summoned creatures now have a creature level equal to your caster level."

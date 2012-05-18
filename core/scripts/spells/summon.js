@@ -1,23 +1,30 @@
 function onActivate(game, slot) {
 	game.addMenuLevel(slot.getAbility().getName());
 	
-	var creatureIDs = [ "rat", "wolfsmall", "tiger", "wolfmedium", "bear", "sabretooth", "wolflarge",
-		"spidergiant", "yeti", "wolfgiant" ];
-	
 	var casterLevel = slot.getParent().getCasterLevel();
 	
-	var max = casterLevel - 3;
-	if (max > creatureIDs.length) max = creatureIDs.length;
+	// add the highest level version of the wolf that is available
+	if (casterLevel >= 13) addButton(game, "summon_wolfgiant", slot);
+	else if (casterLevel >= 10) addButton(game, "summon_wolflarge", slot);
+	else if (casterLevel >= 7) addButton(game, "summon_wolfmedium", slot);
+	else if (casterLevel >= 4) addButton(game, "summon_wolfsmall", slot);
 	
-	for (var index = 0; index < max; index++) {
-		addButton(game, creatureIDs[index], slot);
-	}
+	// add the highest level version of the tiger available
+	if (casterLevel >= 9) addButton(game, "summon_sabretooth", slot);
+	else if (casterLevel >= 6) addButton(game, "summon_tiger", slot);
 	
+	if (casterLevel >= 8) addButton(game, "summon_bear", slot);
+	
+	if (casterLevel >= 10) addButton(game, "summon_spidergiant", slot);
+	
+	if (casterLevel >= 12) addButton(game, "summon_yeti", slot);
+	
+	// add the elementals if applicable
 	if (slot.getParent().getAbilities().has("SummonElemental")) {
-		addButton(game, "elementalAir", slot);
-		addButton(game, "elementalEarth", slot);
-		addButton(game, "elementalFire", slot);
-		addButton(game, "elementalWater", slot);
+		addButton(game, "summon_elementalAir", slot);
+		addButton(game, "summon_elementalEarth", slot);
+		addButton(game, "summon_elementalFire", slot);
+		addButton(game, "summon_elementalWater", slot);
 	}
 	
 	game.showMenu();
@@ -59,9 +66,9 @@ function onTargetSelect(game, targeter, id) {
 	var creature = game.summonCreature(id, position, parent, duration);
 	
 	if (parent.getAbilities().has("ImprovedSummon")) {
-		var bonusLevels = parseInt( 2 * (casterLevel - 10) / 3 );
+		var bonusLevels = parseInt(casterLevel - 1);
 	} else {
-		var bonusLevels = parseInt( (casterLevel - 12) / 2);
+		var bonusLevels = parseInt(casterLevel - 5);
 	}
 	
 	if (bonusLevels > 0) {

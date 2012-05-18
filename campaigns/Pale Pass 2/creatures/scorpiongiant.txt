@@ -5,6 +5,7 @@ icon "creatures/scorpion" "#ffffffff"
 gender "Male"
 race "SmallAnimal"
 unspentSkillPoints 0
+xp 300
 role "Monster" 3
 attributes 12 15 12 10 10 10
 script "ai/aiStandard"

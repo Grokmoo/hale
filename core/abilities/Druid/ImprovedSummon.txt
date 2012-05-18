@@ -1,6 +1,6 @@
 name "Improved Summon"
 type "Druid Abilities"
-description "Your summoned creatures become more powerful, gaining levels at a faster rate.  For every 3 caster levels you gain beyond 10th, all summoned creatures gain an additional 2 creature levels."
+description "Your summoned creatures become more powerful, gaining levels at a faster rate.  All summoned creatures now have a creature level equal to your caster level."
 activateable false
 
 icon "icons/improvedSummon"

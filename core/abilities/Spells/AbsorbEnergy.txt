@@ -23,6 +23,6 @@ rangeType Touch
 aiPower 10
 aiPriority 5
 
-addPrereq Stat CasterLevel 4
+addPrereq Stat CasterLevel 1
 
 upgrade ResistSpells "With Resist Spells, the targeted creature now also gains spell resistance of 15 points plus 1 point per caster level."
