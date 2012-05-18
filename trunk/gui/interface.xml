@@ -147,7 +147,6 @@
 		</theme>
 		
 		<theme name="logbutton" ref="mainpanebutton">
-			<param name="notificationTooltip"><string>Show New [L]og Entry</string></param>
 			<param name="overlay"><image>logicon</image></param>
 			<param name="tooltip"><string>Logbook and Recipes</string></param>
 		</theme>

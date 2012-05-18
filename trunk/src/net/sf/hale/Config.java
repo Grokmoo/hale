@@ -213,14 +213,14 @@ public class Config {
 	/**
 	 * Returns the integer keyboard code associated with the given action
 	 * @param actionName
-	 * @return the integer key code
+	 * @return the integer key code, or -1 if no key is associated with the action
 	 */
 	
 	public int getKeyForAction(String actionName) {
 		Integer key = keyBindingActions.get(actionName);
 		
 		if (key == null)
-			throw new IllegalArgumentException("Keyboard Action " + actionName + " not found");
+			return -1;
 		else
 			return key.intValue();
 	}
@@ -302,7 +302,12 @@ public class Config {
 		for (String bindingName : bindingsObject.keySet()) {
 			String keyboardKey = bindingsObject.get(bindingName, null);
 			
-			keyBindingActions.put(bindingName, Event.getKeyCodeForName(keyboardKey));
+			if (keyboardKey.length() > 0) {
+				keyBindingActions.put(bindingName, Event.getKeyCodeForName(keyboardKey));
+			} else {
+				keyBindingActions.put(bindingName, -1);
+			}
+			
 		}
 		
 		parser.warnOnUnusedKeys();
