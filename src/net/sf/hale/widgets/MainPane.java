@@ -25,11 +25,10 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.interfacelock.MovementHandler;
 
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ThemeInfo;
-import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.renderer.AnimationState.StateKey;
+import de.matthiasmann.twl.renderer.Image;
 
 /**
  * The interface widget containing many of the buttons used to access
@@ -45,7 +44,7 @@ public class MainPane extends Widget {
 	
 	private final HotKeyButton[] windowButtons;
 	
-	private final ToggleButton partyMovement, singleMovement;
+	private final MovementModeButton movementMode;
 	
 	private final HotKeyButton stop;
 	
@@ -63,22 +62,22 @@ public class MainPane extends Widget {
 		
 		windowButtons[0] = new HotKeyButton();
 		windowButtons[0].setTheme("menubutton");
-		windowButtons[0].addHotKeyBinding(new Keybindings.ShowMenu());
+		windowButtons[0].setHotKeyBinding(new Keybindings.ShowMenu());
 		
 		windowButtons[1] = new HotKeyButton();
 		windowButtons[1].setTheme("characterbutton");
-		windowButtons[1].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
+		windowButtons[1].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
 		
 		windowButtons[2] = new HotKeyButton();
 		windowButtons[2].setTheme("inventorybutton");
-		windowButtons[2].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
+		windowButtons[2].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		
 		windowButtons[3] = new HotKeyButton();
 		windowButtons[3].setTheme("mapbutton");
-		windowButtons[3].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
+		windowButtons[3].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
 		
 		windowButtons[4] = new LogButton();
-		windowButtons[4].addHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
+		windowButtons[4].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
 		
 		for (Button button : windowButtons) {
 			add(button);
@@ -86,42 +85,16 @@ public class MainPane extends Widget {
 		
 		endTurn = new HotKeyButton();
 		endTurn.setTheme("endturnbutton");
-		endTurn.addHotKeyBinding(new Keybindings.EndTurn());
+		endTurn.setHotKeyBinding(new Keybindings.EndTurn());
 		add(endTurn);
 		
-		partyMovement = new ToggleButton();
-		if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party)
-			partyMovement.setActive(true);
-			
-		partyMovement.addCallback(new Runnable() {
-			@Override public void run() {
-				partyMovement.setActive(true);
-				singleMovement.setActive(false);
-				
-				setMovementMode();
-			}
-		});
-		partyMovement.setTheme("partymovementbutton");
-		add(partyMovement);
-		
-		singleMovement = new ToggleButton();
-		if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Single)
-			singleMovement.setActive(true);
-		
-		singleMovement.addCallback(new Runnable() {
-			@Override public void run() {
-				partyMovement.setActive(false);
-				singleMovement.setActive(true);
-				
-				setMovementMode();
-			}
-		});
-		singleMovement.setTheme("singlemovementbutton");
-		add(singleMovement);
+		movementMode = new MovementModeButton();
+		movementMode.setHotKeyBinding(new Keybindings.ToggleMovementMode());
+		add(movementMode);
 		
 		stop = new HotKeyButton();
 		stop.setTheme("stopbutton");
-		stop.addHotKeyBinding(new Keybindings.CancelMovement());
+		stop.setHotKeyBinding(new Keybindings.CancelMovement());
 		add(stop);
 	}
 	
@@ -131,13 +104,6 @@ public class MainPane extends Widget {
 	
 	public void cancelAllOrders() {
 		Game.interfaceLocker.interruptMovement();
-	}
-	
-	private void setMovementMode() {
-		if (partyMovement.isActive())
-			Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Party);
-		else
-			Game.interfaceLocker.setMovementMode(MovementHandler.Mode.Single);
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
@@ -170,18 +136,28 @@ public class MainPane extends Widget {
 			lastX = button.getX() - buttonGap;
 		}
 		
-		partyMovement.setSize(partyMovement.getPreferredWidth(), partyMovement.getPreferredHeight());
-		singleMovement.setSize(singleMovement.getPreferredWidth(), singleMovement.getPreferredHeight());
+		movementMode.setSize(movementMode.getPreferredWidth(), movementMode.getPreferredHeight());
 		stop.setSize(stop.getPreferredWidth(), stop.getPreferredHeight());
 		
-		partyMovement.setPosition(windowButtons[4].getX(), windowButtons[4].getBottom() + rowGap);
-		singleMovement.setPosition(partyMovement.getRight() + buttonGap, partyMovement.getY());
-		stop.setPosition(windowButtons[0].getX(), partyMovement.getY());
+		movementMode.setPosition(windowButtons[4].getX(), windowButtons[4].getBottom() + rowGap);
+		stop.setPosition(windowButtons[0].getX(), movementMode.getY());
 		
 		endTurn.setSize(endTurn.getPreferredWidth(), endTurn.getPreferredHeight());
 		
 		endTurn.setPosition(getInnerRight() - endTurn.getWidth(),
 				getInnerBottom() - endTurn.getHeight());
+	}
+	
+	/**
+	 * Sets the icon currently being shown in the movement mode button
+	 */
+	
+	public void setMovementModeIcon() {
+		if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
+			movementMode.setOverlay(movementMode.partyIcon);
+		} else {
+			movementMode.setOverlay(movementMode.singleIcon);
+		}
 	}
 	
 	/**
@@ -234,26 +210,14 @@ public class MainPane extends Widget {
 		}
 	}
 	
-	private class HotKeyButton extends Button {
-		private Keybindings.Binding binding;
-		
-		private void addHotKeyBinding(Keybindings.Binding binding) {
-			this.binding = binding;
-			super.addCallback(binding);
-		}
+	private class MovementModeButton extends HotKeyButton {
+		private Image singleIcon, partyIcon;
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
 			
-			String tooltip = themeInfo.getParameter("tooltip", (String)null);
-			
-			String actionName = binding.getActionName();
-			int key = Game.config.getKeyForAction(actionName);
-			if (key != -1) {
-				String keyChar = Event.getKeyNameForCode(key);
-			
-				setTooltipContent("[" + keyChar + "] " + tooltip);
-			}
+			singleIcon = themeInfo.getImage("singleicon");
+			partyIcon = themeInfo.getImage("partyicon");
 		}
 	}
 }

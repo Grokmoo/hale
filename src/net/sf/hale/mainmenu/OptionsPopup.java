@@ -173,11 +173,12 @@ public class OptionsPopup extends PopupWindow {
 					setAcceptEnabled();
 				}
 			});
-			addHorizontalWidgets(modesTitle, modesBox);
+			//addHorizontalWidgets(modesTitle, modesBox);
 			
 			fullscreen = new ToggleButton();
 			fullscreen.setTheme("fullscreentoggle");
-			addHorizontalWidgets(fullscreen);
+			
+			addHorizontalWidgets(modesTitle, modesBox, fullscreen);
 			
 			tooltipTitle = new Label();
 			tooltipTitle.setTheme("tooltiplabel");

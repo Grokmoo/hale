@@ -188,6 +188,8 @@ public class MainViewer extends DesktopArea {
         this.add(logWindow);
         this.add(merchantWindow);
         this.add(scriptConsole);
+        
+        mainPane.setMovementModeIcon();
 	}
 	
 	public void clearTargetTitleText() {

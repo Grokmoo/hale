@@ -19,6 +19,7 @@
     "ToggleInventoryWindow" : "I",
     "ToggleLogWindow" : "L",
     "ToggleMiniMap" : "M",
+	"ToggleMovementMode" : "O",
     "ToggleQuickbarPopup" : "Q",
     "ToggleScriptConsole" : "GRAVE",
     "UseQuickbarSlot0" : "1",
