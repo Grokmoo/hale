@@ -27,4 +27,4 @@ addPrereq Stat CasterLevel 1
 
 upgrade DistractingFog "When upgraded with Distracting Fog, creatures in the fog suffer a 10 point penalty to Mental Resistance, and a 10 point plus one per caster level penalty to Attack and to Spell Failure."
 
-upgrade PoisonFog "With Poison Fog, creatures in the fog now suffer a penalty to Strength and Constitution.  The penalty starts at -2, and increases by 2 points for each round the creature remains in the fog."
+upgrade PoisonFog "With Poison Fog, creatures in the fog now suffer a penalty to Strength and Constitution.  The penalty starts at -1, and increases by 1 point for each round the creature remains in the fog."

@@ -67,8 +67,8 @@ function addPoisonFog(game, effect, target) {
 	targetEffect.setTitle("Poison Fog");
 	effect.addChildEffect(targetEffect);
 	
-	targetEffect.getBonuses().addPenalty('Str', -2);
-	targetEffect.getBonuses().addPenalty('Con', -2);
+	targetEffect.getBonuses().addPenalty('Str', -1);
+	targetEffect.getBonuses().addPenalty('Con', -1);
 	
 	target.applyEffect(targetEffect);
 }

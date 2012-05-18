@@ -1,6 +1,6 @@
 name "Enfeeble"
 type "Enchantment"
-description "Enfeeble upgrades your Curse spell.  Your curse now affects the target's attributes, applying a 3 plus 1 per 6 caster level penalty to Dexterity and Constitution."
+description "Enfeeble upgrades your Curse spell.  Your curse now affects the target's attributes, applying a 2 plus 1 per 6 caster level penalty to Dexterity and Constitution."
 activateable false
 
 icon "icons/enfeeble"

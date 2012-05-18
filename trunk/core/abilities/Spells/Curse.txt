@@ -1,6 +1,6 @@
 name "Curse"
 type "Enchantment"
-description "The caster attempts to touch a single target.  If they succeed, the target is cursed with a 10 + caster level penalty to Armor Class for 5 to 10 rounds."
+description "The caster attempts to touch a single target.  If they succeed, the target is cursed with a 10 + caster level penalty to Armor Class for 4 to 8 rounds."
 activateable true
 fixed true
 cooldown 8
@@ -24,7 +24,7 @@ aiPriority 4
 
 addPrereq Stat CasterLevel 1
 
-upgrade "Enfeeble" "With Enfeeble, your curse now affects the target's attributes, applying a 3 plus 1 per 6 caster level penalty to Dexterity and Constitution."
+upgrade "Enfeeble" "With Enfeeble, your curse now affects the target's attributes, applying a 2 plus 1 per 6 caster level penalty to Dexterity and Constitution."
 
 upgrade "MassCurse" "With Mass Curse, all hostiles within 20 feet of the caster are now affected by the curse, with no touch attack needed."
 
