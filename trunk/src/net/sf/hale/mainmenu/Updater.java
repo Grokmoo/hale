@@ -81,19 +81,17 @@ public class Updater extends Thread {
 	}
 	
 	private void finish() {
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//			@Override public void run() {
-//				try {
-//					Runtime.getRuntime().exec(updaterCommand);
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//
-//		System.exit(0);
-		
-		popup.updateCurrentTask("Done");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override public void run() {
+				try {
+					Runtime.getRuntime().exec(updaterCommand);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		System.exit(0);
 	}
 	
 	private void downloadUpdater(String downloadURL) {
