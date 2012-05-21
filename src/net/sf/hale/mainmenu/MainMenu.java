@@ -185,7 +185,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         updateButton.setVisible(false);
         updateButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		new Updater().runUpdater();
+        		new Updater().runUpdater(MainMenu.this);
         	}
         });
         this.add(updateButton);

@@ -19,8 +19,16 @@
 
 package net.sf.hale.mainmenu;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
+import net.sf.hale.util.FileUtil;
 import net.sf.hale.Game;
 import net.sf.hale.util.Logger;
 
@@ -30,9 +38,13 @@ import net.sf.hale.util.Logger;
  *
  */
 
-public class Updater {
+public class Updater extends Thread {
 	private String argument;
 	private String updaterCommand;
+	
+	private boolean canceled;
+	
+	private UpdatePopup popup;
 	
 	/**
 	 * Creates a new Updater instance
@@ -49,20 +61,122 @@ public class Updater {
 	}
 	
 	/**
-	 * Restarts hale and applies the update
+	 * Cancels the current update task
 	 */
 	
-	public void runUpdater() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override public void run() {
-				try {
-					Runtime.getRuntime().exec(updaterCommand);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public void cancel() {
+		canceled = true;
+	}
+	
+	/**
+	 * Restarts hale and applies the update
+	 * @param mainMenu
+	 */
+	
+	public void runUpdater(MainMenu mainMenu) {
+		this.popup = new UpdatePopup(mainMenu, this);
+		popup.openPopupCentered();
 		
-		System.exit(0);
+		this.start();
+	}
+	
+	private void finish() {
+//		Runtime.getRuntime().addShutdownHook(new Thread() {
+//			@Override public void run() {
+//				try {
+//					Runtime.getRuntime().exec(updaterCommand);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//
+//		System.exit(0);
+		
+		popup.updateCurrentTask("Done");
+	}
+	
+	private void downloadUpdater(String downloadURL) {
+		BufferedInputStream in = null;
+		FileOutputStream fout = null;
+		try {
+			// delete the old updater file
+			File file = new File("updater.jar");
+			file.delete();
+			
+			// download the new file
+			in = new BufferedInputStream(new URL(downloadURL).openStream());
+			fout = new FileOutputStream(file);
+			
+			byte[] buffer = new byte[2048];
+			int count;
+			while ( (count = in.read(buffer, 0, 2048)) != -1) {
+				if (canceled) break;
+				
+				// write the bytes to the file
+				fout.write(buffer, 0, count);
+			}
+			
+		} catch (Exception e) {
+			Logger.appendToErrorLog("Error downloading updater", e);
+		}
+		
+		try {
+			if (in != null)
+				in.close();
+
+			if (fout != null)
+				fout.close();
+			
+		} catch (Exception e) {
+			Logger.appendToErrorLog("Error closing stream", e);
+		}
+	}
+	
+	@Override public void run() {
+		popup.updateCurrentTask("Checking updater version.");
+		
+		String localVersion = FileUtil.getMD5Sum(new File("updater.jar"));
+		String serverVersion = null;
+		String downloadURL = null;
+		
+		InputStream in = null;
+		
+		try {
+			in = new URL("http://www.halegame.com/updater-version.txt").openStream();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			serverVersion = reader.readLine().toUpperCase();
+			downloadURL = reader.readLine();
+			
+		} catch (Exception e) {
+			Logger.appendToErrorLog("Error checking updater version", e);
+			popup.updateCurrentTask("Error: Unable to update.");
+		}
+		
+		if (in != null) {
+			try {
+				in.close();
+			} catch (IOException e) {
+				Logger.appendToErrorLog("Error closing input stream while checking for updater version", e);
+			}
+		}
+		
+		if (canceled) return;
+		
+		if (!localVersion.equals(serverVersion)) {
+			// we need to update the updater
+			popup.updateCurrentTask("Downloading updater.");
+			
+			downloadUpdater(downloadURL);
+			
+			if (canceled) return;
+			
+			finish();
+			
+		} else {
+			// we do not need to do any updates
+			finish();
+		}
 	}
 }

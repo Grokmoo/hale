@@ -9,6 +9,28 @@
 		<param name="minHeight"><int>50</int></param>
 	</theme>
 	
+	<theme name="updatepopup" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+			<param name="border"><border>10</border></param>
+			<param name="minWidth"><int>300</int></param>
+			<param name="minHeight"><int>200</int></param>
+			
+			<param name="titlegap"><int>40</int></param>
+			
+			<theme name="titlelabel" ref="labelbigblack">
+				<param name="text"><string>Preparing to Update</string></param>
+			</theme>
+			
+			<theme name="currenttasklabel" ref="labelbigblack"/>
+			
+			<theme name="cancelbutton" ref="mainmenubutton">
+				<param name="text"><string>Cancel</string></param>
+				<param name="minWidth"><int>100</int></param>
+				<param name="minHeight"><int>35</int></param>
+			</theme>
+		</theme>
+	</theme>
+	
 	<theme name="loadingwaitpopup" ref="-defaults">
 		<param name="titleGap"><int>20</int></param>
 		<param name="labelBarGap"><int>5</int></param>
