@@ -9,6 +9,7 @@ encounter "aravilMerchantsCenter" 12 9
 
 item 1 "ruraldoor_SW" 24 5
 item 1 "ruraldoor_SW" 25 5
+item 1 "workbench" 8 11
 
 tile base 29 19 base/grass1
 tile base 28 19 base/grass1
