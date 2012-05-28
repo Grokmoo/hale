@@ -2,7 +2,7 @@ name "Journal"
 icon "items/W_Book01" "#ffffffff"
 forceNoQuality true
 ingredient false
-quest false
+quest true
 cursed false
 description "This is the Journal you found in the farmhouse in the Greenrange Forest."
 value "0 CP" 1
