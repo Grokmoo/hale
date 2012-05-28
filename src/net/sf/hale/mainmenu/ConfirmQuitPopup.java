@@ -62,7 +62,14 @@ public class ConfirmQuitPopup extends ConfirmationPopup implements Runnable {
 		this.mode = mode;
 		addCallback(this);
 		
-		setTitleText("Are you sure you wish to quit?");
+		switch (mode) {
+		case QuitToMenu:
+			setTitleText("Are you sure you wish to quit?");
+			break;
+		case ExitGame:
+			setTitleText("Are you sure you wish to exit?");
+			break;
+		}
 	}
 	
 	@Override public void run() {
