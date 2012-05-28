@@ -204,8 +204,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         exitButton.setTheme("exitbutton");
         exitButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		exit = true;
-        		menuRunning = false;
+        		showExitPopup();
         	}
         });
         this.add(exitButton);
@@ -264,6 +263,18 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         });
         releaseNotesButton.setTheme("releasenotesbutton");
         add(releaseNotesButton);
+	}
+	
+	private void showExitPopup() {
+		ConfirmationPopup popup = new ConfirmationPopup(MainMenu.this);
+		popup.setTitleText("Area you sure you wish to exit?");
+		popup.addCallback(new Runnable() {
+			@Override public void run() {
+				exit = true;
+				menuRunning = false;
+			}
+		});
+		popup.openPopupCentered();
 	}
 	
 	/**
@@ -433,8 +444,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
             Display.processMessages();
 			
 			if (Display.isCloseRequested()) {
-				menuRunning = false;
-				exit = true;
+				showExitPopup();
 			}
 		}
 		
