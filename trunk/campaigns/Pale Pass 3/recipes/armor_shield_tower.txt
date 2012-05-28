@@ -1,0 +1,19 @@
+name "Tower Shield"
+description "Creates a tower shield.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 35
+result "shield_tower_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_wood" 4
+ingredient "bar_iron" 6
+ingredient "coal" 5
+qualityModifier 25 ""
+qualityModifier 45 ""
+qualityModifier 65 ""
+qualityModifier 85 ""
+qualityModifier 105 ""
+qualityModifier 130 ""
+qualityModifier 150 ""
+qualityModifier 165 ""
