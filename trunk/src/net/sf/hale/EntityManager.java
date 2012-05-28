@@ -752,7 +752,14 @@ public class EntityManager {
 		c.getInventory().getUnequippedItems().addItemsFromList(unequipped);
 		
 		for (int i = 0; i < equipped.size(); i++) {
-			c.getInventory().equipItem(equipped.getItem(i));
+			int qty = equipped.getQuantity(i);
+			
+			// equip one item to a slot for each item in the equipped itemlist
+			// this handles the case where the character has two of the same item
+			// equipped
+			for (int j = 0; j < qty; j++) {
+				c.getInventory().equipItem(equipped.getItem(i));
+			}
 		}
 		
 		for (int i = 0; i < offHand.size(); i++) {
