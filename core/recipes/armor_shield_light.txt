@@ -1,0 +1,19 @@
+name "Light Shield"
+description "Creates a light shield.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 15
+result "shield_light_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_wood" 2
+ingredient "bar_iron" 2
+ingredient "coal" 2
+qualityModifier 10 ""
+qualityModifier 30 ""
+qualityModifier 50 ""
+qualityModifier 70 ""
+qualityModifier 90 ""
+qualityModifier 110 ""
+qualityModifier 130 ""
+qualityModifier 150 ""

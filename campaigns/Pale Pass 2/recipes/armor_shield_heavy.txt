@@ -1,0 +1,19 @@
+name "Heavy Shield"
+description "Creates a heavy shield.  The quality is dependant on your Craft Armor skill."
+skill "CraftArmor"
+skillRequirement 25
+result "shield_heavy_base"
+resultQuantity 1
+resultHasQuality "true
+resultIsIngredient false
+ingredient "bar_wood" 2
+ingredient "bar_iron" 4
+ingredient "coal" 3
+qualityModifier 15 ""
+qualityModifier 35 ""
+qualityModifier 55 ""
+qualityModifier 75 ""
+qualityModifier 95 ""
+qualityModifier 115 ""
+qualityModifier 130 ""
+qualityModifier 150 ""
