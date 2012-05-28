@@ -13,6 +13,6 @@ trapDifficulties 70 75 80 90 90
 trapActivatesOnlyOnce true
 damageType "Fire"
 damage 10 20
-script "items/flameTrap"
+script "items/trap"
 useButtonText "Place Trap"
 useAPCost 8000

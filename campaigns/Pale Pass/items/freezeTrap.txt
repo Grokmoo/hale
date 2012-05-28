@@ -13,6 +13,6 @@ trapDifficulties 90 100 105 110 105
 trapActivatesOnlyOnce true
 damageType "Cold"
 damage 8 18
-script "items/freezeTrap"
+script "items/trap"
 useButtonText "Place Trap"
 useAPCost 8000

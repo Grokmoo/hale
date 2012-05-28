@@ -13,6 +13,6 @@ trapDifficulties 85 90 95 105 100
 trapActivatesOnlyOnce true
 damageType "Acid"
 damage 5 15
-script "items/acidTrap"
+script "items/trap"
 useButtonText "Place Trap"
 useAPCost 8000
