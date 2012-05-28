@@ -3,7 +3,7 @@ startArea "The Gate"
 minPartySize 2
 maxPartySize 4
 minStartingLevel 12
-maxStartingLevel 18
+maxStartingLevel 60
 roundsPerMinute 10
 minutesPerHour 60
 hoursPerDay 24
