@@ -935,6 +935,9 @@ public class Inventory implements Saveable {
 	/**
 	 * Checks if all currently stored items in this inventory are valid for the
 	 * current campaign.  Any items that are not valid are discarded.
+	 * 
+	 * Note that this method will also remove all quest items, regardless of any other
+	 * status
 	 */
 	
 	public void checkAllItemsValid() {
@@ -945,13 +948,20 @@ public class Inventory implements Saveable {
 			
 			if (Game.entityManager.getItem(item.getID()) == null) {
 				unequip(i);
+			} else if (item.isQuestItem()) {
+				unequip(i);
 			}
 		}
 		
 		for (int i = 0; i < items.size(); i++) {
 			String id = items.getItemID(i);
 			
-			if ( Game.entityManager.getItem(id) == null) {
+			Item item = Game.entityManager.getItem(id);
+			
+			if ( item == null) {
+				items.removeItem(i, items.getQuantity(i));
+				i--;
+			} else if (item.isQuestItem()) {
 				items.removeItem(i, items.getQuantity(i));
 				i--;
 			}
