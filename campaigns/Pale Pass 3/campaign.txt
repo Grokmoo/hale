@@ -17,7 +17,7 @@ addLocation "Aravil Castle" "aravilCastleToWorldMap" "worldmap/city2" 320 320
 addLocation "Aravil Merchants" "aravilMerchantsToWorldMap" "worldmap/city4" 370 400
 addLocation "Tomb of Narkel" "tombEntranceToWorldMap" "worldmap/drake2" 535 280
 addLocation "Greenrange Forest" "greenrangeForestToWorldMap" "worldmap/deciduous-summer-4" 140 250
-addLocation "Greenrange Canyon" "null" "worldmap/deciduous-fall-2" 10 260
+addLocation "Greenrange Canyon" "greenrangeCanyonToWorldMap" "worldmap/deciduous-fall-2" 10 260
 addLocation "Lake Renarel" "lakeRenarelToWorldMap" "worldmap/lake1" 140 100
 addLocation "Demon Gate" "demonGateToWorldMap" "worldmap/dwarven-doors-closed" 110 20
 addLocation "Army Camp" "armyForwardCampToWorldMap" "worldmap/camp" 350 120
