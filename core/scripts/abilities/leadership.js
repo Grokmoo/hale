@@ -6,7 +6,7 @@ function onActivate(game, slot) {
 	effect.setRemoveOnDeactivate(true);
 	effect.setHasDescription(false);
 	
-	var g1 = game.getBaseParticleGenerator("halo");z
+	var g1 = game.getBaseParticleGenerator("halo");
 	g1.setPosition(slot.getParent().getPosition());
 	g1.setDurationInfinite();
 	effect.addAnimation(g1);
