@@ -14,6 +14,7 @@ drawWithSubIcons true
 
 skincolor "#ffffffff"
 clothingcolor "#ffffffff"
+xp 44800
 role "Warrior" 18
 attributes 14 11 15 14 12 13
 conversation "conversations/aravilArmyGeneral"
