@@ -10,6 +10,7 @@ encounter "aravilCastleNorth" 10 8
 
 item 1 "ruraldoor_SE" 10 7
 item 1 "ruraldoor_SE" 11 6
+item 1 "workbench" 25 14
 
 tile base 29 24 base/grass5
 tile base 26 24 base/dirt3
