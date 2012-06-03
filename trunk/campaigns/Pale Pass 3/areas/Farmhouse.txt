@@ -8,6 +8,7 @@ encounter "greenrangeFarmhouse" 6 3
 
 item 1 "chest02" 4 2
 item 1 "farmhouseJournal" 4 2
+item 1 "workbench" 3 5
 
 tile floor 12 10 floor/wood0
 tile floor 14 9 floor/wood2
