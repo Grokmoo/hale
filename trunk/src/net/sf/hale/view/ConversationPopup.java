@@ -58,6 +58,8 @@ public class ConversationPopup extends PopupWindow {
 	
 	private Content content;
 	
+	private boolean closeCalled = false;
+	
 	/**
 	 * Creates a new ConversationPopup which will show the specified conversation
 	 * @param parent the parent entity which initiated the conversation
@@ -104,7 +106,9 @@ public class ConversationPopup extends PopupWindow {
 		// add text and responses added from script to content
 		content.addWidgets();
 		
-		Game.mainViewer.showPopup(this);
+		// if close was called in the start conversation script, don't show the popup
+		if (!closeCalled)
+			Game.mainViewer.showPopup(this);
 	}
 	
 	/**
@@ -151,6 +155,7 @@ public class ConversationPopup extends PopupWindow {
 	
 	public void exit() {
 		closePopup();
+		closeCalled = true;
 	}
 	
 	private class ResponseWidget extends Button implements Runnable {
