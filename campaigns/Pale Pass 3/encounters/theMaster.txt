@@ -1,6 +1,6 @@
 size 5
 faction "Neutral"
-challenge 0
+challenge 250
 creature "focusCrystal" 0 0
 creature "theMaster" -5 2
 creature "demonSlayer" -5 1
