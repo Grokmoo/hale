@@ -394,6 +394,20 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 	}
 	
 	/**
+	 * Starts all animations associated with Effects contained in this set
+	 */
+	
+	public synchronized void startAnimations() {
+		for (Effect effect : effectsNoActiveScript) {
+			effect.startAnimations();
+		}
+		
+		for (Effect effect : effectsWithActiveScript) {
+			effect.startAnimations();
+		}
+	}
+	
+	/**
 	 * Ends all animations currently associated with Effects contained in this
 	 * EntityEffectSet
 	 */

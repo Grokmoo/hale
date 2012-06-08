@@ -384,6 +384,17 @@ public class Area implements Referenceable, EffectTarget, Saveable {
 		return effects.getAffectedCreatures(effect, this.entityList);
 	}
 	
+	/**
+	 * Starts any animations on all effects in this area's effect list,
+	 * and also animations on all contained creatures' effects lists
+	 */
+	
+	public void startEffectAnimations() {
+		effects.startAnimations();
+		
+		entityList.startEffectAnimations();
+	}
+	
 	public List<Effect> getEffectsAt(int x, int y) {
 		return effects.getEffectsAt(x, y);
 	}

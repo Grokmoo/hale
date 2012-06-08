@@ -182,7 +182,7 @@ public class Effect extends Scriptable implements Saveable {
 		if (data.containsKey("scriptState"))
 			effect.scriptState = ScriptState.load(data.getObject("scriptState"));
 		
-		effect.startAnimations();
+		// don't start animations on any effects yet
 		
 		return effect;
 	}

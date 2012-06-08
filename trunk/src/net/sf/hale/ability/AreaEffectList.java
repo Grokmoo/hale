@@ -144,6 +144,16 @@ public class AreaEffectList implements Saveable {
 	}
 	
 	/**
+	 * Starts any animations on effects in this list
+	 */
+	
+	public void startAnimations() {
+		for (Effect effect : effects.keySet()) {
+			effect.startAnimations();
+		}
+	}
+	
+	/**
 	 * Moves the effect currently in this AreaEffectList from its current set of points to the new
 	 * set of points
 	 * 

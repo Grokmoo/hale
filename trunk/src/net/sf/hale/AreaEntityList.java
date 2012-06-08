@@ -282,6 +282,16 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	/**
+	 * Starts any animations on effects in all contained creatures
+	 */
+	
+	public void startEffectAnimations() {
+		for (Entity entity : entitiesSet) {
+			entity.getEffects().startAnimations();
+		}
+	}
+	
+	/**
 	 * Removes the specified Entity from the set of entities within this Area.
 	 * @param entity the entity to remove
 	 */
