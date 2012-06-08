@@ -468,7 +468,7 @@ public class CombatRunner {
 			return creatureAttack(attack, null, true);
 	}
 	
-	private boolean checkContinueCombat() {
+	public boolean checkContinueCombat() {
 		Faction.Relationship rel;
 		
 		for (int i = 0; i < creatures.size(); i++) {		
@@ -612,11 +612,6 @@ public class CombatRunner {
 	
 	public void exitCombat() {
 		for (Creature creature : creatures) {
-			if (!creature.isPlayerSelectable() && creature.isDying())
-				creature.kill();
-			
-			creature.newEncounter();
-			
 			if (creature.isDead())
 				Game.curCampaign.curArea.getEntities().trackDeadCreature(creature);
 		}

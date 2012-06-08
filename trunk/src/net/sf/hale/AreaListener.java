@@ -121,6 +121,8 @@ public class AreaListener {
 			c.getEffects().endAllAnimations();
 			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
 		}
+		
+		if (!combatRunner.checkContinueCombat()) combatRunner.exitCombat();
 	}
 	
 	public void nextTurn() {
