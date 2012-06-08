@@ -602,8 +602,25 @@ public class MainViewer extends DesktopArea {
 		
 		fpsCounter.setPosition(ticker.getRight(), getInnerY() + fpsCounter.getPreferredHeight() / 2);
 		
-		if (ticker.isVisible()) Game.areaViewer.setPosition(ticker.getRight(), getInnerY());
-		else Game.areaViewer.setPosition(getInnerX(), getInnerY());
+		int areaViewerOffset;
+		
+		if (ticker.isVisible()) {
+			areaViewerOffset = Game.areaViewer.getX() - ticker.getRight();
+			Game.areaViewer.setPosition(ticker.getRight(), getInnerY());
+		}
+		else {
+			areaViewerOffset = Game.areaViewer.getX() - getInnerX();
+			Game.areaViewer.setPosition(getInnerX(), getInnerY());
+		}
+		
+		// scroll so the player's viewport doesn't change if the areaviewer moved
+		if (areaViewerOffset != 0) {
+			for (OverHeadFadeAway fade : fadeAways) {
+				fade.scroll(areaViewerOffset, 0);
+			}
+		
+			Game.areaViewer.scroll(-areaViewerOffset, 0);
+		}
 		
 		Game.areaViewer.setSize(portraitArea.getX() - Game.areaViewer.getX(), mainPane.getY() - getInnerY());
 		
