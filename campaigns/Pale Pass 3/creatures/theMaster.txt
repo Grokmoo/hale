@@ -43,6 +43,7 @@ level 1 addAbility "Cure"
 level 1 addAbility "MassRegeneration"
 level 1 addAbility "Regeneration"
 level 1 addAbility "MassCure"
+level 1 addAbility "MasterImmortality"
 
 equip "greatsword" Good
 equip "armor_plateheavy_base" Masterwork

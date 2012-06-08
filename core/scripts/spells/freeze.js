@@ -62,6 +62,7 @@ function applyGlacialWave(game, parent, target, slot) {
 	
 	// apply the ap penalty effect
 	var effect = slot.createEffect();
+	effect.setTitle(spell.getName());
 	effect.setDuration(duration);
 	effect.getBonuses().addPenalty("ActionPoint", -15 - casterLevel);
 	
