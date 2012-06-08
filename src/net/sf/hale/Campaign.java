@@ -219,6 +219,8 @@ public class Campaign {
 		this.party = Party.load(data.getObject("party"), refHandler);
 		
 		this.curArea = refHandler.getArea(data.get("currentArea", null));
+		// start animations on the current area effects
+		curArea.startEffectAnimations();
 		
 		// clear existing triggers by reloading them
 		loadTriggers();
