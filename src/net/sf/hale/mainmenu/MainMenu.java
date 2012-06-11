@@ -267,7 +267,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	
 	private void showExitPopup() {
 		ConfirmationPopup popup = new ConfirmationPopup(MainMenu.this);
-		popup.setTitleText("Area you sure you wish to exit?");
+		popup.setTitleText("Are you sure you wish to exit?");
 		popup.addCallback(new Runnable() {
 			@Override public void run() {
 				exit = true;
