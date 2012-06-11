@@ -140,15 +140,6 @@ public class GameTimer {
 		lastRoundTime = System.currentTimeMillis();
 	}
 	
-	/**
-	 * Forces the timer to run a new round on the next update, assuming that
-	 * the game is currently not in combat mode
-	 */
-	
-	public void forceRoundUpdate() {
-		lastRoundTime = 0l;
-	}
-	
 	private class TemporarySightArea {
 		private List<Point> points;
 		private int roundsRemaining;
