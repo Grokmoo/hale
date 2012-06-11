@@ -472,7 +472,9 @@ public class MainViewer extends DesktopArea {
 		}
 		
 		synchronized(entityUpdateList) {
-			for (Entity e : entityUpdateList) {
+			for (int i = 0; i < entityUpdateList.size(); i++) {
+				Entity e = entityUpdateList.get(i);
+				
 				Game.areaListener.checkKillEntity(e);
 				e.updateViewers();
 			}

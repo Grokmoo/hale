@@ -629,6 +629,8 @@ public class CombatRunner {
 				int hp = -creature.getCurrentHP();
 				creature.healDamage(hp);
 			}
+			
+			creature.getTimer().reset();
 		}
 		
 		int combatLength = Game.curCampaign.getDate().getTotalRoundsElapsed() - combatStartRound;
@@ -644,7 +646,7 @@ public class CombatRunner {
 		Game.selectedEntity = Game.curCampaign.party.getSelected();
 		
 		Game.mainViewer.updateInterface();
-		Game.timer.forceRoundUpdate();
+		Game.timer.resetTime();
 	}
 	
 	public List<Creature> getNextCreatures(int n) {
