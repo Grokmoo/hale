@@ -644,6 +644,7 @@ public class CombatRunner {
 		Game.selectedEntity = Game.curCampaign.party.getSelected();
 		
 		Game.mainViewer.updateInterface();
+		Game.timer.forceRoundUpdate();
 	}
 	
 	public List<Creature> getNextCreatures(int n) {
