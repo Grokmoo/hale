@@ -115,10 +115,11 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		area.getTileGrid().cacheSprites();
 		
 		fadeInTime = System.currentTimeMillis();
+		Game.timer.resetTime();
 	}
 	
 	/**
-	 * Causes this viewer to fade in, with the fade start time set to the current time
+	 * Causes this viewer to fade in, with the fade start time set to the current time.
 	 */
 	
 	public void fadeIn() {
