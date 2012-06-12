@@ -225,8 +225,10 @@
 			<param name="minHeight"><int>300</int></param>
 			<param name="minWidth"><int>400</int></param>
 			
-			<theme name="label" ref="labelbigblack">
-				<param name="text"><string>Press a key...</string></param>
+			<theme name="titlelabel" ref="labelbigblack"/>
+			
+			<theme name="textlabel" ref="labelbigred">
+				<param name="text"><string>Press any key...</string></param>
 			</theme>
 		</theme>
 	</theme>

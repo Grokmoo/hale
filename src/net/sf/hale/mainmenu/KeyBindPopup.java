@@ -53,14 +53,24 @@ public class KeyBindPopup extends PopupWindow {
 	}
 	
 	private class Content extends Widget {
+		private Label title;
 		private Label label;
 		
 		private Content() {
+			title = new Label("Binding for " + callback.getActionName());
+			title.setTheme("titlelabel");
+			add(title);
+			
 			label = new Label();
+			label.setTheme("textlabel");
 			add(label);
 		}
 		
 		@Override protected void layout() {
+			title.setSize(title.getPreferredWidth(), title.getPreferredHeight());
+			title.setPosition(getInnerX() + getInnerWidth() / 2 - title.getWidth() / 2,
+					getInnerY() + getInnerHeight() / 4 - title.getHeight());
+			
 			label.setSize(label.getPreferredWidth(), label.getPreferredHeight());
 			label.setPosition(getInnerX() + getInnerWidth() / 2 - label.getWidth() / 2,
 					getInnerY() + getInnerHeight() / 2 - label.getHeight());
@@ -69,11 +79,11 @@ public class KeyBindPopup extends PopupWindow {
 		}
 		
 		@Override public int getPreferredInnerWidth() {
-			return label.getPreferredWidth();
+			return Math.max(label.getPreferredWidth(), title.getPreferredWidth());
 		}
 		
 		@Override public int getPreferredInnerHeight() {
-			return label.getPreferredHeight();
+			return 2 * (label.getPreferredHeight() + title.getPreferredHeight());
 		}
 		
 		@Override public boolean handleEvent(Event evt) {
@@ -100,6 +110,18 @@ public class KeyBindPopup extends PopupWindow {
 	 */
 	
 	public interface Callback {
+		/**
+		 * Called whenever a key is pressed to be bound
+		 * @param keyCode
+		 */
+		
 		public void keyBound(int keyCode);
+		
+		/**
+		 * Returns the action name for the key that is currently being bound
+		 * @return
+		 */
+		
+		public String getActionName();
 	}
 }

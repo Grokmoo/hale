@@ -404,6 +404,10 @@ public class OptionsPopup extends PopupWindow {
 			actionLabel.setPosition(getInnerX(), getInnerY() + getInnerHeight() / 2 - actionLabel.getHeight() / 2);
 			keyBinding.setPosition(actionLabel.getRight(), getInnerY() + getInnerHeight() / 2 - keyBinding.getHeight() / 2);
 		}
+		
+		@Override public String getActionName() {
+			return actionName;
+		}
 
 		@Override public void keyBound(int keyCode) {
 			String keyChar = Event.getKeyNameForCode(keyCode);
