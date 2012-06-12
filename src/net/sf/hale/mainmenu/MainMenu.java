@@ -331,6 +331,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		//updateButton.setVisible(visible);
 		optionsButton.setVisible(visible);
 		exitButton.setVisible(visible);
+		
+		releaseNotesButton.setEnabled(visible);
 	}
 	
 	@Override protected void paintWidget(GUI gui) {
