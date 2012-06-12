@@ -49,38 +49,27 @@ import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 
+/**
+ * Class for handling the order and progression of combat, including calling AI scripts for
+ * each NPC and creating callbacks to continue combat after each player character's turn
+ * @author Jared
+ *
+ */
+
 public class CombatRunner {
 	private final List<Creature> creatures = new ArrayList<Creature>();
 	private int activeCreatureIndex = -1;
-	private boolean forceCombatMode = false;
 	
 	private boolean combatModeInitiating = false;
 	
 	private int combatStartRound;
 	
-	public void checkForceCombatMode() {
-		if (forceCombatMode) {
-			if (!Game.isInTurnMode()) {
-				Game.setTurnMode(true);
-				startCombat();
-				
-				int selectedIndex = creatures.indexOf(Game.curCampaign.party.getSelected());
-				if (selectedIndex != -1) this.activeCreatureIndex = selectedIndex - 1;
-				
-				runTurn();
-			}
-		} else {
-			if (Game.isInTurnMode() && !checkContinueCombat()) {
-				exitCombat();
-			}
-		}
-	}
-	
-	public void setForceCombatMode(boolean forceCombatMode) {
-		this.forceCombatMode = forceCombatMode;
-		
-		checkForceCombatMode();
-	}
+	/**
+	 * Advances combat to the next round - the next creature in the combat
+	 * queue will have its turn.  If the game is not already in combat mode,
+	 * combat is started and the first creature's turn will occur immediately
+	 * thereafter
+	 */
 	
 	public void nextCombatTurn() {
 		if (!Game.isInTurnMode()) {
@@ -122,6 +111,13 @@ public class CombatRunner {
 		
 		return threatens;
 	}
+	
+	/**
+	 * Returns the list of creatures currently threatening the specified target at their next position
+	 * assumed to be threatening for the purpose of movement
+	 * @param target the creature being threatening
+	 * @return the list of threatening creatures
+	 */
 	
 	private List<Creature> getThreateningCreaturesAtNextPosition(Creature target) {
 		Point curPos = target.getPosition();
@@ -223,6 +219,11 @@ public class CombatRunner {
 		}
 	}
 	
+	/**
+	 * Initializes a combat.  AI active creatures will roll for initiative,
+	 * and then all creatures will be put into the combat queue.
+	 */
+	
 	private void startCombat() {
 		creatures.clear();
 		Game.timer.resetTime();
@@ -255,6 +256,13 @@ public class CombatRunner {
 		combatModeInitiating = false;
 	}
 	
+	/**
+	 * Checks the line of sight of all player characters.  If any character
+	 * has spotted a hostile creature, then combat mode will be initiated after
+	 * a short delay notifying the player
+	 * @return true if a hostile was spotted and combat will be initiated, false otherwise
+	 */
+	
 	public boolean checkAIActivation() {
 		boolean aiActivated = false;
 		
@@ -272,6 +280,13 @@ public class CombatRunner {
 		
 		return aiActivated;
 	}
+	
+	/**
+	 * Checks whether the given creature can see any creatures hostile to it.  Any hostiles
+	 * are added to the AI encounter of known enemies
+	 * @param creature the creature to check
+	 * @return true if the creature can see one or more hostiles, false otherwise
+	 */
 	
 	private boolean checkAIActivation(Creature creature) {
 		Encounter friendlyEncounter = creature.getEncounter();
@@ -313,9 +328,15 @@ public class CombatRunner {
 		return false;
 	}
 	
-	// all attacks end up in this function
-	// if animate is false, the attack is completed immediately and this method
-	// returns after that, otherwise, the attack could be completed async
+	
+	/**
+	 * Causes the specified attack to complete.  If animate is false, then the attack is completed
+	 * immediately, otherwise it will be animated and completed mid animation
+	 * @param attack the main attack
+	 * @param offHand the off hand attack or null if there is no off hand attack
+	 * @param animate whether this attack should be animated
+	 * @return the callback which the caller can wait on for the attack to complete
+	 */
 	
 	private DelayedAttackCallback creatureAttack(Attack attack, Attack offHand, boolean animate) {
 		if (attack == null) {
@@ -414,6 +435,16 @@ public class CombatRunner {
 		}
 	}
 	
+	/**
+	 * Causes the specified attacker to perform a standard attack against the specified defender.
+	 * AP will be deducted from the attacker based on their stats.  If the attacker is wielding an
+	 * off hand weapon, then this attack will also include an off hand attack.  The attack will
+	 * be animated and completed asynchronously mid animation
+	 * @param attacker
+	 * @param defender
+	 * @return the attack callback, which the caller can wait on for the attack to complete
+	 */
+	
 	public DelayedAttackCallback creatureStandardAttack(Creature attacker, Creature defender) {
 		if (defender == null || attacker == null) return null;
 		
@@ -431,6 +462,15 @@ public class CombatRunner {
 		return creatureAttack(attack, offHand, true);
 	}
 	
+	/**
+	 * Causes the specified attacker to perform an attack of opportunity against the specified defender.
+	 * No AP will be used, and only the main hand weapon will attack.  The attack will
+	 * be animated and completed asynchronously mid animation
+	 * @param attacker
+	 * @param defender
+	 * @return the attack callback, which the caller can wait on for the attack to complete
+	 */
+	
 	private DelayedAttackCallback creatureAoOAttack(Creature attacker, Creature defender) {
 		if (defender == null) return null;
 		
@@ -440,6 +480,18 @@ public class CombatRunner {
 		
 		return creatureAttack(attack, null, true);
 	}
+	
+	/**
+	 * Causes the attacker to perform an attack against the specified defender, using the weapon
+	 * in the specified itemSlot, or the main weapon if the itemSlot specified is not a weapon or
+	 * is invalid.  No AP is subtracted from the attacker, and the attack is not animated and completes
+	 * immediately.
+	 * @param attacker
+	 * @param defender
+	 * @param itemSlot
+	 * @return true if the attacker is able to make an attack, false otherwise.  (Note that this
+	 * return status is not affected by whether the attack is a hit or not).
+	 */
 	
 	public boolean creatureSingleAttack(Creature attacker, Creature defender, int itemSlot) {
 		if (defender == null) return false;
@@ -451,6 +503,17 @@ public class CombatRunner {
 		return true;
 	}
 	
+	/**
+	 * Causes the attacker to perform an attack against the specified defender, using the weapon
+	 * in the specified itemSlot, or the main weapon if the itemSlot specified is not a weapon or
+	 * is invalid.  No AP is subtracted from the attacker.  The attack will be animated, and
+	 * completed asynchronously mid-animation.
+	 * @param attacker
+	 * @param defender
+	 * @param itemSlot
+	 * @return the callback which the caller may wait on for the attack to complete
+	 */
+	
 	public DelayedAttackCallback creatureSingleAttackAnimate(Creature attacker, Creature defender, int itemSlot) {
 		if (defender == null) return null;
 		
@@ -458,6 +521,16 @@ public class CombatRunner {
 
 		return creatureAttack(attacker.attack(defender, itemSlot), null, true);
 	}
+	
+	/**
+	 * Causes the specified attacker to perform a touch attack against the specified defender.  The touch
+	 * attack may be either ranged or melee.  Touch attacks do not cost AP.  Melee touch attacks will be
+	 * animated, while ranged touch attacks are not.  Animated attacks will be done asynchronously.
+	 * @param attacker
+	 * @param defender
+	 * @param ranged true if the touch attack is ranged, false if it is melee
+	 * @return
+	 */
 	
 	public DelayedAttackCallback creatureTouchAttack(Creature attacker, Creature defender, boolean ranged) {
 		Attack attack = new Attack(attacker, defender, ranged);
@@ -467,6 +540,12 @@ public class CombatRunner {
 		else
 			return creatureAttack(attack, null, true);
 	}
+	
+	/**
+	 * Checks whether combat should continue.  If any creature is not dead or dying and is hostile
+	 * to any other not dead or dying creature in the current combat, then combat should continue.
+	 * @return true if combat should not continue, false otherwise
+	 */
 	
 	public boolean checkContinueCombat() {
 		Faction.Relationship rel;
@@ -489,6 +568,13 @@ public class CombatRunner {
 		return false;
 	}
 	
+	/**
+	 * Checks if combat should continue and runs the turn for the next creature in the combat queue
+	 * if it should.  If there are no hostiles left or the party is defeated, ends combat.  This method
+	 * will continue running in a loop for AI creatures.  When encountering a PC creature, the loop will
+	 * break to allow for player input.  The function will then be re-called after the PC turn.
+	 */
+	
 	private void runTurn() {	
 		boolean continueCombat = checkContinueCombat();
 		
@@ -497,11 +583,11 @@ public class CombatRunner {
 			if (!c.isDead() && !c.isDying() && !c.isSummoned()) partyDefeated = false;
 		}
 		
-		while ((continueCombat || forceCombatMode) && !partyDefeated) {
+		while (continueCombat && !partyDefeated) {
 			Creature last = lastActiveCreature();
 			if (last != null) last.getTimer().endTurn();
 
-			Creature current = nextActiveCreature();
+			Creature current = nextCreatureInQueue();
 			current.elapseRounds(1);
 			
 			// dead or dying creatures don't get a turn
@@ -546,11 +632,21 @@ public class CombatRunner {
 			}
 		}
 		
-		if (partyDefeated) partyDefeated();
-		else if (!continueCombat && !forceCombatMode) exitCombat();
+		if (partyDefeated)
+			partyDefeated();
+		else if (!continueCombat)
+			exitCombat();
 		
 		Game.mainViewer.updateInterface();
 	}
+	
+	/**
+	 * Changes the order of the combat queue.  The currently active creature is moved
+	 * the specified number of places forward, so that its turn will come up after that
+	 * number of creatures.  Only creatures who have not yet taken any actions, and who
+	 * are not dead, dying, or helpless may wait.
+	 * @param activePlacesForward the number of queue slots forward to move the creature
+	 */
 	
 	public void activeCreatureWait(int activePlacesForward) { 
 		
@@ -600,7 +696,12 @@ public class CombatRunner {
 		Game.mainViewer.updateInterface();
 	}
 	
-	public void partyDefeated() {
+	/**
+	 * Called whenever all player characters are either dead or dying during combat.  The player
+	 * is defeated and must load a game to continue.
+	 */
+	
+	private void partyDefeated() {
 		Game.mainViewer.addMessage("link", "The party has been defeated.");
 		Game.setTurnMode(false);
 		
@@ -609,6 +710,12 @@ public class CombatRunner {
 		InGameMenu menu = new InGameMenu(Game.mainViewer);
 		menu.openPopupCentered();
 	}
+	
+	/**
+	 * Exits the current combat.  Dying player characters are healed to 0 HP.  Level up
+	 * buttons are re-enabled.  Combat XP and currency is awarded, and the interface is
+	 * updated.
+	 */
 	
 	public void exitCombat() {
 		for (Creature creature : creatures) {
@@ -649,6 +756,14 @@ public class CombatRunner {
 		Game.timer.resetTime();
 	}
 	
+	/**
+	 * Gets the next n creatures in the combat queue.  If n is
+	 * larger than the size of the queue, it will loop around, potentially
+	 * holding the same creature multiple times
+	 * @param n the number of creatures to get
+	 * @return a list containing the next n creatures in the combat queue
+	 */
+	
 	public List<Creature> getNextCreatures(int n) {
 		List<Creature> next = new ArrayList<Creature>(n);
 		
@@ -668,9 +783,22 @@ public class CombatRunner {
 		return next;
 	}
 	
+	/**
+	 * inserts the specified creature into the combat queue.  This creature will
+	 * have its turn after the current creature's turn is completed.
+	 * @param creature the creature to insert
+	 */
+	
 	public void insertCreature(Creature creature) {
 		creatures.add(activeCreatureIndex + 1, creature);
 	}
+	
+	/**
+	 * Returns the creature that had its combat turn previous to the current
+	 * creature
+	 * @return the creature that had its combat turn previous to the current
+	 * creature
+	 */
 	
 	public Creature lastActiveCreature() { 
 		if (activeCreatureIndex == -1) return null;
@@ -678,7 +806,22 @@ public class CombatRunner {
 		return creatures.get(activeCreatureIndex);
 	}
 	
-	public Creature nextActiveCreature() {
+	/**
+	 * Returns the current active creature in the combat queue
+	 * @return the current active creature
+	 */
+	
+	public Creature getActiveCreature() {
+		if (activeCreatureIndex == -1) return null;
+		else return creatures.get(activeCreatureIndex);
+	}
+	
+	/**
+	 * Advances the combat queue to the next active creature.
+	 * @return the creature that is next in the queue
+	 */
+	
+	private Creature nextCreatureInQueue() {
 		activeCreatureIndex++;
 		
 		if (activeCreatureIndex == creatures.size()) {
@@ -691,10 +834,12 @@ public class CombatRunner {
 		return creatures.get(activeCreatureIndex);
 	}
 	
-	public Creature getActiveCreature() {
-		if (activeCreatureIndex == -1) return null;
-		else return creatures.get(activeCreatureIndex);
-	}
+	/**
+	 * A class for storing a creature and its associated initiative for this combat round.
+	 * Used in ordering the combat when it starts
+	 * @author Jared
+	 *
+	 */
 	
 	private class CreatureWithInitiative implements Comparable<CreatureWithInitiative> {
 		private Creature creature;
@@ -726,7 +871,7 @@ public class CombatRunner {
 		}
 	}
 	
-	/*
+	/**
 	 * Checks if an AoO Targeter is valid when it is set; the target must still
 	 * be alive
 	 */
@@ -743,6 +888,10 @@ public class CombatRunner {
 		}
 	}
 	
+	/**
+	 * A callback to cancel the current AoO and allow combat to continue
+	 */
+	
 	private class CancelAoOCallback implements Runnable {
 		private MovementHandler.Mover moverToUnPause;
 		
@@ -754,6 +903,12 @@ public class CombatRunner {
 				moverToUnPause.decrementPauseCount();
 		}
 	}
+	
+	/**
+	 * A callback to take the current AoO and then continue combat
+	 * @author Jared
+	 *
+	 */
 	
 	private class TakeAoOCallback implements Runnable {
 		private Creature parent, target;
