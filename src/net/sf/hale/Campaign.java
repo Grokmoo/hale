@@ -686,8 +686,6 @@ public class Campaign {
 		
 		Game.areaViewer.scrollToCreature(Game.curCampaign.party.getSelected());
 		
-		Game.areaListener.getCombatRunner().checkForceCombatMode();
-		
 		for (AbilitySlot slot : canceledAuraSlots) {
 			// reactivate cancelable mode ability slots
 			// that were canceled due to auras being removed

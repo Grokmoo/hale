@@ -108,7 +108,6 @@ public class LoadGameLoadingTaskList extends LoadingTaskList {
 		Runnable setArea = new Runnable() {
 			@Override public void run() {
 				if (Game.isInTurnMode()) Game.areaListener.getCombatRunner().exitCombat();
-				Game.areaListener.getCombatRunner().setForceCombatMode(false);
 				Game.areaViewer.setArea(Game.curCampaign.curArea);
 				Game.areaListener.setArea(Game.curCampaign.curArea);
 			}

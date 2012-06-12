@@ -122,7 +122,11 @@ public class AreaListener {
 			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
 		}
 		
-		if (!combatRunner.checkContinueCombat()) combatRunner.exitCombat();
+		if (Game.isInTurnMode()) {
+			if (!combatRunner.checkContinueCombat()) {
+				combatRunner.exitCombat();
+			}
+		}
 	}
 	
 	public void nextTurn() {
