@@ -282,22 +282,20 @@
 			
 			<theme name="tooltiplabel" ref="labelblack">
 				<param name="text"><string>Tooltip Delay</string></param>
+				<param name="minWidth"><int>95</int></param>
 			</theme>
 			
-			<theme name="tooltipadjuster" ref="valueadjuster"/>
-			
-			<theme name="tooltipunitslabel" ref="labelblack">
-				<param name="text"><string>seconds</string></param>
+			<theme name="tooltipbar" ref="hscrollbar">
+				<param name="minWidth"><int>150</int></param>
 			</theme>
 			
 			<theme name="combatspeedlabel" ref="labelblack">
-				<param name="text"><string>Combat Delay</string></param>
+				<param name="text"><string>Combat Speed</string></param>
+				<param name="minWidth"><int>95</int></param>
 			</theme>
 			
-			<theme name="combatspeedadjuster" ref="valueadjuster"/>
-			
-			<theme name="combatspeedunitslabel" ref="labelblack">
-				<param name="text"><string>seconds</string></param>
+			<theme name="combatspeedbar" ref="hscrollbar">
+				<param name="minWidth"><int>150</int></param>
 			</theme>
 			
 			<theme name="editormodeslabel" ref="labelblack">
