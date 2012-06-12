@@ -101,13 +101,21 @@ public class MerchantWindow extends GameSubWindow {
 	}
 	
 	@Override public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		
-		viewer.clearAllItemHovers();
-		
 		Game.mainViewer.inventoryWindow.setVisible(visible);
 		
-		if (!visible) Game.mainViewer.setMerchant(null);
+		if (visible) {
+			setPosition(Game.mainViewer.inventoryWindow.getRight(), Game.mainViewer.inventoryWindow.getY());
+		} else {
+			Game.mainViewer.setMerchant(null);
+		}
+		
+		super.setVisible(visible);
+		
+		// manually bring this window to the top so that it is over the inventory
+		// window
+		Game.mainViewer.keyboardFocusChildChanged(this);
+		
+		viewer.clearAllItemHovers();
 	}
 	
 	/**
