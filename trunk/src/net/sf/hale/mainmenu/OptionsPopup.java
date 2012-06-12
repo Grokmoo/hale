@@ -41,11 +41,11 @@ import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.Scrollbar;
 import de.matthiasmann.twl.ToggleButton;
-import de.matthiasmann.twl.ValueAdjusterFloat;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.model.SimpleChangableListModel;
-import de.matthiasmann.twl.model.SimpleFloatModel;
+import de.matthiasmann.twl.model.SimpleIntegerModel;
 
 /**
  * The menu Popup responsible for setting game options, such
@@ -144,11 +144,10 @@ public class OptionsPopup extends PopupWindow {
 		private final ToggleButton fullscreen;
 		private final ComboBox<String> modesBox;
 		private final SimpleChangableListModel<String> modesModel;
-		private final ValueAdjusterFloat tooltipDelay;
-		private final ValueAdjusterFloat combatSpeed;
+		private final Scrollbar tooltipDelay, combatSpeed;
 		private final ComboBox<String> editorModesBox;
-		private final Label modesTitle, tooltipTitle, tooltipUnits, editorModesTitle;
-		private final Label combatSpeedTitle, combatSpeedUnits;
+		private final Label modesTitle, tooltipTitle, editorModesTitle;
+		private final Label combatSpeedTitle;
 		private final ScrollPane keyBindingsPane;
 		private final KeyBindingsContent keyBindingsContent;
 		
@@ -173,7 +172,6 @@ public class OptionsPopup extends PopupWindow {
 					setAcceptEnabled();
 				}
 			});
-			//addHorizontalWidgets(modesTitle, modesBox);
 			
 			fullscreen = new ToggleButton();
 			fullscreen.setTheme("fullscreentoggle");
@@ -183,24 +181,20 @@ public class OptionsPopup extends PopupWindow {
 			tooltipTitle = new Label();
 			tooltipTitle.setTheme("tooltiplabel");
 			
-			tooltipDelay = new ValueAdjusterFloat(new SimpleFloatModel(0.1f, 2.0f, 0.4f));
-			tooltipDelay.setStepSize(0.1f);
-			tooltipDelay.setTheme("tooltipadjuster");
-			
-			tooltipUnits = new Label();
-			tooltipUnits.setTheme("tooltipunitslabel");
-			addHorizontalWidgets(tooltipTitle, tooltipDelay, tooltipUnits);
+			tooltipDelay = new Scrollbar(Scrollbar.Orientation.HORIZONTAL);
+			tooltipDelay.setModel(new SimpleIntegerModel(1, 20, 4));
+			tooltipDelay.setPageSize(1);
+			tooltipDelay.setTheme("tooltipbar");
+			addHorizontalWidgets(tooltipTitle, tooltipDelay);
 			
 			combatSpeedTitle = new Label();
 			combatSpeedTitle.setTheme("combatspeedlabel");
 			
-			combatSpeed = new ValueAdjusterFloat(new SimpleFloatModel(0.05f, 0.25f, 0.15f));
-			combatSpeed.setStepSize(0.05f);
-			combatSpeed.setTheme("combatspeedadjuster");
-			
-			combatSpeedUnits = new Label();
-			combatSpeedUnits.setTheme("combatspeedunitslabel");
-			addHorizontalWidgets(combatSpeedTitle, combatSpeed, combatSpeedUnits);
+			combatSpeed = new Scrollbar(Scrollbar.Orientation.HORIZONTAL);
+			combatSpeed.setModel(new SimpleIntegerModel(1, 5, 3));
+			combatSpeed.setPageSize(1);
+			combatSpeed.setTheme("combatspeedbar");
+			addHorizontalWidgets(combatSpeedTitle, combatSpeed);
 			
 			mainV.addGap(DialogLayout.LARGE_GAP);
 			
@@ -258,9 +252,8 @@ public class OptionsPopup extends PopupWindow {
 			
 			// initialize all content
 			fullscreen.setActive(Game.config.getFullscreen());
-			tooltipDelay.setValue( (float)Game.config.getTooltipDelay() / 1000.0f);
-			
-			combatSpeed.setValue( (float)Game.config.getCombatDelay() / 1000.0f);
+			tooltipDelay.setValue(Game.config.getTooltipDelay() / 100);
+			combatSpeed.setValue(Game.config.getCombatDelay() / 50);
 			
 			modesModel.clear();
 			for (DisplayMode mode : Game.allDisplayModes) {
@@ -312,15 +305,13 @@ public class OptionsPopup extends PopupWindow {
 			DisplayMode mode = Game.allDisplayModes.get(this.modesBox.getSelected());
 			boolean fullscreen = this.fullscreen.isActive();
 			
-			// round tooltip delay to 100 ms
-			int tooltipDelay = ( ((int)(this.tooltipDelay.getValue() * 1000.0f)) + 50) / 100;
-			tooltipDelay *= 100;
+			// get tooltip delay in milliseconds
+			int tooltipDelay = this.tooltipDelay.getValue() * 100;
 			
 			DisplayMode edMode = Game.allDisplayModes.get(this.editorModesBox.getSelected());
 			
-			// round combat speed to 50 ms
-			int combatSpeed = ( ((int)(this.combatSpeed.getValue() * 1000.0f)) + 25) / 50;
-			combatSpeed *= 50;
+			// get combat speed in milliseconds
+			int combatSpeed = this.combatSpeed.getValue() * 50;
 			
 			writeConfigToFile(mode.getWidth(), mode.getHeight(), edMode.getWidth(),
 					edMode.getHeight(), fullscreen, tooltipDelay, combatSpeed, keyBindings);
