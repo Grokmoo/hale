@@ -1,6 +1,6 @@
 name "Deadly Initiative"
 type "Assassin Abilities"
-description "You gain a large +40 bonus to initiative, making you far more likely to get the drop on enemies and take your turn first in combat."
+description "You gain a substantial +40 bonus to initiative, making you far more likely to get the drop on enemies and take your turn first in combat."
 
 icon "icons/deadlyInitiative"
 

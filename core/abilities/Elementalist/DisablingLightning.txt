@@ -1,6 +1,6 @@
 name "Disabling Lightning"
 type "Elementalist Abilities"
-description "Your Shock spell now temporarily cripples opponents for 3 rounds.  Affected targets suffer a 10 plus one per caster level penalty to Spell Failure and Attack."
+description "Your Shock / Lightning Bolt spell now temporarily cripples opponents for 3 rounds.  Affected targets suffer a 10 plus one per caster level penalty to Spell Failure and Attack."
 activateable false
 
 icon "icons/disablingLightning"
