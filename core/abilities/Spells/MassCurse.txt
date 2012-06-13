@@ -1,6 +1,6 @@
 name "Mass Curse"
 type "Enchantment"
-description "Mass Curse upgrades Curse, causing it to now affect all hostiles within 20 feet.  Note that there is no resistance check for this spell."
+description "Mass Curse upgrades Curse, causing it to now affect all hostiles within 20 feet.  Note that there is no resistance check for this spell, meaning it is guaranteed to affect all targets."
 activateable false
 
 icon "icons/massCurse"

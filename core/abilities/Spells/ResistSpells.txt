@@ -1,6 +1,6 @@
 name "Resist Spells"
 type "Alteration"
-description "Your Absorb Energy spell is upgraded.  The targeted creature gains spell resistance in addition to the energy damage reduction, reducing the damage and duration of most hostile spells by 15 points plus 1 point per caster level."
+description "Your Absorb Energy spell is upgraded.  The targeted creature gains spell resistance of 15 plus 1 per caster level, in addition to the energy damage reduction.  Spell resistance reduces the damage and duration of hostile spells."
 activateable false
 
 icon "icons/resistSpells"

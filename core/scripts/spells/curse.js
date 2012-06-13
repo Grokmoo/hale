@@ -75,7 +75,7 @@ function bolsterAlly(game, targeter, target, duration) {
 	var casterLevel = parent.getCasterLevel();
 	
 	if (parent.getAbilities().has("Enfeeble")) {
-		var attrPenalty = 2 + parseInt(casterLevel / 6);
+		var attrPenalty = 1 + parseInt(casterLevel / 6);
 	
 		var effect = targeter.getSlot().createEffect();
 		effect.setDuration(duration);
@@ -109,7 +109,7 @@ function applyCurse(game, targeter, target, duration) {
 	effect.getBonuses().addPenalty('ArmorClass', 'Stackable', acPenalty);
 	
 	if (parent.getAbilities().has("Enfeeble")) {
-		var attrPenalty = -3 - parseInt(casterLevel / 6);
+		var attrPenalty = -1 - parseInt(casterLevel / 6);
 	
 		effect.getBonuses().addPenalty('Con', attrPenalty);
 		effect.getBonuses().addPenalty('Dex', attrPenalty);

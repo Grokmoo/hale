@@ -24,7 +24,7 @@ aiPriority 4
 
 addPrereq Stat CasterLevel 1
 
-upgrade "Enfeeble" "With Enfeeble, your curse now affects the target's attributes, applying a 2 plus 1 per 6 caster level penalty to Dexterity and Constitution."
+upgrade "Enfeeble" "With Enfeeble, your curse now affects the target's attributes, applying a 1 plus 1 per 6 caster level penalty to Dexterity and Constitution."
 
 upgrade "MassCurse" "With Mass Curse, all hostiles within 20 feet of the caster are now affected by the curse, with no touch attack needed."
 
