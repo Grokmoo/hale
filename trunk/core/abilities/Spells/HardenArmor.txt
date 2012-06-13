@@ -1,6 +1,6 @@
 name "Harden Armor"
 type "Alteration"
-description "The armor worn by the targeted creature magically hardens, giving the wearer 5 points plus one per 6 caster levels of Physical Damage Reduction.  However, the wearer also suffers an additional 10 points of Armor Penalty due to the decreased mobility.  The effect lasts for 3 rounds plus one round per four caster levels."
+description "The armor worn by the targeted creature magically hardens, giving the wearer 4 points plus one per 6 caster levels of Physical Damage Reduction.  However, the wearer also suffers an additional 10 points of Armor Penalty due to the decreased mobility.  The effect lasts for 3 rounds plus one round per four caster levels."
 activateable true
 fixed true
 cooldown 8
@@ -27,4 +27,4 @@ addPrereq Stat CasterLevel 4
 
 addPrereq Ability ImproveWeapon
 
-upgrade "ResistWeapons" "With Resist Weapons, the targeted armor also gains 25% plus one per caster level Damage Immunity to one of the three physical damage types: Slashing, Piercing, or Blunt."
+upgrade "ResistWeapons" "With Resist Weapons, the targeted armor also gains 20% plus 1% caster level Damage Immunity to one of the three physical damage types: Slashing, Piercing, or Blunt."

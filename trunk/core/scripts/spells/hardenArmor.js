@@ -67,11 +67,11 @@ function onTargetSelect(game, targeter, type) {
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
-	effect.getBonuses().addDamageReduction("Physical", 5 + parseInt(casterLevel / 6));
+	effect.getBonuses().addDamageReduction("Physical", 4 + parseInt(casterLevel / 6));
 	effect.getBonuses().addBonus('ArmorPenalty', 10);
 	
 	if (parent.getAbilities().has("ResistWeapons")) {
-		effect.getBonuses().addDamageImmunity(type, 25 + casterLevel);
+		effect.getBonuses().addDamageImmunity(type, 20 + casterLevel);
 	}
 	
 	// we already checked that the armor exists

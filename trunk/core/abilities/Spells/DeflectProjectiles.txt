@@ -1,6 +1,6 @@
 name "Deflect Projectiles"
 type "Alteration"
-description "The caster touches a single creature.  The creature gains 100% immunity from all damage from normal projectile attacks for 3 rounds plus 1 round per 5 caster levels."
+description "The caster touches a single creature.  The creature gains 100% immunity from projectile attacks for 3 rounds plus 1 round per 5 caster levels.  This includes thrown weapons, arrows, bolts, and sling stones."
 activateable true
 fixed true
 cooldown 11

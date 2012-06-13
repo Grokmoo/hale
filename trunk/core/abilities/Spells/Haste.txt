@@ -1,6 +1,6 @@
 name "Haste"
 type "Alteration"
-description "A single touched target suddenly finds the entire world around them moving more slowly than usual.  The target gains an Action Point bonus of 15 plus one per two caster levels.  The effect lasts for 3 rounds plus one round per 4 caster levels."
+description "A single touched target suddenly finds the entire world around them moving more slowly than usual.  The target gains an Action Point bonus of 15 plus one per two caster levels, allowing them to move further, make more attacks, or cast more spells in a single combat round.  The effect lasts for 3 rounds plus one round per 4 caster levels."
 activateable true
 fixed true
 cooldown 10
