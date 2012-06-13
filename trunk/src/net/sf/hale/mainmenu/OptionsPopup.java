@@ -139,7 +139,7 @@ public class OptionsPopup extends PopupWindow {
 	
 	private class Content extends DialogLayout {
 		private Label title, keybindingsTitle, editorTitle;
-		private Button accept, cancel;
+		private Button accept, cancel, reset;
 		
 		private final ToggleButton fullscreen;
 		private final ComboBox<String> modesBox;
@@ -245,29 +245,37 @@ public class OptionsPopup extends PopupWindow {
 				}
 			});
 			
-			addHorizontalWidgets(accept, cancel);
+			reset = new Button();
+			reset.setTheme("resetbutton");
+			reset.addCallback(new Runnable() {
+				@Override public void run() {
+					ConfirmationPopup popup = new ConfirmationPopup(mainMenu);
+					popup.setTitleText("Reset all options to defaults?");
+					popup.addCallback(new Runnable() {
+						@Override public void run() {
+							resetOptions();
+						}
+					});
+					popup.openPopupCentered();
+				}
+			});
+			
+			Group buttonsH = createSequentialGroup();
+			Group buttonsV = createParallelGroup();
+			
+			buttonsH.addWidgets(accept, cancel);
+			buttonsH.addGap("button");
+			buttonsH.addWidget(reset);
+			
+			buttonsV.addWidgets(accept, cancel, reset);
+			mainH.addGroup(buttonsH);
+			mainV.addGroup(buttonsV);
 			
 			setHorizontalGroup(mainH);
 			setVerticalGroup(mainV);
 			
 			// initialize all content
-			fullscreen.setActive(Game.config.getFullscreen());
-			tooltipDelay.setValue(Game.config.getTooltipDelay() / 100);
-			combatSpeed.setValue(Game.config.getCombatDelay() / 50);
-			
-			modesModel.clear();
-			for (DisplayMode mode : Game.allDisplayModes) {
-				modesModel.addElement(mode.getWidth() + " x " + mode.getHeight());
-			}
-			
-			int index = Config.getMatchingDisplayMode(Game.config.getResolutionX(), Game.config.getResolutionY());
-			modesBox.setSelected(index);
-			
-			int editorIndex = Config.getMatchingDisplayMode(Game.config.getEditorResolutionX(),
-					Game.config.getEditorResolutionY());
-			editorModesBox.setSelected(editorIndex);
-			
-			setAcceptEnabled();
+			initializeWidgetsToConfig(Game.config);
 		}
 		
 		private void setAcceptEnabled() {
@@ -287,6 +295,12 @@ public class OptionsPopup extends PopupWindow {
 				mainH.addGroup(gH);
 				mainV.addGroup(gV);
 			}
+		}
+		
+		private void resetOptions() {
+			Config defaultConfig = new Config("docs/defaultConfig.json");
+			
+			initializeWidgetsToConfig(defaultConfig);
 		}
 		
 		private void applySettings() {
@@ -319,12 +333,34 @@ public class OptionsPopup extends PopupWindow {
 			if (mode.getWidth() == Game.config.getResolutionX() && mode.getHeight() == Game.config.getResolutionY() &&
 					fullscreen == Game.config.getFullscreen()) {
 				
-				Game.config = new Config();
+				Game.config = new Config(Game.configFile);
 				return;
 			}
 			
-			Game.config = new Config();
+			Game.config = new Config(Game.configFile);
 			mainMenu.restartMenu();
+		}
+		
+		private void initializeWidgetsToConfig(Config config) {
+			fullscreen.setActive(config.getFullscreen());
+			tooltipDelay.setValue(config.getTooltipDelay() / 100);
+			combatSpeed.setValue(config.getCombatDelay() / 50);
+			
+			modesModel.clear();
+			for (DisplayMode mode : Game.allDisplayModes) {
+				modesModel.addElement(mode.getWidth() + " x " + mode.getHeight());
+			}
+			
+			int index = Config.getMatchingDisplayMode(config.getResolutionX(), config.getResolutionY());
+			modesBox.setSelected(index);
+			
+			int editorIndex = Config.getMatchingDisplayMode(config.getEditorResolutionX(),
+					config.getEditorResolutionY());
+			editorModesBox.setSelected(editorIndex);
+			
+			keyBindingsContent.initializeWidgetsToConfig(config);
+			
+			setAcceptEnabled();
 		}
 	}
 	
@@ -333,15 +369,20 @@ public class OptionsPopup extends PopupWindow {
 		
 		private KeyBindingsContent() {
 			widgets = new ArrayList<KeyBindWidget>();
+		}
+		
+		private void initializeWidgetsToConfig(Config config) {
+			removeAllChildren();
+			widgets.clear();
 			
 			Group mainH = createParallelGroup();
 			Group mainV = createSequentialGroup();
 			
-			List<String> actions = Game.config.getKeyActionNames();
+			List<String> actions = config.getKeyActionNames();
 			Collections.sort(actions);
 			
 			for (String actionName : actions) {
-				KeyBindWidget widget = new KeyBindWidget(actionName);
+				KeyBindWidget widget = new KeyBindWidget(actionName, config);
 				mainH.addWidget(widget);
 				mainV.addWidget(widget);
 				
@@ -359,14 +400,14 @@ public class OptionsPopup extends PopupWindow {
 		
 		private String actionName;
 		
-		private KeyBindWidget(String actionName) {
+		private KeyBindWidget(String actionName, Config config) {
 			this.actionName = actionName;
 			
 			actionLabel = new Label(actionName);
 			actionLabel.setTheme("actionlabel");
 			add(actionLabel);
 			
-			int keyCode = Game.config.getKeyForAction(actionName);
+			int keyCode = config.getKeyForAction(actionName);
 			String keyChar = Event.getKeyNameForCode(keyCode);
 			
 			keyBinding = new Button(keyChar);

@@ -90,6 +90,8 @@ public class Game {
 	
 	private static NumberFormat numberFormat;
 	
+	public static final String configFile = "config.json";
+	
 	/**
 	 * The global config, containing video mode etc
 	 */
@@ -269,7 +271,7 @@ public class Game {
 	
 	public static void main(String[] args) {
 		Game.numberFormat = NumberFormat.getInstance();
-		Game.config = new Config();
+		Game.config = new Config(Game.configFile);
 		Game.dice = new Dice();
 		
 		Game.mouseActions = new MouseActionList("gui/mouseActions.txt");

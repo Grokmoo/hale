@@ -53,7 +53,7 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	public static void main(String[] args) {
 		// create the basic objects used by the campaign editor
 		Game.textureLoader = new AsyncTextureLoader();
-		Game.config = new Config();
+		Game.config = new Config(Game.configFile);
 		Game.scriptEngineManager = new JSEngineManager();
 		Game.entityManager = new EntityManager();
 		Game.dice = new Dice();
