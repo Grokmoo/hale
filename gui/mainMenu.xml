@@ -322,7 +322,7 @@
 				<theme name="keybindingscontent" ref="dialoglayout">
 					<theme name="keybindwidget" ref="-defaults">
 						<theme name="actionlabel" ref="labelblack">
-							<param name="minWidth"><int>180</int></param>
+							<param name="minWidth"><int>200</int></param>
 						</theme>
 						
 						<theme name="keybindingbutton" ref="-defaults">
@@ -330,7 +330,7 @@
 							<param name="textAlignment"><enum type="alignment">center</enum></param>
 							<param name="font"><font>black</font></param>
 						
-							<param name="minWidth"><int>80</int></param>
+							<param name="minWidth"><int>90</int></param>
 							<param name="minHeight"><int>24</int></param>
 						</theme>
 					</theme>
