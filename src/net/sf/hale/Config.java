@@ -242,10 +242,11 @@ public class Config {
 	}
 	
 	/**
-	 * Creates a new Config from the config.json file
+	 * Creates a new Config from the specified file
+	 * @param fileName the name of the file to read the config from
 	 */
 	
-	public Config() {
+	public Config(String fileName) {
 		// determine system type
 		String osString = System.getProperty("os.name").toLowerCase();
 		
@@ -256,11 +257,11 @@ public class Config {
 		versionID = FileUtil.getHalfMD5Sum(new File("hale.jar"));
 		
 		
-		File configFile = new File("config.json");
+		File configFile = new File(fileName);
 		
 		// create the config file if it does not already exist
 		if (!configFile.isFile()) {
-			createConfigFile();
+			createConfigFile(fileName);
 		}
 		
 		SimpleJSONParser parser = new SimpleJSONParser(configFile);
@@ -313,9 +314,9 @@ public class Config {
 		parser.warnOnUnusedKeys();
 	}
 	
-	private void createConfigFile() {
+	private void createConfigFile(String fileName) {
 		try {
-			FileUtil.copyFile(new File("docs/defaultConfig.json"), new File("config.json"));
+			FileUtil.copyFile(new File("docs/defaultConfig.json"), new File(fileName));
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error creating configuration file.", e);
 		}
