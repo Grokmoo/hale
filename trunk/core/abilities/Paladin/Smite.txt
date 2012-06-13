@@ -1,6 +1,6 @@
 name "Smite"
 type "Paladin Abilities"
-description "The Paladin charges their current with weapon with holy might.  For the next 3 rounds, all hits with the weapon do 2 points per point of Charisma above 10 plus the wielder's Paladin level in Divine damage."
+description "The Paladin charges their current weapon with holy might.  For the next 3 rounds, all hits with the weapon do 2 points per point of Charisma above 10 plus the wielder's Paladin level in Divine damage."
 activateable true
 fixed true
 cooldown 5
