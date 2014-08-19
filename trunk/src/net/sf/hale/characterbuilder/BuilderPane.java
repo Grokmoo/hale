@@ -23,6 +23,7 @@ import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
+import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
@@ -45,6 +46,8 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 	private DialogLayout.Group selectorPaneContentH;
 	private DialogLayout.Group selectorPaneContentV;
 	private Label pointsLabel;
+	
+	private int titleGap;
 	
 	/**
 	 * Create a BuilderPane with the specified descriptive name.
@@ -96,6 +99,12 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		return selectorPane;
 	}
 	
+	@Override protected void applyTheme(ThemeInfo themeInfo) {
+		super.applyTheme(themeInfo);
+		
+		this.titleGap = themeInfo.getParameter("titlegap", 0);
+	}
+	
 	@Override protected void layout() {
 		super.layout();
 		
@@ -109,11 +118,11 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		
 		int selectorPaneWidth = selectorPane.getPreferredWidth();
 		int selectorPaneHeight = Math.min(selectorPane.getPreferredHeight(),
-				getNextButton().getY() - pointsLabel.getBottom());
+				getNextButton().getY() - pointsLabel.getBottom() - titleGap);
 		
 		int textPaneX = getInnerX() + Math.max(backNextWidth, selectorPaneWidth);
 		
-		selectorPane.setPosition(getInnerX(), pointsLabel.getBottom());
+		selectorPane.setPosition(getInnerX(), pointsLabel.getBottom() + titleGap);
 		selectorPane.setSize(textPaneX - getInnerX(), selectorPaneHeight);
 		
 		// if the preferred size is too small leaving a horizontal scrollbar,

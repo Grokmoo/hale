@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 import de.matthiasmann.twl.AnimationState;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.Creature;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -56,7 +57,7 @@ public class CircleTargeter extends AreaTargeter {
 	 * @param slot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public CircleTargeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot slot) {
+	public CircleTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 	}
 
@@ -93,8 +94,10 @@ public class CircleTargeter extends AreaTargeter {
 		return true;
 	}
 	
-	@Override public void draw(AnimationState as) {
-		super.draw(as);
+	@Override public boolean draw(AnimationState as) {
+		if (!super.draw(as)) {
+			return false;
+		}
 		
 		if (mouseHoverValid() && this.radius > 0) {
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -109,5 +112,7 @@ public class CircleTargeter extends AreaTargeter {
 			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 		}
+		
+		return true;
 	}
 }

@@ -21,14 +21,17 @@ package net.sf.hale;
 
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Targeter;
+import net.sf.hale.area.Area;
 import net.sf.hale.defaultability.DefaultAbility;
 import net.sf.hale.defaultability.MouseActionList;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Item;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.NPC;
+import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.PC;
 import net.sf.hale.interfacelock.InterfaceCombatLock;
-import net.sf.hale.rules.CombatRunner;
-import net.sf.hale.rules.ItemList;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.view.AreaViewer;
@@ -46,11 +49,11 @@ public class AreaListener {
 	
 	private Area area;
 	private final AreaViewer areaViewer;
-	private AreaUtil areaUtil;
 	
 	private final CombatRunner combatRunner;
 	
-	private final Point mouseDragStart = new Point(false);
+	private boolean mouseDragStartValid;
+	private Point mouseDragStart;
 	
 	private boolean mouseClickedWithoutDragging = true;
 	
@@ -64,62 +67,79 @@ public class AreaListener {
 		combatRunner = new CombatRunner();
 		
 		targeterManager = new TargeterManager();
+		mouseDragStart = new Point();
 	}
 	
 	public void setArea(Area area) {
 		this.area = area;
-		
-		areaUtil = new AreaUtil(area);
 	}
 	
 	public void setThemeInfo(ThemeInfo themeInfo) {
 		this.themeInfo = themeInfo;
 	}
 	
-	public AreaUtil getAreaUtil() { return areaUtil; }
 	public CombatRunner getCombatRunner() { return combatRunner; }
 	public AreaViewer getAreaViewer() { return areaViewer; }
 	
-	public void checkKillEntity(Entity e) {
-		if (e.getType() != Entity.Type.CREATURE) return;
+	public void checkKillEntity(Entity entity) {
+		if ( !(entity instanceof Creature) ) return;
 		
-		if (!area.getEntities().containsEntity(e)) return;
+		if (entity.getLocation().getArea() != area) return;
 		
-		Creature c = (Creature)e;
+		Creature creature = (Creature)entity;
 		
-		if (c.isSummoned() && c.getCurrentHP() <= 0) {
+		// if creature has already been removed, don't attempt to remove it again
+		if (!area.getEntities().containsEntity(creature)) return;
+		
+		if (creature.isSummoned() && creature.getCurrentHitPoints() <= 0) {
 			boolean runNextCombatTurn = false;
 			
-			if (c.isPlayerSelectable() && combatRunner.lastActiveCreature() == c) {
-				runNextCombatTurn = true;
+			if (creature.isPlayerFaction()) {
+				if (combatRunner.lastActiveCreature() == creature) {
+					runNextCombatTurn = true;
+				}
+				
+				Game.curCampaign.party.removeSummon(creature);
 			}
 			
-			Game.mainViewer.addMessage("red", c.getName() + " is unsummoned.");
-			area.getEntities().removeEntity(c);
-			Game.curCampaign.party.remove(c);
+			Game.mainViewer.addMessage("red", creature.getTemplate().getName() + " is unsummoned.");
+			area.getEntities().removeEntity(creature);
 			
 			if (runNextCombatTurn) {
-				Game.interfaceLocker.add(new InterfaceCombatLock(c, 500));
+				Game.interfaceLocker.add(new InterfaceCombatLock(creature, 500));
 			}
 			
-			c.getEffects().endAllAnimations();
-			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
+			creature.getTemplate().getScript().executeFunction(ScriptFunctionType.onCreatureDeath, creature);
+			creature.endAllAnimations();
+			creature.getEffects().executeOnAllAuraChildren(ScriptFunctionType.onTargetExit);
+			creature.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, creature);
 				
-		} else if (!c.isPlayerSelectable() && c.getCurrentHP() <= -20) {
-			Game.mainViewer.addMessage("red", c.getName() + " is dead.");
-			area.getEntities().removeEntity(c);
+		} else if (!creature.isPlayerFaction() && creature.getCurrentHitPoints() <= 0) {
+			Game.mainViewer.addMessage("red", creature.getTemplate().getName() + " is dead.");
+			area.getEntities().removeEntity(creature);
 			
-			if (!c.getLoot().alreadyGenerated()) {
-				ItemList loot = c.getLoot().generate();
-				for (int i = 0; i < loot.size(); i++) {
-					Item item = loot.getItem(i);
-					item.setPosition(c.getX(), c.getY());
-					area.addItem(item, loot.getQuantity(i));
+			if (creature instanceof NPC) {
+				NPC npc = (NPC)creature;
+				
+				ItemList loot = npc.getTemplate().generateLoot();
+				
+				for (ItemList.Entry entry : loot) {
+					Item item = entry.createItem();
+					item.setLocation(entity.getLocation());
+					
+					area.addItem(item, entry.getQuantity());
 				}
 			}
 			
-			c.getEffects().endAllAnimations();
-			c.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, c);
+			if (creature.getTemplate().getScript() != null) {
+				creature.getTemplate().getScript().executeFunction(ScriptFunctionType.onCreatureDeath, creature);
+			}
+			creature.endAllAnimations();
+			creature.getEffects().executeOnAllAuraChildren(ScriptFunctionType.onTargetExit);
+			creature.getEffects().executeOnAll(ScriptFunctionType.onTargetExit, creature);
+			
+		} else if (creature.isPlayerFaction() && creature.getCurrentHitPoints() <= 0) {
+			creature.timer.endTurn();
 		}
 		
 		if (Game.isInTurnMode()) {
@@ -130,7 +150,7 @@ public class AreaListener {
 	}
 	
 	public void nextTurn() {
-		areaUtil.setPartyVisibility(area);
+		area.getUtil().setPartyVisibility();
 		
 		areaViewer.mouseHoverValid = true;
 		
@@ -138,20 +158,14 @@ public class AreaListener {
 			combatRunner.nextCombatTurn();
 		} else {
 			Game.curCampaign.getDate().incrementRound();
-			Game.curCampaign.curArea.getEntities().elapseRoundsForDeadCreatures(1);
 			
-			for (Entity e : Game.curCampaign.curArea.getEntities()) {
-				if (e.getType() == Entity.Type.CREATURE) {
-					Creature c = (Creature)e;
-					
-					if (c.isPlayerSelectable() || c.isAIActive()) {
-						c.newEncounter();
-						c.elapseRounds(1);
-					}
-					
-					if (c.isDead()) {
-						Game.mainViewer.updateEntity(c);
-					}
+			for (Entity entity : Game.curCampaign.curArea.getEntities()) {
+				if (! (entity instanceof Creature)) continue;
+				
+				Creature creature = (Creature)entity;
+				
+				if (creature.isPlayerFaction() || creature.isAIActive()) {
+					creature.elapseTime(1);
 				}
 			}
 			
@@ -159,15 +173,7 @@ public class AreaListener {
 			Game.mainViewer.updateInterface();
 		}
 	}
-	
-	private boolean isPartyMoving() {
-		for (Creature partyMember : Game.curCampaign.party) {
-			if (partyMember.isCurrentlyMoving()) return true;
-		}
-		
-		return false;
-	}
-	
+
 	public TargeterManager getTargeterManager() { return targeterManager; }
 	
 	public boolean handleEvent(Event evt) {
@@ -180,18 +186,20 @@ public class AreaListener {
 		
 		if (curGridPoint == null) return true;
 		
+		Location curLocation = new Location(area, curGridPoint.x, curGridPoint.y);
+		
 		switch (evt.getType()) {
 		case MOUSE_BTNDOWN:
 			mouseClickedWithoutDragging = true;
 			
-			if (!isPartyMoving() && evt.getMouseButton() == Event.MOUSE_RBUTTON) {
+			if (!Game.curCampaign.party.isCurrentlyMoving() && evt.getMouseButton() == Event.MOUSE_RBUTTON) {
 				if (targeterManager.isInTargetMode()) {
 					targeterManager.getCurrentTargeter().showMenu(evt.getMouseX() - 2, evt.getMouseY() - 25);
 				} else if (Game.interfaceLocker.locked()) {
 					// Do nothing
 				} else {
 					Game.mouseActions.showDefaultAbilitiesMenu(Game.curCampaign.party.getSelected(),
-							curGridPoint, evt.getMouseX() - 2, evt.getMouseY() - 25);
+							curLocation, evt.getMouseX() - 2, evt.getMouseY() - 25);
 				}
 			}
 			break;
@@ -199,17 +207,17 @@ public class AreaListener {
 			if (evt.getMouseButton() != Event.MOUSE_LBUTTON) break; 
 
 			
-			if (mouseDragStart.valid) {
-				mouseDragStart.valid = false;
-			} else if (isPartyMoving() && mouseClickedWithoutDragging) {
+			if (mouseDragStartValid) {
+				mouseDragStartValid = false;
+			} else if (Game.curCampaign.party.isCurrentlyMoving() && mouseClickedWithoutDragging) {
 				Game.mainViewer.getMainPane().cancelAllOrders();
 			} else if (targeterManager.isInTargetMode() && mouseClickedWithoutDragging) {
 				targeterManager.getCurrentTargeter().performLeftClickAction();
 			} else if (curMouseCondition != null && mouseClickedWithoutDragging) {
 				DefaultAbility ability = curMouseCondition.getAbility();
 				if (ability != null) {
-					Creature parent = Game.curCampaign.party.getSelected();
-					if (ability.canActivate(parent, curGridPoint)) ability.activate(parent, curGridPoint);
+					PC parent = Game.curCampaign.party.getSelected();
+					if (ability.canActivate(parent, curLocation)) ability.activate(parent, curLocation);
 				}
 				
 			}
@@ -217,13 +225,13 @@ public class AreaListener {
 		case MOUSE_DRAGGED:
 			mouseClickedWithoutDragging = false;
 			
-			if (mouseDragStart.valid) {
-				mouseDragStart.valid = false;
+			if (mouseDragStartValid) {
+				mouseDragStartValid = false;
 				areaViewer.scroll(-2 * (evt.getMouseX() - mouseDragStart.x), -2 * (evt.getMouseY() - mouseDragStart.y));
 			} else {
 				mouseDragStart.x = evt.getMouseX();
 				mouseDragStart.y = evt.getMouseY();
-				mouseDragStart.valid = true;
+				mouseDragStartValid = true;
 			}
 			break;
 		}
@@ -235,18 +243,24 @@ public class AreaListener {
 		int xOffset = lastMouseX + areaViewer.getScrollX() - areaViewer.getX();
 		int yOffset = lastMouseY + areaViewer.getScrollY() - areaViewer.getY();
 		
+		// compute grid point of mouse and limit it to area coordinates
 		curGridPoint = AreaUtil.convertScreenToGrid(xOffset, yOffset);
+		
+		if (curGridPoint.x < 0) curGridPoint.x = 0;
+		else if (curGridPoint.x >= area.getWidth()) curGridPoint.x = area.getWidth() - 1;
+		
+		if (curGridPoint.y < 0) curGridPoint.y = 0;
+		else if (curGridPoint.y >= area.getHeight()) curGridPoint.y = area.getHeight() - 1;
 		
 		Game.mainViewer.getMouseOver().setPoint(curGridPoint);
 		
-		areaViewer.mouseHoverTile.valid = true;
 		areaViewer.mouseHoverTile.x = curGridPoint.x;
 		areaViewer.mouseHoverTile.y = curGridPoint.y;
 		
 		if (targeterManager.isInTargetMode()) {
 			Targeter targeter = targeterManager.getCurrentTargeter();
 			
-			if (targeter.getParent().isPlayerSelectable()) {
+			if (targeter.getParent() instanceof PC) {
 				targeter.setMousePosition(xOffset, yOffset, curGridPoint);
 				
 				areaViewer.mouseHoverValid = targeter.mouseHoverValid();
@@ -261,8 +275,10 @@ public class AreaListener {
 			
 			Game.mainViewer.clearTargetTitleText();
 		} else {
+			Location curLocation = new Location(area, curGridPoint.x, curGridPoint.y);
+			
 			curMouseCondition = Game.mouseActions.getDefaultMouseCondition(Game.curCampaign.party.getSelected(),
-					curGridPoint);
+					curLocation);
 			
 			areaViewer.mouseHoverValid = curMouseCondition != MouseActionList.Condition.Cancel;
 			

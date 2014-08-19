@@ -20,12 +20,12 @@
 package net.sf.hale.defaultability;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * A callback that is used to
- * {@link DefaultAbility#activate(net.sf.hale.entity.Creature, net.sf.hale.util.Point)}
+ * {@link DefaultAbility#activate(PC, Location)}
  * a DefaultAbility.  Can be added as a Callback to a button so that it runs (activating
  * the specified DefaultAbility) when the button is clicked.
  * @author Jared Stephen
@@ -34,8 +34,8 @@ import net.sf.hale.util.Point;
 
 public class DefaultAbilityCallback implements Runnable {
 	private DefaultAbility ability;
-	private Creature parent;
-	private Point targetPosition;
+	private PC parent;
+	private Location targetPosition;
 	
 	/**
 	 * Creates a new DefaultAbilityCallback that will activate the
@@ -55,7 +55,7 @@ public class DefaultAbilityCallback implements Runnable {
 	 * @param targetPosition the targeted grid Point
 	 */
 	
-	public void setActivateParameters(Creature parent, Point targetPosition) {
+	public void setActivateParameters(PC parent, Location targetPosition) {
 		this.parent = parent;
 		this.targetPosition = targetPosition;
 	}

@@ -1,3 +1,0 @@
-area "Large Cavern"
-script "triggers/largeCavernEnter"
-addPoints   7 7   7 6   12 4   9 5   13 3   8 6   7 8   10 5   7 9

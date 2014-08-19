@@ -19,12 +19,29 @@
 
 package net.sf.hale.rules;
 
+/**
+ * A BaseWeapon represents a particular class of weapon, such
+ * as short sword, longsword, bow, or battleaxe
+ * @author Jared
+ *
+ */
+
 public class BaseWeapon {
-	private String name;
+	private final String name;
+	
+	/**
+	 * Creates a new BaseWeapon
+	 * @param name the name for the BaseWeapon
+	 */
 	
 	public BaseWeapon(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Returns the name of this BaseWeapon
+	 * @return the name
+	 */
 	
 	public String getName() { return name; }
 }

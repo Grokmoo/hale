@@ -1,6 +1,0 @@
-name "Berserker"
-
-subList BerserkerAbilities 0.5 0.5
-
-subList "Melee"        0.5 5.0
-subList "DualWielding" 4.0 5.0

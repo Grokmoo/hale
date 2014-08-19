@@ -17,7 +17,7 @@
 	"DisarmTrapCost" : 8000,
 	"RecoverTrapCost" : 8000,
 	"PlaceTrapCost" : 8000,
-	"OpenContainerCost" : 4000,
+	"OpenContainerCost" : 0,
 	"OpenDoorCost" : 4000,
 
 	"TrapCriticalFailureThreshold" : 40,
@@ -26,6 +26,10 @@
 	"SearchCheckDistanceMultiplier" : 10,
 
 	"HideAttackPenalty" : 100,
+	"HideSpringTrapPenalty" : 150,
+	"HidePlaceTrapPenalty" : 75,
+	"HideRecoverTrapPenalty" : 50,
+	"HideDisarmTrapPenalty" : 30,
 	"HideCastSpellPenalty" : 100,
 	"HideInPlainSightPenalty" : 50,
 	"HideOpenDoorPenalty" : 100,
@@ -46,7 +50,9 @@
 	"XPLevelExpBaseInv" : 11,
 
 	"EncounterChallengeFactor" : 10,
-	"EncounterXPFactor" : 60,
+	"EncounterXPFactor" : 80,
+	
+	"EncounterGroupChallengeScaleFactor" : 622,
 
 	"SkillsMaxPerLevel" : 5,
 
@@ -58,10 +64,10 @@
 	"SpellSlotCooldownSpellLevelFactor" : 1,
 
 	"AttributePointCostExpBaseNumerator"   : 106,
-	"AttributePointCostExpBaseDemonenator" : 100,
+	"AttributePointCostExpBaseDenominator" : 100,
 
 	"TrapQualityDifficultyNumerator"   : 1,
-	"TrapQualityDifficultyDenomenator" : 4,
+	"TrapQualityDifficultyDenominator" : 4,
 
 	"RecipeVisibleSkillThreshold" : 50,
 	
@@ -79,19 +85,17 @@
 	"CharismaIcon"     : "icons/charisma",
 
 	"DefaultClothes" : "armor_clothes",
-	
-	"LootBagIcon" : "items/I_Lootbag",
 
 	"DefaultRace" : "Human",
 	"DefaultGender" : "Male",
 	
-	"TempContainerDescription" : "__TEMPORARY_CONTAINER_DESCRIPTION__",
+	"TemporaryContainerID" : "temporaryContainer",
 
 	"DefaultItemQuality" : "Good",
 	"DefaultBaseWeapon"  : "Unarmed",
 	"DefaultArmorType"   : "None",
 	"PhysicalDamageType" : "Physical",
-	
 	"DefaultFaction" : "Neutral",
+	
 	"PlayerFaction" : "Player"
 }

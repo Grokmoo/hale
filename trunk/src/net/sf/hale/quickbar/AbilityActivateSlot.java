@@ -23,19 +23,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.Color;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilityActivateCallback;
-import net.sf.hale.ability.AbilityActivator;
 import net.sf.hale.ability.AbilityExamineCallback;
 import net.sf.hale.ability.AbilitySlot;
 import net.sf.hale.ability.ScriptFunctionType;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
-import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.widgets.RightClickMenu;
 
 
@@ -54,9 +51,9 @@ import net.sf.hale.widgets.RightClickMenu;
 
 public class AbilityActivateSlot extends QuickbarSlot {
 	private final String abilityID;
-	private final String abilityIcon;
+	private final Icon abilityIcon;
 	private final String abilityName;
-	private AbilityActivator parent;
+	private PC parent;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
@@ -73,19 +70,15 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	 * @param parent the activator for this Ability
 	 */
 	
-	public AbilityActivateSlot(Ability ability, AbilityActivator parent) {
+	public AbilityActivateSlot(Ability ability, PC parent) {
 		this.abilityID = ability.getID();
 		this.abilityIcon = ability.getIcon();
 		this.abilityName = ability.getName();
 		this.parent = parent;
 	}
 	
-	@Override public Sprite getSprite() {
-		return SpriteManager.getSprite(abilityIcon);
-	}
-	
-	@Override public Color getSpriteColor() {
-		return Color.WHITE;
+	@Override public Icon getIcon() {
+		return abilityIcon;
 	}
 
 	@Override public String getLabelText() {
@@ -97,14 +90,17 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	@Override public boolean isChildActivateable() {
 		Ability ability = Game.ruleset.getAbility(abilityID);
 		
-		for (AbilitySlot slot : parent.getAbilities().getSlotsWithReadiedAbility(ability)) {
+		if (!Game.isInTurnMode() && !ability.canActivateOutsideCombat()) return false;
+		if (!parent.timer.canPerformAction(ability.getAPCost())) return false;
+		
+		for (AbilitySlot slot : parent.abilities.getSlotsWithReadiedAbility(ability)) {
 			if (slot.getCooldownRoundsLeft() == 0) return true;
 		}
 		
 		return false;
 	}
 
-	@Override public void childActivate() {
+	@Override public void childActivate(QuickbarSlotButton button) {
 		AbilitySlot slot = getBestSlot();
 		if (slot == null) return;
 		
@@ -115,23 +111,23 @@ public class AbilityActivateSlot extends QuickbarSlot {
 		}
 	}
 	
-	@Override public void createRightClickMenu(QuickbarSlotButton widget) {
+	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		menu.addMenuLevel(abilityName);
 		
 		Button activate = new Button("Activate");
 		activate.setEnabled(isActivateable());
-		activate.addCallback(new QuickbarSlotButton.ActivateSlotCallback(this));
+		activate.addCallback(button.getActivateSlotCallback(this));
 		menu.addButton(activate);
 		
 		Button examine = new Button("View Details");
-		AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), widget, parent);
+		AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
 		cb.setWindowCenter(menu.getX(), menu.getY());
 		examine.addCallback(cb);
 		menu.addButton(examine);
 		
 		Button clearSlot = new Button("Clear Slot");
-		clearSlot.addCallback(new QuickbarSlotButton.ClearSlotCallback(widget));
+		clearSlot.addCallback(button.getClearSlotCallback());
 		menu.addButton(clearSlot);
 		
 		menu.show();
@@ -144,7 +140,7 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	private AbilitySlot getBestSlot() {
 		Ability ability = Game.ruleset.getAbility(abilityID);
 		
-		List<AbilitySlot> slots = parent.getAbilities().getSlotsWithReadiedAbility(ability);
+		List<AbilitySlot> slots = parent.abilities.getSlotsWithReadiedAbility(ability);
 		
 		if (slots.isEmpty()) return null;
 		
@@ -165,15 +161,13 @@ public class AbilityActivateSlot extends QuickbarSlot {
 		return "Activate " + abilityName;
 	}
 	
-	@Override public Sprite getSecondarySprite() { return null; }
-	
-	@Override public Color getSecondarySpriteColor() { return Color.WHITE; }
+	@Override public Icon getSecondaryIcon() { return null; }
 
 	@Override public String getSaveDescription() {
 		return "Ability \"" + abilityID + "\"";
 	}
 
-	@Override public QuickbarSlot getCopy(Creature parent) {
+	@Override public QuickbarSlot getCopy(PC parent) {
 		return new AbilityActivateSlot(Game.ruleset.getAbility(this.abilityID), parent);
 	}
 }

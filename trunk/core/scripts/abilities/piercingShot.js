@@ -1,15 +1,15 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return !weapon.isMeleeWeapon();
+	return !weapon.isMelee();
 }
 
 function onActivate(game, slot) {
 	var targeter = game.createLineTargeter(slot);
 	
-	targeter.setOrigin(slot.getParent().getPosition());
+	targeter.setOrigin(slot.getParent().getLocation());
 	targeter.setForceLineLength(10);
 	targeter.activate();
 }
@@ -20,20 +20,20 @@ function onTargetSelect(game, targeter) {
 	var parent = targeter.getParent();
 	var ability = targeter.getSlot().getAbility();
 	
-	parent.getTimer().performAttack();
+	parent.timer.performAttack();
 	
 	var g1 = game.getBaseParticleGenerator("ray");
 	g1.setRedDistribution(game.getFixedDistribution(0.4));
 	g1.setGreenDistribution(game.getFixedDistribution(0.28));
 	g1.setBlueDistribution(game.getFixedDistribution(0.22));
 	g1.setAlphaSpeedDistribution(game.getFixedDistribution(-1.0));
-	g1.setVelocityDurationRotationBasedOnSpeed(parent.getPosition(), targeter.getEndPoint(), 600.0);
+	g1.setVelocityDurationRotationBasedOnSpeed(parent.getLocation().toPoint(), targeter.getEndPoint(), 600.0);
 	
 	var targets = targeter.getAffectedCreatures();
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
 	
-		var delay = targets.get(i).getPosition().screenDistance(parent.getPosition()) / g1.getSpeed();
+		var delay = targets.get(i).getLocation().getScreenDistance(parent.getLocation()) / g1.getSpeed();
 		
 		var callback = ability.createDelayedCallback("applyDamage");
 		callback.setDelay(delay);

@@ -1,9 +1,0 @@
-name "Healing Spell Focus"
-type "Spell Casting"
-description "You have focused on the casting of healing magic.  All of your spells heal an additional 10% damage."
-
-icon "icons/healingSpellFocus"
-
-addPrereq Ability IntenseCasting
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('SpellHealing', 'Stackable', 10); parent.applyEffect(effect); }"

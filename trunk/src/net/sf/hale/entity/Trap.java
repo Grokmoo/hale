@@ -1,6 +1,6 @@
 /*
  * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
+ * Copyright (C) 2012 Jared Stephen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,150 +19,150 @@
 
 package net.sf.hale.entity;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
+import net.sf.hale.ScriptInterface;
 import net.sf.hale.ability.ScriptFunctionType;
+import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
-import net.sf.hale.rules.Currency;
-import net.sf.hale.rules.Faction;
-import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
- * A trap is a type of Item that is designed to "go off" when a hostile
- * Creature enters its tile.  It will then generally apply damage or some
- * other effect to the Creature.  Traps can be placed, disarmed, recovered.
- * 
- * @author Jared Stephen
+ * A Trap is a type of item that is triggered when a creature passes through
+ * its tile.  It will do damage or cause a negative effect on its victim.
+ * @author Jared
  *
  */
 
 public class Trap extends Item {
-	private boolean spotted;
-	private boolean armed;
+
+	// whether the location of this trap is known to hostile creatures
+	private boolean isSpotted;
 	
-	private int findDifficulty, placeDifficulty, disarmDifficulty, recoverDifficulty;
-	private int reflexDifficulty;
-	private boolean activateOnlyOnce;
+	private final TrapTemplate template;
+	
+	@Override public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
+		super.load(data, area, refHandler);
+		
+		isSpotted = data.get("isSpotted", false);
+	}
 	
 	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = super.save();
+		JSONOrderedObject out = super.save();
 		
-		data.put("spotted", spotted);
-		data.put("armed", armed);
-		data.put("faction", this.getFaction().getName());
+		out.put("isSpotted", isSpotted);
 		
-		return data;
+		return out;
 	}
 	
-	@Override public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
-		super.load(data, refHandler);
+	protected Trap(TrapTemplate template) {
+		super(template);
 		
-		this.spotted = data.get("spotted", false);
-		this.armed = data.get("armed", false);
+		this.template = template;
 		
-		if (data.containsKey("faction"))
-			this.setFaction(data.get("faction", null));
+		this.isSpotted = false;
 	}
 	
-	/**
-	 * Create a new Trap with the specified parameters.
-	 * 
-	 * @param id the ID String for this Trap; must be unique among items
-	 * @param name the plain text name for this Trap
-	 * @param icon the icon to show on the area
-	 * @param description text description of this item
-	 * @param currency the value of this item
-	 */
-	
-	public Trap(String id, String name, String icon, String description, Currency currency) {
-		super(id, name, icon, Item.ItemType.ITEM, description, currency);
-		this.type = Entity.Type.TRAP;
-		this.spotted = false;
-		this.armed = false;
+	@Override public TrapTemplate getTemplate() {
+		return template;
 	}
 	
 	/**
-	 * Create a new Trap that is a copy of the specified other trap
-	 * 
-	 * @param other the Trap to copy
+	 * Returns true if this trap is spotted and will be seen by all creatures.  Returns false
+	 * if the trap is not spotted and will only be visible to friendly creatures.  Hostiles
+	 * must succeed in a Search check against find difficulty to spot a trap.
+	 * @return whether the trap is visible to hostile creatures
 	 */
 	
-	public Trap(Trap other) {
-		super(other);
-		this.type = Entity.Type.TRAP;
-		this.armed = other.armed;
-		this.spotted = other.spotted;
-		this.activateOnlyOnce = other.activateOnlyOnce;
-		this.findDifficulty = other.findDifficulty;
-		this.placeDifficulty = other.placeDifficulty;
-		this.disarmDifficulty = other.disarmDifficulty;
-		this.recoverDifficulty = other.recoverDifficulty;
-		this.reflexDifficulty = other.reflexDifficulty;
+	public boolean isSpotted() {
+		return isSpotted;
 	}
 	
-	public boolean canPlace(Creature parent) {
-		if (!parent.stats().has(Bonus.Type.TrapHandling)) return false;
+	/**
+	 * Returns true if the parent is currently capable of attempting to place a trap on
+	 * their current location, false otherwise
+	 * @param parent
+	 * @return whether the parent can attempt to place a trap
+	 */
+	
+	public boolean canAttemptPlace(PC parent) {
+		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
 		
-		Trap curTrap = Game.curCampaign.curArea.getTrapAtGridPoint(parent.getX(), parent.getY());
-		
-		if (curTrap != null) return false;
+		// if there is already a trap at the location
+		if (parent.getLocation().getTrap() != null) {
+			Game.mainViewer.addFadeAway("Trap already present here", parent.getLocation().getX(),
+					parent.getLocation().getY(), Color.RED);
+			return false;
+		}
 		
 		return true;
 	}
 	
-	public void tryPlace(Creature parent) {
-		Trap curTrap = Game.curCampaign.curArea.getTrapAtGridPoint(parent.getX(), parent.getY());
+	/**
+	 * The specified parent attemps to place this trap at their current location
+	 * @param parent
+	 * @return true if this trap is succesfully placed, false otherwise
+	 */
+	
+	public boolean attemptPlace(PC parent) {
+		if (!canAttemptPlace(parent)) return false;
 		
-		if (curTrap != null) {
-			Game.mainViewer.addMessage("red", "There is already a trap there.");
-			return;
-		}
+		int difficulty = modifyValueByQuality(template.getPlaceDifficulty());
+		int check = parent.skills.getCheck("Traps", difficulty);
 		
-		int difficulty = modifyValueByQuality(placeDifficulty);
-		int check = parent.getSkillCheck("Traps", difficulty, true);
+		// other creatures get a chance to spot a hiding creature when it places a trap
+		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HidePlaceTrapPenalty"));
 		
 		if (check >= difficulty) {
-			setArmed(true);
-			setSpotted(true);
-			setPosition(parent.getX(), parent.getY());
-			setFaction(parent.getFaction());
-			Game.curCampaign.curArea.addItem(new Trap(this));
-			parent.getInventory().removeItem(this);
-		} else if (check < difficulty - Game.ruleset.getValue("TrapCriticalFailureThreshold")) {
+			// the player character can see their own traps
+			isSpotted = true;
 			
-			//critical failure
-			fireTrap(parent);
-			if (activateOnlyOnce) {
-				armed = false;
-				parent.getInventory().removeItem(this);
+			setLocation(parent.getLocation());
+			setFaction(parent.getFaction());
+			Game.curCampaign.curArea.placeTrap(this);
+			parent.inventory.getUnequippedItems().remove(this);
+			
+			Game.mainViewer.addFadeAway("Trap placed", parent.getLocation().getX(),
+					parent.getLocation().getY(), Color.RED);
+			
+			return true;
+		} else {
+			Game.mainViewer.addFadeAway("Failed to place trap", parent.getLocation().getX(),
+					parent.getLocation().getY(), Color.RED);
+			
+			if (check < difficulty - Game.ruleset.getValue("TrapCriticalFailureThreshold")) {
+				//critical failure
+				fireTrap(parent);
 			}
+			
+			return false;
 		}
 	}
 	
 	/**
-	 * The specified Creature will attempt to recover this trap.  The
+	 * The specified Creature will attempt to disarm this trap.  The
 	 * Creature must succeed at a Traps check against this Trap's
-	 * recoverDifficulty.
+	 * disarmDifficulty.  If successfully disarmed via this method,
+	 * the trap is destroyed.
 	 * 
-	 * @param parent the Creature trying to recover this Trap
-	 * @return true if and only if the Trap was recovered successfully
+	 * @param parent the Creature trying to disarm this Trap.
+	 * @return true if and only if this Trap was disarmed successfully.
 	 */
 	
-	public boolean tryRecover(Creature parent) {
-		if (!armed) return false;
+	public boolean attemptDisarm(Creature parent) {
+		int difficulty = modifyValueByQuality(template.getDisarmDifficulty());
+		int check = parent.skills.getCheck("Traps", difficulty);
 		
-		int difficulty = modifyValueByQuality(recoverDifficulty);
-		int check = parent.getSkillCheck("Traps", difficulty, true);
+		// other creatures get a chance to spot a hiding creature when it disarms a trap
+		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideDisarmTrapPenalty"));
 		
 		if (check >= difficulty) {
 			Game.curCampaign.curArea.removeEntity(this);
-			parent.getInventory().addItem(this);
 			return true;
 		} else if (check < difficulty - Game.ruleset.getValue("TrapCriticalFailureThreshold")) {
-			
 			//critical failure
 			fireTrap(parent);
 		}
@@ -171,25 +171,27 @@ public class Trap extends Item {
 	}
 	
 	/**
-	 * The specified Creature will attempt to disarm this trap.  The
+	 * The specified Creature will attempt to recover this trap.  The
 	 * Creature must succeed at a Traps check against this Trap's
-	 * disarmDifficulty.
+	 * recoverDifficulty.  If recovered, the trap is added to the
+	 * creature's inventory for their use
 	 * 
-	 * @param parent the Creature trying to disarm this Trap.
-	 * @return true if and only if this Trap was disarmed successfully.
+	 * @param parent the Creature trying to recover this Trap
+	 * @return true if and only if the Trap was recovered successfully
 	 */
 	
-	public boolean tryDisarm(Creature parent) {
-		if (!armed) return false;
+	public boolean attemptRecover(Creature parent) {
+		int difficulty = modifyValueByQuality(template.getRecoverDifficulty());
+		int check = parent.skills.getCheck("Traps", difficulty);
 		
-		int difficulty = modifyValueByQuality(disarmDifficulty);
-		int check = parent.getSkillCheck("Traps", difficulty, true);
+		// other creatures get a chance to spot a hiding creature when it recovers a trap
+		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideRecoverTrapPenalty"));
 		
 		if (check >= difficulty) {
 			Game.curCampaign.curArea.removeEntity(this);
+			parent.inventory.getUnequippedItems().add(this);
 			return true;
 		} else if (check < difficulty - Game.ruleset.getValue("TrapCriticalFailureThreshold")) {
-			
 			//critical failure
 			fireTrap(parent);
 		}
@@ -201,30 +203,84 @@ public class Trap extends Item {
 	 * The specified Creature will attempt to spot this Trap.  The creature must
 	 * succeed at a Search check against this Trap's findDifficulty.
 	 * @param parent the Creature trying to spot the trap
-	 * @return true if and only if the Creature succeeds in spotting the trap.  Returns
-	 * false if the Trap was already visible.
+	 * @return true if the trap was spotted via this search attempt, false otherwise
 	 */
 	
-	public boolean trySearch(Creature parent) {
-		if (isVisible()) return false;
+	public boolean attemptSearch(Creature parent) {
+		if (isSpotted) return false;
 		
-		int distancePenalty = 10 * AreaUtil.distance(parent.getX(), parent.getY(), this.getX(), this.getY());
+		int distancePenalty = 10 * getLocation().getDistance(parent);
 		
-		if (parent.skillCheck("Search", modifyValueByQuality(findDifficulty) + distancePenalty, false)) {
-			Game.mainViewer.addMessage("orange", parent.getName() + " spots a trap!");
-			Game.mainViewer.addFadeAway("Search: Success", this.getX(), this.getY(), "grey");
+		if (parent.skills.performCheck("Search", modifyValueByQuality(template.getFindDifficulty()) + distancePenalty)) {
+			Game.mainViewer.addMessage("orange", parent.getTemplate().getName() + " spots a trap!");
+			Game.mainViewer.addFadeAway("Search: Success", getLocation().getX(), getLocation().getY(), new Color(0xFFAbA9A9));
 			
-			setSpotted(true);
-			
-			return true;
+			isSpotted = true;
 		}
 		
-		return false;
+		return isSpotted;
 	}
+	
+	/**
+	 * Checks to see if the target is valid for this trap.  If so, springs the trap on them.
+	 * @param target
+	 * @return whether the trap was fired or not
+	 */
+	
+	public boolean checkSpringTrap(Creature target) {
+		// only fire on hostile creatures
+		if (!getFaction().isHostile(target))
+			return false;
+		
+		Game.mainViewer.addMessage("red", target.getTemplate().getName() + " springs a trap.");
+		
+		fireTrap(target);
+		
+		return true;
+	}
+	
+	/**
+	 * Causes the trap to "Attack" the target.  The target is allowed a reflex save.
+	 * @param target
+	 */
+	
+	private void fireTrap(Creature target) {
+		Game.mainViewer.addFadeAway("Trap sprung", target.getLocation().getX(),
+				target.getLocation().getY(), Color.RED);
+		
+		if (template.hasScript()) {
+			template.getScript().executeFunction(ScriptFunctionType.onSpringTrap, this, target);
+		}
+		
+		// other creatures get a chance to spot a hiding creature when it springs a trap
+		ScriptInterface.performSearchChecksForCreature(target, Game.ruleset.getValue("HideSpringTrapPenalty"));
+		
+		if ( !target.stats.getReflexResistanceCheck(modifyValueByQuality(template.getReflexDifficulty())) ) {
+			if (template.hasScript())
+				template.getScript().executeFunction(ScriptFunctionType.onTrapReflexFailed, this, target);
+			
+			int minDamage = modifyValueByQuality(template.getMinDamage());
+			int maxDamage = modifyValueByQuality(template.getMaxDamage());
+			int damage = Game.dice.rand(minDamage, maxDamage);
+	    
+			if (damage != 0)
+				target.takeDamage(damage, template.getDamageType().getName());
+		}
+		
+		// remove the trap as it has fired
+		Game.curCampaign.curArea.removeEntity(this);
+	}
+	
+	/**
+	 * Multiplies the specified difficulty by the quality modifier of this trap
+	 * as a percentage
+	 * @param difficulty
+	 * @return the multiplied value
+	 */
 	
 	public int modifyValueByQuality(int difficulty) {
 		int num = Game.ruleset.getValue("TrapQualityDifficultyNumerator");
-		int den = Game.ruleset.getValue("TrapQualityDifficultyDenomenator");
+		int den = Game.ruleset.getValue("TrapQualityDifficultyDenominator");
 		
 		int qualityBonus = this.getQuality().getModifier();
 		
@@ -232,72 +288,4 @@ public class Trap extends Item {
 		
 		return difficulty * (100 + bonus) / 100;
 	}
-	
-	public void setArmed(boolean armed) { this.armed = armed; }
-	public boolean isArmed() { return armed; }
-	
-	public boolean isVisible() { return !armed || spotted; }
-	
-	public boolean isDisarmable() { return armed && spotted; }
-	
-	public void setSpotted(boolean spotted) { this.spotted = spotted; }
-	public boolean isSpotted() { return spotted; }
-	
-	private void fireTrap(Creature target) {
-		if (this.hasScript()) {
-			getScript().executeFunction(ScriptFunctionType.onSpringTrap, this, target);
-		}
-		
-		if ( !target.reflexCheck(modifyValueByQuality(reflexDifficulty)) ) {
-			
-			if (hasScript())
-				getScript().executeFunction(ScriptFunctionType.onTrapReflexFailed, this, target);
-			
-			int minDamage = modifyValueByQuality(getDamageMin());
-			int maxDamage = modifyValueByQuality(getDamageMax());
-			int damage = Game.dice.rand(minDamage, maxDamage);
-	    
-			if (damage != 0)
-				target.takeDamage(damage, getDamageType().getName());
-	    }
-		
-		if (activateOnlyOnce) {
-			armed = false;
-			Game.curCampaign.curArea.removeEntity(this);
-		}
-	}
-	
-	public boolean springTrap(Creature target) {
-		// only fire on hostile creatures
-		Faction faction = getFaction();
-		if (faction != null) {
-			if (faction.getRelationship(target) != Faction.Relationship.Hostile) return false; 
-		}
-		
-		if (!armed) return false;
-		
-		Game.mainViewer.addMessage("red", target.getName() + " springs a trap.");
-		
-		fireTrap(target);
-		
-		return true;
-	}
-	
-	public void setReflexDifficulty(int reflexDifficulty) { this.reflexDifficulty = reflexDifficulty; }
-	public int getReflexDifficulty() { return reflexDifficulty; }
-	
-	public void setActivateOnlyOnce(boolean activateOnlyOnce) { this.activateOnlyOnce = activateOnlyOnce; }
-	public boolean activatesOnlyOnce() { return activateOnlyOnce; }
-	
-	public void setFindDifficulty(int findDifficulty) { this.findDifficulty = findDifficulty; }
-	public int getFindDifficulty() { return findDifficulty; }
-
-	public void setPlaceDifficulty(int placeDifficulty) { this.placeDifficulty = placeDifficulty; }
-	public int getPlaceDifficulty() { return placeDifficulty; }
-
-	public void setDisarmDifficulty(int disarmDifficulty) { this.disarmDifficulty = disarmDifficulty; }
-	public int getDisarmDifficulty() { return disarmDifficulty; }
-
-	public void setRecoverDifficulty(int recoverDifficulty) { this.recoverDifficulty = recoverDifficulty; }
-	public int getRecoverDifficulty() { return recoverDifficulty; }
 }

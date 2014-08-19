@@ -1,8 +1,0 @@
-name "Ambidextrous"
-type "Racial Abilities"
-description "Ambidextrous creatures can use either hand nearly as easily as the other for any task.  They can use a weapon in their off hand with nearly no penalties."
-activateable false
-
-icon "icons/dualWielding"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('DualWieldTraining'); effect.getBonuses().addBonus('DualWieldAttack', 25); effect.getBonuses().addBonus('OffHandAttack', 10); effect.getBonuses().addBonus('DualWieldStrDamage', 3); parent.applyEffect(effect); }"

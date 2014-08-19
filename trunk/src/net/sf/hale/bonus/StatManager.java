@@ -26,13 +26,15 @@ import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
+import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EquippableItem;
+import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.Weapon;
 import net.sf.hale.rules.Damage;
 import net.sf.hale.rules.DamageType;
 import net.sf.hale.rules.Role;
-import net.sf.hale.rules.RoleSet;
 
 public class StatManager {
 	private enum RecomputeMode {
@@ -122,13 +124,13 @@ public class StatManager {
 		return amountLeft;
 	}
 	
-	public void changeEquipment(Item.ItemType itemType) {
+	public void changeEquipment(EquippableItemTemplate.Type itemType) {
 		switch (itemType) {
-		case WEAPON: case SHIELD:
+		case Weapon: case Shield:
 			// recompute attack bonus for shield swaps due to shield attack penalty
 			recomputeAttackBonus();
-			// recompute armor class for weapon swaps for a few fringe cases where weapons affect your AC
-		case ARMOR: case GLOVES: case HELMET: case BOOTS:
+			// recompute defense for weapon swaps for a few fringe cases where weapons affect your AC
+		case Armor: case Gloves: case Helmet: case Boots:
 			recomputeArmorClass();
 			break;
 		}
@@ -181,10 +183,10 @@ public class StatManager {
 			case TemporaryHP:
 				switch (mode) {
 				case Removal:
-					parent.removeTemporaryHP(bonus.getValue());
+					parent.removeTemporaryHitPoints(bonus.getValue());
 					break;
 				case Addition:
-					parent.addTemporaryHP(bonus.getValue());
+					parent.addTemporaryHitPoints(bonus.getValue());
 					break;
 				}
 				break;
@@ -243,7 +245,7 @@ public class StatManager {
 		checkRecompute(bonuses, RecomputeMode.Addition, oldConBonus);
 	}
 	
-	private void addAllNoRecompute(BonusList bonuses) {
+	public void addAllNoRecompute(BonusList bonuses) {
 		this.bonuses.addAll(bonuses);
 	}
 	
@@ -373,21 +375,20 @@ public class StatManager {
 	}
 	
 	public void recomputeLevelAndMaxHP() {
-		RoleSet roleSet = parent.getRoles();
 		zeroStats(Stat.LevelAttackBonus, Stat.LevelDamageBonus, Stat.MaxHP);
 		
-		stats.put(Stat.CasterLevel, roleSet.getCasterLevel());
-		stats.put(Stat.CreatureLevel, roleSet.getTotalLevel());
+		stats.put(Stat.CasterLevel, parent.roles.getCasterLevel());
+		stats.put(Stat.CreatureLevel, parent.roles.getTotalLevel());
 		
-		for (String roleID : roleSet.getRoleIDs()) {
+		for (String roleID : parent.roles.getRoleIDs()) {
 			Role role = Game.ruleset.getRole(roleID);
-			int level = roleSet.getLevel(roleID);
+			int level = parent.roles.getLevel(roleID);
 			
 			addToStat(Stat.LevelAttackBonus, level * role.getAttackBonusPerLevel());
 			addToStat(Stat.LevelDamageBonus, level * role.getDamageBonusPerLevel());
 			
-			if (role == roleSet.getBaseRole()) {
-				addToStat(Stat.MaxHP, role.getLevel1HP() + ( (level - 1) * role.getHPPerLevel()) );
+			if (role == parent.roles.getBaseRole()) {
+				addToStat(Stat.MaxHP, role.getHPAtLevelOne() + ( (level - 1) * role.getHPPerLevel()) );
 			} else {
 				addToStat(Stat.MaxHP, level * role.getHPPerLevel());
 			}
@@ -418,43 +419,41 @@ public class StatManager {
 	}
 	
 	public void recomputeArmorClass() {
-		int sizeModifier = parent.getRace().getSize().modifier;
-		
 		float itemsArmorClass = 0.0f;
 		float itemsArmorPenalty = 0.0f;
 		float itemsMovementPenalty = 0.0f;
 		float itemsShieldAC = 0.0f;
 		
-		Item mainWeapon = parent.getInventory().getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
-		if (mainWeapon == null) mainWeapon = parent.getRace().getDefaultWeapon();
+		EquippableItem offItem = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
+				(Weapon)offItem : null;
 		
-		Item offItem = parent.getInventory().getEquippedItem(Inventory.EQUIPPED_OFF_HAND);
-		Item offWeapon = (offItem != null && offItem.getItemType() == Item.ItemType.WEAPON) ? offItem : null;
+		List<Armor> armorItems = new ArrayList<Armor>(5);
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Armor));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Helmet));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Gloves));
+		armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.Boots));
 		
-		List<Item> armorItems = new ArrayList<Item>(5);
-		armorItems.add(parent.getInventory().getEquippedItem(Inventory.EQUIPPED_ARMOR));
-		armorItems.add(parent.getInventory().getEquippedItem(Inventory.EQUIPPED_HELMET));
-		armorItems.add(parent.getInventory().getEquippedItem(Inventory.EQUIPPED_GLOVES));
-		armorItems.add(parent.getInventory().getEquippedItem(Inventory.EQUIPPED_BOOTS));
-		armorItems.add(parent.getInventory().getEquippedItem(Inventory.EQUIPPED_OFF_HAND));
-		for (Item item : armorItems) {
-			if (item == null) continue;
+		if (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Shield)
+			armorItems.add((Armor)parent.inventory.getEquippedItem(Inventory.Slot.OffHand));
+		
+		for (Armor armor : armorItems) {
+			if (armor == null) continue;
 			
-			switch (item.getItemType()) {
-			case WEAPON: continue;
-			case SHIELD:
-				itemsShieldAC += item.getQualityArmorClass() * 
-					(100.0f + get(item.getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
+			switch (armor.getTemplate().getType()) {
+			case Shield:
+				itemsShieldAC += armor.getQualityModifiedArmorClass() * 
+					(100.0f + get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
 			default:
-				itemsArmorClass += item.getQualityArmorClass() * 
-					(100.0f + get(item.getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
-				itemsArmorPenalty += item.getQualityArmorPenalty() *
-					(100.0f - get(item.getArmorType().getName(), Bonus.Type.ArmorTypeArmorPenalty)) / 100.0f;
-				itemsMovementPenalty += item.getQualityMovementPenalty() *
-					(100.0f - get(item.getArmorType().getName(), Bonus.Type.ArmorTypeMovementPenalty)) / 100.0f;
+				itemsArmorClass += armor.getQualityModifiedArmorClass() * 
+					(100.0f + get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorClass)) / 100.0f;
+				itemsArmorPenalty += armor.getQualityModifiedArmorPenalty() *
+					(100.0f - get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeArmorPenalty)) / 100.0f;
+				itemsMovementPenalty += armor.getQualityModifiedMovementPenalty() *
+					(100.0f - get(armor.getTemplate().getArmorType().getName(), Bonus.Type.ArmorTypeMovementPenalty)) / 100.0f;
 			}
 		}
-		// we double counted shield AC bonus
+		// if a shield was present, we double counted shield AC bonus
 		itemsArmorClass -= itemsShieldAC;
 		
 		if (offWeapon != null) itemsShieldAC = get(Bonus.Type.DualWieldArmorClass);
@@ -470,8 +469,9 @@ public class StatManager {
 		if (this.has(Bonus.Type.ImmobilizationImmunity) && baseMovementBonus < 0)
 			baseMovementBonus = 0;
 		
-		addToStat(Stat.MovementBonus, baseMovementBonus - (int)itemsMovementPenalty);
-		addToStat(Stat.MovementCost, parent.getRace().getMovementCost() * (100 - get(Stat.MovementBonus)) / 100);
+		addToStat(Stat.MovementBonus, Math.min(100, baseMovementBonus - (int)itemsMovementPenalty));
+		
+		addToStat(Stat.MovementCost, parent.getTemplate().getRace().getMovementCost() * (100 - get(Stat.MovementBonus)) / 100);
 		
 		int deflection = this.get(Bonus.Type.ArmorClass, Bonus.StackType.DeflectionBonus, Bonus.StackType.DeflectionPenalty);
 		int naturalArmor = this.get(Bonus.Type.ArmorClass, Bonus.StackType.NaturalArmorBonus, Bonus.StackType.NaturalArmorPenalty);
@@ -492,10 +492,10 @@ public class StatManager {
 		armor = Math.max(armor, (int)itemsArmorClass);
 		shield = Math.max(shield, (int)itemsShieldAC);
 		
-		addToStat(Stat.ArmorClass, 50 + sizeModifier + deflection + naturalArmor + armor + shield);
-		addToStat(Stat.TouchArmorClass, 50 + sizeModifier + deflection + shield);
+		addToStat(Stat.ArmorClass, 50 + deflection + naturalArmor + armor + shield);
+		addToStat(Stat.TouchArmorClass, 50 + deflection + shield);
 		
-		if (parent.isImmobilized()) {
+		if (parent.stats.isImmobilized()) {
 			addToStat(Stat.ArmorClass, -20);
 			addToStat(Stat.TouchArmorClass, -20);
 		} else {
@@ -506,87 +506,85 @@ public class StatManager {
 	}
 	
 	public void recomputeAttackBonus() {
-		int sizeModifier = parent.getRace().getSize().modifier;
+		Weapon mainWeapon = parent.getMainHandWeapon();
 		
-		Item mainWeapon = parent.getInventory().getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
-		if (mainWeapon == null) mainWeapon = parent.getRace().getDefaultWeapon();
-		
-		Item offItem = parent.getInventory().getEquippedItem(Inventory.EQUIPPED_OFF_HAND);
-		Item offWeapon = (offItem != null && offItem.getItemType() == Item.ItemType.WEAPON) ? offItem : null;
+		EquippableItem offItem = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
+		Weapon offWeapon = (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Weapon) ?
+				(Weapon)offItem : null;
 		
 		zeroStats(Stat.MainHandAttackBonus, Stat.MainHandDamageBonus, Stat.OffHandAttackBonus, Stat.OffHandDamageBonus);
 		zeroStats(Stat.AttackCost, Stat.TouchAttackBonus, Stat.ShieldAttackPenalty);
 		
-		if (offItem != null && offItem.getItemType() == Item.ItemType.SHIELD) {
+		if (offItem != null && offItem.getTemplate().getType() == EquippableItemTemplate.Type.Shield) {
 			addToStat( Stat.ShieldAttackPenalty,
-					Math.min(0, get(Bonus.Type.ShieldAttack) - offItem.getShieldAttackPenalty()) );
+					Math.min(0, get(Bonus.Type.ShieldAttack) - ((Armor)offItem).getTemplate().getShieldAttackPenalty()) );
 		}
 		
-		String mainBaseWeapon = mainWeapon.getBaseWeapon().getName();
+		String mainBaseWeapon = mainWeapon.getTemplate().getBaseWeapon().getName();
 		
-		addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.MainHandAttack) + get(Bonus.Type.Attack) + sizeModifier);
+		addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.MainHandAttack) + get(Bonus.Type.Attack));
 		addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.MainHandDamage) + get(Bonus.Type.Damage));
 		addToStat(Stat.MainHandAttackBonus, get(mainBaseWeapon, Bonus.Type.BaseWeaponAttack));
 		addToStat(Stat.MainHandDamageBonus, get(mainBaseWeapon, Bonus.Type.BaseWeaponDamage));
 		addToStat(Stat.MainHandAttackBonus, get(Stat.ShieldAttackPenalty));
 		
-		switch (mainWeapon.getWeaponType()) {
-		case MELEE:
-			
-			switch (mainWeapon.getWeaponHandedForCreature(parent.getRace().getSize())) {
-			case LIGHT:
+		switch (mainWeapon.getTemplate().getWeaponType()) {
+		case Melee:
+			switch (mainWeapon.getTemplate().getHanded()) {
+			case Light:
 				addToStat(Stat.MainHandAttackBonus, (Math.max(getDex(), getStr()) - 10) * 2);
 				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.LightMeleeWeaponDamage));
 				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.LightMeleeWeaponAttack));
 				break;
-			case ONE_HANDED:
+			case OneHanded:
 				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.OneHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
 				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.OneHandedMeleeWeaponDamage));
 				break;
-			case TWO_HANDED:
+			case TwoHanded:
 				addToStat(Stat.MainHandAttackBonus, get(Bonus.Type.TwoHandedMeleeWeaponAttack) + (getStr() - 10) * 2);
 				addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.TwoHandedMeleeWeaponDamage));
 			}
 			
+			// add extra damage bonus for not dual wielding
 			if (offWeapon == null) addToStat(Stat.MainHandDamageBonus, 8 * (getStr() - 10));
 			
 			break;
-		case CROSSBOW:
-			addToStat(Stat.MainHandAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.RangedAttack));
-			addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.RangedDamage));
-			break;
 		default:
-			addToStat(Stat.MainHandAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.RangedAttack));
-			addToStat(Stat.MainHandDamageBonus, Math.min( (getStr() - 10) * 8, mainWeapon.getMaxStrengthBonus() ));
-			addToStat(Stat.MainHandDamageBonus, get(Bonus.Type.RangedDamage));
+			addToStat(Stat.MainHandAttackBonus,
+					(getDex() - 10) * 2 + get(Bonus.Type.RangedAttack));
+			addToStat( Stat.MainHandDamageBonus,
+					Math.max(mainWeapon.getTemplate().getMinStrengthBonus(),
+							Math.min( (getStr() - 10) * 8, mainWeapon.getTemplate().getMaxStrengthBonus())) );
+			addToStat(Stat.MainHandDamageBonus,
+					get(Bonus.Type.RangedDamage));
 		}
 		
 		int mainWeaponSpeedBonus = get(mainBaseWeapon, Bonus.Type.BaseWeaponSpeed) + get(Bonus.Type.AttackCost);
-		int mainWeaponSpeed = mainWeapon.getAttackCost() * (100 - mainWeaponSpeedBonus) / 100;
+		int mainWeaponSpeed = mainWeapon.getTemplate().getAttackCost() * (100 - mainWeaponSpeedBonus) / 100;
 		int offWeaponSpeed = 0;
 		
 		if (offWeapon != null) {
-			String offBaseWeapon = offWeapon.getBaseWeapon().getName();
+			String offBaseWeapon = offWeapon.getTemplate().getBaseWeapon().getName();
 			
-			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.OffHandAttack) + get(Bonus.Type.Attack) + sizeModifier);
+			addToStat(Stat.OffHandAttackBonus, get(Bonus.Type.OffHandAttack) + get(Bonus.Type.Attack));
 			addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.OffHandDamage) + get(Bonus.Type.Damage));
 			addToStat(Stat.OffHandAttackBonus, get(offBaseWeapon, Bonus.Type.BaseWeaponAttack));
 			addToStat(Stat.OffHandDamageBonus, get(offBaseWeapon, Bonus.Type.BaseWeaponDamage));
 			
 			int offWeaponSpeedBonus = get(offBaseWeapon, Bonus.Type.BaseWeaponSpeed) + get(Bonus.Type.AttackCost);
-			offWeaponSpeed = offWeapon.getAttackCost() * (100 - offWeaponSpeedBonus) / 100;
+			offWeaponSpeed = offWeapon.getTemplate().getAttackCost() * (100 - offWeaponSpeedBonus) / 100;
 			
 			int offWeaponLightBonus = 0;
 			
-			switch (offWeapon.getWeaponHandedForCreature(parent.getRace().getSize())) {
-			case LIGHT:
+			switch (offWeapon.getTemplate().getHanded()) {
+			case Light:
 				addToStat(Stat.OffHandAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.LightMeleeWeaponAttack));
 				addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.LightMeleeWeaponDamage));
-				offWeaponLightBonus = 10;
 				break;
-			case ONE_HANDED:
+			case OneHanded:
 				addToStat(Stat.OffHandAttackBonus, (getStr() - 10) * 2 + get(Bonus.Type.OneHandedMeleeWeaponAttack));
 				addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.OneHandedMeleeWeaponDamage));
+				offWeaponLightBonus = -10;
 				break;
 			}
 			
@@ -599,7 +597,7 @@ public class StatManager {
 		
 		addToStat(Stat.AttackCost, Math.max(mainWeaponSpeed, offWeaponSpeed));
 		
-		addToStat(Stat.TouchAttackBonus, (getDex() - 10) * 2 + sizeModifier + get(Bonus.Type.Attack));
+		addToStat(Stat.TouchAttackBonus, (getDex() - 10) * 2 + get(Bonus.Type.Attack));
 	}
 	
 	public void recomputeAllStats() {
@@ -611,10 +609,11 @@ public class StatManager {
 			}
 		}
 		
-		for (Item item : parent.getInventory().getEquippedItems()) {
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippableItem item = parent.inventory.getEquippedItem(slot);
 			if (item == null) continue;
 			
-			addAllNoRecompute(item.getAllAppliedBonuses());
+			addAllNoRecompute(item.getBonusList());
 		}
 		
 		recomputeStrNoAttackBonus();
@@ -648,11 +647,39 @@ public class StatManager {
 		}
 	}
 	
+	public int[] getAttributes() {
+		int[] attributes = new int[6];
+		
+		attributes[0] = stats.get(Stat.BaseStr);
+		attributes[1] = stats.get(Stat.BaseDex);
+		attributes[2] = stats.get(Stat.BaseCon);
+		attributes[3] = stats.get(Stat.BaseInt);
+		attributes[4] = stats.get(Stat.BaseWis);
+		attributes[5] = stats.get(Stat.BaseCha);
+		
+		return attributes;
+	}
+	
+	public int getBaseSpellFailure(int spellLevel) {
+		Role role = parent.roles.getBaseRole();
+		
+		int abilityScore = get(role.getSpellCastingAttribute());
+		int casterLevel = getCasterLevel();
+		
+		int failure = role.getSpellFailureBase() + role.getSpellFailureSpellLevelFactor() * spellLevel;
+		failure -= (abilityScore - 10) * role.getSpellFailureAbilityScoreFactor();
+		failure -= casterLevel * role.getSpellFailureCasterLevelFactor();
+		failure -= get(Bonus.Type.SpellFailure);
+		
+		return failure;
+	}
+	
 	public int getCasterLevel() { return get(Stat.CasterLevel); }
 	public int getCreatureLevel() { return get(Stat.CreatureLevel); }
 	public int getLevelDamageBonus() { return get(Stat.LevelDamageBonus); }
 	public int getLevelAttackBonus() { return get(Stat.LevelAttackBonus); }
 	public int getMaxHP() { return get(Stat.MaxHP); }
+	public int getSpellCastingAttribute() { return get(parent.roles.getBaseRole().getSpellCastingAttribute()); }
 	
 	public int getBaseStr() { return get(Stat.BaseStr) + get(Bonus.Type.BaseStr); }
 	public int getBaseDex() { return get(Stat.BaseDex) + get(Bonus.Type.BaseDex); }
@@ -672,7 +699,7 @@ public class StatManager {
 	public int getPhysicalResistance() { return get(Stat.PhysicalResistance) + get(Bonus.Type.PhysicalResistance); }
 	public int getReflexResistance() { return get(Stat.ReflexResistance) + get(Bonus.Type.ReflexResistance); }
 	
-	public int getWeightLimit() { return get(Stat.WeightLimit) + get(Bonus.Type.WeightLimit); }
+	public int getWeightLimit() { return get(Stat.WeightLimit) + get(Bonus.Type.WeightLimit) * 1000; }
 	
 	public boolean isHidden() { return bonuses.has(Bonus.Type.Hidden); }
 	
@@ -690,4 +717,42 @@ public class StatManager {
 	
 	public int getAttackCost() { return stats.get(Stat.AttackCost); }
 	public int getMovementCost() { return stats.get(Stat.MovementCost); }
+	
+	public boolean getMentalResistanceCheck(int difficulty) {
+		return getCheck(difficulty, getMentalResistance(), new StringBuilder("Mental Resistance Check: "));
+	}
+	
+	public boolean getPhysicalResistanceCheck(int difficulty) {
+		return getCheck(difficulty, getPhysicalResistance(), new StringBuilder("Physical Resistance Check: "));
+	}
+	
+	public boolean getReflexResistanceCheck(int difficulty) {
+		return getCheck(difficulty, getReflexResistance(), new StringBuilder("Reflex Resistance Check: "));
+	}
+	
+	private boolean getCheck(int difficulty, int resistance, StringBuilder sb) {
+		int roll = Game.dice.d100();
+		int total = resistance + roll;
+		
+		sb.insert(0, parent.getTemplate().getName() + " attempts ");
+		
+		sb.append(resistance);
+		sb.append(" + ");
+		sb.append(roll);
+		sb.append(" = ");
+		sb.append(total);
+		sb.append(" vs ");
+		sb.append(difficulty);
+		sb.append(" : ");
+		
+		if (total >= difficulty) {
+			sb.append("Success.");
+			Game.mainViewer.addMessage("orange", sb.toString());
+			return true;
+		} else {
+			sb.append("Failure.");
+			Game.mainViewer.addMessage("orange", sb.toString());
+			return false;
+		}
+	}
 }

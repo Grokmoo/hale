@@ -5,7 +5,7 @@
  * This script assumes creatures/human01 exists, and it must be used with a 72x72 creature icon.
  *
  * After creating this, you need to add a frame with the appropriate icon and set the position,
- * using Entity.getIcon() and Entity.getScreenPosition()
+ * using Entity.getIcon() and Entity.getLocation().getCenteredScreenPoint()
  */
 
 var anim = game.createAnimation("creatures/human01", 2.0);

@@ -33,13 +33,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
-import net.sf.hale.Area;
-import net.sf.hale.Encounter;
 import net.sf.hale.Game;
-import net.sf.hale.entity.Entity;
-import net.sf.hale.entity.Trap;
+import net.sf.hale.area.Area;
+import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.DirectoryListing;
+import net.sf.hale.util.FileUtil;
 
 /**
  * The menu bar for the swing campaign Editor
@@ -172,9 +170,9 @@ public class EditorMenuBar extends JMenuBar {
 			
 			// populate the list of areas
 			File areaDir = new File("campaigns/" + Game.curCampaign.getID() + "/areas");
-			List<File> areaFiles = DirectoryListing.getFiles(areaDir);
+			List<File> areaFiles = FileUtil.getFiles(areaDir);
 			for (File file : areaFiles) {
-				String ref = file.getName().substring(0, file.getName().length() - 4);
+				String ref = file.getName().substring(0, file.getName().length() - ResourceType.JSON.getExtension().length());
 				
 				JMenuItem item = new JMenuItem(new OpenAreaAction(ref));
 				openAreasMenu.add(item);
@@ -226,15 +224,7 @@ public class EditorMenuBar extends JMenuBar {
 			Area area = Game.curCampaign.getArea(areaID);
 			AreaUtil.setMatrix(area.getExplored(), true);
 			
-			// remove automatically placed creatures from encounters
-			Encounter.removeCreaturesFromArea(area);
-			
-			// force spot all traps so we can see them in the editor
-			for (Entity entity : area.getEntities()) {
-				if (entity.getType() == Entity.Type.TRAP) ((Trap)entity).setSpotted(true);
-			}
-			
-			AreaRenderer viewer = new AreaRenderer(area);
+			AreaRenderer viewer = new AreaRenderer(area, frame.getOpenGLCanvas());
 			frame.setAreaViewer(viewer);
 			
 			EditorManager.addLogEntry("Opened area: " + area.getID());

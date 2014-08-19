@@ -1,8 +1,0 @@
-name "Locks"
-verb Lock
-verbPast Locked
-untrained false
-keyAttribute Dex
-hasArmorPenalty false
-restrictToRole Rogue
-icon "icons/locks"

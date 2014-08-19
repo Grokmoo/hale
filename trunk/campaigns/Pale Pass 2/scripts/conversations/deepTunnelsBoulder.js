@@ -22,7 +22,7 @@ function examine(game, parent, talker, conversation) {
     if (check > 50) {
         parent.put("secretFound", true);
         
-        talker.getInventory().addItem("deepTunnelsKey", 1, "Good");
+        talker.inventory.getUnequippedItems().add("deepTunnelsKey");
         
         conversation.addString("<div style=\"font-family: blue; margin-top: 1em\">");
         conversation.addString("You discover a key hidden under the rock.  It likely opens a door somewhere nearby.");

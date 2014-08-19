@@ -6,7 +6,7 @@ function onUse(game, item, target) {
     
     target.healDamage(hp);
     
-    target.getInventory().removeItem(item);
+    target.inventory.remove(item);
     
     game.ai.provokeAttacksOfOpportunity(target);
 }

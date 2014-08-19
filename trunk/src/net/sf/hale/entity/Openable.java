@@ -1,6 +1,6 @@
 /*
  * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
+ * Copyright (C) 2012 Jared Stephen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,183 +21,190 @@ package net.sf.hale.entity;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.ScriptFunctionType;
+import net.sf.hale.area.Area;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
-import net.sf.hale.rules.Currency;
 import net.sf.hale.util.SimpleJSONObject;
 
-public abstract class Openable extends Item {
-	private String openIcon;
-	private String closedIcon;
+/**
+ * An openable is an entity that is capable of being open and closed, including
+ * doors and containers
+ * @author Jared
+ *
+ */
+
+public abstract class Openable extends Entity {
+
+	private OpenableTemplate template;
 	
 	private boolean isOpen;
-	private boolean locked = false;
-	private boolean keyRequired = false;
-	private boolean removeKeyOnUnlock = false;
-	private String key;
-	private int lockDifficulty;
+	private boolean isLocked;
 	
 	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = super.save();
+		JSONOrderedObject out = super.save();
 		
-		data.put("open", isOpen);
-		data.put("locked", locked);
+		out.put("isOpen", isOpen);
 		
-		return data;
-	}
-	
-	@Override public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
-		super.load(data, refHandler);
+		if (isLocked)
+			out.put("isLocked", isLocked);
 		
-		this.isOpen = data.get("open", false);
-		this.locked = data.get("locked", false);
+		return out;
+	}
+	
+	@Override public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
+		super.load(data, area, refHandler);
 		
-		if (isOpen)
-			setIcon(this.openIcon);
-		else
-			setIcon(this.closedIcon);
+		isOpen = data.get("isOpen", false);
+		
+		if (data.containsKey("isLocked")) {
+			isLocked = data.get("isLocked", false);
+		} else {
+			isLocked = false;
+		}
 	}
-	
-	public Openable(String id, String name, String icon, Item.ItemType itemType,
-			String description, Currency currency, String openIcon, String closedIcon) {
-		super(id, name, icon, itemType, description, currency);
-		this.isOpen = false;
-		this.openIcon = openIcon;
-		this.closedIcon = closedIcon;
-	}
-	
-	public Openable(Openable other) {
-		super(other);
-		this.locked = other.locked;
-		this.lockDifficulty = other.lockDifficulty;
-		this.key = other.key;
-		this.keyRequired = other.keyRequired;
-		this.isOpen = other.isOpen;
-		this.removeKeyOnUnlock = other.removeKeyOnUnlock;
-		this.openIcon = other.openIcon;
-		this.closedIcon = other.closedIcon;
-	}
-	
-	public void setOpenIcon(String openIcon) {
-		this.openIcon = openIcon;
-	}
-	
-	public void setClosedIcon(String closedIcon) {
-		this.closedIcon = closedIcon;
-		this.setIcon(closedIcon);
-	}
-	
-	public String getOpenIcon() { return this.openIcon; }
-	public String getClosedIcon() { return this.closedIcon; }
 	
 	/**
-	 * The specified Creature will attempt to pick the lock on this Openable.
-	 * If the Game is in combat mode, the Creature must make a "Locks" skill check.
-	 * If not, the Creature will automatically roll 100 on the check.
-	 * 
-	 * Returns true if this Openable is unlocked, false if it remains locked.  Returns
-	 * true if this Openable was already unlocked when this function was called.
-	 * 
-	 * @param unlocker the Creature picking the lock
-	 * @return true if and only if this Openable is unlocked
+	 * Creates a new Openable
+	 * @param template
 	 */
 	
-	public boolean tryPickLock(Creature unlocker) {
-		if (!this.locked) return true;
+	protected Openable(OpenableTemplate template) {
+		super(template);
+
+		this.template = template;
 		
-		if (!keyRequired) {
-			if (Game.isInTurnMode()) {
-				if (unlocker.skillCheck("Locks", lockDifficulty)) {
-					unlock(unlocker);
-					return true;
-				}
-			} else {
-				if (unlocker.skillCheckRoll100("Locks", lockDifficulty)) {
-					unlock(unlocker);
-					return true;
-				}
-			}
-		} else {
-			Game.mainViewer.addMessage("orange", "A specific key is required to unlock that object.");
-		}
-		
-		return false;
+		this.isOpen = false;
+		this.isLocked = template.isDefaultLocked();
 	}
+	
+	@Override public OpenableTemplate getTemplate() {
+		return template;
+	}
+	
+	/**
+	 * Returns true if this openable is open, false if it is closed
+	 * @return whether this openable is open
+	 */
+	
+	public boolean isOpen() {
+		return isOpen;
+	}
+	
+	/**
+	 * Returns true if this openable is locked, false if it is not locked
+	 * @return whether this openable is locked
+	 */
+	
+	public boolean isLocked() {
+		return isLocked;
+	}
+	
+	/**
+	 * Sets the locked state of this openable
+	 * @param locked
+	 */
+	
+	public void setLocked(boolean locked) {
+		this.isLocked = locked;
+	}
+	
+	/**
+	 * Unlocks this openable
+	 */
 	
 	public void unlock() {
-		if(locked && hasScript())
-			getScript().executeFunction(ScriptFunctionType.onUnlock, this);
-		
-		this.locked = false;
-		
-		Game.mainViewer.updateInterface();
+		isLocked = false;
 	}
+	
+	/**
+	 * Unlocks this openable and runs any associated scripts
+	 * @param unlocker
+	 */
 	
 	public void unlock(Creature unlocker) {
-		if (locked && hasScript())
-			getScript().executeFunction(ScriptFunctionType.onUnlock, this, unlocker);
-		
-		this.locked = false;
-		
-		Game.mainViewer.updateInterface();
+		if (isLocked && template.hasScript())
+			template.getScript().executeFunction(ScriptFunctionType.onUnlock, this, unlocker);
+		isLocked = false;
 	}
 	
-	public void open(Creature opener) {
-		if (this.locked && this.key != null) {
-			if (opener.getInventory().hasItem(Game.entityManager.getItem(this.key))) {
-				Game.mainViewer.addMessage("orange", opener.getName() + " uses a key.");
-				unlock(opener);
-				if (this.removeKeyOnUnlock) opener.getInventory().removeItemEvenIfEquipped(this.key);
+	/**
+	 * The specified creature makes a locks attempt to pick the lock of this Openable.
+	 * If successful, this Openable is unlocked
+	 * @param unlocker
+	 * @return whether this openable is now unlocked
+	 */
+	
+	public boolean attemptUnlock(Creature unlocker) {
+		if (!isLocked) return true;
+		
+		if (template.isKeyRequiredToUnlock()) {
+			Game.mainViewer.addMessage("orange", "A specific key is required to unlock that object.");
+		} else {
+			int difficulty = template.getLockDifficulty();
+			int check = unlocker.skills.getCheck("Locks", difficulty);
+			
+			if (check >= difficulty) {
+				unlock(unlocker);
 			}
 		}
 		
-		if (!this.locked) {
-			if (!isOpen && hasScript())
-				getScript().executeFunction(ScriptFunctionType.onOpen, this, opener);
+		return !isLocked;
+	}
+	
+	/**
+	 * The specified creature will attempt to open this Openable.  If this Openable
+	 * is locked, the opener must have the key to use this method (otherwise, they will
+	 * need to pick the lock first, if possible)
+	 * @param opener
+	 * @return true if the openable was successfully opened, false otherwise
+	 */
+	
+	public boolean attemptOpen(Creature opener) {
+		if (isLocked && template.hasKey()) {
+			if (opener.inventory.getTotalQuantity(template.getKeyID()) > 0) {
+				Game.mainViewer.addMessage("orange", opener.getTemplate().getName() + " uses a key.");
+				
+				unlock(opener);
+				
+				if (template.isRemoveKeyOnUnlock()) {
+					opener.inventory.remove(template.getKeyID(), 1);
+				}
+			}
+		}
+		
+		if (!isLocked) {
+			// if openable was already unlocked or unlock was successful
 			
-			this.isOpen = true;
+			if (!isOpen && template.hasScript())
+				template.getScript().executeFunction(ScriptFunctionType.onOpen, this, opener);
 			
-			this.setIcon(this.openIcon);
-			
+			isOpen = true;
 		} else {
 			Game.mainViewer.addMessage("orange", "That object is locked.");
 		}
+		
+		return isOpen;
 	}
+	
+	/**
+	 * The specified creature closes this Openable.  Unlock {@link #attemptOpen(Creature)},
+	 * this method guarantees success
+	 * @param closer
+	 */
 	
 	public void close(Creature closer) {
-		if (isOpen && hasScript())
-			getScript().executeFunction(ScriptFunctionType.onClose, this, closer);
+		if (isOpen && template.hasScript())
+			template.getScript().executeFunction(ScriptFunctionType.onClose, this, closer);
 		
-		this.isOpen = false;
-		
-		this.setIcon(this.closedIcon);
+		isOpen = false;
 	}
 	
-	public boolean isOpen() { return isOpen; }
-	
-	public boolean isLocked() { return locked; }
-	public int getLockDifficulty() { return lockDifficulty; }
-	public String getKey() { return key; }
-	public boolean isKeyRequired() { return keyRequired; }
-	public boolean removeKeyOnUnlock() { return removeKeyOnUnlock; }
-	
-	public void setLocked(boolean locked) { this.locked = locked; }
-	
-	public void setLockDifficulty(int difficulty) {
-		this.locked = true;
-		this.lockDifficulty = difficulty;
+	@Override public void areaDraw(int x, int y) {
+		if (isOpen)
+			template.getOpenIcon().drawCentered(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
+		else
+			template.getClosedIcon().drawCentered(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
 	}
-	
-	public void setKey(String key) {
-		this.key = key;
-	}
-	
-	public void setKeyRequired(boolean keyRequired) {
-		this.keyRequired = keyRequired;
-	}
-	
-	public void setRemoveKeyOnUnlock(boolean removeKey) {
-		this.removeKeyOnUnlock = removeKey;
-	}
+
 }

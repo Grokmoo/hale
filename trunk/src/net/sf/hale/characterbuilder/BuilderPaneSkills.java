@@ -22,7 +22,12 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.ScrollPane;
+
 import net.sf.hale.Game;
+import net.sf.hale.entity.PC;
+import net.sf.hale.rules.Role;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
 
@@ -36,6 +41,8 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	private PointAllocatorModel points;
 	
 	private List<SkillSelector> selectors;
+	
+	private final Button resetButton, roleButton;
 	
 	/**
 	 * Creates a new BuilderPane editing the skills of the specified character
@@ -52,8 +59,73 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
         points.addListener(this);
         
         selectors = new ArrayList<SkillSelector>();
+        
+        resetButton = new Button("Reset Selections");
+        resetButton.setTheme("resetbutton");
+        resetButton.addCallback(new Runnable() {
+        	@Override public void run() {
+        		resetValues();
+        	}
+        });
+        add(resetButton);
+        
+        roleButton = new Button("Suggested Values");
+        roleButton.setTheme("rolebutton");
+        roleButton.addCallback(new Runnable() {
+        	@Override public void run() {
+        		setRoleValues();
+        	}
+        });
+        add(roleButton);
+	}
+	
+	private void resetValues() {
+		for (SkillSelector selector : selectors) {
+			int valueDiff = (selector.baseValue - selector.getValue()) / 5;
+			
+			selector.addModelPoints(valueDiff);
+			selector.addValue(valueDiff);
+		}
+	}
+	
+	private void setRoleValues() {
+		resetValues();
+		
+		Role role = getCharacter().getBaseRole();
+		
+		List<String> skillSelections = role.getDefaultPlayerSkillSelections();
+		
+		for (String skillID : skillSelections) {
+			// break if we are out of points
+			if (points.getRemainingPoints() < 5) break;
+			
+			SkillSelector selector = findSelector(skillID);
+			
+			selector.addModelPoints(1);
+			selector.addValue(1);
+		}
+	}
+	
+	private SkillSelector findSelector(String skillID) {
+		for (SkillSelector selector : selectors) {
+			if (selector.skill.getID().equals(skillID)) return selector;
+		}
+		
+		return null;
 	}
 
+	@Override protected void layout() {
+		super.layout();
+		
+		ScrollPane pane = getSelectorPane();
+		
+		resetButton.setSize(resetButton.getPreferredWidth(), resetButton.getPreferredHeight());
+		roleButton.setSize(roleButton.getPreferredWidth(), roleButton.getPreferredHeight());
+		
+		resetButton.setPosition(getInnerX(), pane.getBottom());
+		roleButton.setPosition(resetButton.getRight(), pane.getBottom());
+	}
+	
 	@Override public void updateCharacter() {
 		for (SkillSelector selector : selectors) {
 			points.removeListener(selector);
@@ -68,15 +140,14 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 		
 		int intelligence = getCharacter().getCurrentIntelligence();
 		
-		int totalPoints = getCharacter().getSelectedRole().getSkillsPerLevel();
+		int totalPoints = getCharacter().getSelectedRole().getSkillPointsPerLevel();
 		totalPoints += (intelligence - 10);
 		totalPoints += getCharacter().getUnspentSkillPoints();
 		
 		points.setPointsRemaining(totalPoints);
 		
 		for (Skill skill : getCharacter().getSelectableSkills()) {
-        	SkillSelector selector = new SkillSelector(skill);
-        	selector.setValue(baseSkills.getRanks(skill));
+        	SkillSelector selector = new SkillSelector(skill, baseSkills.getRanks(skill));
         	selector.setMinMaxValue(selector.getValue(), skillLevelMax);
         	selector.setPointAllocatorModel(points);
         	
@@ -91,11 +162,21 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
         }
 		
 		allocatorModelUpdated();
+		
+		if (alreadySelected == null) {
+			setRoleValues();
+		}
 	}
 	
 	@Override public void allocatorModelUpdated() {
 		double points = this.points.getRemainingPoints();
-		setPointsText(Game.numberFormat(0).format(points) + " points remaining");
+		
+		long pointsInt = Math.round(points);
+		if (pointsInt == 1) {
+			setPointsText("1 point remaining");
+		} else {
+			setPointsText(pointsInt + " points remaining");
+		}
 		
 		boolean nextEnabled = true;
 		for (SkillSelector selector : selectors) {
@@ -109,8 +190,10 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	}
 	
 	@Override protected void next() {
+		PC workingCopy = getCharacter().getWorkingCopy();
+		
 		SkillSet oldSkills = getCharacter().getSkillSet();
-		SkillSet newSkills = new SkillSet();
+		SkillSet newSkills = new SkillSet(workingCopy);
 		for (SkillSelector selector : selectors) {
 			int newRanks = selector.getValue() - oldSkills.getRanks(selector.skill);
 			if (newRanks > 0) newSkills.addRanks(selector.skill, newRanks);
@@ -133,10 +216,14 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	
 	private class SkillSelector extends BuildablePropertySelector {
 		private Skill skill;
+		private final int baseValue;
 		
-		private SkillSelector(Skill skill) {
-			super(skill.getName(), skill.getIcon(), true);
+		private SkillSelector(Skill skill, int baseValue) {
+			super(skill.getNoun(), skill.getIcon(), true);
 			this.skill = skill;
+			this.baseValue = baseValue;
+			
+			setValue(baseValue);
 		}
 		
 		@Override protected void addValue(int value) {
@@ -160,9 +247,9 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 		@Override protected void onMouseHover() {
 			StringBuilder content = new StringBuilder();
 			content.append("<div style=\"font-family: red; margin-bottom: 1em;\">");
-			content.append(skill.getName()).append("</div>");
+			content.append(skill.getNoun()).append("</div>");
 			
-			if (skill.isRestricted()) {
+			if (skill.isRestrictedToARole()) {
 				content.append("<div style=\"margin-bottom: 1em;\">Restricted to ");
 				content.append("<span style=\"font-family: red;\">");
 				content.append(skill.getRestrictToRole()).append("</span></div>");
@@ -172,11 +259,11 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 			content.append(skill.getKeyAttribute().name).append("</span></div>");
 			
 			
-			if (!skill.usableUntrained()) {
+			if (!skill.isUsableUntrained()) {
 				content.append("<div style=\"font-family: green; margin-bottom: 1em;\">Requires training</div>");
 			}
 			
-			if (skill.hasArmorPenalty()) {
+			if (skill.suffersArmorPenalty()) {
 				content.append("<div style=\"font-family: green; margin-bottom: 1em;\">Armor Penalty applies</div>");
 			}
 			

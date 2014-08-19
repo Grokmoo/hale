@@ -1,6 +1,0 @@
-size 1
-faction "Hostile"
-challenge 25
-respawn true
-respawnHours 24
-creature "bear" 0 0

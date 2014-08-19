@@ -1,4 +1,0 @@
-size 1
-faction "Neutral"
-challenge 130
-creature "werewolf_farmhouse" 0 0

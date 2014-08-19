@@ -24,13 +24,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.matthiasmann.twl.Color;
+
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.PrereqList;
-import net.sf.hale.util.FileKeyMap;
-import net.sf.hale.util.LineKeyList;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
 /**
  * An Ability is a special power that a particular Creature possesses.  Abilities can
@@ -106,10 +110,10 @@ public class Ability extends Scriptable {
 		/** only targetable on the AbilityActivator using this Ability */
 		Personal,
 		
-		/** targetable on Creatures 5 feet away */
+		/** targetable on Creatures 1 hex away */
 		Touch,
 		
-		/** targetable on Creatures a short distance away, 10 to 20 feet */
+		/** targetable on Creatures a short distance away, 2 to 4 hexes */
 		Short,
 		
 		/** targetable on Creatures up to a long distance away, usually any visible Creature */
@@ -119,18 +123,15 @@ public class Ability extends Scriptable {
 	private final String id;
 	private final String name;
 	private final String type;
-	private final String description;
+	private final Icon icon;
 	
-	private final String icon;
-	
-	private final boolean fixed;
-	
-	private final boolean activateable;
-	private final boolean mode;
-	private final boolean cancelable;
-	
-	private final int cooldown;
-	
+	private final boolean isFixed;
+	private final boolean isActivateable;
+	private final boolean isMode;
+	private final boolean isCancelable;
+	private final boolean canActivateOutsideCombat;
+
+	private final int cooldown;	
 	private final int actionPointCost;
 	private final String actionPointCostDescription;
 	
@@ -142,15 +143,18 @@ public class Ability extends Scriptable {
 	private final int aiPower;
 	private final int aiPriority;
 	
+	private final String description;
 	private Map<String, String> upgrades;
 	
+	// stored here so generic ability activators can get it for abilities
+	// that may or may not be spells
 	private final int spellLevel;
 	
 	/**
 	 * Ability factory method.  This is the preferred method for creating new abilities.
 	 * Creates a new Ability using the specified id String and the Resource
 	 * at the specified location.  Will determine whether the Object created should
-	 * be an Ability or some subclass of Ability
+	 * be an Ability or a Spell.
 	 * 
 	 * @param id the ID String of this Ability
 	 * @param resourcePath the location of the Resource to read in creating
@@ -158,47 +162,58 @@ public class Ability extends Scriptable {
 	 * @return a new Ability created from the specified resource
 	 */
 	
-	public static Ability createAbilityFromResource(String id, String resourcePath) {
-		FileKeyMap map = new FileKeyMap(resourcePath);
+	public static Ability createAbilityFromResource(String id, String resourcePath) throws IllegalArgumentException {
+		SimpleJSONParser parser = new SimpleJSONParser(resourcePath);
 		
-		boolean inline = false;
-		String script = null;
-		String scriptLocation = map.getValue("scriptfile", null);
+		boolean inline;
+		String script;
+		String scriptLocation;
 		
-		boolean isSpell = map.getValue("spell", false);
+		boolean isSpell;
+		if (parser.containsKey("isSpell")) {
+			isSpell = parser.get("isSpell", false);
+		} else {
+			isSpell = false;
+		}
 		
-		if (scriptLocation == null) {
+		if (!parser.containsKey("externalScript")) {
 			if (isSpell) {
 				Logger.appendToWarningLog("Warning.  Script not specified for Spell " + id +
 						" and inline scripts unsupported for spells.");
 			}
 			
-			script = map.getValue("script", null);
+			if (parser.containsKey("inlineScript")) {
+				script = parser.get("inlineScript", null);
+				inline = true;
+			} else {
+				script = null;
+				inline = false;
+			}
 			
 			// set the script location to something sensible so error messages from the
 			// superclass methods are useful
 			scriptLocation = resourcePath;
-			inline = true;
 		} else {
+			scriptLocation = parser.get("externalScript", null);
 			script = ResourceManager.getScriptResourceAsString(scriptLocation);
+			inline = false;
 		}
-		
-		Ability ability = null;
 		
 		try {
+			Ability ability;
 			
 			if (isSpell)
-				ability = new Spell(id, script, scriptLocation, map);
+				ability = new Spell(id, script, scriptLocation, parser.getObject());
 			else
-				ability = new Ability(id, script, scriptLocation, map, inline);
+				ability = new Ability(id, script, scriptLocation, parser.getObject(), inline);
+			
+			parser.warnOnUnusedKeys();
+			
+			return ability;
 			
 		} catch (IllegalArgumentException e) {
-			Logger.appendToErrorLog("Error creating ability " + id + " from resource " + resourcePath, e);
+			throw new IllegalArgumentException("Error creating ability " + id + " from resource " + resourcePath, e);
 		}
-		
-		map.checkUnusedKeys();
-		
-		return ability;
 	}
 	
 	/**
@@ -206,80 +221,144 @@ public class Ability extends Scriptable {
 	 * @param id the ID String of the Ability
 	 * @param script the script contents of the Ability
 	 * @param scriptLocation the resource location of the script for the Ability
-	 * @param map the FileKeyMap containing keys with values for the data making up
-	 * this Ability
+	 * @param map the JSON to parse for this ability
 	 * @param inline See @link Scriptable#Scriptable(String, String, boolean).  Whether
 	 * or not this script is treated as inline.
 	 */
 	
-	protected Ability(String id, String script, String scriptLocation, FileKeyMap map, boolean inline) {
+	protected Ability(String id, String script, String scriptLocation, SimpleJSONObject map, boolean inline) {
 		super(script, scriptLocation, inline);
 		this.id = id;
 		
-		this.name = map.getValue("name", id);
-		this.type = map.getValue("type", this.getClass().getSimpleName());
-		this.description = map.getValue("description", null);
+		this.name = map.get("name", id);
+		this.type = map.get("type", this.getClass().getSimpleName());
 		
-		this.activateable = map.getValue("activateable", false);
-		this.fixed = map.getValue("fixed", false);
-		this.mode = map.getValue("mode", false);
-		this.cancelable = map.getValue("cancelable", false);
+		if (map.containsKey("icon")) {
+			icon = IconFactory.createIcon(map.getObject("icon"));
+		} else {
+			icon = IconFactory.emptyIcon;
+		}
 		
-		if (map.has("spelllevel"))
-			this.spellLevel = map.getValue("spelllevel", 0);
+		SimpleJSONObject descriptionIn = map.getObject("description");
+		this.description = descriptionIn.get("base", null);
+		
+		upgrades = new HashMap<String, String>();
+		if (descriptionIn.containsKey("upgrades")) {
+			SimpleJSONObject upgradesIn = descriptionIn.getObject("upgrades");
+			
+			for (String key : upgradesIn.keySet()) {
+				upgrades.put(key, upgradesIn.get(key, null));
+			}
+		}
+		
+		if (map.containsKey("canActivateOutsideCombat")) {
+			this.canActivateOutsideCombat = map.get("canActivateOutsideCombat", false);
+		} else {
+			this.canActivateOutsideCombat = false;
+		}
+		
+		if (map.containsKey("isActivateable")) {
+			this.isActivateable = map.get("isActivateable", false);
+		} else {
+			this.isActivateable = false;
+		}
+		
+		if (map.containsKey("isFixed")) {
+			this.isFixed = map.get("isFixed", false);
+		} else {
+			this.isFixed = false;
+		}
+		
+		if (map.containsKey("isMode")) {
+			this.isMode = map.get("isMode", false);
+		} else {
+			this.isMode = false;
+		}
+		
+		if (map.containsKey("isCancelable")) {
+			this.isCancelable = map.get("isCancelable", false);
+		} else {
+			this.isCancelable = false;
+		}
+		
+		if (map.containsKey("spellLevel"))
+			this.spellLevel = map.get("spellLevel", 0);
 		else
 			this.spellLevel = 0;
 		
-		if (!activateable && mode)
-			Logger.appendToWarningLog("Ability at " + map.getFilePath() +
+		if (!isActivateable && isMode)
+			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
 					" is not activateable.  Mode=true flag will have no effect.");
 		
-		if ( (!activateable || !mode) && cancelable)
-			Logger.appendToWarningLog("Ability at " + map.getFilePath() +
+		if ( (!isActivateable || !isMode) && isCancelable)
+			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
 					" is not an activateable mode.  Cancelable=true flag will have no effect.");
 		
-		if (!activateable && fixed)
-			Logger.appendToWarningLog("Ability at " + map.getFilePath() +
+		if (!isActivateable && isFixed)
+			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
 					" is not activateable.  Fixed=true flag will have no effect.");
 		
 		
-		this.cooldown = map.getValue("cooldown", 0);
-		this.actionPointCost = map.getValue("actionpointcost", 0);
-		this.actionPointCostDescription = map.getValue("actionpointcostdescription",
-				"" + (this.actionPointCost / 100));
+		if (map.containsKey("cooldown")) {
+			this.cooldown = map.get("cooldown", 0);
+		} else {
+			this.cooldown = 0;
+		}
 		
-		String actionType = map.getValue("actiontype", null);
-		String groupType = map.getValue("grouptype", null);
-		String rangeType = map.getValue("rangetype", null);
+		if (map.isInteger("actionPointCost")) {
+			this.actionPointCost = map.get("actionPointCost", 0);
+			this.actionPointCostDescription = Integer.toString(this.actionPointCost / 100);
+		} else if (map.isString("actionPointCost")) {
+			this.actionPointCost = 0;
+			this.actionPointCostDescription = map.get("actionPointCost", null);
+		} else {
+			this.actionPointCost = 0;
+			this.actionPointCostDescription = Integer.toString(this.actionPointCost / 100);
+		}
 		
+		int aiPower = 0;
+		int aiPriority = 1;
+		String actionType = null;
+		String groupType = null;
+		String rangeType = null;
+		if (map.containsKey("ai")) {
+			SimpleJSONObject aiIn = map.getObject("ai");
+			
+			if (aiIn.containsKey("power")) {
+				aiPower = aiIn.get("power", 0);
+			}
+			
+			if (aiIn.containsKey("priority")) {
+				aiPriority = aiIn.get("priority", 1);
+			}
+			
+			if (aiIn.containsKey("actionType")) {
+				actionType = aiIn.get("actionType", null);
+				groupType = aiIn.get("groupType", null);
+				rangeType = aiIn.get("rangeType", null);
+			}
+		}
 		this.actionType = actionType != null ? ActionType.valueOf(actionType) : null;
 		this.groupType = groupType != null ? GroupType.valueOf(groupType) : null;
 		this.rangeType = rangeType != null ? RangeType.valueOf(rangeType) : null;
+		this.aiPower = aiPower;
+		this.aiPriority = aiPriority;
 		
-		this.aiPower = map.getValue("aipower", 0);
-		this.aiPriority = map.getValue("aipriority", 1);
-		
-		this.prereqs = new PrereqList();
-		for (LineKeyList line : map.get("addprereq")) {
-			prereqs.addPrereq(line);
+		if (map.containsKey("prereqs")) {
+			prereqs = new PrereqList(map.getObject("prereqs"));
+		} else {
+			prereqs = new PrereqList();
 		}
-		
-		this.icon = map.getValue("icon", null);
-		
-		upgrades = new HashMap<String, String>();
-		for (LineKeyList line : map.get("upgrade")) {
-			String abilityID = line.next();
-			
-			String description = line.next();
-			
-			upgrades.put(abilityID, description);
-		}
+	}
+	
+	public boolean canActivateOutsideCombat() {
+		return canActivateOutsideCombat;
 	}
 	
 	/**
 	 * Returns the spell level of this ability, not modified by any upgrades.
 	 * 
-	 * Most uses should use {@link #getSpellLevel(AbilityActivator)} instead
+	 * Most uses should use {@link #getSpellLevel(Creature)} instead
 	 * @return the spell level of this ability
 	 */
 	
@@ -297,13 +376,13 @@ public class Ability extends Scriptable {
 	 * @return the Spell Level of this spell, or 0 if this is not a spell
 	 */
 	
-	public int getSpellLevel(AbilityActivator parent) {
+	public int getSpellLevel(Creature parent) {
 		int level = this.spellLevel;
 		
 		if (parent == null) return this.spellLevel;
 		
 		for (String abilityID : upgrades.keySet()) {
-			if (parent.getAbilities().has(abilityID)) {
+			if (parent.abilities.has(abilityID)) {
 				level = Math.max(level, Game.ruleset.getAbility(abilityID).spellLevel);
 			}
 		}
@@ -341,11 +420,11 @@ public class Ability extends Scriptable {
 	public String getDescription() { return description; }
 	
 	/**
-	 * Returns the String referencing the {@link net.sf.hale.Sprite} for this Ability's icon.
-	 * @return the String referencing this Ability's icon Sprite.
+	 * Returns the Icon referencing the {@link net.sf.hale.resource.Sprite} for this Ability's icon.
+	 * @return the Icon referencing this Ability's icon Sprite.
 	 */
 	
-	public String getIcon() { return icon; }
+	public Icon getIcon() { return icon; }
 	
 	/**
 	 * Returns whether this Ability is fixed.  A fixed ability is an activateable ability
@@ -354,7 +433,7 @@ public class Ability extends Scriptable {
 	 * @return true if and only if this Ability is fixed
 	 */
 	
-	public boolean isFixed() { return fixed; }
+	public boolean isFixed() { return isFixed; }
 	
 	/**
 	 * Returns whether or not this Ability is user activateable.
@@ -364,7 +443,7 @@ public class Ability extends Scriptable {
 	 * @return true if this Ability can be activated, false otherwise
 	 */
 	
-	public boolean isActivateable() { return activateable; }
+	public boolean isActivateable() { return isActivateable; }
 	
 	/**
 	 * Returns whether this Ability is a mode.  This is only meaningful for
@@ -375,7 +454,7 @@ public class Ability extends Scriptable {
 	 * @return true if this Ability is a mode, false otherwise
 	 */
 	
-	public boolean isMode() { return mode; }
+	public boolean isMode() { return isMode; }
 	
 	/**
 	 * Returns whether this Ability can be canceled once active.  This is only
@@ -386,7 +465,7 @@ public class Ability extends Scriptable {
 	 * @return true if this Ability can be canceled, false otherwise
 	 */
 	
-	public boolean isCancelable() { return cancelable; }
+	public boolean isCancelable() { return isCancelable; }
 	
 	/**
 	 * Returns the cooldown for this Ability in rounds.  This is the length
@@ -397,7 +476,7 @@ public class Ability extends Scriptable {
 	 * @return the cooldown for this Ability in rounds
 	 */
 	
-	public int getCooldown(AbilityActivator parent) { return cooldown; }
+	public int getCooldown(Creature parent) { return cooldown; }
 	
 	/**
 	 * Returns the Action Point (AP) cost of activating this Ability.
@@ -446,11 +525,11 @@ public class Ability extends Scriptable {
 	 * @return the max range type
 	 */
 	
-	public RangeType getUpgradedRangeType(AbilityActivator parent) {
+	public RangeType getUpgradedRangeType(Creature parent) {
 		RangeType rangeType = this.rangeType;
 		
 		for (String abilityID : upgrades.keySet()) {
-			if (parent.getAbilities().has(abilityID)) {
+			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				
 				RangeType otherRangeType = ability.getRangeType();
@@ -480,11 +559,11 @@ public class Ability extends Scriptable {
 	 * @return the max group type
 	 */
 	
-	public GroupType getUpgradedGroupType(AbilityActivator parent) {
+	public GroupType getUpgradedGroupType(Creature parent) {
 		GroupType groupType = this.groupType;
 		
 		for (String abilityID : upgrades.keySet()) {
-			if (parent.getAbilities().has(abilityID)) {
+			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				
 				GroupType otherGroupType = ability.getGroupType();
@@ -520,11 +599,11 @@ public class Ability extends Scriptable {
 	 * @return the max AI power of this ability or any of its upgrades owned by the parent
 	 */
 	
-	public int getUpgradedAIPower(AbilityActivator parent) {
+	public int getUpgradedAIPower(Creature parent) {
 		int aiPower = this.aiPower;
 		
 		for (String abilityID : upgrades.keySet()) {
-			if (parent.getAbilities().has(abilityID)) {
+			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				aiPower = Math.max(aiPower, ability.getAIPower());
 			}
@@ -543,13 +622,17 @@ public class Ability extends Scriptable {
 	 * @param parent the parent Activator / Creature that is activating this Ability
 	 */
 	
-	public void activate(AbilityActivator parent) {
+	public void activate(Creature parent) {
 		parent.getEffects().executeOnAll(ScriptFunctionType.onAbilityActivated, this, parent);
 		
-		Game.mainViewer.addMessage(parent.getName() + " uses " + getName());
-		Game.mainViewer.addFadeAway(getName(), parent.getX(), parent.getY(), "green");
+		// spells create their own detailed message
+		if (! (this instanceof Spell) ) {
+			Game.mainViewer.addMessage(parent.getTemplate().getName() + " uses " + getName() + ".");
+		}
 		
-		parent.getTimer().performAction(this.actionPointCost);
+		Game.mainViewer.addFadeAway(getName(), parent.getLocation().getX(), parent.getLocation().getY(), new Color(0xFF00FF00));
+		
+		parent.timer.performAction(this.actionPointCost);
 	}
 	
 	/**
@@ -568,23 +651,23 @@ public class Ability extends Scriptable {
 		return prereqs.meetsPrereqs(parent);
 	}
 	
-	private void appendUpgradesList(StringBuilder sb, AbilityActivator parent) {
+	private void appendUpgradesList(StringBuilder sb, Creature parent) {
 		if (parent == null) return;
 		
 		int upgradesCount = 0;
 		for (String abilityID : upgrades.keySet()) {
 			Ability ability = Game.ruleset.getAbility(abilityID);
 
-			if (parent.getAbilities().has(ability)) {
+			if (parent.abilities.has(ability)) {
 				if (upgradesCount == 0) {
-					sb.append("<div style=\"font-family: vera; margin-bottom: 1em;\">");
+					sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">");
 					sb.append("Upgraded with ");
 					upgradesCount++;
 				} else {
 					sb.append(", ");
 				}
 
-				sb.append("<span style=\"font-family: vera-red\">");
+				sb.append("<span style=\"font-family: medium-red\">");
 				sb.append(ability.getName());
 				sb.append("</span>");
 			}
@@ -603,9 +686,9 @@ public class Ability extends Scriptable {
 	 * @param parent the owner of this ability
 	 */
 	
-	public void appendDetails(StringBuilder sb, AbilityActivator parent) {
+	public void appendDetails(StringBuilder sb, Creature parent) {
 		// whether the ability is active or passive
-		sb.append("<div style=\"font-family: vera; margin-bottom: 1em;\">");
+		sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">");
 		appendBaseType(sb);
 		sb.append("</div>");
 		
@@ -613,22 +696,22 @@ public class Ability extends Scriptable {
 		appendUpgradesList(sb, parent);
 		
 		// create table with slot type, AP cost, and cooldown
-		sb.append("<table style=\"font-family: vera; vertical-align: middle;\">");
-		sb.append("<tr><td style=\"width: 10ex;\">Slot Type</td><td style=\"font-family: vera-green\">");
+		sb.append("<table style=\"font-family: medium; vertical-align: middle;\">");
+		sb.append("<tr><td style=\"width: 10ex;\">Slot Type</td><td style=\"font-family: medium-green\">");
 		sb.append(type).append("</td></tr>");
 		
-		if (activateable) {
-			sb.append("<tr><td style=\"width: 10ex;\">AP Cost</td><td style=\"font-family: vera-blue\">");
+		if (isActivateable) {
+			sb.append("<tr><td style=\"width: 10ex;\">AP Cost</td><td style=\"font-family: medium-blue\">");
 			sb.append(actionPointCostDescription).append("</td></tr>");
 			
 			if (cooldown > 0) {
-				sb.append("<tr><td style=\"width: 10ex;\">Cooldown</td><td style=\"font-family: vera-red\">");
+				sb.append("<tr><td style=\"width: 10ex;\">Cooldown</td><td style=\"font-family: medium-red\">");
 				sb.append(cooldown).append(" Rounds</td></tr>");
 			}
 		}
 		sb.append("</table>");
 		
-		this.prereqs.appendDescription(sb);
+		this.prereqs.appendDescription(sb, parent);
 	}
 	
 	/**
@@ -638,13 +721,13 @@ public class Ability extends Scriptable {
 	 * no owner
 	 */
 	
-	public void appendUpgradesDescription(StringBuilder sb, AbilityActivator parent) {
+	public void appendUpgradesDescription(StringBuilder sb, Creature parent) {
 		if (parent == null) return;
 		
 		List<String> upgradesToShow = new ArrayList<String>();
 		
 		for (String abilityID : upgrades.keySet()) {
-			if (parent.getAbilities().has(abilityID))
+			if (parent.abilities.has(abilityID))
 				upgradesToShow.add(upgrades.get(abilityID));
 		}
 		
@@ -665,17 +748,17 @@ public class Ability extends Scriptable {
 	 */
 	
 	private void appendBaseType(StringBuilder sb) {
-		if (activateable) {
-			sb.append("<p><span style=\"font-family: vera-italic-red\">Active</span> Ability</p>");
-			if (mode) {
+		if (isActivateable) {
+			sb.append("<p><span style=\"font-family: medium-italic-red\">Active</span> Ability</p>");
+			if (isMode) {
 				sb.append("<p>");
-				if (cancelable)
-					sb.append("<span style=\"font-family: vera-italic-blue\">Cancelable</span> ");
+				if (isCancelable)
+					sb.append("<span style=\"font-family: medium-italic-blue\">Cancelable</span> ");
 				
 				sb.append("Mode</p>");
 			}
 		} else {
-			sb.append("<p><span style=\"font-family: vera-italic-red\">Passive</span> Ability</p>");
+			sb.append("<p><span style=\"font-family: medium-italic-red\">Passive</span> Ability</p>");
 		}
 	}
 	
@@ -686,10 +769,10 @@ public class Ability extends Scriptable {
 	 * 
 	 * For abilities that are not spells, no action is taken.  Also
 	 * 
-	 * See {@link Spell#setSpellDuration(Effect, AbilityActivator)}
+	 * See {@link #setSpellDuration(Effect, Creature)}
 	 * @param effect the effect to shorten duration
 	 * @param parent the activator for this ability
 	 */
 	
-	public void setSpellDuration(Effect effect, AbilityActivator parent) { }
+	public void setSpellDuration(Effect effect, Creature parent) { }
 }

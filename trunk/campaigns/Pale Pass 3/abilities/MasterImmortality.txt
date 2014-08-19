@@ -1,8 +1,0 @@
-name "Master Immortality"
-type "Racial Abilities"
-description "The Master cannot be killed without first destroying the focus crystal."
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect('effects/masterImmortality'); parent.applyEffect(effect); }"

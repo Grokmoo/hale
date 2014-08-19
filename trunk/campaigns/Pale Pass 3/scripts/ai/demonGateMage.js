@@ -44,15 +44,15 @@ function summon(game, parent) {
 	var summonID = choices[index];
 
 	// first, find a location to summon to
-	var position = game.ai.findClosestEmptyTile(parent.getPosition(), 5);
+	var position = game.ai.findClosestEmptyTile(parent.getLocation().toPoint(), 5);
 	
 	if (position == null) {
 		// if there are no positions available, something is horribly wrong
 		return;
 	}
 	
-	var creature = game.summonCreature(summonID, position, parent, 999999);
-	
+	var creature = game.createSummon(summonID, parent, 999999);
+	game.finishSummon(creature, position);
 	game.addMessage(parent.getName() + " summons " + creature.getName() + ".");
 }
 

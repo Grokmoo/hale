@@ -19,6 +19,7 @@
 
 package net.sf.hale.util;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 /**
@@ -37,6 +38,7 @@ public class SimpleJSONArrayEntry {
 	
 	// non null if this is wrapping an object not a primitive type
 	private SimpleJSONObject objData;
+	private SimpleJSONArray arrayData;
 	
 	/**
 	 * Creates a new ArrayEntry with the specified data and id
@@ -69,6 +71,8 @@ public class SimpleJSONArrayEntry {
 		this.warnOnMissingKeys = warn;
 		
 		if (objData != null) objData.setWarnOnMissingKeys(warn);
+		
+		if (arrayData != null) arrayData.setWarnOnMissingKeys(warn);
 	}
 	
 	/**
@@ -81,6 +85,8 @@ public class SimpleJSONArrayEntry {
 			Logger.appendToWarningLog(id + " is an unused key.");
 		else if (objData != null)
 			objData.warnOnUnusedKeys();
+		else if (arrayData != null)
+			arrayData.warnOnUnusedKeys();
 	}
 	
 	/**
@@ -112,11 +118,21 @@ public class SimpleJSONArrayEntry {
 	
 	/**
 	 * Returns true if this ArrayEntry is an Object, false if it is wrapping a primitive
+	 * or an array
 	 * @return true if this ArrayEntry is an Object
 	 */
 	
 	public boolean isObject() {
 		return data instanceof JSONObject;
+	}
+	
+	/**
+	 * Returns true if this ArrayEntry is an Array, false otherwise
+	 * @return true if this ArrayEntry is an Array
+	 */
+	
+	public boolean isArray() {
+		return data instanceof JSONArray;
 	}
 	
 	/**
@@ -145,8 +161,27 @@ public class SimpleJSONArrayEntry {
 	}
 	
 	/**
+	 * Gets the JSONArray wrapper for this Array entry, or null if the entry is
+	 * not a JSONArray (Object, Boolean, Integer, or Double)
+	 * @return the JSONArray wrapper for this Array entry
+	 */
+	
+	public SimpleJSONArray getArray() {
+		if (data instanceof JSONArray) {
+			entryRead = true;
+			
+			arrayData = new SimpleJSONArray((JSONArray)data, id);
+			if (warnOnMissingKeys) arrayData.setWarnOnMissingKeys(warnOnMissingKeys);
+			return arrayData;
+		} else {
+			Logger.appendToWarningLog("Array Entry \"" + id + "\" is not an array.");
+			return null;
+		}
+	}
+	
+	/**
 	 * Gets the JSONObject wrapper for this Array entry, or null if the entry is
-	 * not a JSONObject (Boolean, Integer, or Double)
+	 * not a JSONObject (Array, Boolean, Integer, or Double)
 	 * @return the JSONObject wrapper for this Array entry
 	 */
 	

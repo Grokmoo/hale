@@ -188,7 +188,7 @@ public class MainPane extends Widget {
 		Creature current = Game.curCampaign.party.getSelected();
 		if (Game.isInTurnMode()) current = Game.areaListener.getCombatRunner().lastActiveCreature();
 		
-		endTurn.getAnimationState().setAnimationState(STATE_NOTIFICATION, !current.getTimer().canAttack());
+		endTurn.getAnimationState().setAnimationState(STATE_NOTIFICATION, !current.timer.canAttack());
 	}
 	
 	/**

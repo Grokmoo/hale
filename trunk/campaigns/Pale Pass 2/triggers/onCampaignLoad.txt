@@ -1,3 +1,0 @@
-area "Large Cavern"
-script "triggers/onCampaignLoad"
-addPoints

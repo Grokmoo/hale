@@ -19,7 +19,10 @@
 
 package net.sf.hale.loading;
 
+import java.io.File;
+
 import net.sf.hale.Game;
+import net.sf.hale.entity.EntityManager;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.SpriteManager;
@@ -51,7 +54,7 @@ public class CampaignLoadingTaskList extends LoadingTaskList {
 		// load spritesheets task
 		LoadingTask spriteTask = new LoadingTask(null, "Loading Images");
 		for (String resource : ResourceManager.getResourcesInDirectory("images")) {
-			if (!resource.endsWith(ResourceType.SpriteSheet.getExtension())) continue;
+			if (!resource.endsWith(ResourceType.JSON.getExtension())) continue;
 			
 			spriteTask.addSubTask(new SpriteSheetLoader(resource), 10);
 		}
@@ -67,7 +70,7 @@ public class CampaignLoadingTaskList extends LoadingTaskList {
 				Game.ruleset = new Ruleset();
 				Game.ruleset.readData();
 				
-				Game.entityManager.clearEntities();
+				EntityManager.clear();
 			}
 		};
 		
@@ -85,6 +88,13 @@ public class CampaignLoadingTaskList extends LoadingTaskList {
 		addTask(loadAnimations, "Loading Animations", 5);
 		addTask(loadRuleset, "Loading Ruleset", 30);
 		addTask(loadCampaign, "Loading Campaign resources", 30);
+	}
+	
+	@Override protected void onError() {
+		Game.curCampaign = null;
+		
+		File f = new File(Game.getConfigBaseDirectory() + "lastOpenCampaign.txt");
+		f.delete();
 	}
 	
 	private class SpriteSheetLoader implements Runnable {

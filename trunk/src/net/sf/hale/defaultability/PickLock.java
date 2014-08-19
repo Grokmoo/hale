@@ -19,12 +19,13 @@
 
 package net.sf.hale.defaultability;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
 import net.sf.hale.entity.Openable;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.PC;
 
 /**
  * A default ability for picking a lock on a door or container.  If the parent is
@@ -41,19 +42,20 @@ public class PickLock implements DefaultAbility {
 		return "Pick Lock";
 	}
 	
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canPerformAction("OpenLockCost")) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canPerformAction("OpenLockCost")) return false;
 		
-		if (!parent.stats().has(Bonus.Type.LockPicking)) return false;
+		if (!parent.stats.has(Bonus.Type.LockPicking)) return false;
 		
-		openable = Game.curCampaign.curArea.getOpenableAtGridPoint(targetPosition);
+		openable = targetPosition.getOpenable();
 		if (openable == null) return false;
 		
 		if (!openable.isLocked()) return false;
 		
 		move = new Move();
+		move.setAllowPartyMove(false);
 		
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// need to move towards the door before opening
 			return move.canMove(parent, targetPosition, 1);
 		}
@@ -62,8 +64,8 @@ public class PickLock implements DefaultAbility {
 		
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// move towards the door then open
 			move.addCallback(new UnlockCallback(parent));
 			move.moveTowards(parent, targetPosition, 1);
@@ -86,18 +88,35 @@ public class PickLock implements DefaultAbility {
 	 */
 	
 	public boolean unlock(Creature parent, Openable openable) {
-		if (AreaUtil.distance(parent.getX(), parent.getY(),
-				openable.getX(), openable.getY()) > 1) return false;
+		if (openable.getLocation().getDistance(parent) > 1)
+			return false;
 		
-		if (openable == null || !parent.getTimer().canPerformAction("OpenLockCost")) return false;
+		if (openable == null || !parent.timer.canPerformAction("OpenLockCost")) return false;
 		
-		if (!parent.stats().has(Bonus.Type.LockPicking)) return false;
+		if (!parent.stats.has(Bonus.Type.LockPicking)) return false;
 		
-		parent.getTimer().performAction("OpenLockCost");
+		parent.timer.performAction("OpenLockCost");
 		
 		if (!openable.isLocked()) return false;
 		
-		return openable.tryPickLock(parent);
+		boolean isUnlocked;
+		// if the parent already has the key, just open the object rather than trying to pick the lock
+		if (openable.getTemplate().hasKey() &&
+				parent.inventory.getTotalQuantity(openable.getTemplate().getKeyID()) > 0) {
+			isUnlocked = openable.attemptOpen(parent);
+		} else {
+			isUnlocked = openable.attemptUnlock(parent);
+		}
+		
+		if (!isUnlocked) {
+			Game.mainViewer.addFadeAway("Pick Lock Failed", openable.getLocation().getX(), openable.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		} else {
+			Game.mainViewer.addFadeAway("Unlocked", openable.getLocation().getX(), openable.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		}
+		
+		return isUnlocked;
 	}
 
 	@Override public DefaultAbility getInstance() {

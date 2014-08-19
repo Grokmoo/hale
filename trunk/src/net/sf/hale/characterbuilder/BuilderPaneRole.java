@@ -22,6 +22,7 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 
 /**
@@ -34,6 +35,8 @@ import net.sf.hale.rules.Role;
 public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.Listener {
 	private List<RoleSelector> roleSelectors;
 	private PointAllocatorModel points;
+	
+	private PC workingCopy;
 	
 	/**
 	 * Create a new BuilderPaneRole editing the roles for the
@@ -56,6 +59,8 @@ public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.
         super.setTitleText("Select a Role");
         
         allocatorModelUpdated();
+        
+        workingCopy = this.getCharacter().getWorkingCopy();
 	}
 	
 	@Override protected void next() {
@@ -131,7 +136,7 @@ public class BuilderPaneRole extends BuilderPane implements PointAllocatorModel.
 	private void setTextAreaContent(Role role) {
 		StringBuilder sb = new StringBuilder();
 		
-		role.appendDescription(sb);
+		role.appendDescription(sb, workingCopy);
 		
 		getTextModel().setHtml(sb.toString());
 		getTextPane().invalidateLayout();

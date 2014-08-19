@@ -19,12 +19,12 @@
 
 package net.sf.hale.defaultability;
 
-import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
+import net.sf.hale.area.Transition;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 import net.sf.hale.interfacelock.InterfaceCallbackLock;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
 
 /**
  * Default ability for activating an area transition and traveling to a new area.  If the
@@ -36,37 +36,50 @@ import net.sf.hale.util.Point;
 public class Travel implements DefaultAbility {
 	// storage for movement properties if movement is needed
 	private Move move;
-	private AreaTransition target;
+	private Transition target;
 	
 	@Override public String getActionName() {
 		return "Travel";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		target = Game.curCampaign.curArea.getTransitionAtGridPoint(targetPosition);
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		target = targetPosition.getAreaTransition();
 		
 		// if target is an active (visible) area transition
 		if (target != null && target.isActivated()) {
 			move = new Move();
 			
-			if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
-				// need to move towards the container before opening
-				return move.canMove(parent, targetPosition, 1);
+			// allow any member of the player character party to travel
+			for (PC character : Game.curCampaign.party) {
+				if (targetPosition.getDistance(character) <= 1) {
+					return true;
+				}
 			}
 			
-			return true;
+			// need to move towards the transition before traveling
+			return move.canMove(parent, targetPosition, 1);
 		}
 		
 		return false;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		boolean needToMove = true;
+		
+		// allow any member of the player character party to travel
+		for (PC character : Game.curCampaign.party) {
+			if (targetPosition.getDistance(character) <= 1) {
+				needToMove = false;
+				break;
+			}
+		}
+		
+		if (needToMove) {
 			// move towards the transition then travel
 			move.addCallback(new TravelCallback(parent, targetPosition));
 			move.moveTowards(parent, targetPosition, 1);
 		} else {
-			Game.curCampaign.transition(target, Game.curCampaign.curArea.getName());
+			Game.curCampaign.transition(target, false);
 		}
 		
 		Game.areaListener.computeMouseState();
@@ -82,10 +95,10 @@ public class Travel implements DefaultAbility {
 	
 	private class TravelCallback implements Runnable {
 		private Creature parent;
-		private Point targetPosition;
+		private Location targetPosition;
 		private boolean alreadyLocked;
 		
-		private TravelCallback(Creature parent, Point targetPosition) {
+		private TravelCallback(Creature parent, Location targetPosition) {
 			this.parent = parent;
 			this.targetPosition = targetPosition;
 		}
@@ -102,8 +115,8 @@ public class Travel implements DefaultAbility {
 				return;
 			}
 			
-			if (AreaUtil.distance(parent.getPosition(), targetPosition) <= 1) {
-				Game.curCampaign.transition(target, Game.curCampaign.curArea.getName());
+			if (targetPosition.getDistance(parent) <= 1) {
+				Game.curCampaign.transition(target, false);
 			}
 		}
 	}

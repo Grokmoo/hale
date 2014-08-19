@@ -48,25 +48,20 @@ public class ScriptState implements Saveable {
 	/**
 	 * Creates a new ScriptState object by loading the specified JSON data
 	 * @param data the parsed JSON data
-	 * @return a new ScriptState object
 	 */
 	
-	public static ScriptState load(SimpleJSONObject data) {
-		ScriptState scriptState = new ScriptState();
-		
+	public void load(SimpleJSONObject data) {
 		for (String key : data.keySet()) {
 			if (data.isString(key)) {
-				scriptState.state.put(key, data.get(key, null));
+				state.put(key, data.get(key, null));
 			} else if (data.isInteger(key)) {
-				scriptState.state.put(key, data.get(key, 0));
+				state.put(key, data.get(key, 0));
 			} else if (data.isFloat(key)) {
-				scriptState.state.put(key, data.get(key, 0.0f));
+				state.put(key, data.get(key, 0.0f));
 			} else if (data.isBoolean(key)) {
-				scriptState.state.put(key, data.get(key, false));
+				state.put(key, data.get(key, false));
 			}
 		}
-		
-		return scriptState;
 	}
 	
 	/**

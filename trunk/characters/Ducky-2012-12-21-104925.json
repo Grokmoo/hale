@@ -1,0 +1,63 @@
+{
+  "name" : "Ducky",
+  "isPregenerated" : true,
+  "gender" : "Female",
+  "race" : "Elf",
+  "portrait" : "Elf\/chantal-druid",
+  "icon" : {
+    "skinColor" : "#fff6d39b",
+    "clothingColor" : "#ff00ff00",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair004",
+        "color" : "#ffeee685"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 12,
+    "dexterity" : 19,
+    "constitution" : 12,
+    "intelligence" : 11,
+    "wisdom" : 10,
+    "charisma" : 11
+  },
+  "skills" : {
+    "Hide" : 5,
+    "Locks" : 5,
+    "Traps" : 5,
+    "Search" : 5
+  },
+  "abilities" : [
+    {
+      "id" : "DualWielding",
+      "levelObtained" : 1
+    }, {
+      "id" : "Backstab",
+      "levelObtained" : 1
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Rogue",
+    "Rogue" : 1
+  },
+  "inventory" : {
+    "equipped" : {
+      "Armor" : {
+        "id" : "armor_clothes"
+      }
+    },
+    "unequipped" : [
+      
+    ]
+  },
+  "unspentSkillPoints" : 1,
+  "experiencePoints" : 0,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+
+    }
+  }
+}

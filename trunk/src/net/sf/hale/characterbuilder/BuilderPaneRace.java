@@ -22,6 +22,7 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.RacialType;
 
@@ -85,7 +86,7 @@ public class BuilderPaneRace extends BuilderPane {
 		private Race race;
 		
 		private RaceSelector(Race race) {
-			super(race.getName(), race.getIcon(), false);
+			super(race.getName(), IconFactory.createIcon(race.getIcon()), false);
 			
 			this.race = race;
 			this.setSelectable(true);
@@ -107,21 +108,20 @@ public class BuilderPaneRace extends BuilderPane {
 			sb.append("<div style=\"font-family: large-red; \">");
 			sb.append(race.getName()).append("</div>");
 			
-			sb.append("<div style=\"font-family: blue; margin-bottom: 1em;\">").append(race.getSize());
-			sb.append(" ");
+			sb.append("<div style=\"font-family: blue; margin-bottom: 1em;\">");
 			List<RacialType> racialTypes = race.getRacialTypes();
 			for (RacialType type : racialTypes) {
 				sb.append(type.getName()).append(" ");
 			}
 			sb.append("</div>");
 			
-			int baseSpeed = 5 * 10000 / race.getMovementCost();
+			int baseSpeed = 10000 / race.getMovementCost();
 			sb.append("<div style=\"margin-bottom: 1em;\">Base Speed: <span style=\"font-family: green;\">");
-			sb.append(baseSpeed).append(" feet / turn</span></div>");
+			sb.append(baseSpeed).append(" hexes / turn</span></div>");
 			
 			sb.append(race.getDescriptionFile());
 			
-			sb.append("<div style=\"margin-top: 1em; font-family: vera\">Base Racial Attributes</div>");
+			sb.append("<div style=\"margin-top: 1em; font-family: medium\">Base Racial Attributes</div>");
 			sb.append("<table style=\"width: 22ex;\">");
 			sb.append("<tr><td>Strength</td><td style=\"font-family: red; text-align:right;\">");
 			sb.append(race.getBaseStr());

@@ -1,3 +1,0 @@
-area "Southern Road"
-script "triggers/southernRoad"
-addPoints

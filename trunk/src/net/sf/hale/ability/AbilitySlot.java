@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.NPC;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.ReferenceHandler;
 import net.sf.hale.loading.Saveable;
@@ -62,7 +64,7 @@ public class AbilitySlot implements Saveable {
 	private int activeRoundsLeft;
 	private boolean active;
 	
-	private AbilityActivator parent;
+	private Creature parent;
 	
 	private List<Effect> activeEffects;
 	
@@ -88,21 +90,29 @@ public class AbilitySlot implements Saveable {
 		}
 		
 		if (activeEffects.size() > 0) {
-			Object[] effectsData = new Object[activeEffects.size()];
+			List<Object> effectsData = new ArrayList<Object>();
 			
-			int i = 0;
 			for (Effect effect : activeEffects) {
-				effectsData[i] = SaveGameUtil.getRef(effect);
-				i++;
+				// don't save effect references for effects on dead NPCs, as these
+				// will not be resolved on loading
+				if (effect.getTarget() instanceof NPC) {
+					NPC target = (NPC)effect.getTarget();
+					
+					if (target.isDead()) {
+						continue;
+					}
+				}
+				
+				effectsData.add(SaveGameUtil.getRef(effect));
 			}
 			
-			data.put("effects", effectsData);
+			data.put("effects", effectsData.toArray());
 		}
 		
 		return data;
 	}
 	
-	public static AbilitySlot load(SimpleJSONObject data, ReferenceHandler refHandler, AbilityActivator parent) {
+	public static AbilitySlot load(SimpleJSONObject data, ReferenceHandler refHandler, Creature parent) {
 		AbilitySlot slot = new AbilitySlot(data.get("type", null), parent);
 		
 		refHandler.add(data.get("ref", null), slot);
@@ -153,7 +163,7 @@ public class AbilitySlot implements Saveable {
 	 * @param parent the Creature or AbilityActivator that owns this AbilitySlot
 	 */
 	
-	public AbilitySlot(String type, AbilityActivator parent) {
+	public AbilitySlot(String type, Creature parent) {
 		this.type = type;
 		this.fixed = false;
 		
@@ -174,7 +184,7 @@ public class AbilitySlot implements Saveable {
 	 * @param parent the Creature that owns this AbilitySlot
 	 */
 	
-	public AbilitySlot(Ability ability, AbilityActivator parent) {
+	public AbilitySlot(Ability ability, Creature parent) {
 		this.type = ability.getType();
 		this.fixed = true;
 		
@@ -197,7 +207,7 @@ public class AbilitySlot implements Saveable {
 	 * @param parent the owner Creature for this AbilitySlot
 	 */
 	
-	public AbilitySlot(AbilitySlot other, AbilityActivator parent) {
+	public AbilitySlot(AbilitySlot other, Creature parent) {
 		this.type = other.type;
 		this.fixed = other.fixed;
 		
@@ -272,7 +282,7 @@ public class AbilitySlot implements Saveable {
 	 * @return the owner of this AbilitySlot
 	 */
 	
-	public AbilityActivator getParent() { return parent; }
+	public Creature getParent() { return parent; }
 	
 	/**
 	 * Returns true if this AbilitySlot currently does not ready any Ability.
@@ -393,7 +403,8 @@ public class AbilitySlot implements Saveable {
 		if (abilityID == null) return false;
 		if (active) return false;
 		if (cooldownRoundsLeft > 0) return false;
-		if (!parent.getTimer().canPerformAction(this.getAbility().getAPCost())) return false;
+		if (!parent.timer.canPerformAction(this.getAbility().getAPCost())) return false;
+		if (!Game.isInTurnMode() && !getAbility().canActivateOutsideCombat()) return false;
 		
 		if (getAbility().hasFunction(ScriptFunctionType.canActivate)) {
 			Object returnValue = getAbility().executeFunction(ScriptFunctionType.canActivate, parent);
@@ -494,24 +505,63 @@ public class AbilitySlot implements Saveable {
 		// only go up to the size of the current size of the list
 		// this will prevent elapsing a round for any effects that
 		// were created as a result of the current effects running their onRoundElapsed
-		int size = activeEffects.size();
-		
-		for (int i = 0; i < size; i++) {
-			Effect effect = activeEffects.get(i);
-			
-			effect.elapseRounds(rounds);
-			
-			boolean removeEffect = effect.getRoundsRemaining() < 1 && !effect.removeOnDeactivate();
-			removeEffect = removeEffect || !effect.getTarget().isValidEffectTarget();
-			
-			if (removeEffect) {
-				effect.getTarget().removeEffect(effect);
-				activeEffects.remove(i);
+		synchronized(activeEffects) {
+			int size = activeEffects.size();
+
+			for (int i = 0; i < size; i++) {
+				Effect effect = activeEffects.get(i);
+
+				effect.elapseRounds(rounds);
+
+				boolean removeEffect = effect.getRoundsRemaining() < 1 && !effect.removeOnDeactivate();
+				if (effect.getTarget() != null) {
+					removeEffect = removeEffect || !effect.getTarget().isValidEffectTarget();
+					
+					if (removeEffect) {
+						effect.getTarget().removeEffect(effect);
+						activeEffects.remove(i);
+
+						// we have one fewer effect to run through
+						i--;
+						size--;
+					}
+				} else {
+					// just remove the effect if it has no target
+					activeEffects.remove(i);
+					i--;
+					size--;
+				}
+
 				
-				// we have one fewer effect to run through
-				i--;
-				size--;
 			}
+		}
+	}
+	
+	/**
+	 * Cancels and immediately ends all effects being tracked from this ability slot.
+	 */
+	
+	public void cancelAllEffects() {
+		synchronized(activeEffects) {
+			int size = activeEffects.size();
+			
+			for (int i = 0; i < size; i++) {
+				Effect effect = activeEffects.get(i);
+				
+				effect.getTarget().removeEffect(effect);
+				
+				if (size != activeEffects.size()) {
+					// the effect was removed as a result of a script firing
+					i--;
+					size--;
+				}
+			}
+
+			activeEffects.clear();
+		}
+		
+		if (getAbility().isCancelable()) {
+			deactivate();
 		}
 	}
 	
@@ -522,20 +572,23 @@ public class AbilitySlot implements Saveable {
 	 */
 	
 	public boolean cancelAllAuras() {
-		int size = activeEffects.size();
-		
 		boolean auraFound = false;
-		for (int i = 0; i < size; i++) {
-			Effect effect = activeEffects.get(i);
-			
-			if (! (effect instanceof Aura)) continue;
-			
-			effect.getTarget().removeEffect(effect);
-			activeEffects.remove(i);
-			
-			i--;
-			size--;
-			auraFound = true;
+		
+		synchronized(activeEffects) {
+			int size = activeEffects.size();
+
+			for (int i = 0; i < size; i++) {
+				Effect effect = activeEffects.get(i);
+
+				if (! (effect instanceof Aura)) continue;
+
+				effect.getTarget().removeEffect(effect);
+				activeEffects.remove(i);
+
+				i--;
+				size--;
+				auraFound = true;
+			}
 		}
 		
 		if (auraFound && abilityID != null) {
@@ -559,7 +612,9 @@ public class AbilitySlot implements Saveable {
 		Effect effect = new Effect();
 		effect.setSlot(this);
 		
-		this.activeEffects.add(effect);
+		synchronized(activeEffects) {
+			this.activeEffects.add(effect);
+		}
 		
 		return effect;
 	}
@@ -579,7 +634,9 @@ public class AbilitySlot implements Saveable {
 		Effect effect = new Effect(scriptID);
 		effect.setSlot(this);
 		
-		this.activeEffects.add(effect);
+		synchronized(activeEffects) {
+			this.activeEffects.add(effect);
+		}
 		
 		return effect;
 	}
@@ -599,7 +656,9 @@ public class AbilitySlot implements Saveable {
 		Aura aura = new Aura(scriptID);
 		aura.setSlot(this);
 		
-		this.activeEffects.add(aura);
+		synchronized(activeEffects) {
+			this.activeEffects.add(aura);
+		}
 		
 		return aura;
 	}

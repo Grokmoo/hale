@@ -19,6 +19,7 @@
 
 package net.sf.hale;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.Map;
 import net.sf.hale.mainmenu.InGameMenu;
 import net.sf.hale.quickbar.Quickbar;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.interfacelock.MovementHandler;
 
 import de.matthiasmann.twl.Widget;
@@ -249,7 +251,23 @@ public class Keybindings {
 	
 	public static class Quicksave extends Binding {
 		@Override public void run() {
-			Game.mainViewer.quickSave();
+			Game.mainViewer.updateInterface();
+			
+			if (Game.isInTurnMode() || Game.curCampaign.party.isDefeated()) {
+				Game.mainViewer.addMessage("red", "You cannot save the game while in combat mode.");
+				return;
+			}
+			
+			File fout = SaveGameUtil.getNextQuickSaveFile();
+			
+			try {
+				SaveGameUtil.saveGame(fout);
+				Game.mainViewer.addMessage("link", "Quicksave successful.");
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error when quicksaving to " + fout.getPath(), e);
+				Game.mainViewer.addMessage("red", "Error saving game!");
+				fout.delete();
+			}
 		}
 	}
 	

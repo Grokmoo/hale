@@ -1,5 +1,5 @@
 function onActivate(game, slot) {
-	game.addMenuLevel("Conjure Armor");
+	if (!game.addMenuLevel("Conjure Armor")) return;
 	
 	var types = [ "Leather", "Mail", "Plate", "Heavy Plate" ];
 		
@@ -22,10 +22,10 @@ function conjureArmor(game, slot, itemIDs) {
 	
 	// make sure all targets can equip all of the items
 	for (var itemIndex = 0; itemIndex < itemIDs.length; itemIndex++) {
-		var baseItem = game.entities().getItem(itemIDs[itemIndex]);
+		var baseItem = game.getItem(itemIDs[itemIndex], game.ruleset().getItemQuality("Good"));
 	
 		for (var i = 0; i < creatures.size(); i++) {
-			if ( !creatures.get(i).getInventory().hasPrereqsToEquip(baseItem) ) {
+			if ( !creatures.get(i).inventory.hasPrereqsToEquip(baseItem) ) {
 				creatures.remove(i);
 				i--;
 			}
@@ -46,35 +46,37 @@ function onTargetSelect(game, targeter, itemIDs) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = game.dice().d5(2);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	// create the items, set its properties, and equip it
+	var allQualities = [ "Mediocre", "Decent", "Good", "Fine", "Superb", "Exceptional", "Phenomenal", "Masterwork" ];
+	
 	var qualityIndex = parseInt(casterLevel / 3) + 1;
-	if (qualityIndex >= game.ruleset().getNumItemQualities())
-		qualityIndex = game.ruleset().getNumItemQualities() - 1;
+	if (qualityIndex >= allQualities.length)
+		qualityIndex = allQualities.length - 1;
 	
 	for (var index = 0; index < itemIDs.length; index++) {
-		createItem(game, itemIDs[index], qualityIndex, target, duration, targeter);
+		createItem(game, itemIDs[index], allQualities[qualityIndex], target, duration, targeter);
 	}
 }
 
-function createItem(game, itemID, qualityIndex, target, duration, targeter) {
+function createItem(game, itemID, quality, target, duration, targeter) {
 	// create the item to be conjured
-	var item = game.entities().getItem(itemID);
-	var conjuredID = "__" + item.getID() + "Conjured";
-	item.setName("Conjured " + item.getName());
-	item.setID(conjuredID);
-	item.setCursed(true);
-	item.setQuality(game.ruleset().getItemQuality(qualityIndex));
-	item.recomputeBonuses();
-	game.campaign().addCreatedItem(itemID, item);
+	var conjuredID = "__" + itemID + "Conjured";
+	var model = game.getCreatedItemModel(itemID, conjuredID);
+	model.setNamePrefix("Conjured ");
+	model.setForceNotUnequippable(true);
+	game.campaign().addCreatedItem(model.getCreatedItem());
+	
+	// get a copy of the item
+	var item = game.getItem(conjuredID, game.ruleset().getItemQuality(quality));
 	
 	// create an effect to keep track of the item
 	var effect = targeter.getSlot().createEffect("effects/conjureItem");
@@ -84,34 +86,39 @@ function createItem(game, itemID, qualityIndex, target, duration, targeter) {
 	
 	// keep track of the old item to re-equip it at the end of the effect, if possible
 	// also figure out the sub icon slot of the item
-	if (item.isArmor()) {
+	if (item.getTemplate().getType().name().equals("Armor")) {
 		var subIconSlot = "Torso";
-		var oldItem = target.getInventory().getEquippedArmor();
-	} else if (item.isGloves()) {
+		var oldItem = target.inventory.getEquippedArmor();
+	} else if (item.getTemplate().getType().name().equals("Gloves")) {
 		var subIconSlot = "Gloves";
-		var oldItem = target.getInventory().getEquippedGloves();
-	} else if (item.isBoots()) {
+		var oldItem = target.inventory.getEquippedGloves();
+	} else if (item.getTemplate().getType().name().equals("Boots")) {
 		var subIconSlot = "Boots";
-		var oldItem = target.getInventory().getEquippedBoots();
+		var oldItem = target.inventory.getEquippedBoots();
 	} else {
 		var subIconSlot = "Head";
-		var oldItem = target.getInventory().getEquippedHelmet();
+		var oldItem = target.inventory.getEquippedHelmet();
 	}
 	
 	// if there was an item in this slot, save it to re-equip after the spell ends
 	if (oldItem != null) {
-		effect.put("oldItemID", oldItem.getID());
-		effect.put("oldItemQuality", oldItem.getQuality().getName());
+		effect.put("oldItemID", oldItem.getTemplate().getID());
+		
+		if (oldItem.getTemplate().hasQuality()) {
+			effect.put("oldItemQuality", oldItem.getQuality().getName());
+		}
 	}
 	
 	target.applyEffect(effect);
 	
 	// equip the new item
-	target.getInventory().addItemAndEquip(item);
+	target.timer.setFreeMode(true);
+	target.inventory.addAndEquip(item);
+	target.timer.setFreeMode(false);
 	
 	var anim = game.getBaseAnimation("subIconFlash");
-	anim.addFrame(target.getSubIcon(subIconSlot));
-	anim.setColor(target.getSubIconColor(subIconSlot));
+	anim.addFrame(target.getIconRenderer().getIcon(subIconSlot));
+	anim.setColor(target.getIconRenderer().getColor(subIconSlot));
 	
 	var pos = target.getSubIconScreenPosition(subIconSlot);
 	anim.setPosition(pos.x, pos.y);

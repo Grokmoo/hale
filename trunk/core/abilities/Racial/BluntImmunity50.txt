@@ -1,8 +1,0 @@
-name "Blunt Immunity 50%"
-type "Racial Abilities"
-description "Some creatures are naturally resistant to blunt weapons."
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Blunt', 50); parent.applyEffect(effect); }"

@@ -1,7 +1,7 @@
 function isTargetValid(game, target, slot) {
-	var armor = target.getInventory().getEquippedArmor();
+	var armor = target.inventory.getEquippedArmor();
 	
-	if (armor == null || !armor.isArmor()) {
+	if (armor == null || armor.getTemplate().getArmorType().getName().equals("None")) {
 		return false;
 	}
 	
@@ -9,7 +9,7 @@ function isTargetValid(game, target, slot) {
 }
 
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("ResistWeapons")) {
+	if (slot.getParent().abilities.has("ResistWeapons")) {
 		showResistWeaponsMenu(game, slot);
 	} else {
 		createTargeter(game, slot, null);
@@ -17,7 +17,7 @@ function onActivate(game, slot) {
 }
 
 function showResistWeaponsMenu(game, slot) {
-	game.addMenuLevel(slot.getAbility().getName());
+	if (!game.addMenuLevel(slot.getAbility().getName())) return;
 
 	var types = ["Slashing", "Piercing", "Blunt"];
 	
@@ -53,7 +53,7 @@ function onTargetSelect(game, targeter, type) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	if (!isTargetValid(game, target, targeter.getSlot())) return;
 	
@@ -62,7 +62,7 @@ function onTargetSelect(game, targeter, type) {
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
@@ -70,29 +70,48 @@ function onTargetSelect(game, targeter, type) {
 	effect.getBonuses().addDamageReduction("Physical", 4 + parseInt(casterLevel / 6));
 	effect.getBonuses().addBonus('ArmorPenalty', 10);
 	
-	if (parent.getAbilities().has("ResistWeapons")) {
+	if (parent.abilities.has("ResistWeapons")) {
 		effect.getBonuses().addDamageImmunity(type, 20 + casterLevel);
 	}
 	
 	// we already checked that the armor exists
-	var armor = target.getInventory().getEquippedArmor();
+	var armor = target.inventory.getEquippedArmor();
 	armor.applyEffect(effect);
 		
-	if (target.drawWithSubIcons() && !target.drawOnlyHandSubIcons()) {
+	if (target.drawsWithSubIcons() && target.getIconRenderer().getSubIcon("Torso") != null) {
 		var anim = game.getBaseAnimation("subIconFlash");
-		anim.addFrame(target.getSubIcon("Torso"));
-		anim.setColor(target.getSubIconColor("Torso"));
+		anim.addFrame(target.getIconRenderer().getIcon("Torso"));
+		anim.setColor(target.getIconRenderer().getColor("Torso"));
 			
 		var pos = target.getSubIconScreenPosition("Torso");
 		anim.setPosition(pos.x, pos.y);
 	} else {
 		var anim = game.getBaseAnimation("iconFlash");
-		anim.addFrame(target.getIcon());
-		anim.setColor(target.getIconColor());
-		var pos = target.getScreenPosition();
+		anim.addFrameAndSetColor(target.getTemplate().getIcon());
+		var pos = target.getLocation().getCenteredScreenPoint();
 		anim.setPosition(pos.x, pos.y);
 	}
 		
 	game.runAnimationNoWait(anim);
 	game.lockInterface(anim.getSecondsRemaining());
+}
+
+function aiCheckTargetValid(game, slot, targetPosition) {
+	var target = targetPosition.getCreature();
+	if (target == null) {
+		return false;
+	}
+
+	if ( !isTargetValid(game, target) ) {
+		return false;
+	}
+	
+	var armor = target.inventory.getEquippedArmor();
+	var effect = armor.getEffects().getEffectCreatedBySlot(slot.getAbilityID());
+	
+	if (effect != null) {
+		return false;
+	} else {
+		return true;
+	}
 }

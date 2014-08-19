@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.sf.hale.Game;
-import net.sf.hale.QuestEntry;
-import net.sf.hale.QuestSubEntry;
+import net.sf.hale.rules.QuestEntry;
+import net.sf.hale.rules.QuestSubEntry;
 import net.sf.hale.widgets.ExpandableWidget;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.ScrollPane;
@@ -181,13 +181,13 @@ public class QuestSetViewer extends Widget {
 		}
 		
 		@Override protected void appendDescriptionMain(StringBuilder sb) {
-			sb.append("<div style=\"font-family: vera-bold;\">");
+			sb.append("<div style=\"font-family: medium-bold;\">");
 			sb.append(entry.getTitle());
 			sb.append("</div>");
 			
 			if (entry.getNumSubEntries() > 0) {
 				QuestSubEntry subEntry = entry.getMostRecentSubEntry();
-				sb.append("<div style=\"margin-top: 1em; font-family: vera;\">");
+				sb.append("<div style=\"margin-top: 1em; font-family: medium;\">");
 				if (subEntry.showTitle()) sb.append(subEntry.getTitle());
 				sb.append("</div>");
 				sb.append(subEntry.getDescription());
@@ -204,7 +204,7 @@ public class QuestSetViewer extends Widget {
 			
 			while (iter.hasNext()) {
 				QuestSubEntry subEntry = iter.next();
-				sb.append("<div style=\"margin-top: 1em; font-family: vera;\">");
+				sb.append("<div style=\"margin-top: 1em; font-family: medium;\">");
 				if (subEntry.showTitle()) sb.append(subEntry.getTitle());
 				sb.append("</div>");
 				sb.append(subEntry.getDescription());

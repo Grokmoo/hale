@@ -21,6 +21,7 @@ package net.sf.hale.ability;
 
 import de.matthiasmann.twl.Widget;
 import net.sf.hale.Game;
+import net.sf.hale.entity.Creature;
 import net.sf.hale.view.AbilityDetailsWindow;
 
 /**
@@ -37,7 +38,7 @@ public class AbilityExamineCallback implements Runnable {
 	private Widget parent;
 	private int x, y;
 	
-	private AbilityActivator owner;
+	private Creature owner;
 	
 	/**
 	 * Create a new AbilityExamineCallback.  When activated with the run()
@@ -48,7 +49,7 @@ public class AbilityExamineCallback implements Runnable {
 	 * @param owner the owner of the specified ability or null for no owner
 	 */
 	
-	public AbilityExamineCallback(Ability ability, Widget parent, AbilityActivator owner) {
+	public AbilityExamineCallback(Ability ability, Widget parent, Creature owner) {
 		this.owner = owner;
 		this.ability = ability;
 		this.parent = parent;

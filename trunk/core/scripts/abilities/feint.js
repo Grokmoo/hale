@@ -1,9 +1,9 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return weapon.isMeleeWeapon();
+	return weapon.isMelee();
 }
 
 function onActivate(game, slot) {
@@ -21,25 +21,28 @@ function onTargetSelect(game, targeter) {
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
 	
-	var rogueLevel = parent.getRoles().getLevel("Rogue");
+	var rogueLevel = parent.roles.getLevel("Rogue");
 	
-	var checkDC = 50 + 2 * (parent.stats().getInt() - 10) + 3 * rogueLevel;
+	var checkDC = 50 + 2 * (parent.stats.getInt() - 10) + 3 * rogueLevel;
 	
-	if ( target.mentalResistanceCheck(checkDC) )
+	if ( target.stats.getMentalResistanceCheck(checkDC) )
 		return;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(2);
+	effect.addNegativeIcon("items/enchant_armor_small");
 	effect.setTitle(targeter.getSlot().getAbility().getName());
 	effect.getBonuses().addPenalty("ArmorClass", "Stackable", -20 - rogueLevel);
 	
 	var g1 = game.getBaseParticleGenerator("sparkle");
 	g1.setDurationInfinite();
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(target.getPosition());
+	g1.setPosition(target.getLocation());
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));
 	g1.setGreenDistribution(game.getFixedDistribution(0.0));
 	effect.addAnimation(g1);
+	
+	parent.timer.performAttack();
 	
 	target.applyEffect(effect);
 }

@@ -1,7 +1,7 @@
 function onActivate(game, slot) {
 	var targeter = game.createConeTargeter(slot);
 	
-	targeter.setOrigin(slot.getParent().getPosition());
+	targeter.setOrigin(slot.getParent().getLocation());
 	targeter.setConeAngle(30);
 	targeter.setConeRadius(8);
 	targeter.setHasVisibilityCriterion(false);
@@ -14,13 +14,13 @@ function onTargetSelect(game, targeter) {
 
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	// check for spell failure
 	if (!spell.checkSpellFailure(parent)) return;
 	
 	var g1 = game.getBaseParticleGenerator("spray");
-	g1.setPosition(parent.getPosition());
+	g1.setPosition(parent.getLocation());
 	g1.setRedDistribution(game.getUniformDistribution(0.438 - 0.05, 0.438 + 0.05));
     g1.setGreenDistribution(game.getUniformDistribution(0.379 - 0.05, 0.379 + 0.05));
     g1.setBlueDistribution(game.getFixedDistribution(0.0));
@@ -34,7 +34,7 @@ function onTargetSelect(game, targeter) {
 	
 	var targets = targeter.getAffectedCreatures();
 	for (var i = 0; i < targets.size(); i++) {
-		var delay = targets.get(i).getPosition().screenDistance(parent.getPosition()) / 400.0;
+		var delay = targets.get(i).getLocation().getScreenDistance(parent.getLocation()) / 400.0;
 		
 		var callback = spell.createDelayedCallback("applyEffect");
 		callback.setDelay(delay);
@@ -50,12 +50,12 @@ function onTargetSelect(game, targeter) {
 }
 
 function applyEffect(game, parent, target, slot) {
-	if ( target.stats().has("ImmobilizationImmunity")) {
+	if ( target.stats.has("ImmobilizationImmunity")) {
 		game.addMessage("blue", target.getName() + " is immune.");
 		return;
 	}
 	
-	if ( target.physicalResistanceCheck(slot.getAbility().getCheckDifficulty(parent)) )
+	if ( target.stats.getPhysicalResistanceCheck(slot.getAbility().getCheckDifficulty(parent)) )
 		return;
 		
 	var effect = slot.createEffect();
@@ -67,7 +67,7 @@ function applyEffect(game, parent, target, slot) {
 	var g1 = game.getBaseParticleGenerator("sparkle");
 	g1.setDurationInfinite();
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(target.getPosition());
+	g1.setPosition(target.getLocation());
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));
 	g1.setGreenDistribution(game.getFixedDistribution(0.0));
 	effect.addAnimation(g1);

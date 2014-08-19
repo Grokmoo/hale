@@ -1,5 +1,0 @@
-size 1
-faction "Hostile"
-challenge 1
-creature "tutorialOrc2" 0 0
-creature "tutorialOrc2" -1 -1

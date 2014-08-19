@@ -19,11 +19,12 @@
 
 package net.sf.hale.defaultability;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Door;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * A DefaultAbility for opening a door.  Can also move to the door and
@@ -47,10 +48,10 @@ public class OpenDoor implements DefaultAbility {
 		return actionName;
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canPerformAction("OpenDoorCost")) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canPerformAction("OpenDoorCost")) return false;
 		
-		door = Game.curCampaign.curArea.getDoorAtGridPoint(targetPosition);
+		door = targetPosition.getDoor();
 		
 		if (door != null) {
 			if (door.isOpen()) actionName = OpenDoor.doorCloseAction;
@@ -58,7 +59,7 @@ public class OpenDoor implements DefaultAbility {
 			
 			move = new Move();
 			
-			if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+			if (targetPosition.getDistance(parent) > 1) {
 				// need to move towards the door before opening
 				return move.canMove(parent, targetPosition, 1);
 			}
@@ -69,13 +70,13 @@ public class OpenDoor implements DefaultAbility {
 		return false;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// move towards the door then open
 			move.addCallback(new OpenDoorCallback(parent));
 			move.moveTowards(parent, targetPosition, 1);
 		} else {
-			toggleDoor(parent, Game.curCampaign.curArea.getDoorAtGridPoint(targetPosition));
+			toggleDoor(parent, targetPosition.getDoor());
 		}
 		
 		Game.areaListener.computeMouseState();
@@ -95,25 +96,29 @@ public class OpenDoor implements DefaultAbility {
 	 */
 	
 	public boolean toggleDoor(Creature parent, Door door) {
-		if (AreaUtil.distance(parent.getX(), parent.getY(),
-				door.getX(), door.getY()) > 1) return false;
+		if (parent.getLocation().getDistance(door) > 1) return false;
 
-		if (door == null || !parent.getTimer().canPerformAction("OpenDoorCost")) return false;
+		if (door == null || !parent.timer.canPerformAction("OpenDoorCost")) return false;
 		
-		parent.getTimer().performAction("OpenDoorCost");
+		parent.timer.performAction("OpenDoorCost");
 		
 		if (door.isOpen()) {
-			Creature creature = Game.curCampaign.curArea.getCreatureAtGridPoint(door.getPosition());
+			Creature creature = door.getLocation().getCreature();
 			if (creature == null) {
 				door.close(parent);
 			} else {
-				Game.mainViewer.addMessage("red", creature.getName() + " blocks the door.");
+				Game.mainViewer.addMessage("red", creature.getTemplate().getName() + " blocks the door.");
 			}
 			
 			return !door.isOpen();
 		}
 		else {
-			door.open(parent);
+			door.attemptOpen(parent);
+			
+			if (!door.isOpen()) {
+				Game.mainViewer.addFadeAway("Locked", door.getLocation().getX(), door.getLocation().getY(),
+						new Color(0xFFAbA9A9));
+			}
 			
 			return door.isOpen();
 		}

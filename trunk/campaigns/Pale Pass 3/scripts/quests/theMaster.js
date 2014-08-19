@@ -49,7 +49,7 @@ function narkel(game) {
     
     entry.addText("He informed you that the Master is an ancient demon, bound to this world through a powerful spell requiring some manner of focus.");
     
-    entry.addText("If the focus is destroyed, the Master should be removed from this plane.  Unfortunately, Narkell did not know where the focus would be.");
+    entry.addText("If the focus is destroyed, the Master should be removed from this plane.  Unfortunately, Narkel did not know where the focus would be.");
     
     entry.addText("His only clues were that the focus must be a large and pure crystal, and that the Master would most likely keep it close to him.");
     
@@ -96,7 +96,7 @@ function gateComplete(game) {
     entry.addText("You should return to the Lady of Aravil to plan your next move.");
 }
 
-function learnOfArmy(game) {
+function learnOfArmyLocation(game) {
     var quest = game.getQuestEntry("The Master");
     
     if (quest.hasSubEntry("Army Camp")) return;

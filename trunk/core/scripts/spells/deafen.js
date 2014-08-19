@@ -8,7 +8,7 @@ function onActivate(game, slot) {
 function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	targeter.getSlot().setActiveRoundsLeft(5);
 	targeter.getSlot().activate();
@@ -29,7 +29,7 @@ function onTargetSelect(game, targeter) {
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
 		
-		var delay = target.getPosition().screenDistance(explosionCenter) / 400.0;
+		var delay = target.getLocation().getScreenDistance(explosionCenter) / 400.0;
 		
 		var callback = spell.createDelayedCallback("applyDeafen");
 		callback.setDelay(delay);
@@ -37,7 +37,7 @@ function onTargetSelect(game, targeter) {
 		callback.start();
 	}
 	
-	if (parent.getAbilities().has("Silence")) {
+	if (parent.abilities.has("Silence")) {
 		var callback = spell.createDelayedCallback("applySilence");
 		callback.setDelay(g1.getTimeLeft() - 1.0);
 		callback.addArguments([spell, targeter]);
@@ -48,8 +48,9 @@ function onTargetSelect(game, targeter) {
 function applySilence(game, spell, targeter) {
 	var effect = targeter.getSlot().createEffect();
 	effect.setTitle(spell.getName());
-	effect.setDuration(5);
+	effect.setDuration(3);
 	effect.getBonuses().add('Silence');
+	effect.addNegativeIcon("items/enchant_spellFailure_small");
 	
 	for (var i = 0; i < targeter.getAffectedPoints().size(); i++) {
 		var point = targeter.getAffectedPoints().get(i);
@@ -67,7 +68,7 @@ function applySilence(game, spell, targeter) {
 }
 
 function applyDeafen(game, parent, target, spell, targeter) {
-	if ( !target.physicalResistanceCheck(spell.getCheckDifficulty(parent)) ) {
+	if ( !target.stats.getPhysicalResistanceCheck(spell.getCheckDifficulty(parent)) ) {
 		var duration = game.dice().randInt(3, 5);
 		
 		var effect = targeter.getSlot().createEffect();
@@ -79,10 +80,13 @@ function applyDeafen(game, parent, target, spell, targeter) {
 		effect.getBonuses().addSkillPenalty("Speech", -50);
 		effect.getBonuses().addPenalty("VerbalSpellFailure", "Morale", -30);
 		
+		effect.addNegativeIcon("items/enchant_spellFailure_small");
+		effect.addNegativeIcon("items/enchant_attack_small");
+		
 		var g1 = game.getBaseParticleGenerator("sparkle");
 		g1.setDurationInfinite();
 		g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-		g1.setPosition(target.getPosition());
+		g1.setPosition(target.getLocation());
 		g1.setBlueDistribution(game.getFixedDistribution(0.0));
 		g1.setGreenDistribution(game.getFixedDistribution(0.0));
 		effect.addAnimation(g1);

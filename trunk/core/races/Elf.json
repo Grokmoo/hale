@@ -1,8 +1,7 @@
 { "name" : "Elf",
   "icon" : "icons/elf",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedMedium",
+  "defaultWeapon" : "unarmedMedium",
   "playerSelectable" : true,
   
   "baseAttributes" : [ 9, 12, 9, 10, 10, 10 ],

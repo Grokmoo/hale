@@ -1,0 +1,175 @@
+{
+  "name" : "Pedrek",
+  "isPregenerated" : true,
+  "gender" : "Male",
+  "race" : "Human",
+  "portrait" : "Human\/mage-arch",
+  "icon" : {
+    "skinColor" : "#fff8e088",
+    "clothingColor" : "#ff0000ff",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair016",
+        "color" : "#ffd98719"
+      }, {
+        "type" : "Beard",
+        "sprite" : "subIcons\/beard006",
+        "color" : "#ffeeb86f"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 10,
+    "dexterity" : 13,
+    "constitution" : 13,
+    "intelligence" : 18,
+    "wisdom" : 10,
+    "charisma" : 10
+  },
+  "skills" : {
+    "Search" : 35,
+    "Alchemy" : 20,
+    "Enchanting" : 35
+  },
+  "abilities" : [
+    {
+      "id" : "FastSpellRecovery1",
+      "levelObtained" : 5
+    }, {
+      "id" : "ProficientCasting",
+      "levelObtained" : 2
+    }, {
+      "id" : "ConcealingFog",
+      "levelObtained" : 2
+    }, {
+      "id" : "IcicleStab",
+      "levelObtained" : 6
+    }, {
+      "id" : "Firebolt",
+      "levelObtained" : 1
+    }, {
+      "id" : "Fireball",
+      "levelObtained" : 7
+    }, {
+      "id" : "Freeze",
+      "levelObtained" : 3
+    }, {
+      "id" : "Shock",
+      "levelObtained" : 5
+    }, {
+      "id" : "FlamingFingers",
+      "levelObtained" : 4
+    }, {
+      "id" : "ImproveWeapon",
+      "levelObtained" : 1
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Mage",
+    "Mage" : 7
+  },
+  "inventory" : {
+    "equipped" : {
+      "MainHand" : {
+        "id" : "crossbow",
+        "quality" : "Decent"
+      },
+      "Armor" : {
+        "id" : "armor_robe-0x2777514a"
+      },
+      "Helmet" : {
+        "id" : "wizardHat"
+      },
+      "Boots" : {
+        "id" : "boots_leather_base",
+        "quality" : "Mediocre"
+      },
+      "Amulet" : {
+        "id" : "amulet-0x8f13fb97"
+      },
+      "Quiver" : {
+        "id" : "bolt"
+      }
+    },
+    "unequipped" : [
+      {
+        "id" : "potionHealing",
+        "quality" : "Mediocre",
+        "quantity" : 1
+      }, {
+        "id" : "bolt",
+        "quantity" : 197
+      }
+    ],
+    "createdItems" : [
+      {
+        "baseItemID" : "armor_robe",
+        "createdItemID" : "armor_robe-0x2777514a",
+        "scripts" : [
+          "entity.addDamageReduction('Electrical',  2);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Electrical Resistance",
+        "valueModifier" : 150,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_lightning",
+          "color" : "#ffffffff"
+        }
+      }, {
+        "baseItemID" : "amulet",
+        "createdItemID" : "amulet-0x8f13fb97",
+        "scripts" : [
+          "entity.addBonus('SpellFailure',  4);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Casting Success",
+        "valueModifier" : 170,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_spellFailure",
+          "color" : "#ffffffff"
+        }
+      }
+    ]
+  },
+  "unspentSkillPoints" : 1,
+  "experiencePoints" : 3246,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+      "slot0" : {
+        "type" : "ability",
+        "abilityID" : "Firebolt"
+      },
+      "slot1" : {
+        "type" : "ability",
+        "abilityID" : "ImproveWeapon"
+      },
+      "slot2" : {
+        "type" : "use",
+        "itemID" : "potionHealing",
+        "itemQuality" : "Mediocre"
+      },
+      "slot3" : {
+        "type" : "ability",
+        "abilityID" : "FlamingFingers"
+      },
+      "slot4" : {
+        "type" : "ability",
+        "abilityID" : "ConcealingFog"
+      },
+      "slot5" : {
+        "type" : "ability",
+        "abilityID" : "Freeze"
+      },
+      "slot6" : {
+        "type" : "ability",
+        "abilityID" : "Shock"
+      },
+      "slot7" : {
+        "type" : "ability",
+        "abilityID" : "IcicleStab"
+      }
+    }
+  }
+}

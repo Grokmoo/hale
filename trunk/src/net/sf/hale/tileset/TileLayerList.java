@@ -22,6 +22,7 @@ package net.sf.hale.tileset;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,9 @@ import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
-import net.sf.hale.Area;
+import net.sf.hale.area.Area;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Door;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Trap;
 import net.sf.hale.util.Point;
@@ -230,30 +233,29 @@ public class TileLayerList {
 		}
 	}
 	
-	private final void drawEntityTile(int x, int y, Point screen, Point selected) {
+	private final void drawEntityTile(int x, int y, Point screen) {
 		draw(x, y, screen.x, screen.y);
 		
 		// dont draw entities in unexplored tiles
 		if (!explored[x][y]) return;
 		
-		Set<Entity> entities = area.getEntities().getEntitiesSet(x, y);
+		Collection<Entity> entities = area.getEntities().getEntitiesSet(x, y);
 		if (entities == null) return;
 		
-		for (Entity e : entities) {
-			if (!visibility[x][y] && e.getType() != Entity.Type.DOOR) continue;
-			
-			if (e.getType() == Entity.Type.TRAP && !((Trap)e).isVisible()) continue;
-			
-			if (e.isSelected()) {
-				selected.x = e.getX();
-				selected.y = e.getY();
-				selected.valid = true;
+		for (Entity entity : entities) {
+			// don't draw doors or hostiles that can't be seen
+			if (!visibility[x][y]) {
+				if (entity instanceof Door) continue;
+				if (!entity.isPlayerFaction() && entity instanceof Creature) continue;
 			}
 			
-			e.drawForArea(screen.x, screen.y);
+			// don't draw traps unless they have been spotted
+			if (entity instanceof Trap && !((Trap)entity).isSpotted()) continue;
 			
-			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			entity.areaDraw(screen.x, screen.y);
 		}
+		
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 	}
 	
 	/**
@@ -261,32 +263,26 @@ public class TileLayerList {
 	 * @param screenCoordinates the array of screen coordinates for the set
 	 * of grid points in this layer
 	 * @param renderer the renderer for the area being drawn
-	 * @returns the grid location of the selected entity, or null if there is no
-	 * selected entity
 	 * @param topLeft the top left grid point drawing bound, this point must be within the
 	 * bounds of the tile grid and the x coordinate must be even
 	 * @param bottomRight the bottom right grid point drawing bound, this point must be within the
 	 * bounds of the tile grid
 	 */
 	
-	protected Point draw(Point[][] screenCoordinates, AreaTileGrid.AreaRenderer renderer, Point topLeft, Point bottomRight) {
-		Point selected = new Point(false);
-		
+	protected void draw(Point[][] screenCoordinates, AreaTileGrid.AreaRenderer renderer, Point topLeft, Point bottomRight) {
 		area = renderer.getArea();
 		visibility = area.getVisibility();
 		explored = area.getExplored();
 		
 		for (int y = topLeft.y; y <= bottomRight.y; y++) {
 			for (int x = topLeft.x; x <= bottomRight.x; x += 2) {
-				drawEntityTile(x, y, screenCoordinates[x][y], selected);
+				drawEntityTile(x, y, screenCoordinates[x][y]);
 			}
 			
 			for (int x = topLeft.x + 1; x <= bottomRight.x; x += 2) {
-				drawEntityTile(x, y, screenCoordinates[x][y], selected);
+				drawEntityTile(x, y, screenCoordinates[x][y]);
 			}
 		}
-		
-		return selected;
 	}
 	
 	private final void draw(int gridX, int gridY, int screenX, int screenY) {

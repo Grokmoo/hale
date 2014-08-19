@@ -23,9 +23,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.hale.Sprite;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.SimpleIcon;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
@@ -140,13 +142,18 @@ public class Animation extends AnimationBase implements Animated {
 		this(SpriteManager.getSprite(sprite), 0.0f, sprite);
 	}
 	
+	public Animation(SimpleIcon icon) {
+		this(SpriteManager.getSprite(icon.getSpriteID()), 0.0f, icon.getSpriteID());
+		setColor(icon.getColor());
+	}
+	
 	public Animation(Sprite sprite, float defaultFrameDuration, String textureSprite) {
 		super(sprite.getWidth() / 2, sprite.getHeight() / 2);
 		
 		this.drawingMode = DrawingMode.AboveEntities;
 		
 		this.textureSprite = textureSprite;
-		this.texture = sprite.getTextureImage();
+		this.texture = sprite.getTextureReference();
 		this.width = sprite.getWidth();
 		this.height = sprite.getHeight();
 		this.halfWidth = width / 2;
@@ -168,7 +175,7 @@ public class Animation extends AnimationBase implements Animated {
 	
 	public void cacheSprite() {
 		Sprite sprite = SpriteManager.getSprite(textureSprite);
-		this.texture = sprite.getTextureImage();
+		this.texture = sprite.getTextureReference();
 	}
 	
 	public void setLoopInfinite() {
@@ -227,6 +234,16 @@ public class Animation extends AnimationBase implements Animated {
 	
 	public void clearFrames() {
 		frames.clear();
+	}
+	
+	// add a frame with the specified icon sprite and color, if possible
+	public void addFrameAndSetColor(Icon icon) {
+		if (!(icon instanceof SimpleIcon)) return;
+		
+		SimpleIcon simpleIcon = (SimpleIcon)icon;
+		
+		addFrame(simpleIcon.getSpriteID());
+		setColor(simpleIcon.getColor());
 	}
 	
 	// add a frame with the default frame duration

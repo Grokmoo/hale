@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 import net.sf.hale.view.CharacterWindow;
 import net.sf.hale.widgets.BasePortraitViewer;
@@ -64,7 +64,7 @@ public class CharacterSelector extends Widget {
 	
 	private boolean characterMeetsLevelRequirements;
 	private UniqueCharacter character;
-	private Creature creature;
+	private PC pc;
 	private Widget parent;
 	
 	private BasePortraitViewer portrait;
@@ -90,12 +90,12 @@ public class CharacterSelector extends Widget {
 			this.charactersInParties = Collections.emptySet();
 		
 		this.character = character;
-		this.creature = character.getBestCreature();
+		this.pc = character.getBestCreature();
 
-		characterMeetsLevelRequirements = creature != null;
+		characterMeetsLevelRequirements = pc != null;
 		// use the first creature if none meet the requirements
-		if (creature == null) {
-			creature = character.iterator().next();
+		if (pc == null) {
+			pc = character.iterator().next();
 		}
 		
 		this.parent = parent;
@@ -111,15 +111,14 @@ public class CharacterSelector extends Widget {
         details.addCallback(new Runnable() {
         	@Override public void run() {
         		CharWindow window = new CharWindow();
-        		window.updateContent(CharacterSelector.this.creature);
-        		window.setPosition(details.getRight(), details.getY() - 150);
-        		
         		CharacterSelector.this.parent.add(window);
+        		window.updateContent(CharacterSelector.this.pc);
+        		window.setPosition(details.getRight(), details.getY() - 150);
         	}
         });
         add(details);
         
-        portrait = new BasePortraitViewer(creature);
+        portrait = new BasePortraitViewer(pc);
         portrait.setEnableEventHandling(false);
         add(portrait);
         
@@ -131,12 +130,12 @@ public class CharacterSelector extends Widget {
 	/**
 	 * Create a new CharacterSelector for the specified creature.  Any CharacterWindows
 	 * that are created by this Widget are added to the supplied widget
-	 * @param creature the creature to view
+	 * @param pc the creature to view
 	 * @param parent the parent widget to add details windows to
 	 */
 	
-	public CharacterSelector(Creature creature, Widget parent) {
-		this(new UniqueCharacter(creature), parent, null);
+	public CharacterSelector(PC pc, Widget parent) {
+		this(new UniqueCharacter(pc), parent, null);
 	}
 	
 	/**
@@ -171,11 +170,11 @@ public class CharacterSelector extends Widget {
 	
 	/**
 	 * Returns the Creature that this CharacterSelector was created with or is currently selected
-	 * @return the Creature
+	 * @return the PC
 	 */
 	
-	public Creature getCreature() {
-		return creature;
+	public PC getCreature() {
+		return pc;
 	}
 	
 	/**
@@ -188,8 +187,8 @@ public class CharacterSelector extends Widget {
 		this.newGameWindow = window;
 	}
 	
-	private void setSelectedCreature(Creature creature) {
-		this.creature = creature;
+	private void setSelectedCreature(PC pc) {
+		this.pc = pc;
 		textAreaModel.setHtml(getDescription());
 		
 		setDeleteExpandState();
@@ -202,7 +201,7 @@ public class CharacterSelector extends Widget {
 	 */
 	
 	public String getCreatureID() {
-		return creature.getID();
+		return pc.getTemplate().getID();
 	}
 	
 	/**
@@ -255,21 +254,21 @@ public class CharacterSelector extends Widget {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("<div style=\"font-family: vera-bold;\">").append(creature.getName()).append("</div>");
+		sb.append("<div style=\"font-family: medium-bold;\">").append(pc.getTemplate().getName()).append("</div>");
 		
-		sb.append("<div style=\"font-family: vera;\">");
-		sb.append(creature.getGender()).append(' ');
-		sb.append("<span style=\"font-family: vera-blue;\">").append(creature.getRace().getName()).append("</span>");
+		sb.append("<div style=\"font-family: medium;\">");
+		sb.append(pc.getTemplate().getGender()).append(' ');
+		sb.append("<span style=\"font-family: medium-blue;\">").append(pc.getTemplate().getRace().getName()).append("</span>");
 		sb.append("</div>");
 		
-		sb.append("<div style=\"font-family: vera; margin-bottom: 1em\">");
-		for (String roleID : creature.getRoles().getRoleIDs()) {
+		sb.append("<div style=\"font-family: medium; margin-bottom: 1em\">");
+		for (String roleID : pc.roles.getRoleIDs()) {
 			Role role = Game.ruleset.getRole(roleID);
-			int level = creature.getRoles().getLevel(role);
+			int level = pc.roles.getLevel(role);
 			
 			sb.append("<p>");
-			sb.append("Level <span style=\"font-family: vera-italic;\">").append(level).append("</span> ");
-			sb.append("<span style=\"font-family: vera-red;\">").append(role.getName()).append("</span>");
+			sb.append("Level <span style=\"font-family: medium-italic;\">").append(level).append("</span> ");
+			sb.append("<span style=\"font-family: medium-red;\">").append(role.getName()).append("</span>");
 			sb.append("</p>");
 			
 			numRoleLines++;
@@ -378,7 +377,7 @@ public class CharacterSelector extends Widget {
 			Popup popup = new Popup(parent);
 			popup.openPopup();
 			
-			popup.setPosition(getX(), getBottom());
+			popup.setPosition(getX(), getInnerBottom());
 			popup.setSize(getWidth(), popup.getPreferredHeight());
 		}
 		
@@ -391,14 +390,14 @@ public class CharacterSelector extends Widget {
 			getAnimationState().setAnimationState(Label.STATE_HOVER, boxHover || expand.getModel().isHover());
 		}
 		
-		@Override public int getPreferredHeight() {
-			return numRoleLines * expand.getPreferredHeight() + getBorderVertical() + box.getBorderVertical();
+		@Override public int getPreferredInnerHeight() {
+			return numRoleLines * expand.getPreferredHeight() + box.getBorderVertical();
 		}
 		
 		@Override protected void layout() {
-			expand.setSize(expand.getPreferredWidth(), expand.getPreferredHeight());
-			expand.setPosition(getInnerRight() - expand.getWidth() - box.getBorderRight(),
-					getInnerY() + box.getBorderTop() + (getInnerHeight() - expand.getHeight()) / 2);
+			expand.setSize(expand.getPreferredWidth(), getPreferredInnerHeight());
+			expand.setPosition(getInnerRight() - expand.getWidth(),
+					getInnerY() + (getInnerHeight() - expand.getHeight()) / 2);
 			
 			box.setSize(getInnerWidth(), getInnerHeight());
 			box.setPosition(getInnerX(), getInnerY());
@@ -435,12 +434,12 @@ public class CharacterSelector extends Widget {
 			selectors = new ArrayList<CharacterButton>();
 			deleteButtons = new ArrayList<DeleteButton>();
 			
-			for (Creature creature : character) {
-				CharacterButton button = new CharacterButton(creature, popup);
+			for (PC pc : character) {
+				CharacterButton button = new CharacterButton(pc, popup);
 				add(button);
 				selectors.add(button);
 				
-				DeleteButton deleteButton = new DeleteButton(creature, popup);
+				DeleteButton deleteButton = new DeleteButton(pc, popup);
 				if (showDeleteButtons)
 					add(deleteButton);
 				deleteButtons.add(deleteButton);
@@ -477,15 +476,18 @@ public class CharacterSelector extends Widget {
 	}
 	
 	private class DeleteButton extends Button implements Runnable {
-		private Creature creature;
+		private PC pc;
 		private PopupWindow parent;
 		
-		private DeleteButton(Creature creature, PopupWindow parent) {
-			this.creature = creature;
+		private DeleteButton(PC pc, PopupWindow parent) {
+			this.pc = pc;
 			this.parent = parent;
 			addCallback(this);
 			
-			if (charactersInParties.contains(creature.getID())) {
+			if (pc.getTemplate().isPregenerated()) {
+				this.setEnabled(false);
+				setTooltipContent("This character is pregenerated and may not be deleted.");
+			} else if (charactersInParties.contains(pc.getTemplate().getID())) {
 				this.setEnabled(false);
 				setTooltipContent("This character is in one or more parties and may not be deleted.");
 			}
@@ -496,12 +498,12 @@ public class CharacterSelector extends Widget {
 			
 			StringBuilder sb = new StringBuilder();
 			sb.append("Delete ");
-			sb.append(creature.getName());
+			sb.append(pc.getTemplate().getName());
 			
 			sb.append(", Level ");
-			sb.append(creature.getRoles().getTotalLevel());
+			sb.append(pc.roles.getTotalLevel());
 			sb.append(" ");
-			sb.append(creature.getRoles().getBaseRole().getName());
+			sb.append(pc.roles.getBaseRole().getName());
 			
 			sb.append("?");
 			
@@ -509,30 +511,30 @@ public class CharacterSelector extends Widget {
 			
 			popup.setWarningText("This action is permanent and cannot be undone.");
 			
-			popup.addCallback(new DeleteCallback(creature, parent));
+			popup.addCallback(new DeleteCallback(pc, parent));
 			
 			popup.openPopupCentered();
 		}
 	}
 	
 	private class DeleteCallback implements Runnable {
-		private Creature creature;
+		private PC pc;
 		private PopupWindow parent;
 		
-		private DeleteCallback(Creature creature, PopupWindow parent) {
-			this.creature = creature;
+		private DeleteCallback(PC pc, PopupWindow parent) {
+			this.pc = pc;
 			this.parent = parent;
 		}
 		
 		@Override public void run() {
-			character.deleteCreature(creature);
+			character.deleteCreature(pc);
 			
 			if ( character.size() == 0 ) {
 				if (newGameWindow != null) {
 					newGameWindow.removeSelector(CharacterSelector.this);
 				}
-			} else if (creature == CharacterSelector.this.creature) {
-				Creature best = character.getBestCreature();
+			} else if (pc == CharacterSelector.this.pc) {
+				PC best = character.getBestCreature();
 				
 				if (best == null) {
 					newGameWindow.removeSelector(CharacterSelector.this);
@@ -550,36 +552,36 @@ public class CharacterSelector extends Widget {
 		private int height, numRows;
 		
 		private PopupWindow popup;
-		private Creature creature;
+		private PC pc;
 		
 		private TextArea textArea;
 		private HTMLTextAreaModel textAreaModel;
 		
-		private CharacterButton(Creature creature, PopupWindow popup) {
+		private CharacterButton(PC pc, PopupWindow popup) {
 			
-			if (!character.meetsLevelConstraints(creature)) {
+			if (!character.meetsLevelConstraints(pc)) {
 				setEnabled(false);
 			}
 			
-			if (creature == CharacterSelector.this.creature)
+			if (pc == CharacterSelector.this.pc)
 				setActive(true);
 			
 			this.popup = popup;
-			this.creature = creature;
+			this.pc = pc;
 			
 			textAreaModel = new HTMLTextAreaModel();
 			
 			numRows = 0;
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append("<div style=\"font-family: vera\">");
-			for (String roleID : creature.getRoles().getRoleIDs()) {
+			sb.append("<div style=\"font-family: medium\">");
+			for (String roleID : pc.roles.getRoleIDs()) {
 				Role role = Game.ruleset.getRole(roleID);
-				int level = creature.getRoles().getLevel(role);
+				int level = pc.roles.getLevel(role);
 				
 				sb.append("<p>");
-				sb.append("Level <span style=\"font-family: vera-italic;\">").append(level).append("</span> ");
-				sb.append("<span style=\"font-family: vera-red;\">").append(role.getName()).append("</span>");
+				sb.append("Level <span style=\"font-family: medium-italic;\">").append(level).append("</span> ");
+				sb.append("<span style=\"font-family: medium-red;\">").append(role.getName()).append("</span>");
 				sb.append("</p>");
 				
 				numRows++;
@@ -600,7 +602,7 @@ public class CharacterSelector extends Widget {
 		@Override public void run() {
 			popup.closePopup();
 			
-			setSelectedCreature(creature);
+			setSelectedCreature(pc);
 		}
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {

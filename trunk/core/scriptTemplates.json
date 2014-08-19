@@ -132,7 +132,7 @@
 		"game.addMessage(\"blue\", target.getName() + \" drinks a potion.\");",
 		"",
 		"target.healDamage(hp);",
-		"target.getInventory().removeItem(item);",
+		"target.inventory.remove(item);",
 		"game.ai.provokeAttacksOfOpportunity(target);"
 	  ]
 	},
@@ -152,7 +152,7 @@
 		"effect.getBonuses().addBonus('Cha', chaBonus);"
 		"target.applyEffect(effect);",
 		"",
-		"target.getInventory().removeItem(item);",
+		"target.inventory.remove(item);",
 		"game.ai.provokeAttacksOfOpportunity(target);"
 	  ]
 	},
@@ -169,7 +169,7 @@
 	  "function" : "canUse",
 	  "arguments" : [ "game", "item", "target" ],
 	  "content" : [
-	    "return target.getTimer().canActivateAbility(\"INSERT_ABILITY_ID\");"
+	    "return target.timer.canActivateAbility(\"INSERT_ABILITY_ID\");"
 	  ]
 	},
 	"Scroll onUse" : {
@@ -191,7 +191,7 @@
 	  "function" : "canUse",
 	  "arguments" : [ "game", "item", "target" ],
 	  "content" : [
-	    "return trap.canPlace(parent);"
+	    "return trap.canAttemptPlace(parent);"
 	  ]
 	},
 	"Trap onUse" : {
@@ -199,7 +199,7 @@
 	  "function" : "onUse",
 	  "arguments" : [ "game", "item", "target" ],
 	  "content" : [
-	    "trap.tryPlace(parent);"
+	    "trap.attemptPlace(parent);"
 	  ]
 	},
 	"Run AI Turn" : {
@@ -286,11 +286,11 @@
 	},
 	"Player Conversation check" : {
 	  "types" : [ "Conversation" ],
-	  "content" : [ "var check = target.getSkillCheck(\"Conversation\");" ]
+	  "content" : [ "var check = game.campaign().getBestPartySkillCheck(\"Speech\");" ]
 	},
 	"Make the creature hostile" : {
 	  "types" : [ "Conversation", "AI" ],
-	  "content" : [ "parent.getEncounter().setCreatureFaction(\"Hostile\");" ]
+	  "content" : [ "parent.getEncounter().setFaction(\"Hostile\");" ]
 	},
 	"Get or create a quest entry" : {
 	  "types" : [ "Conversation", "Quest" ],

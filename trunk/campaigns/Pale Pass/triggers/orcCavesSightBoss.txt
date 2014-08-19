@@ -1,3 +1,0 @@
-area "Orc Cave"
-script "triggers/orcCavesSightBoss"
-addPoints   33 20   34 21   35 21

@@ -1,9 +1,9 @@
 function onRoundElapsed(game, effect) {
 	var spell = effect.getSlot().getAbility();
 	var parent = effect.getSlot().getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
-	var hasLightning = parent.getAbilities().has("LightningStorm");
+	var hasLightning = parent.abilities.has("LightningStorm");
 	
 	var targets = effect.getTarget().getAffectedCreatures(effect);
 	for (var i = 0; i < targets.size(); i++) {
@@ -24,7 +24,7 @@ function checkLightning(game, effect, target) {
 
 	var spell = effect.getSlot().getAbility();
 	var parent = effect.getSlot().getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var damage = game.dice().d10() + casterLevel;
 	
@@ -34,7 +34,7 @@ function checkLightning(game, effect, target) {
 		
 	// create the animation
 	var anim = game.getBaseAnimation("blast");
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y);
 		
 	game.runAnimationNoWait(anim);
@@ -45,7 +45,7 @@ function checkLightning(game, effect, target) {
 function onTargetEnter(game, target, effect) {
 	var spell = effect.getSlot().getAbility()
 	var parent = effect.getSlot().getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	var damage = parseInt(game.dice().d4(2) + casterLevel / 2);
 	
 	spell.applyDamage(parent, target, damage, "Cold");

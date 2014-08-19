@@ -7,7 +7,7 @@ function onPlayerEnter(game, player, trigger) {
         var partyMember = game.getParty().get(i);
         
         // if not all party members are in the trap area, do nothing
-        if ( !trigger.containsPoint(partyMember.getPosition()) )
+        if ( !trigger.containsPoint(partyMember.getLocation()) )
             return;
     }
     
@@ -19,14 +19,14 @@ function onPlayerEnter(game, player, trigger) {
     
     entranceDoor.close(player);
     entranceDoor.setLocked(true);
-    entranceDoor.setKeyRequired(true);
     
     // show the surrounding area
     game.revealArea(27, 11, 5, 0);
     
     // create chieftan and start convo
-    var chieftan = game.entities().getCreature("goblin_chieftan_entrance");
-    chieftan.setPosition(23, 14);
+    var chieftan = game.getNPC("goblin_chieftan_entrance");
+	chieftan.setLocation(game.currentArea(), 23, 14);
+    //chieftan.setLocationInCurrentArea(23, 14);
     chieftan.setFaction("Neutral");
     game.currentArea().getEntities().addEntity(chieftan);
     

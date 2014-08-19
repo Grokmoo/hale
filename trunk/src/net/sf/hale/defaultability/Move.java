@@ -21,17 +21,22 @@ package net.sf.hale.defaultability;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Path;
 import net.sf.hale.interfacelock.MovementHandler;
 import net.sf.hale.util.AreaUtil;
+import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 
 /**
  * A DefaultAbility for moving a Creature to a specified location.
  * 
- * Stores the results of {@link #canMove(Creature, Point, int)}
+ * Stores the results of {@link #canMove(Creature, Location, int)}
  * pathfinding computations when applying moves.  Supports adding
  * callbacks to InterfaceMovementLock when moving.
  * @author Jared Stephen
@@ -40,19 +45,32 @@ import net.sf.hale.util.Point;
 
 public class Move implements DefaultAbility {
 	// stores the path that is computed in canActivate() for use in activate()
-	private List<Point> computedPath;
+	private Path computedPath;
 	
 	// stores the list of callbacks that will be added to the InterfaceMovementLock
 	private List<Runnable> callbacks = new ArrayList<Runnable>();
 	
 	private MovementHandler.Mover mover;
 	
-	private boolean truncatePath = false;
+	private boolean truncatePath = true;
+	
+	private boolean allowPartyMove = true;
+	
+	/**
+	 * Sets whether this move will attempt a party move.  Outside of combat, moving one PC
+	 * while the game is in party movement mode will move the entire party, by default.
+	 * @param allowPartyMove whether to allow a party move if other conditions are right.  If
+	 * false, party movement will never occur as a result of this move
+	 */
+	
+	public void setAllowPartyMove(boolean allowPartyMove) {
+		this.allowPartyMove = allowPartyMove;
+	}
 	
 	/**
 	 * Sets whether computed paths will be truncated based on how much AP the mover has left.
-	 * If false, movement paths longer than this max length will return false for canMove.
-	 * By default this is set to false.  Even if this is set to true, canMove will still
+	 * If true, movement paths longer than this max length will return false for canMove.
+	 * By default this is set to true.  Even if this is set to false, canMove will still
 	 * return false if the mover doesn't have enough AP to move even a single tile.
 	 * @param truncatePath whether long paths are truncated to the maximum path length for the
 	 * mover based on its AP.
@@ -87,16 +105,13 @@ public class Move implements DefaultAbility {
 	 * @return true if the Creature can move to the specified position, false otherwise
 	 */
 	
-	public boolean canMove(Creature parent, Point targetPosition, int distanceAway) {
-		boolean[][] explored = Game.curCampaign.curArea.getExplored();
-		boolean[][] passable = Game.curCampaign.curArea.getPassability();
+	public boolean canMove(Creature parent, Location targetPosition, int distanceAway) {
+		if (!targetPosition.isInAreaBounds())
+			return false;
 		
-		if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= explored.length ||
-				targetPosition.y >= explored[0].length) return false;
-		
-		if (parent.isPlayerSelectable()) {
+		if (parent.isPlayerFaction()) {
 			// player characters can't move to unexplored areas
-			if (!explored[targetPosition.x][targetPosition.y])
+			if (!targetPosition.isExplored())
 				return false;
 			
 			// if the interface is disabling movement
@@ -104,52 +119,38 @@ public class Move implements DefaultAbility {
 				return false;
 		}
 		
-		// check for passability
-		if (!passable[targetPosition.x][targetPosition.y]) return false;
+		if (!targetPosition.isPassable()) return false;
 		
 		// check for an elevation difference
-		byte curElev = Game.curCampaign.curArea.getElevationGrid().getElevation(parent.getX(), parent.getY());
-		byte targetElev = Game.curCampaign.curArea.getElevationGrid().getElevation(targetPosition.x, targetPosition.y);
-		if (curElev != targetElev) return false;
+		if (parent.getLocation().getElevation() != targetPosition.getElevation()) return false;
 
-		if (parent.isImmobilized()) return false;
+		if (parent.stats.isImmobilized()) return false;
 		
 		// if parent is already at targetPosition
-		if (parent.getPosition().equals(targetPosition)) return false;
+		if (parent.getLocation().equals(targetPosition)) return false;
 		
-		// if the parent already has a movement lock
-		if (parent.isCurrentlyMoving()) return false;
+		computedPath = parent.findPathTo(targetPosition, distanceAway);
 		
 		// check to see if a valid path exists up to distanceAway from targetPosition
-		computedPath = Game.areaListener.getAreaUtil().findShortestPath(parent, targetPosition, distanceAway);
-		
 		if (computedPath == null) {
 			return false;
 		}
 		
 		// truncate path to how far the parent can actually move
+		// note that this checks the actual path on the area, so it
+		// takes area based movement effects into account
 		if (truncatePath) {
-			int maxLength = parent.getTimer().getMovementLeft() / 5;
-			while (computedPath.size() > maxLength) {
-				computedPath.remove(0);
-			}
-		}
-		
-		// check that the parent has sufficient Action Points (AP) to move
-		// note that normally the computedPath should be a size such that
-		// the parent can move it; if there are movement reducing effects
-		// then the path may need to be truncated further
-		while (!parent.getTimer().canMove(computedPath) && computedPath.size() > 0) {
-			computedPath.remove(0);
+			int maxLength = parent.timer.getLengthCurrentlyMovable(computedPath);
+			computedPath = computedPath.truncate(maxLength);
 		}
 		
 		// cannot move at all
-		if (computedPath.size() == 0) return false;
+		if (computedPath.length() == 0) return false;
 		
 		return true;
 	}
 	
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
 		return canMove(parent, targetPosition, 0);
 	}
 
@@ -167,21 +168,18 @@ public class Move implements DefaultAbility {
 	 * specified callback will still be called in that case.
 	 */
 	
-	public boolean moveTowards(Creature parent, Point position, int distanceAway, boolean provokeAoOs) {
+	public boolean moveTowards(Creature parent, Location position, int distanceAway, boolean provokeAoOs) {
 		if (!canMove(parent, position, distanceAway)) return false;
 		
 		if (!checkOverburdened(parent)) return false;
 
-		if (computedPath != null && computedPath.size() != 0) {
-			// if we found a path, create the movementlock which will actually do the movement
-			// and block player input while it is occuring
-			createMover(parent, provokeAoOs);
-		} 
+		if (computedPath == null || computedPath.length() == 0) return false;
 		
-		// TODO reimplement opening doors in the AI
-//		if (parent.stats().get(Stat.Int) >= Game.ruleset.getRuleValue("minIntelligenceToOpenDoors"))  {
-//			
-//		}
+		if (parent.timer.getLengthCurrentlyMovable(computedPath) == 0) return false;
+		
+		// if we found a path, create the movementlock which will actually do the movement
+		// and block player input while it is occuring
+		createMover(parent, provokeAoOs);
 
 		return true;
 	}
@@ -200,11 +198,11 @@ public class Move implements DefaultAbility {
 	 * specified callback will still be called in that case.
 	 */
 	
-	public boolean moveTowards(Creature parent, Point position, int distanceAway) {
+	public boolean moveTowards(Creature parent, Location position, int distanceAway) {
 		return moveTowards(parent, position, distanceAway, true);
 	}
 	
-	@Override public void activate(Creature parent, Point targetPosition) {
+	@Override public void activate(PC parent, Location targetPosition) {
 		if (!checkOverburdened(parent)) return;
 		
 		createMover(parent, true);
@@ -217,8 +215,8 @@ public class Move implements DefaultAbility {
 	 */
 	
 	private boolean checkOverburdened(Creature parent) {
-		if (parent.getInventory().getTotalWeightInGrams() > parent.stats().getWeightLimit()) {
-			Game.mainViewer.addMessage("red", parent.getName() + " is overburdened and cannot move.");
+		if (parent.inventory.getTotalWeight().grams > parent.stats.getWeightLimit()) {
+			Game.mainViewer.addMessage("red", parent.getTemplate().getName() + " is overburdened and cannot move.");
 			return false;
 		}
 		
@@ -233,10 +231,11 @@ public class Move implements DefaultAbility {
 		this.mover = Game.interfaceLocker.addMove(parent, computedPath, provoke);
 		mover.addCallbacks(callbacks);
 		
-		if (parent.isPlayerSelectable()) {
+		if (parent.isPlayerFaction()) {
 			mover.setBackground(true);
 			
-			if (!Game.isInTurnMode() && Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party) {
+			if (Game.interfaceLocker.getMovementMode() == MovementHandler.Mode.Party &&
+					allowPartyMove && !Game.isInTurnMode()) {
 				movePartyInFormation(parent);
 			}
 		}
@@ -248,63 +247,70 @@ public class Move implements DefaultAbility {
 		
 		boolean[][] pass = Game.curCampaign.curArea.getCurrentPassable();
 		for (Creature current : Game.curCampaign.party) {
-			pass[current.getX()][current.getY()] = true;
+			pass[current.getLocation().getX()][current.getLocation().getY()] = true;
 		}
-		Point lastPosition = computedPath.get(0);
+		
+		Point lastPosition = computedPath.get(0).toPoint();
 		pass[lastPosition.x][lastPosition.y] = false;
 		
-		int creatureIndex = 0;
 		int pathIndex = 1;
+		
+		ListIterator<Creature> partyIter = Game.curCampaign.party.allCreaturesIterator();
 		
 		// first add movers for party members to points in the path
 		// behind the main mover
 		while (true) {
 			// we have added all the paths we can based on computedPath
-			if (pathIndex >= computedPath.size()) break;
+			if (pathIndex >= computedPath.length()) break;
 			
 			// we have created a path for all creatures in the party
-			if (creatureIndex >= Game.curCampaign.party.size()) return;
+			if (!partyIter.hasNext()) break;
 			
-			Creature curCreature = Game.curCampaign.party.get(creatureIndex);
+			Creature currentCreature = partyIter.next();
 			
 			// don't create a mover for main as it already has one
-			if (curCreature != main && checkOverburdened(curCreature)) {
+			if (currentCreature != main && checkOverburdened(currentCreature)) {
 				
-				List<Point> curPath = Game.areaListener.getAreaUtil().findShortestPath(curCreature,
-						computedPath.get(pathIndex), 0);
+				Path curPath = currentCreature.getLocation().getArea().getUtil().findShortestPath(currentCreature,
+						computedPath.get(pathIndex).toPoint(), 0);
 				
 				pathIndex++;
 				
-				// if no path exists to this point, then we continue to the next point
-				if (curPath == null) continue;
+				// if no path was found, rewind the iterator by one and try again with a new point
+				if (curPath == null) {
+					partyIter.previous();
+					continue;
+				}
 				
-				// move the curCreature, make it background so it doesn't update the interface like the
-				// main mover
-				MovementHandler.Mover mover = Game.interfaceLocker.addMove(curCreature, curPath, true);
-				mover.setBackground(true);
+				if (curPath.length() != 0) {
+					// if currentPC is not already at the goal
+					
+					// move the curCreature, make it background so it doesn't update the interface like the
+					// main mover
+					MovementHandler.Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
+					mover.setBackground(true);
+					
+					// the destination for the current creature will be occupied
+					lastPosition = curPath.get(0).toPoint();
+				} else {
+					// if currentPC is already at the goal
+					lastPosition = currentCreature.getLocation().toPoint();
+				}
 				
-				// the destination for the current creature will be occupied
-				lastPosition = curPath.get(0);
 				pass[lastPosition.x][lastPosition.y] = false;
 			}
-			
-			creatureIndex++;
 		}
-		
-		if (creatureIndex >= Game.curCampaign.party.size()) return;
 		
 		Point[] adjacent = AreaUtil.getAdjacentTiles(lastPosition);
 		int direction = computePathDirection(adjacent, main);
 		Point lastTarget = lastPosition;
 		
 		// now add movers for any additional party members beyond the length of the path above
-		while (creatureIndex < Game.curCampaign.party.size()) {
-			
-			Creature curCreature = Game.curCampaign.party.get(creatureIndex);
+		while (partyIter.hasNext()) {
+			Creature currentCreature = partyIter.next();
 			
 			// don't create a mover for main as it already has one
-			if (curCreature == main) {
-				creatureIndex++;
+			if (currentCreature == main) {
 				continue;
 			}
 			
@@ -320,28 +326,33 @@ public class Move implements DefaultAbility {
 			// if no new point is found, we are stuck and must exit
 			if (newPosition == null) return;
 			
-			List<Point> curPath = Game.areaListener.getAreaUtil().findShortestPathIgnoreParty(curCreature, newPosition, pass);
+			Path curPath = null;
+			try {
+				curPath = main.getLocation().getArea().getUtil().findShortestPathIgnoreParty(currentCreature, newPosition, pass);
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error finding path for " + currentCreature.getTemplate().getID(), e);
+			}
 			
 			// if no path is found to this point, we can try to find a different point
 			if (curPath == null) {
 				pass[newPosition.x][newPosition.y] = false;
+				partyIter.previous();
 				continue;
 			}
 			
 			// if curCreature is already at the right point
-			if (curPath.size() == 0) {
+			if (curPath.length() == 0) {
 				lastPosition = newPosition;
 				pass[newPosition.x][newPosition.y] = false;
-				creatureIndex ++;
 				continue;
 			}
 			
-			if (AreaUtil.distance(curPath.get(0), computedPath.get(0)) > 6) {
+			if (curPath.get(0).getDistance(computedPath.get(0)) > 6) {
 				// if the distance away is too great, better to exit than send the party member on a long journey across the map
 				return;
 			}
 			
-			if ( curPath.size() > 3 * AreaUtil.distance(curCreature.getPosition(), computedPath.get(0)) ) {
+			if ( curPath.length() > 3 * currentCreature.getLocation().getDistance(computedPath.get(0)) ) {
 				// if the path is too long, try to find another point
 				pass[newPosition.x][newPosition.y] = false;
 				continue;
@@ -349,14 +360,12 @@ public class Move implements DefaultAbility {
 			
 			// move the curCreature, make it background so it doesn't update the interface like the
 			// main mover
-			MovementHandler.Mover mover = Game.interfaceLocker.addMove(curCreature, curPath, true);
+			MovementHandler.Mover mover = Game.interfaceLocker.addMove(currentCreature, curPath, true);
 			mover.setBackground(true);
 			
 			// the destination for the current creature will be occupied
-			lastPosition = curPath.get(0);
+			lastPosition = curPath.get(0).toPoint();
 			pass[lastPosition.x][lastPosition.y] = false;
-			
-			creatureIndex++;
 		}
 	}
 	
@@ -365,7 +374,7 @@ public class Move implements DefaultAbility {
 	// finds the empty point closest to the specified point; mainCreaturePosition is used
 	// for tie breaking
 	
-	private Point getNearestAvailablePoint(Point target, boolean[][] pass, Point mainCreaturePosition) {
+	private Point getNearestAvailablePoint(Point target, boolean[][] pass, Location mainCreaturePosition) {
 		if (checkCoordinates(target)) {
 			if (pass[target.x][target.y]) return target;
 		}
@@ -383,7 +392,7 @@ public class Move implements DefaultAbility {
 				if (!checkCoordinates(current)) continue;
 				
 				if (pass[current.x][current.y]) {
-					int distance = AreaUtil.distance(current, mainCreaturePosition);
+					int distance = mainCreaturePosition.getDistance(current);
 					
 					if (distance < minDistance) {
 						minDistance = distance;
@@ -409,13 +418,13 @@ public class Move implements DefaultAbility {
 	// AreaUtil.findAdjacentPoints
 	
 	private int computePathDirection(Point[] adjacent, Creature main) {
-		Point end = main.getPosition();
+		Location end = main.getLocation();
 		
 		int smallestDistance = Integer.MAX_VALUE;
 		int smallestIndex = 0;
 		
 		for (int i = 0; i < adjacent.length; i++) {
-			int distance = AreaUtil.distance(adjacent[i], end);
+			int distance = end.getDistance(adjacent[i]);
 			
 			if (distance < smallestDistance) {
 				smallestDistance = distance;
@@ -439,19 +448,8 @@ public class Move implements DefaultAbility {
 	 * @return the computed path for this Move
 	 */
 	
-	public List<Point> getComputedPath() {
+	public Path getComputedPath() {
 		return computedPath;
-	}
-	
-	/**
-	 * Returns the total path length of the computed path for this Move.  Calling this when
-	 * there is no computed path will throw a NullPointerException.  The path is computed only
-	 * by a call to {@link #canMove(Creature, Point, int)} that returns true.
-	 * @return the total path length of the computed path for this Move.
-	 */
-	
-	public int getComputedPathLength() {
-		return computedPath.size();
 	}
 	
 	/**

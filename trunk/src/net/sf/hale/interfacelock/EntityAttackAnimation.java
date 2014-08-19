@@ -43,13 +43,13 @@ public class EntityAttackAnimation extends EntityOffsetAnimation {
 	 */
 	
 	public EntityAttackAnimation(Entity attacker, Entity target) {
-		super(attacker.getAnimatingOffsetPoint());
+		super();
 		
 		halfDuration = Game.config.getCombatDelay() / 1000.0f;
 		elapsed = 0.0f;
 		
-		Point curScreen = AreaUtil.convertGridToScreen(attacker.getPosition());
-		Point destScreen = AreaUtil.convertGridToScreen(target.getPosition());
+		Point curScreen = attacker.getLocation().getScreenPoint();
+		Point destScreen = target.getLocation().getScreenPoint();
 		
 		double distance = AreaUtil.euclideanDistance2(curScreen.x, curScreen.y, destScreen.x, destScreen.y);
 		distance = Math.sqrt(distance);

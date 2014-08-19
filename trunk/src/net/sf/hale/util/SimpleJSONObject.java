@@ -66,6 +66,15 @@ public class SimpleJSONObject {
 	}
 	
 	/**
+	 * Returns an ID string which describes the location of this object
+	 * @return the ID string
+	 */
+	
+	public String getObjectID() {
+		return objectID;
+	}
+	
+	/**
 	 * Sets whether this Object and all sub objects will warn when a key is requested but not
 	 * found.
 	 * @param warn whether to warn on missing keys

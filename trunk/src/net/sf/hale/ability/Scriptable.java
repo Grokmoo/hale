@@ -39,10 +39,10 @@ import net.sf.hale.util.Logger;
  */
 
 public class Scriptable implements Saveable {
-	private String scriptLocation;
-	private String script;
-	private boolean inline;
-	private Set<ScriptFunctionType> scriptFunctions;
+	private final String scriptLocation;
+	private final String script;
+	private final boolean inline;
+	private final Set<ScriptFunctionType> scriptFunctions;
 	
 	@Override public JSONOrderedObject save() {
 		JSONOrderedObject data = new JSONOrderedObject();
@@ -183,6 +183,26 @@ public class Scriptable implements Saveable {
 	public Object executeFunction(String function, Object argument) {
 		Object[] args = new Object[1];
 		args[0] = argument;
+		
+		return executeFunction(function, args);
+	}
+	
+	/**
+	 * Execute the function from this AbstractScriptable's script with the specified function name.
+	 * The first argument passed to the function will be Game.scriptInterface (see
+	 * {@link net.sf.hale.ScriptInterface}.  After that, the supplied arguments are passed
+	 * 
+	 * @param function the name of the function to be called
+	 * @param arg1 optional first argument to pass to the function
+	 * @param arg2 optional second argument to pass to the function
+	 * @return the return value of the executed JavaScript function, or null if no
+	 * function was executed
+	 */
+	
+	public Object executeFunction(String function, Object arg1, Object arg2) {
+		Object[] args = new Object[2];
+		args[0] = arg1;
+		args[1] = arg2;
 		
 		return executeFunction(function, args);
 	}

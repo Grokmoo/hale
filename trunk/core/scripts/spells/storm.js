@@ -12,7 +12,7 @@ function onTargetSelect(game, targeter) {
 	
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	if (!spell.checkSpellFailure(parent)) return;
 	

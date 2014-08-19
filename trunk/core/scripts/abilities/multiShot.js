@@ -1,15 +1,15 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	var baseWeaponName = weapon.getBaseWeapon().getName();
+	var baseWeaponName = weapon.getTemplate().getBaseWeapon().getName();
 	return (baseWeaponName.equals("Longbow") || baseWeaponName.equals("Shortbow") ||
 		baseWeaponName.equals("Crossbow"))
 }
 
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("Scattershot")) {
+	if (slot.getParent().abilities.has("Scattershot")) {
 		var creatures = game.ai.getAttackableCreatures(slot.getParent());
 	
 		var targeter = game.createCircleTargeter(slot);
@@ -42,12 +42,12 @@ function performAttack(game, targeter) {
 	var center = targeter.getMouseGridPosition();
 	var target = game.currentArea().getCreatureAtGridPoint(center);
 	
-	var numAttacks = parseInt(parent.stats().getLevelAttackBonus() / 25) + 1;
+	var numAttacks = parseInt(parent.stats.getLevelAttackBonus() / 25) + 1;
 	
 	game.standardAttack(parent, target);
 	numAttacks--;
 	
-	if (parent.getAbilities().has("Scattershot")) {
+	if (parent.abilities.has("Scattershot")) {
 		var g1 = game.getBaseParticleGenerator("explosion");
 		g1.setNumParticles(100.0);
 		g1.setDurationDistribution(game.getFixedDistribution(1.0));
@@ -65,9 +65,9 @@ function performAttack(game, targeter) {
 			// don't apply shrapnel to the main target
 			if (targets.get(i) == target) continue;
 			
-			var delay = targets.get(i).getPosition().screenDistance(center) / 200.0;
+			var delay = targets.get(i).getLocation().getScreenDistance(center) / 200.0;
 			
-			var damage = game.dice().d10() + parseInt(parent.stats().getCreatureLevel() / 3);
+			var damage = game.dice().d10() + parseInt(parent.stats.getCreatureLevel() / 3);
 			
 			var callback = targeter.getSlot().getAbility().createDelayedCallback("applyScattershot");
 			callback.setDelay(delay);

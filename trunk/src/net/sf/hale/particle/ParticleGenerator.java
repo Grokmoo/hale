@@ -24,9 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
+import net.sf.hale.entity.Location;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
@@ -381,6 +382,11 @@ public class ParticleGenerator implements Animated {
 		this.stopAtOpaque = stopAtOpaque;
 	}
 	
+	public void setPosition(Location location) {
+		Point screenPoint = AreaUtil.convertGridToScreenAndCenter(location.getX(), location.getY());
+		setPosition(screenPoint.x, screenPoint.y);
+	}
+	
 	public void setPosition(Point gridPoint) {
 		Point screenPoint = AreaUtil.convertGridToScreenAndCenter(gridPoint);
 		setPosition(screenPoint.x, screenPoint.y);
@@ -623,7 +629,7 @@ public class ParticleGenerator implements Animated {
 		// it is a big performance improvement to bind the texture only once
 		// this assumes that all particles in this generator use a texture from the same spritesheet
 		
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, particleSprite.getTextureImage());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, particleSprite.getTextureReference());
 		
 		for (Particle particle : particles) {
 			particle.draw();

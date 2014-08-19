@@ -1,10 +1,10 @@
 function cutsceneFinished(game) {
     var popup = game.showCampaignConclusionPopup();
-    popup.addText("<div style=\"font-family: vera;\">");
+    popup.addText("<div style=\"font-family: medium;\">");
     popup.addText("Congratulations on completing the Pale Pass campaign.");
     popup.addText("</div>");
     
-    popup.addText("<div style=\"font-family: vera; margin-top: 1em;\">");
+    popup.addText("<div style=\"font-family: medium; margin-top: 1em;\">");
     popup.addText("Thanks for playing!");
     popup.addText("</div>");
     
@@ -26,8 +26,8 @@ function onCreatureDeath(game, parent) {
 }
 
 function spawnPortal(game) {
-    var portalCreature = game.entities().getCreature("theMasterPortal");
-	portalCreature.setPosition(37, 7);
+    var portalCreature = game.getNPC("theMasterPortal");
+	portalCreature.setLocationInCurrentArea(37, 7);
 	portalCreature.setFaction("Neutral");
 	
 	game.currentArea().getEntities().addEntity(portalCreature);
@@ -38,7 +38,7 @@ function spawnPortal(game) {
 	var g1 = game.getBaseParticleGenerator("sparkle");
 	g1.setDurationInfinite();
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(portalCreature.getPosition());
+	g1.setPosition(portalCreature.getLocation());
 	effect.addAnimation(g1);
 	
 	portalCreature.applyEffect(effect);

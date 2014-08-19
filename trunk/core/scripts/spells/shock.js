@@ -1,9 +1,9 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("LightningBolt")) {
+	if (slot.getParent().abilities.has("LightningBolt")) {
 		var creatures = game.ai.getVisibleCreaturesWithinRange(slot.getParent(), "Hostile", 20);
 
 		var targeter = game.createCircleTargeter(slot);
-		targeter.setRadius(2);
+		targeter.setRadius(1);
 		targeter.addAllowedCreatures(creatures);
 		targeter.activate();
 	} else {
@@ -19,7 +19,7 @@ function onTargetSelect(game, targeter) {
 	// cast the spell
 	targeter.getSlot().activate();
 
-	if (targeter.getSlot().getParent().getAbilities().has("LightningBolt")) {
+	if (targeter.getSlot().getParent().abilities.has("LightningBolt")) {
 	    lightningBolt(game, targeter);
     } else {
 	    shock(game, targeter);
@@ -29,13 +29,13 @@ function onTargetSelect(game, targeter) {
 function lightningBolt(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	// check for spell failure
 	if (!spell.checkSpellFailure(parent)) return;
 	
 	var center = targeter.getMouseGridPosition();
-	var centerScreen = center.toScreen();
+	var centerScreen = targeter.getMouseScreenPosition();
 	
 	var g1 = game.getBaseParticleGenerator("explosion");
 	g1.setPosition(center);
@@ -53,9 +53,9 @@ function lightningBolt(game, targeter) {
 		
 		var damage = game.dice().d12(2) + casterLevel;
 		
-		var targetPosition = target.getPosition();
-		var targetDistance = center.screenDistance(targetPosition);
-		var targetAngle = center.angleTo(targetPosition);
+		var targetPosition = target.getLocation();
+		var targetDistance = targetPosition.getScreenDistance(center);
+		var targetAngle = center.angleTo(targetPosition.toPoint());
 		var speed = 288.0;
 		
 		var anim = game.getBaseAnimation("lightning");
@@ -93,7 +93,7 @@ function performTouch(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var damage = game.dice().d8(2) + casterLevel;
 	
@@ -105,7 +105,7 @@ function performTouch(game, targeter) {
 		
 		// create the animation
 		var anim = game.getBaseAnimation("blast");
-		var position = target.getScreenPosition();
+		var position = target.getLocation().getCenteredScreenPoint();
 		anim.setPosition(position.x, position.y);
 		
 		game.runAnimationNoWait(anim);
@@ -119,8 +119,8 @@ function applyDamage(game, parent, target, damage, targeter) {
 
 	spell.applyDamage(parent, target, damage, "Electrical");
 	
-	if (parent.getAbilities().has("DisablingLightning")) {
-		var magnitude = 10 + parent.getCasterLevel();
+	if (parent.abilities.has("DisablingLightning")) {
+		var magnitude = 10 + parent.stats.getCasterLevel();
    
 		var effect = targeter.getSlot().createEffect();
 		effect.setTitle("Disabling Lightning");

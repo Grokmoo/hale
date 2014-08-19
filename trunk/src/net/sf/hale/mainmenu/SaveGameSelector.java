@@ -21,6 +21,7 @@ package net.sf.hale.mainmenu;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.zip.GZIPInputStream;
@@ -81,8 +82,9 @@ public class SaveGameSelector extends AbstractSaveGamePopup.Selector {
 		area.setTheme("arealabel");
 		add(area);
 		
+		FileInputStream fin = null;
 		try {
-			FileInputStream fin = new FileInputStream(saveFile);
+			fin = new FileInputStream(saveFile);
 			GZIPInputStream gz = new GZIPInputStream(fin);
 			
 			SaveFileHeader header = SaveFileHeader.read(gz);
@@ -97,6 +99,14 @@ public class SaveGameSelector extends AbstractSaveGamePopup.Selector {
 			
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error reading header for save game file " + saveFile.getPath(), e);
+		} finally {
+			if (fin != null) {
+				try {
+					fin.close();
+				} catch (IOException e) {
+					Logger.appendToErrorLog("Error closing file " + saveFile.getPath(), e);
+				}
+			}
 		}
 	}
 	

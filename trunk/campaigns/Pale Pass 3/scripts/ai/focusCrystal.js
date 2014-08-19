@@ -21,7 +21,7 @@ function runTurn(game, parent) {
 	// check to make sure the player hasn't already somehow killed the master
 	if (target == null) return;
 	
-	var damage = target.stats().getMaxHP() - target.getCurrentHP();
+	var damage = target.stats.getMaxHP() - target.getCurrentHitPoints();
 	
 	if (damage > 0)
 		target.healDamage(damage);

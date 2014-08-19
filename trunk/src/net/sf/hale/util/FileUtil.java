@@ -98,7 +98,7 @@ public class FileUtil {
 		
 		ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
 		
-		List<File> files = DirectoryListing.getFilesAndDirectories(topLevel);
+		List<File> files = FileUtil.getFilesAndDirectories(topLevel);
 		
 		for (File file : files) {
 			String filePath = FileUtil.getRelativePath(topLevel, file);
@@ -227,7 +227,10 @@ public class FileUtil {
 			s += to.get(j) + "/";
 		}
 
-		s += to.get(j);
+		if (j != -1) {
+			// if j == -1, paths are equal
+			s += to.get(j);
+		}
 		
 		return s;
 	}
@@ -323,5 +326,59 @@ public class FileUtil {
 		}
 		
 		return hex.toString();
+	}
+
+	/**
+	 * Gets a list of all files recursively contained in the specified directory.  The 
+	 * returned list will not contain any directories.
+	 * @param startingDir
+	 * @return the list of all files recursively contained in the specified directory
+	 */
+	
+	public static List<File> getFiles(File startingDir) {
+		List<File> result = new ArrayList<File>();
+		
+		File[] subFiles = startingDir.listFiles();
+		
+		if (subFiles == null) return result;
+		
+		for (int i = 0; i < subFiles.length; i++) {
+			if (subFiles[i].getName().equals(".svn")) continue;
+			
+			if (subFiles[i].isFile()) {
+				result.add(subFiles[i]);
+			} else {
+				result.addAll( getFiles(subFiles[i]) );
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Gets a list of all files and all directories recursively contained in the
+	 * specified directory
+	 * @param startingDir
+	 * @return the list of all files and all directories recursively contained
+	 * in the specified directory
+	 */
+
+	public static List<File> getFilesAndDirectories(File startingDir) {
+		List<File> result = new ArrayList<File>();
+		
+		File[] subFiles = startingDir.listFiles();
+		
+		if (subFiles == null) return result;
+		
+		for (int i = 0; i < subFiles.length; i++) {
+			if (subFiles[i].getName().equals(".svn")) continue;
+			
+			result.add(subFiles[i]);
+			if (subFiles[i].isDirectory()) {
+				result.addAll( getFilesAndDirectories(subFiles[i]) );
+			}
+		}
+		
+		return result;
 	}
 }

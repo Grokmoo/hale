@@ -17,6 +17,10 @@ function onEquipItem(game, parent, item) {
 	var tutQuest = game.getQuestEntry("Tutorial");
 	if (tutQuest.hasSubEntry("Basic Character Statistics")) return;
 
+	if (parent.get("tutorialDaggerEquipped") != null) return;
+
+    parent.put("tutorialDaggerEquipped", true);
+	
     var popup = game.createHTMLPopup("tutorial/tutorial_06.html");
     popup.setSize(400, 250);
     popup.addCallback("items/tutorial_club", "tutorialEquipClosed", parent);
@@ -61,13 +65,48 @@ function tutorialScrolling(game, parent) {
 function onAttack(game, weapon, attack) {
 	var parent = attack.getAttacker();
 
+	if (game.get("playerMustDrinkPotion") == true) {
+		var cb = weapon.getTemplate().getScript().createDelayedCallback("reshowPotionTutorial");
+		cb.setDelay(1.0);
+		cb.addArgument(attack.getDefender());
+		game.lockInterface(1.0);
+		cb.start();
+	}
+	
+	if (game.get("playerMustUseAbility") == true) {
+		var cb = weapon.getTemplate().getScript().createDelayedCallback("reshowAbilityTutorial");
+		cb.setDelay(1.0);
+		cb.addArgument(attack.getAttacker());
+		cb.addArgument(attack.getDefender());
+		game.lockInterface(1.0);
+		cb.start();
+	}
+	
     if (parent.get("tutorialDaggerAttacked") != null) return;
 
     parent.put("tutorialDaggerAttacked", true);
 
-	var cb = weapon.getScript().createDelayedCallback("attackTutorial");
+	game.lockInterface(1.0);
+	var cb = weapon.getTemplate().getScript().createDelayedCallback("attackTutorial");
 	cb.setDelay(1.0);
 	cb.start();
+}
+
+function reshowAbilityTutorial(game, player, target) {
+	target.healDamage(100);
+	player.healDamage(100);
+	
+	var popup = game.createHTMLPopup("tutorial/tutorial_15.html");
+    popup.setSize(400, 250);
+    popup.show();
+}
+
+function reshowPotionTutorial(game, target) {
+	target.healDamage(100);
+
+	var popup = game.createHTMLPopup("tutorial/tutorial_14.html");
+	popup.setSize(400, 250);
+	popup.show();
 }
 
 function attackTutorial(game) {
@@ -95,7 +134,7 @@ function onAttackHit(game, weapon, attack, damage) {
 			}
 		
 			if (allDead) {
-				var cb = weapon.getScript().createDelayedCallback("tutorial17");
+				var cb = weapon.getTemplate().getScript().createDelayedCallback("tutorial17");
 				cb.setDelay(0.7);
 				cb.start();
 			}
@@ -104,7 +143,7 @@ function onAttackHit(game, weapon, attack, damage) {
 		if (game.get("alreadyHit")) return;
 		game.put("alreadyHit", true);
 	
-        var cb = weapon.getScript().createDelayedCallback("attackHitTutorial");
+        var cb = weapon.getTemplate().getScript().createDelayedCallback("attackHitTutorial");
 		cb.setDelay(1.0);
 		cb.start();
     }

@@ -13,6 +13,8 @@ function killedGrimbok(game) {
     
     quest.setCurrentSubEntriesCompleted();
     
+	if (quest.hasSubEntry("Return with the head")) return;
+	
     var entry = quest.createSubEntry("Return with the head");
     
     entry.addText("You have defeated the Grimbok and collected the beast's head.");

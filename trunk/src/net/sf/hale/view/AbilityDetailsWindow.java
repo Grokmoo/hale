@@ -25,8 +25,7 @@ import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilityActivator;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.entity.Creature;
 import net.sf.hale.widgets.IconViewer;
 
 /**
@@ -45,7 +44,7 @@ public class AbilityDetailsWindow extends GameSubWindow {
 	 * @param parent the owner of the specified ability, or null to specify no owner
 	 */
 	
-	public AbilityDetailsWindow(Ability ability, AbilityActivator parent) {
+	public AbilityDetailsWindow(Ability ability, Creature parent) {
 		this.setTitle("Details for " + ability.getName());
 		
 		DialogLayout layout = new DialogLayout();
@@ -53,7 +52,7 @@ public class AbilityDetailsWindow extends GameSubWindow {
 		this.add(layout);
 		
 		// set up the widgets for the top row
-		IconViewer iconViewer = new IconViewer(SpriteManager.getSprite(ability.getIcon()));
+		IconViewer iconViewer = new IconViewer(ability.getIcon());
 		iconViewer.setEventHandlingEnabled(false);
 		
 		Label title = new Label(ability.getName());

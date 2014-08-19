@@ -22,6 +22,8 @@ package net.sf.hale.characterbuilder;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ScrollPane;
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Stat;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.rules.Race;
@@ -54,17 +56,17 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
         points.addListener(this);
 		
 		expBase = Game.ruleset.getValue("AttributePointCostExpBaseNumerator") /
-		(double)Game.ruleset.getValue("AttributePointCostExpBaseDemonenator");
+		(double)Game.ruleset.getValue("AttributePointCostExpBaseDenominator");
         
         setTitleText("Select Attributes");
         
         selectors = new AttributeSelector[6];
-        selectors[0] = new AttributeSelector("Strength", Game.ruleset.getString("StrengthIcon"));
-        selectors[1] = new AttributeSelector("Dexterity", Game.ruleset.getString("DexterityIcon"));
-        selectors[2] = new AttributeSelector("Constitution", Game.ruleset.getString("ConstitutionIcon"));
-        selectors[3] = new AttributeSelector("Intelligence", Game.ruleset.getString("IntelligenceIcon"));
-        selectors[4] = new AttributeSelector("Wisdom", Game.ruleset.getString("WisdomIcon"));
-        selectors[5] = new AttributeSelector("Charisma", Game.ruleset.getString("CharismaIcon"));
+        selectors[0] = new AttributeSelector(Stat.Str, Game.ruleset.getString("StrengthIcon"));
+        selectors[1] = new AttributeSelector(Stat.Dex, Game.ruleset.getString("DexterityIcon"));
+        selectors[2] = new AttributeSelector(Stat.Con, Game.ruleset.getString("ConstitutionIcon"));
+        selectors[3] = new AttributeSelector(Stat.Int, Game.ruleset.getString("IntelligenceIcon"));
+        selectors[4] = new AttributeSelector(Stat.Wis, Game.ruleset.getString("WisdomIcon"));
+        selectors[5] = new AttributeSelector(Stat.Cha, Game.ruleset.getString("CharismaIcon"));
         
         for (AttributeSelector selector : selectors) {
         	addSelector(selector);
@@ -102,17 +104,13 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 	}
 	
 	private void setRoleValues() {
-		int[] defaultSelections = getCharacter().getSelectedRole().getDefaultPlayerAttributeSelections();
-		if (defaultSelections == null) return;
-		
-		int i = 0;
 		for (AttributeSelector selector : selectors) {
-			int valueDiff = selector.baseValue + defaultSelections[i] - selector.getValue();
+			int defaultSelection = getCharacter().getSelectedRole().getDefaultPlayerAttributeSelection(selector.stat);
+			
+			int valueDiff = selector.baseValue + defaultSelection - selector.getValue();
 			
 			selector.addModelPoints(valueDiff);
 			selector.addValue(valueDiff);
-			
-			i++;
 		}
 	}
 	
@@ -157,12 +155,11 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 		selectors[5].baseValue = race.getBaseCha();
 		
 		int[] alreadySelected = getCharacter().getSelectedAttributes();
-		int[] defaultSelections = getCharacter().getSelectedRole().getDefaultPlayerAttributeSelections();
-		
-		raceRoleButton.setEnabled(defaultSelections != null);
 		
 		int i = 0;
 		for (AttributeSelector selector : selectors) {
+			int defaultSelection = getCharacter().getSelectedRole().getDefaultPlayerAttributeSelection(selector.stat);
+			
 			selector.setMinMaxValue(selector.baseValue - 3, selector.baseValue + 10);
 			selector.setValue(selector.baseValue);
 			
@@ -170,8 +167,8 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 			
 			if (alreadySelected != null) {
 				added = alreadySelected[i] - selector.baseValue;
-			} else if (defaultSelections != null) {
-				added = defaultSelections[i];
+			} else {
+				added = defaultSelection;
 			}
 			
 			selector.addModelPoints(added);
@@ -200,13 +197,12 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 	}
 	
 	private class AttributeSelector extends BuildablePropertySelector {
-		private String name;
+		private Stat stat;
 		private int baseValue;
 		
-		public AttributeSelector(String name, String icon) {
-			super(name, icon, true);
-			
-			this.name = name;
+		public AttributeSelector(Stat stat, String icon) {
+			super(stat.name, IconFactory.createIcon(icon), true);
+			this.stat = stat;
 			this.baseValue = 0;
 		}
 		
@@ -237,9 +233,9 @@ public class BuilderPaneAttributes extends BuilderPane implements PointAllocator
 			StringBuilder content = new StringBuilder();
 			content.append("<html><body>");
 			
-			content.append("<div style=\"font-family: red; margin-bottom: 1em;\">" + name + "</div>");
+			content.append("<div style=\"font-family: red; margin-bottom: 1em;\">" + stat.name + "</div>");
 			
-			content.append(ResourceManager.getResourceAsString("descriptions/stats/" + name, ResourceType.HTML));
+			content.append(ResourceManager.getResourceAsString("descriptions/stats/" + stat.name, ResourceType.HTML));
 			
 			content.append("</body></html>");
 			getTextModel().setHtml(content.toString());

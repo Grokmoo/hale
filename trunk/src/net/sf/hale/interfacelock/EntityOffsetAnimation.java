@@ -34,15 +34,21 @@ public abstract class EntityOffsetAnimation {
 	private boolean canceled;
 	
 	/**
-	 * Create a new EntityOffsetAnimation.  The specified point will be updated
-	 * by this animation
-	 * @param entityOffset the point to update representing the entity's offset
+	 * Create a new EntityOffsetAnimation.
 	 */
 	
-	public EntityOffsetAnimation(Point entityOffset) {
-		this.entityOffset = entityOffset;
+	public EntityOffsetAnimation() {
 		this.canceled = false;
-		
+	}
+	
+	/**
+	 * Sets the point that will be controlled with this animation.
+	 * This method must be called prior to any other methods.
+	 * @param offset
+	 */
+	
+	public void setAnimatingPoint(Point offset) {
+		this.entityOffset = offset;
 		resetOffset();
 	}
 	

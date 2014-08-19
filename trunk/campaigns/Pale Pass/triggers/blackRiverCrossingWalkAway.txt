@@ -1,3 +1,0 @@
-area "Black River Crossing"
-script "triggers/blackRiverCrossingWalkAway"
-addPoints   27 28   27 29   27 30   27 31   27 33   27 32   28 34   31 35   30 35   29 34

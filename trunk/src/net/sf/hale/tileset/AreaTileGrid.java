@@ -28,8 +28,8 @@ import java.util.Set;
 
 import de.matthiasmann.twl.AnimationState;
 
-import net.sf.hale.Area;
 import net.sf.hale.Game;
+import net.sf.hale.area.Area;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -233,8 +233,6 @@ public class AreaTileGrid {
 	 */
 	
 	public void draw(AreaRenderer renderer, AnimationState as, Point topLeft, Point bottomRight) {
-		Point selected = null;
-		
 		String entityLayerID = tileset.getEntityLayerID();
 		String interfaceLayerID = tileset.getInterfaceLayerID();
 		
@@ -256,14 +254,14 @@ public class AreaTileGrid {
 				
 				renderer.drawTransitions();
 				
-				selected = tiles.get(layerID).draw(screenCoordinates, renderer, topLeft, bottomRight);
+				tiles.get(layerID).draw(screenCoordinates, renderer, topLeft, bottomRight);
 				
 				if (Game.particleManager != null)
 					Game.particleManager.drawAboveEntities();
 				
 			} else if (layerID.equals(interfaceLayerID)) {
 				tiles.get(layerID).draw(screenCoordinates, topLeft, bottomRight);
-				renderer.drawInterface(selected, as);
+				renderer.drawInterface(as);
 			} else {
 				tiles.get(layerID).draw(screenCoordinates, topLeft, bottomRight);
 			}
@@ -294,10 +292,9 @@ public class AreaTileGrid {
 		/**
 		 * Draws interface elements such as the mouse hover over and the highlight
 		 * for the currently selected entity
-		 * @param selected the position of the currently selected entity, or null
-		 * if there is no selected entity
+		 * @param as the current animation state
 		 */
 		
-		public void drawInterface(Point selected, AnimationState as);
+		public void drawInterface(AnimationState as);
 	}
 }

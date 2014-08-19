@@ -28,15 +28,18 @@ import de.matthiasmann.twl.Color;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Item;
-import net.sf.hale.quickbar.Quickbar;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.PCTemplate;
+import net.sf.hale.icon.ComposedCreatureIcon;
+import net.sf.hale.icon.SubIcon;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Role;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
-import net.sf.hale.util.Point;
 
 /**
  * A class for containing a Creature and managing the valid selections
@@ -47,7 +50,7 @@ import net.sf.hale.util.Point;
  */
 
 public class Buildable {
-	private Creature creature;
+	private PC creature;
 	
 	private Race selectedRace;
 	
@@ -80,8 +83,8 @@ public class Buildable {
 	 */
 	
 	public Buildable() {
-		creature = new Creature("temp", null, null, "temp", null, null,
-				Game.ruleset.getString("PlayerFaction"), true, new Point(false), null);
+		PCTemplate template = new PCTemplate("temp", "temp", null, Ruleset.Gender.Male, null, null);
+		creature = new PC(template);
 		
 		selectableRaces = new ArrayList<Race>();
 		for (Race race : Game.ruleset.getAllRaces()) {
@@ -99,13 +102,13 @@ public class Buildable {
 	 * @param creature the creature to edit
 	 */
 	
-	public Buildable(Creature creature) {
+	public Buildable(PC creature) {
 		this.creature = creature;
 		
 		newCharacter = false;
 		
 		selectableRaces = new ArrayList<Race>();
-		selectableRaces.add(creature.getRace());
+		selectableRaces.add(creature.getTemplate().getRace());
 		
 		selectedAbilities = new ArrayList<Ability>();
 	}
@@ -516,31 +519,29 @@ public class Buildable {
 	 */
 	
 	protected void applySelectionsToCreature() {
-		Quickbar quickbar = creature.getQuickbar();
-		
 		if (selectedRole != null) {
-			creature.getRoles().addLevels(selectedRole, 1);
+			creature.roles.addLevels(selectedRole, 1);
 			
-			int curLevel = creature.getRoles().getLevel(selectedRole);
+			int curLevel = creature.roles.getLevel(selectedRole);
 			
 			// check all added abilities to see if they are activateable; if so add them to the quickbar
 			for (Ability ability : selectedRole.getAbilitiesAddedAtLevel(curLevel)) {
-				if (quickbar != null && ability.isActivateable())
-					quickbar.addToFirstEmptySlot(ability);
+				if (creature.quickbar != null && ability.isActivateable())
+					creature.quickbar.addToFirstEmptySlot(ability);
 			}
 		}
 		
 		if (selectedSkills != null) {
-			creature.getSkillSet().addRanksFromList(selectedSkills);
+			creature.skills.addRanksFromList(selectedSkills);
 			creature.setUnspentSkillPoints(selectedUnspentSkillPoints);
 		}
 		
 		int level = getCreatureLevel();
 		for (Ability ability : selectedAbilities) {
-			creature.getAbilities().add(ability, level - 1);
+			creature.abilities.add(ability, level - 1);
 			
-			if (quickbar != null && ability.isActivateable()) {
-				quickbar.addToFirstEmptySlot(ability);
+			if (creature.quickbar != null && ability.isActivateable()) {
+				creature.quickbar.addToFirstEmptySlot(ability);
 			}
 		}
 	}
@@ -552,63 +553,76 @@ public class Buildable {
 	 * @return a working copy of the Creature being edited
 	 */
 	
-	public Creature getWorkingCopy() {
-		Creature workingCopy = new Creature(creature);
+	public PC getWorkingCopy() {
 		
-		workingCopy.invalidatePosition();
+		PCTemplate template;
+		if (newCharacter) {
+			List<SubIcon> subIcons = new ArrayList<SubIcon>();
+			
+			// set up the character's icon
+			if (selectedHairIcon != null) {
+				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Hair, selectedRace, selectedGender);
+				factory.setPrimaryIcon(selectedHairIcon, selectedHairColor);
+				subIcons.add(factory.createSubIcon());
+			}
+			
+			if (selectedBeardIcon != null) {
+				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Beard, selectedRace, selectedGender);
+				factory.setPrimaryIcon(selectedBeardIcon, selectedBeardColor);
+				subIcons.add(factory.createSubIcon());
+			}
+			
+			ComposedCreatureIcon icon = new ComposedCreatureIcon(selectedSkinColor, selectedClothingColor, subIcons);
+			
+			// for a new character, create a new template
+			template = new PCTemplate(selectedName, selectedName, icon, selectedGender, selectedRace, selectedPortrait);
+		} else {
+			// for an existing character, use the existing template
+			template = creature.getTemplate();
+		}
+		
+		PC workingCopy = new PC(template);
+		// give the PC action points to equip the armor if their gender is set
+		workingCopy.timer.reset();
 		
 		if (newCharacter) {
-			if (selectedRace != null) {
-				workingCopy.setRace(selectedRace);
-				workingCopy.setDrawWithSubIcons(true);
+			// add the default set of clothing
+			if (selectedGender != null) {
+				Item clothes = EntityManager.getItem(Game.ruleset.getString("DefaultClothes"));
+				workingCopy.inventory.addAndEquip((EquippableItem)clothes);
 			}
 			
 			if (selectedAttributes != null)
-				workingCopy.stats().setAttributes(selectedAttributes);
+				workingCopy.stats.setAttributes(selectedAttributes);
+		} else {
+			// add base roles, skills, etc from creature being worked on
+			workingCopy.roles.addLevels(creature.roles);
 			
-			if (selectedSkinColor != null)
-				workingCopy.getSubIcons().setSkinColor(selectedSkinColor);
+			workingCopy.skills.addRanksFromList(creature.skills);
 			
-			if (selectedClothingColor != null) {
-				workingCopy.getSubIcons().setClothingColor(selectedClothingColor);
-			}
+			workingCopy.stats.setAttributes(creature.stats.getAttributes());
 			
-			if (selectedName != null)
-				workingCopy.setName(selectedName);
-			
-			if (selectedGender != null) {
-				workingCopy.setGender(selectedGender);
-				workingCopy.addBaseSubIcons();
-				
-				// add the default set of clothes
-				Item clothes = Game.entityManager.getItem(Game.ruleset.getString("DefaultClothes"));
-				if (clothes != null) {
-					workingCopy.getInventory().addItem(clothes);
-					workingCopy.getInventory().equipItem(clothes, 0);
-				}
-			}
-			if (selectedPortrait != null) workingCopy.setPortrait(selectedPortrait);
-			
-			if (selectedHairIcon != null)
-				workingCopy.setHairSubIcon(selectedHairIcon, selectedHairColor);
-			
-			if (selectedBeardIcon != null)
-				workingCopy.setBeardSubIcon(selectedBeardIcon, selectedBeardColor);
+			workingCopy.abilities.addAll(creature.abilities);
 		}
-			
+		
 		if (selectedRole != null)
-			workingCopy.getRoles().addLevels(selectedRole, 1);
+			workingCopy.roles.addLevels(selectedRole, 1);
 		
 		if (selectedSkills != null) {
-			workingCopy.getSkillSet().addRanksFromList(selectedSkills);
+			workingCopy.skills.addRanksFromList(selectedSkills);
 			workingCopy.setUnspentSkillPoints(selectedUnspentSkillPoints);
 		}
 			
 		int level = getCreatureLevel();
 		for (Ability ability : selectedAbilities) {
-			workingCopy.getAbilities().add(ability, level);
+			workingCopy.abilities.add(ability, level);
 		}
 		
+		if (newCharacter && selectedRace != null) {
+			// can't recompute if race is not yet specified as some stats can't be computed
+			workingCopy.resetTime();
+		}
+			
 		return workingCopy;
 	}
 	
@@ -636,9 +650,9 @@ public class Buildable {
 		// sort skills; restricted to this character's role first, then alphabetically by name
 		Collections.sort(skills, new Comparator<Skill>() {
 			@Override public int compare(Skill s1, Skill s2) {
-				if (s1.isRestricted() && !s2.isRestricted()) return -1;
-				else if (s2.isRestricted() && !s1.isRestricted()) return 1;
-				else return s1.getName().compareTo(s2.getName());
+				if (s1.isRestrictedToARole() && !s2.isRestrictedToARole()) return -1;
+				else if (s2.isRestrictedToARole() && !s1.isRestrictedToARole()) return 1;
+				else return s1.getNoun().compareTo(s2.getNoun());
 			}
 		});
 		
@@ -657,9 +671,9 @@ public class Buildable {
 		List<Role> roles = new ArrayList<Role>();
 		
 		for (Role role : Game.ruleset.getAllRoles()) {
-			if (!role.isPlayerSelectable()) continue;
+			if (!role.isPlayer()) continue;
 			
-			if (!role.creatureCanAdd(creature)) continue;
+			if (!role.creatureCanSelect(creature)) continue;
 			
 			roles.add(role);
 		}
@@ -679,9 +693,9 @@ public class Buildable {
 		List<Role> roles = new ArrayList<Role>();
 		
 		for (Role role : Game.ruleset.getAllRoles()) {
-			if (!role.isPlayerSelectable()) continue;
+			if (!role.isPlayer()) continue;
 			
-			if (role.creatureCanAdd(creature)) continue;
+			if (role.creatureCanSelect(creature)) continue;
 			
 			if (!role.creatureHasRolePrereqs(creature)) continue;
 			
@@ -712,7 +726,7 @@ public class Buildable {
 	 */
 	
 	public int getLevel(Role role) {
-		return creature.getRoles().getLevel(role);
+		return creature.roles.getLevel(role);
 	}
 	
 	/**
@@ -723,7 +737,7 @@ public class Buildable {
 	 */
 	
 	public int getCreatureLevel() {
-		return creature.stats().getCreatureLevel() + 1;
+		return creature.stats.getCreatureLevel() + 1;
 	}
 	
 	/**
@@ -744,7 +758,7 @@ public class Buildable {
 	 */
 	
 	public SkillSet getSkillSet() {
-		return creature.getSkillSet();
+		return creature.skills;
 	}
 	
 	/**
@@ -755,7 +769,7 @@ public class Buildable {
 	
 	public int getCurrentIntelligence() {
 		if (newCharacter) return selectedAttributes[3];
-		else return creature.stats().getBaseInt();
+		else return creature.stats.getBaseInt();
 	}
 	
 	/**
@@ -766,6 +780,17 @@ public class Buildable {
 	
 	public String getName() {
 		if (newCharacter) return selectedName;
-		else return creature.getName();
+		else return creature.getTemplate().getName();
+	}
+	
+	/**
+	 * Returns the base role of this character.  For new characters, this is the selected role.
+	 * For existing characters, this is the base role for that creature's roleset
+	 * @return the base role of this character
+	 */
+	
+	public Role getBaseRole() {
+		if (newCharacter) return selectedRole;
+		else return creature.roles.getBaseRole();
 	}
 }

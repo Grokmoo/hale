@@ -21,8 +21,8 @@ package net.sf.hale.defaultability;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * A default ability for talking to a creature.  If the parent is not within range,
@@ -40,24 +40,18 @@ public class Talk implements DefaultAbility {
 		return "Talk";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
 		if (Game.isInTurnMode()) return false;
 		
-		int width = parent.getVisibility().length;
-		int height = parent.getVisibility()[0].length;
+		if (!parent.hasVisibility(targetPosition)) return false;
 		
-		if (targetPosition.x < 0 || targetPosition.y < 0) return false;
-		if (targetPosition.x >= width || targetPosition.y >= height) return false;
-		
-		if (!parent.getVisibility(targetPosition)) return false;
-		
-		target = Game.curCampaign.curArea.getCreatureAtGridPoint(targetPosition);
+		target = targetPosition.getCreature();
 		
 		// if target is a valid conversation target
-		if (target != null && target.getConversationScript() != null) {
+		if (target != null && target.getTemplate().getConversation() != null) {
 			move = new Move();
 			
-			if (AreaUtil.distance(parent.getPosition(), targetPosition) > 3) {
+			if (targetPosition.getDistance(parent) > 3) {
 				// need to move towards the target before talking
 				return move.canMove(parent, targetPosition, 3);
 			}
@@ -68,8 +62,8 @@ public class Talk implements DefaultAbility {
 		return false;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 3) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 3) {
 			// move towards the target then talk
 			move.addCallback(new TalkCallback(parent));
 			move.moveTowards(parent, targetPosition, 3);
@@ -89,16 +83,15 @@ public class Talk implements DefaultAbility {
 	 */
 	
 	private class TalkCallback implements Runnable {
-		private Creature parent;
+		private PC parent;
 		
-		private TalkCallback(Creature parent) {
+		private TalkCallback(PC parent) {
 			this.parent = parent;
 		}
 		
 		@Override public void run() {
-			if ( AreaUtil.distance(parent.getPosition(), target.getPosition()) > 3 ) return;
-			
-			if ( !parent.getVisibility(target.getPosition()) ) return;
+			if (parent.getLocation().getDistance(target) > 3) return;
+			if ( !parent.hasVisibility(target.getLocation()) ) return;
 			
 			target.startConversation(parent);
 		}

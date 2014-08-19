@@ -19,7 +19,7 @@
 
 package net.sf.hale.widgets;
 
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
@@ -47,9 +47,9 @@ public abstract class ExpandableWidget extends Widget {
 	 * no IconViewer is shown, only the TextArea
 	 */
 	
-	public ExpandableWidget(String icon) {
+	public ExpandableWidget(Icon icon) {
 		if (icon != null) {
-			iconViewer = new IconViewer(SpriteManager.getSprite(icon));
+			iconViewer = new IconViewer(icon);
 			iconViewer.setTheme("iconviewer");
 			iconViewer.setEventHandlingEnabled(false);
 			add(iconViewer);

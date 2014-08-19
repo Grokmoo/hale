@@ -1,8 +1,0 @@
-name Hide
-verb Hide
-verbPast Hide
-untrained true
-keyAttribute Dex
-hasArmorPenalty true
-restrictToRole Rogue
-icon "icons/hide"

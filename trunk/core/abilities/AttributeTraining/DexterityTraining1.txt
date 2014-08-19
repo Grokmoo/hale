@@ -1,9 +1,0 @@
-name "Dexterity Training I"
-type "General"
-description "You gain a permanent +1 bonus to Dexterity.
-activateable false
-
-icon "icons/trainDexterity1"
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('BaseDex', 'Stackable', 1); parent.applyEffect(effect); }"
-
-addPrereq Stat CreatureLevel 2

@@ -6,8 +6,8 @@ function onDamaged(game, damage, effect) {
 	
 	var damageApplied = damage.getTotalAppliedDamage();
 	
-	if (target.getCurrentHP() <= damageApplied) {
-		target.healDamage(damageApplied, false);
+	if (target.getCurrentHitPoints() <= damageApplied) {
+		target.healDamage(damageApplied);
 		
 		game.addMessage("red", "The Master is protected by the focus crystal!");
 	}

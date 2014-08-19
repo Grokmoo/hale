@@ -8,17 +8,20 @@ function onTargetSelect(game, targeter, type) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = game.dice().randInt(5, 10);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setTitle(spell.getName());
+	effect.addPositiveIcon("items/enchant_attack_small");
+	effect.addPositiveIcon("items/enchant_armor_small");
+	effect.addPositiveIcon("items/enchant_physical_small");
 	effect.setDuration(duration);
 	
 	effect.getBonuses().addBonus('Str', parseInt(4 + casterLevel / 4));
@@ -35,7 +38,7 @@ function onTargetSelect(game, targeter, type) {
 	var g1 = game.getBaseParticleGenerator("fog");
 	g1.setDrawingMode("BelowEntities");
 	g1.setDurationInfinite();
-	g1.setPosition(target.getPosition());
+	g1.setPosition(target.getLocation());
 	g1.setRedDistribution(game.getFixedDistribution(0.0));
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));
 	

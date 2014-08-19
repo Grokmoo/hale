@@ -20,6 +20,7 @@
 package net.sf.hale.ability;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import de.matthiasmann.twl.AnimationState;
@@ -58,7 +59,7 @@ public abstract class AreaTargeter extends Targeter {
 	 * @param slot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public AreaTargeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot slot) {
+	public AreaTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 		
 		affectedPoints = new ArrayList<Point>();
@@ -145,15 +146,20 @@ public abstract class AreaTargeter extends Targeter {
 	
 	protected boolean meetsRelationshipCriterion(Creature creature) {
 		if (this.affectedCreatureRelationship == null) {
+			Faction playerFaction = Game.ruleset.getFaction(Game.ruleset.getString("PlayerFaction"));
+			
 			
 			// if friendly fire is disabled, hostile spells don't affect friendly PC creatures
 			boolean friendlyFireOnPCs = Game.ruleset.getDifficultyManager().friendlyFireOnPCs();
-			boolean playerTargetingPlayer = getParent().isPlayerSelectable() && creature.isPlayerSelectable();
+			boolean playerTargetingPlayer = getParent().getFaction() == playerFaction &&
+					creature.getFaction() == playerFaction;
 			
-			boolean spellIsHostile = false;
+			boolean spellIsHostile;
 			switch (getSlot().getAbility().getActionType()) {
 			case Debuff: case Damage:
 				spellIsHostile = true;
+			default:
+				spellIsHostile = false;
 			}
 			
 			if (spellIsHostile && playerTargetingPlayer && !friendlyFireOnPCs) return false;
@@ -207,6 +213,15 @@ public abstract class AreaTargeter extends Targeter {
 		affectedCreatures.clear();
 		
 		computeAffectedPoints(x, y, gridPoint);
+		
+		// remove out of bounds points
+		Iterator<Point> iter = affectedPoints.iterator();
+		while (iter.hasNext()) {
+			Point p = iter.next();
+			
+			if (p.x < 0 || p.x >= Game.curCampaign.curArea.getWidth() || p.y < 0 || p.y >= Game.curCampaign.curArea.getHeight())
+				iter.remove();
+		}
 		
 		// compute affected creatures based on affected points
 		for (Point p : affectedPoints) {
@@ -267,19 +282,70 @@ public abstract class AreaTargeter extends Targeter {
 	 * @see net.sf.hale.effect.Targeter#draw()
 	 */
 	
-	@Override public void draw(AnimationState as) {
-		super.draw(as);
+	@Override public boolean draw(AnimationState as) {
+		if (!super.draw(as)) {
+			return false;
+		}
 		
 		for (Point p : affectedPoints) {
 			Game.areaViewer.drawGreyHex(p, as);
 		}
 		
 		for (Creature creature : affectedCreatures) {
-			Game.areaViewer.drawRedHex(creature.getPosition(), as);
+			Game.areaViewer.drawRedHex(creature.getLocation().toPoint(), as);
 		}
 		
 		for (Point p : getAllowedPoints()) {
 			Game.areaViewer.drawGreenHex(p, as);
 		}
+		
+		return true;
+	}
+	
+	/**
+	 * Gets the number of targets currently affected by the targeter with the appropriate
+	 * status
+	 * @param desirable true to get desirable targets (friendly for positive, hostile
+	 * for negative abilities), or false to get undesirable
+	 * @return the number of targets of the specified status
+	 */
+	
+	private int getTargetCount(boolean desirable) {
+		if (getSlot() == null) return 0;
+		
+		Faction.Relationship targetRelationship;
+		
+		switch (getSlot().getAbility().getActionType()) {
+		case Buff: case Heal:
+			targetRelationship = Faction.Relationship.Friendly;
+			break;
+		case Debuff: case Damage:
+			targetRelationship = Faction.Relationship.Hostile;
+			break;
+		default:
+			return 0;
+		}
+		
+		int count = 0;
+		for (Creature creature : affectedCreatures) {
+			Faction.Relationship creatureRelationship = getParent().getFaction().getRelationship(creature);
+			
+			if (desirable && creatureRelationship == targetRelationship) {
+				count++;
+			} else if (!desirable && creatureRelationship != targetRelationship) {
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
+	@Override public int getDesirableTargetCount() {
+		return getTargetCount(true);
+		
+	}
+	
+	@Override public int getUndesirableTargetCount() {
+		return getTargetCount(false);
 	}
 }

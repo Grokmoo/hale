@@ -107,7 +107,8 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 				
 				Effect effect = Effect.load(entryData, refHandler, target);
 				
-				refHandler.add(entryData.get("ref", null), effect);
+				String ref = entryData.get("ref", null);
+				refHandler.add(ref, effect);
 				effectsNoActiveScript.add( effect );
 			}
 		}
@@ -119,7 +120,8 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 				
 				Effect effect = Effect.load(entryData, refHandler, target);
 				
-				refHandler.add(entryData.get("ref", null), effect);
+				String ref = entryData.get("ref", null);
+				refHandler.add(ref, effect);
 				effectsWithActiveScript.add( effect );
 			}
 		}
@@ -330,6 +332,23 @@ public class EntityEffectSet implements Iterable<Effect>, Saveable {
 			effectsNoActiveScript.remove(effect);
 		else
 			effectsWithActiveScript.remove(effect);
+	}
+	
+	/**
+	 * For each aura held by this set, execute the function with the specified type for all child effects.
+	 * The function is executed with arguments of the child effect target and the aura, so the signature
+	 * looks like:
+	 * function(Game.scriptInterface, target, aura)
+	 * @param type
+	 * @param arguments
+	 */
+	
+	public synchronized void executeOnAllAuraChildren(ScriptFunctionType type) {
+		for (Aura aura : auras) {
+			for (Effect childEffect : aura.getChildEffects()) {
+				aura.executeFunction(type, childEffect.getTarget(), aura);
+			}
+		}
 	}
 	
 	/**

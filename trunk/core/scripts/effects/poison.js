@@ -2,27 +2,29 @@ function onAttackHit(game, attack, damage, effect) {
 	var attacker = attack.getAttacker();
 	var target = attack.getDefender();
 	
-	var lvls = attacker.getRoles().getLevel("Assassin");
+	var lvls = attacker.roles.getLevel("Assassin");
 	
-	var dc = 60 + lvls * 5;
+	var dc = 75 + lvls * 5;
 	
-	if (!target.physicalResistanceCheck(dc)) {
+	if (!target.stats.getPhysicalResistanceCheck(dc)) {
 		var targetEffect = attacker.createEffect("effects/damageOverTime");
 		
-		if (attacker.getAbilities().has("LingeringPoison"))
+		if (attacker.abilities.has("LingeringPoison"))
 			targetEffect.setDuration(3);
 		else
 			targetEffect.setDuration(2);
 		
 		targetEffect.put("damageType", "Poison");
 		
-		if (attacker.getAbilities().has("LethalPoison")) {
+		if (attacker.abilities.has("LethalPoison")) {
 			targetEffect.put("minDamagePerRound", 1 + parseInt(lvls / 2));
 			targetEffect.put("maxDamagePerRound", 6 + parseInt(lvls / 2));
 		} else {
 			targetEffect.put("minDamagePerRound", 1);
 			targetEffect.put("maxDamagePerRound", 6);
 		}
+		
+		targetEffect.addNegativeIcon("items/enchant_acid_small");
 		
 		target.applyEffect(targetEffect);
 		

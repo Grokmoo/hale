@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.hale.Game;
+import net.sf.hale.bonus.Stat;
+import net.sf.hale.entity.Creature;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
 import net.sf.hale.util.Logger;
@@ -38,6 +40,7 @@ import net.sf.hale.util.SimpleJSONObject;
  */
 
 public class SkillSet implements Saveable {
+	private final Creature parent;
 	private final Map<String, Integer> skills;
 	
 	@Override public JSONOrderedObject save() {
@@ -65,20 +68,23 @@ public class SkillSet implements Saveable {
 	
 	/**
 	 * Constructs an empty skill list with no ranks in any skill.
+	 * @param parent the parent creature
 	 */
 	
-	public SkillSet() {
+	public SkillSet(Creature parent) {
 		this.skills = new LinkedHashMap<String, Integer>();
+		this.parent = parent;
 	}
 	
 	/**
 	 * Constructs a SkillSet containing the same skills and ranks as the
 	 * supplied SkillSet.
 	 * @param other The SkillSet to copy the skills and ranks from.
+	 * @param parent the new parent for this skillset
 	 */
 	
-	public SkillSet(SkillSet other) {
-		this();
+	public SkillSet(SkillSet other, Creature parent) {
+		this(parent);
 		for (String skillID : other.skills.keySet()) {
 			this.skills.put(skillID, other.skills.get(skillID));
 		}
@@ -142,23 +148,8 @@ public class SkillSet implements Saveable {
 			int curRanks = getRanks(skillID);
 			
 			skills.put(skillID, Integer.valueOf(curRanks + ranks));
-		}
-		
-		
-	}
-	
-	/**
-	 * Sets the number of ranks for the specified skill.
-	 * 
-	 * @param skillID The ID String for the {@link Skill}
-	 * @param ranks The number of ranks to be set
-	 */
-	
-	public void setRanks(String skillID, int ranks) {
-		if (Game.ruleset.getSkill(skillID) == null) {
-			Logger.appendToErrorLog("Skill ID: " + skillID + " not found");
-		} else {
-			skills.put(skillID, Integer.valueOf(ranks));
+			
+			parent.updateListeners();
 		}
 	}
 	
@@ -247,5 +238,119 @@ public class SkillSet implements Saveable {
 	
 	public Set<String> getSkills() {
 		return Collections.unmodifiableSet(skills.keySet());
+	}
+	
+	/**
+	 * Returns the parent creature's modifier for the specified skill.  For most
+	 * skills, a random roll from 1 to 100 is then added to this value for a skill check.
+	 * Sometimes, however, skill modifiers may be compared directly with no random
+	 * element
+	 * @param skill
+	 * @return the parent creature's skill modifier for the specified skill
+	 */
+	
+	public int getTotalModifier(Skill skill) {
+		int ranks = getRanks(skill.getID());
+		int modifier = parent.stats.getSkillBonus(skill.getID()) + (parent.stats.get(skill.getKeyAttribute()) - 10) * 2;
+		if (skill.suffersArmorPenalty()) modifier -= parent.stats.get(Stat.ArmorPenalty);
+		
+		return ranks + modifier;
+	}
+	
+	/**
+	 * Returns the parent creature's modifier for the specified skill.  For most
+	 * skills, a random roll from 1 to 100 is then added to this value for a skill check.
+	 * Sometimes, however, skill modifiers may be compared directly with no random
+	 * element
+	 * @param skillID the ID of the skill
+	 * @return the parent creature's skill modifier for the specified skill
+	 */
+	
+	public int getTotalModifier(String skillID) {
+		return getTotalModifier(Game.ruleset.getSkill(skillID));
+	}
+	
+	/**
+	 * The parent creature performs a skill check with the specified difficulty.
+	 * The parent's total modifier plus a random roll of 1 to 100 is compared
+	 * against the difficulty.  Some skills require training, which means the
+	 * parent must have non zero ranks in order for this check to succeed.  Some
+	 * skills allow a guaranteed roll of 100 while not in combat.  When using this method
+	 * no message is appended to the mainviewer regarding the check
+	 * @param skillID the skill to check
+	 * @param difficulty the difficulty of the check.
+	 * @return true if the check succeeds, false otherwise
+	 */
+	
+	public boolean performCheck(String skillID, int difficulty) {
+		return getCheck(skillID, difficulty, null) >= difficulty;
+	}
+	
+	/**
+	 * Gets a skill check for the specified skill.
+	 * The parent's total modifier plus a random roll of 1 to 100 is generally used.
+	 * Some skills require training, which means the
+	 * parent must have non zero ranks in order for this check to be non-zero.  Some
+	 * skills allow a guaranteed roll of 100 while not in combat.
+	 * 
+	 * A message is append to the mainviewer about the results of this check
+	 * @param skillID the skill to check
+	 * @param difficulty the difficulty of the check.  Used in building the message
+	 * describing this check
+	 * @return the value of the check
+	 */
+	
+	public int getCheck(String skillID, int difficulty) {
+		StringBuilder sb = new StringBuilder();
+		
+		int check = getCheck(skillID, difficulty, sb);
+		
+		if (check != 0) {
+			Game.mainViewer.addMessage("orange", sb.toString());
+		}
+			
+		return check;
+	}
+	
+	/**
+	 * Gets a check without showing a message
+	 * @param skillID
+	 * @param difficulty
+	 * @param sb the message to append to, or null for no message
+	 * @return the skill check
+	 */
+	
+	private int getCheck(String skillID, int difficulty, StringBuilder sb) {
+		Skill skill = Game.ruleset.getSkill(skillID);
+		
+		// if skill requires training, the parent must have ranks
+		if (!skill.isUsableUntrained() && getRanks(skill) < 1)
+			return 0;
+		
+		int modifier = getTotalModifier(skill);
+		int roll = (!Game.isInTurnMode() && skill.alwaysRolls100OutsideOfCombat()) ? 100 : Game.dice.d100();
+		int total = modifier + roll;
+		
+		if (sb != null) {
+			sb.append(skill.getNoun());
+			sb.append(" Check: ");
+			
+			sb.append(modifier);
+			sb.append(" + ");
+			sb.append(roll);
+			sb.append(" = ");
+			sb.append(total);
+			sb.append(" vs ");
+			sb.append(difficulty);
+			sb.append(" : ");
+			
+			if (total >= difficulty) {
+				sb.append("Success.");
+			} else {
+				sb.append("Failure.");
+			}
+		}
+		
+		return total;
 	}
 }

@@ -94,6 +94,16 @@ function askWork4b(game, parent, target, conversation) {
 }
 
 function trade(game, parent, target, conversation) {
+	var merchant = game.campaign().getMerchant("goblin_smith");
+
+	if (parent.get("rewardGiven") == null) {
+		merchant.setBuyValuePercentage(50);
+		merchant.setSellValuePercentage(150);
+	} else {
+		merchant.setBuyValuePercentage(70);
+		merchant.setSellValuePercentage(130);
+	}
+
     game.showMerchant("goblin_smith");
     conversation.exit();
 }

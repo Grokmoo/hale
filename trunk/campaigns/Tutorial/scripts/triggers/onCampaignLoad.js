@@ -14,10 +14,9 @@ function onAreaLoadFirstTime(game, area) {
 	
 	for (var i = 0; i < game.getParty().size(); i++) {
 		var partyMember = game.getParty().get(i);
-        var quickBar = partyMember.getQuickbar();
         
-		partyMember.getAbilities().fillEmptySlots();
-		quickBar.addAbilitiesToEmptySlots();
+		partyMember.abilities.fillEmptySlots();
+		partyMember.quickbar.addAbilitiesToEmptySlots();
 	}
 }
 

@@ -1,5 +1,5 @@
 function onActivate(game, slot) {
-    game.addMenuLevel("Conjure Weapon");
+    if (!game.addMenuLevel("Conjure Weapon")) return;
 	
 	var ids = [ "dagger", "shortSword", "longsword", "greatsword", "mace",
 	    "morningstar", "lighthammer", "warhammer", "maul", "javelin",
@@ -26,10 +26,10 @@ function onActivate(game, slot) {
 function castSpell(game, slot, weaponID) {
 	var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
 	
-	var baseItem = game.entities().getItem(weaponID);
+	var baseItem = game.getItem(weaponID, game.ruleset().getItemQuality("Good"));
 	
 	for (var i = 0; i < creatures.size(); i++) {
-		if (!creatures.get(i).getInventory().hasPrereqsToEquip(baseItem)) {
+		if (!creatures.get(i).inventory.hasPrereqsToEquip(baseItem)) {
 			creatures.remove(i);
 			i--;
 		}
@@ -49,31 +49,31 @@ function onTargetSelect(game, targeter, weaponID) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = game.dice().d5(2);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	// create the weapon, set its properties, and equip it
+	var allQualities = [ "Mediocre", "Decent", "Good", "Fine", "Superb", "Exceptional", "Phenomenal", "Masterwork" ];
+	
 	var qualityIndex = parseInt(casterLevel / 3) + 1;
-	if (qualityIndex >= game.ruleset().getNumItemQualities())
-		qualityIndex = game.ruleset().getNumItemQualities() - 1;
+	if (qualityIndex >= allQualities.length)
+		qualityIndex = allQualities.length - 1;
 	
-	var weapon = game.entities().getItem(weaponID);
-	var conjuredID = "__" + weapon.getID() + "Conjured";
-	weapon.setName("Conjured " + weapon.getName());
-	weapon.setID(conjuredID);
-	weapon.setCursed(true);
-	weapon.setQuality(game.ruleset().getItemQuality(qualityIndex));
-	weapon.createEnchantment("entity.addBonus(\"WeaponAttack\", 10);");
-	weapon.recomputeBonuses();
-	game.campaign().addCreatedItem(weaponID, weapon);
+	// create the item to be conjured
+	var conjuredID = "__" + weaponID + "Conjured";
+	var model = game.getCreatedItemModel(weaponID, conjuredID);
+	model.addEnchantment("entity.addBonus(\"WeaponAttack\", 10);");
+	model.setNamePrefix("Conjured ");
+	model.setForceNotUnequippable(true);
+	game.campaign().addCreatedItem(model.getCreatedItem());
 	
-	
+	var weapon = game.getItem( conjuredID, game.ruleset().getItemQuality(allQualities[qualityIndex]) );
 	
 	// create an effect to keep track of the weapon
 	var effect = targeter.getSlot().createEffect("effects/conjureItem");
@@ -82,37 +82,39 @@ function onTargetSelect(game, targeter, weaponID) {
 	effect.put("itemID", conjuredID);
 	
 	// keep track of the old item to re-equip it if possible
-	var oldItem = target.getInventory().getEquippedMainHand();
+	var oldItem = target.inventory.getEquippedMainHand();
 	if (oldItem != null) {
-		effect.put("oldItemID", oldItem.getID());
+		effect.put("oldItemID", oldItem.getTemplate().getID());
 		effect.put("oldItemQuality", oldItem.getQuality().getName());
 	}
 	
 	// if weapon is two handed, check the off hand slot to be re-equipped
-	if (!weapon.canWieldInOneHand(target)) {
-		var oldItem2 = target.getInventory().getEquippedOffHand();
+	if (weapon.isTwoHanded()) {
+		var oldItem2 = target.inventory.getEquippedOffHand();
 		if (oldItem2 != null) {
-			effect.put("oldItem2ID", oldItem2.getID());
+			effect.put("oldItem2ID", oldItem2.getTemplate().getID());
 			effect.put("oldItem2Quality", oldItem2.getQuality().getName());
 		}
 	}
 	
 	target.applyEffect(effect);
 	
-	target.getInventory().addItemAndEquip(weapon);
+	target.timer.setFreeMode(true);
+	target.inventory.addAndEquip(weapon);
+	target.timer.setFreeMode(false);
 	
 	// animate the new item initially
 	if (weaponID == "longbow" || weaponID == "shortbow") {
 		var anim = game.getBaseAnimation("subIconFlash");
-		anim.addFrame(target.getSubIcon("OffHandWeapon"));
-		anim.setColor(target.getSubIconColor("OffHandWeapon"));
+		anim.addFrame(target.getIconRenderer().getIcon("OffHandWeapon"));
+		anim.setColor(target.getIconRenderer().getColor("OffHandWeapon"));
 		
 		var pos = target.getSubIconScreenPosition("OffHandWeapon");
 		anim.setPosition(pos.x, pos.y);
 	} else {
 		var anim = game.getBaseAnimation("subIconFlash");
-		anim.addFrame(target.getSubIcon("MainHandWeapon"));
-		anim.setColor(target.getSubIconColor("MainHandWeapon"));
+		anim.addFrame(target.getIconRenderer().getIcon("MainHandWeapon"));
+		anim.setColor(target.getIconRenderer().getColor("MainHandWeapon"));
 		
 		var pos = target.getSubIconScreenPosition("MainHandWeapon");
 		anim.setPosition(pos.x, pos.y);

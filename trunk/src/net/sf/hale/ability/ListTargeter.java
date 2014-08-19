@@ -57,7 +57,7 @@ public class ListTargeter extends Targeter {
 	 * @param slot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public ListTargeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot slot) {
+	public ListTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 		this.selectedPoints = new ArrayList<Point>();
 		this.numberOfSelections = 1;
@@ -284,12 +284,16 @@ public class ListTargeter extends Targeter {
 		}
 	}
 	
-	@Override public void draw(AnimationState as) {
-		super.draw(as);
+	@Override public boolean draw(AnimationState as) {
+		if (!super.draw(as)) {
+			return false;
+		}
 		
 		for (Point p : getAllowedPoints()) {
 			Game.areaViewer.drawGreenHex(p, as);
 		}
+		
+		return true;
 	}
 	
 	private class AddPointCallback implements Runnable {

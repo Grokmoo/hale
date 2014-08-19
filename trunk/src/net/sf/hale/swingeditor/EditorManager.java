@@ -33,10 +33,10 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
@@ -55,13 +55,12 @@ public class EditorManager {
 	private static LogViewer logViewer;
 	private static List<String> logEntries;
 	
-	private static AssetModel<Item> itemsModel;
 	private static AssetModel<Creature> creaturesModel;
 	
 	private static List<AssetEditor> subEditors;
 	
 	private static Map<String, BufferedImage> itemIcons;
-	private static Map<Item.ItemType, Map<String, BufferedImage>> subIcons;
+	private static Map<EquippableItemTemplate.Type, Map<String, BufferedImage>> subIcons;
 	private static Map<String, BufferedImage> projectileIcons;
 	private static Map<String, BufferedImage> doorIcons;
 	
@@ -131,15 +130,6 @@ public class EditorManager {
 	}
 	
 	/**
-	 * Returns the list model storing references to all available items
-	 * @return the items model
-	 */
-	
-	public static AssetModel<Item> getItemsModel() {
-		return itemsModel;
-	}
-	
-	/**
 	 * Returns the list model storing references to all available creatures
 	 * @return the creature list model
 	 */
@@ -163,7 +153,6 @@ public class EditorManager {
 	 */
 	
 	public static void loadAllAssets() {
-		itemsModel = new AssetModel<Item>(AssetType.Items);
 		creaturesModel = new AssetModel<Creature>(AssetType.Creatures);
 		
 		// get sprites and sort them alphabetically
@@ -185,7 +174,7 @@ public class EditorManager {
 		
 		doorIcons = new LinkedHashMap<String, BufferedImage>();
 		itemIcons = new LinkedHashMap<String, BufferedImage>();
-		subIcons = new HashMap<Item.ItemType, Map<String, BufferedImage>>();
+		subIcons = new HashMap<EquippableItemTemplate.Type, Map<String, BufferedImage>>();
 		projectileIcons = new HashMap<String, BufferedImage>();
 		
 		// go through the list of sprites and add them to the icon lists as needed
@@ -240,7 +229,10 @@ public class EditorManager {
 		// sub icon is valid, so add it to the approprate set
 		int index = shortID.indexOf('-');
 		if (index > 0) {
-			Item.ItemType type = Item.ItemType.valueOf(shortID.substring(0, index).toUpperCase());
+			String itemType = shortID.substring(0, index);
+			itemType = itemType.substring(0, 1).toUpperCase() + itemType.substring(1, itemType.length());
+			
+			EquippableItemTemplate.Type type = EquippableItemTemplate.Type.valueOf(itemType);
 			
 			Map<String, BufferedImage> map = subIcons.get(type);
 			if (map == null) {
@@ -297,7 +289,7 @@ public class EditorManager {
 	 * @return the list of valid icon choices
 	 */
 	
-	public static Map<String, BufferedImage> getSubIconChoices(Item.ItemType type) {
+	public static Map<String, BufferedImage> getSubIconChoices(EquippableItemTemplate.Type type) {
 		return subIcons.get(type);
 	}
 	

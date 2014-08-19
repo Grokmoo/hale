@@ -2,14 +2,14 @@ function onActivate(game, slot) {
    var targeter = game.createCircleTargeter(slot);
    targeter.setRadius(4);
    targeter.setRelationshipCriterion("Hostile");
-   targeter.addAllowedPoint(slot.getParent().getPosition());
+   targeter.addAllowedPoint(slot.getParent().getLocation());
    targeter.activate();
 }
 
 function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	targeter.getSlot().activate();
 	
@@ -27,7 +27,7 @@ function onTargetSelect(game, targeter) {
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
 		
-		var delay = target.getPosition().screenDistance(explosionCenter) / 400.0;
+		var delay = target.getLocation().getScreenDistance(explosionCenter) / 400.0;
 		
 		var callback = spell.createDelayedCallback("applyEffect");
 		callback.setDelay(delay);
@@ -37,7 +37,7 @@ function onTargetSelect(game, targeter) {
 }
 
 function applyEffect(game, parent, target, spell, targeter) {
-	if ( !target.physicalResistanceCheck(90) ) {
+	if ( !target.stats.getPhysicalResistanceCheck(90) ) {
 		var duration = game.dice().rand(3, 5);
 		
 		var effect = targeter.getSlot().createEffect();
@@ -52,7 +52,7 @@ function applyEffect(game, parent, target, spell, targeter) {
 		var g1 = game.getBaseParticleGenerator("sparkle");
 		g1.setDurationInfinite();
 		g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-		g1.setPosition(target.getPosition());
+		g1.setPosition(target.getLocation());
 		g1.setBlueDistribution(game.getFixedDistribution(0.0));
 		g1.setGreenDistribution(game.getFixedDistribution(0.0));
 		effect.addAnimation(g1);

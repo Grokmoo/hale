@@ -1,5 +1,5 @@
 function canActivate(game, parent) {
-	return parent.getTimer().canPerformAction(parent.stats().getMovementCost());
+	return parent.timer.canPerformAction(parent.stats.getMovementCost());
 }
 
 function onActivate(game, slot) {
@@ -7,8 +7,8 @@ function onActivate(game, slot) {
 	
 	// this is an estimate of how much movement the parent can perform
 	// it will not be exact if there are movement penalizing effects on the area
-	var AP = parent.getTimer().getAP();
-	var moves = AP / parent.stats().getMovementCost();
+	var AP = parent.timer.getAP();
+	var moves = AP / parent.stats.getMovementCost();
 	if (moves > 3) moves = 3;
 	
 	var targeter = game.createCircleTargeter(slot);
@@ -24,8 +24,8 @@ function onTargetSelect(game, targeter) {
 	var position = targeter.getAffectedPoints().get(0);
 	var ability = targeter.getSlot().getAbility();
 	
-	var path = game.ai.getMovementPath(parent, position);
-	if (path == null || !parent.getTimer().canMove(path)) {
+	var path = game.ai.getMovementPath(parent, position.x, position.y);
+	if (path == null || !parent.timer.canMove(path)) {
 		game.addMessage("red", "You cannot move there or the distance is too great.");
 		return;
 	}
@@ -40,7 +40,7 @@ function onTargetSelect(game, targeter) {
 
 function performTumble(game, parent, position) {
 	// perform movement provoking no attacks of opportunity
-	if (!game.ai.moveTowards(parent, position, 0, false)) {
+	if (!game.ai.moveTowards(parent, position.x, position.y, 0, false)) {
 		game.addMessage("red", "Tumble by " + parent + " was interrupted.");
 		return;
 	}

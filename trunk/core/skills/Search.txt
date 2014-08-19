@@ -1,7 +1,0 @@
-name Search
-verb Search
-verbPast Searched
-untrained true
-keyAttribute Int
-hasArmorPenalty false
-icon "icons/search"

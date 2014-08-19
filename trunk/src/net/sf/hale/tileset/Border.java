@@ -81,7 +81,6 @@ public class Border implements Iterable<BorderTile> {
 	 * specified point within the specified grid of terrain
 	 * @param terrain the set of terrain that is being checked against
 	 * @param center the point within the set of terrain to check the border conditions
-	 * @param borderList the border list that is being
 	 * @return true if and only if this border's conditions are met
 	 */
 	

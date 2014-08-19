@@ -19,13 +19,11 @@
 
 package net.sf.hale.characterbuilder;
 
-import net.sf.hale.Sprite;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.widgets.IconViewer;
 import de.matthiasmann.twl.AnimationState;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.Event;
-import de.matthiasmann.twl.GUI;
-import de.matthiasmann.twl.Widget;
 
 /**
  * The base class for the selectors used to customize various attributes
@@ -57,13 +55,13 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 	 * buttons, false otherwise
 	 */
 	
-	public BuildablePropertySelector(String name, String icon, boolean hasValue) {
+	public BuildablePropertySelector(String name, Icon icon, boolean hasValue) {
 		this.hasValue = hasValue;
 		this.selected = false;
 		this.selectable = false;
 		
 		iconViewer = new IconViewer();
-		if (icon != null) iconViewer.sprite = SpriteManager.getSprite(icon);
+		if (icon != null) iconViewer.setIcon(icon);
 		
 		nameLabel = new Label(name);
 		nameLabel.setTheme("namelabel");
@@ -126,9 +124,8 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 	 * @param icon the icon to display
 	 */
 	
-	public void setIcon(String icon) {
-		if (icon == null) iconViewer.sprite = null;
-		else iconViewer.sprite = SpriteManager.getSprite(icon);
+	public void setIcon(Icon icon) {
+		iconViewer.setIcon(icon);
 	}
 	
 	/**
@@ -370,24 +367,6 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 			BuildablePropertySelector.this.handleEvent(evt);
 			
 			return super.handleEvent(evt);
-		}
-	}
-	
-	private class IconViewer extends Widget {
-		private Sprite sprite;
-
-		@Override protected void paintWidget(GUI gui) {
-			super.paintWidget(gui);
-			
-			if (sprite != null) sprite.drawWithIconOffset(getInnerX(), getInnerY());
-		}
-		
-		@Override public int getMinWidth() {
-			return sprite != null ? sprite.getWidth() + getBorderHorizontal() : getBorderHorizontal();
-		}
-		
-		@Override public int getMinHeight() {
-			return sprite != null ? sprite.getHeight() + getBorderVertical(): getBorderVertical();
 		}
 	}
 }

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.LineParser;
+import net.sf.hale.util.StringParser;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 
@@ -105,7 +105,7 @@ public class DirectionList implements Iterable<Direction> {
 		DirectionList list = new DirectionList();
 		ArrayList<Direction> directions = new ArrayList<Direction>();
 		
-		LineParser tokenizer = new LineParser(input);
+		StringParser tokenizer = new StringParser(input);
 		tokenizer.whitespaceChars('-', '-');
 		try {
 			while (tokenizer.hasNext()) {

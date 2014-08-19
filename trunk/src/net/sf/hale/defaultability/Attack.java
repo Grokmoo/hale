@@ -21,8 +21,9 @@ package net.sf.hale.defaultability;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Weapon;
 
 /**
  * A default ability for using a standard attack against an opponent.  If the
@@ -39,23 +40,22 @@ public class Attack implements DefaultAbility {
 		return "Attack";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canAttack()) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canAttack()) return false;
 		
-		if (parent.getPosition().equals(targetPosition)) return false;
+		if (parent.getLocation().equals(targetPosition)) return false;
 		
-		target = Game.curCampaign.curArea.getCreatureAtGridPoint(targetPosition);
+		target = targetPosition.getCreature();
 		
 		if (target != null && parent.getFaction().isHostile(target)) {
 			move = new Move();
 			
-			if (parent.canAttackPosition(targetPosition.x, targetPosition.y)) {
+			if (parent.canAttack(targetPosition)) {
 				return true;
 			} else {
-				Item weapon = parent.getInventory().getMainWeapon();
-				
-				if (weapon.isMeleeWeapon()) {
-					return move.canMove(parent, targetPosition, weapon.getWeaponReachMax());
+				Weapon weapon = parent.getMainHandWeapon();
+				if (weapon.isMelee()) {
+					return move.canMove(parent, targetPosition, weapon.getTemplate().getMaxRange());
 				}
 			}
 		}
@@ -63,15 +63,15 @@ public class Attack implements DefaultAbility {
 		return false;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (parent.canAttackPosition(targetPosition.x, targetPosition.y)) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (parent.canAttack(targetPosition)) {
 			Game.areaListener.getCombatRunner().creatureStandardAttack(parent, target);
 		} else {
-			Item weapon = parent.getInventory().getMainWeapon();
+			Weapon weapon = parent.getMainHandWeapon();
 			
-			if (weapon.isMeleeWeapon()) {
+			if (weapon.isMelee()) {
 				move.addCallback(new AttackCallback(parent));
-				move.moveTowards(parent, targetPosition, weapon.getWeaponReachMax());
+				move.moveTowards(parent, targetPosition, weapon.getTemplate().getMaxRange());
 			}
 		}
 		
@@ -94,9 +94,9 @@ public class Attack implements DefaultAbility {
 		}
 		
 		@Override public void run() {
-			if (parent.canAttackPosition(target.getX(), target.getY())) {
+			if (parent.canAttack(target.getLocation())) {
 				Game.areaListener.getCombatRunner().creatureStandardAttack(parent, target);
-			} 
+			}
 		}
 	}
 }

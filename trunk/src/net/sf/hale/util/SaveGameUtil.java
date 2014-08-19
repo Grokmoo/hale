@@ -46,7 +46,7 @@ import net.sf.hale.resource.ResourceType;
 public class SaveGameUtil {
 	
 	/**
-	 * Returns a saveable reference string for the specified object
+	 * Returns a save-able reference string for the specified object
 	 * @param object the object to get the reference for
 	 * @return the reference string
 	 */
@@ -110,7 +110,7 @@ public class SaveGameUtil {
 	public static List<String> getSaveGames() {
 		List<String> saves = new ArrayList<String>();
 		
-		File dir = new File("saves");
+		File dir = new File(Game.getSaveBaseDirectory());
 		
 		File[] files = dir.listFiles();
 		if (files == null) return saves;
@@ -149,7 +149,7 @@ public class SaveGameUtil {
 	 */
 	
 	public static File getNextQuickSaveFile() {
-		File[] files = new File("saves").listFiles();
+		File[] files = new File(Game.getSaveBaseDirectory()).listFiles();
 		
 		if (files == null) return getSaveFile("quicksave1");
 		
@@ -190,12 +190,12 @@ public class SaveGameUtil {
 	 */
 	
 	public static File getSaveFile(String name) {
-		File dir = new File("saves");
+		File dir = new File(Game.getSaveBaseDirectory());
 		if (!dir.exists() || !dir.isDirectory()) {
-			dir.mkdir();
+			dir.mkdirs();
 		}
 		
-		return new File("saves/" + Game.curCampaign.getID() + "-" +
+		return new File(Game.getSaveBaseDirectory() + Game.curCampaign.getID() + "-" +
 				name + ResourceType.SaveGame.getExtension());
 	}
 	

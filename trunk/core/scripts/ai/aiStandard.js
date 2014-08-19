@@ -5,7 +5,14 @@
  */
 
 function runTurn(game, parent) {
-	var aiSet = parent.getAbilities().createAISet();
+	if (parent.getEncounter() != null) {
+		// perform no actions if this AI's encounter hasn't spotted any hostiles yet
+		if (parent.getEncounter().getHostiles().size() == 0) {
+			return;
+		}
+	}
+
+	var aiSet = parent.abilities.createAISet();
 	
 	// figure out the set of usable action types
 	var usableActionTypes = [ "Buff", "Debuff", "Damage", "Summon" ];
@@ -40,20 +47,24 @@ function runTurn(game, parent) {
 	
 		var slot = allSlots.get(i);
 		
+		// don't try to activate slots which are already active
+		if (slot.isActive()) continue;
+		
 		// first attempt to move within range as needed
 		var targetData = moveTowardsForAbility(game, parent, slot, preferredTarget);
 		
 		if (targetData.endTurn)
 			return;
 		
+		// at this point, the ability will either be used or be determined to be unusable
+		// this turn
+		numAbilities--;
+		
 		if (!targetData.targetFound)
 			continue;
 
 		// now try to activate the ability
 		var activateData = tryActivateAbility(game, parent, targetData.target, slot, aiSet);
-			
-		// we have activated one ability
-		numAbilities--;
 			
 		// we can either end the turn here or try another ability
 		if (activateData.endTurn)
@@ -85,7 +96,7 @@ function checkForHealingSpells(game, parent, aiSet) {
 		for (var i = 0; i < friendlies.size(); i++) {
 			var friendly = friendlies.get(i);
 			
-			if (friendly.getCurrentHP() / friendly.stats().getMaxHP() < 0.5) {
+			if (friendly.getCurrentHitPoints() / friendly.stats.getMaxHP() < 0.5) {
 				// we found a good target
 				return true;
 			}
@@ -113,23 +124,23 @@ function checkForTacticalAbilities(game, parent, aiSet, allSlots, functions) {
 }
 
 function checkTotalDefense(game, parent, aiSet, allSlots) {
-	if (!parent.getAbilities().has("TotalDefense")) return null;
+	if (!parent.abilities.has("TotalDefense")) return null;
 	
 	var nearbyHostiles = game.ai.getTouchableCreatures(parent, "Hostile");
 	if (nearbyHostiles.size() <= 2) return null;
 	
 	// if the parent is surrounded by hostiles, now is a good time to use total defense
-	var slot = parent.getAbilities().getSlotWithReadiedAbility("TotalDefense");
+	var slot = parent.abilities.getSlotWithReadiedAbility("TotalDefense");
 	if (slot == null) return null;
 	
 	allSlots.add(0, slot);
-	return parent.getPosition();
+	return parent.getLocation();
 }
 
 function checkRenewal(game, parent, aiSet, allSlots) {
-	if (!parent.getAbilities().has("Renewal")) return null;
+	if (!parent.abilities.has("Renewal")) return null;
 	
-	var slot = parent.getAbilities().getSlotWithReadiedAbility("Renewal");
+	var slot = parent.abilities.getSlotWithReadiedAbility("Renewal");
 	if (slot == null) return null;
 	
 	var ability = slot.getAbility();
@@ -143,15 +154,15 @@ function checkRenewal(game, parent, aiSet, allSlots) {
 		if (isValid == true) {
 			// if the friendly has attribute penalties, then add renewal to the list of spells
 			allSlots.add(0, slot);
-			return friendly.getPosition();
+			return friendly.getLocation();
 		}
 	}
 }
 
 function checkDispell(game, parent, aiSet, allSlots) {
-	if (!parent.getAbilities().has("Dispell")) return null;
+	if (!parent.abilities.has("Dispell")) return null;
 	
-	var slot = parent.getAbilities().getSlotWithReadiedAbility("Dispell");
+	var slot = parent.abilities.getSlotWithReadiedAbility("Dispell");
 	if (slot == null) return null;
 	
 	var ability = slot.getAbility();
@@ -165,7 +176,7 @@ function checkDispell(game, parent, aiSet, allSlots) {
 		if (isValid == true) {
 			// if the friendly has dispellable effects, then add dispell to the list of spells
 			allSlots.add(0, slot);
-			return friendly.getPosition();
+			return friendly.getLocation();
 		}
 	}
 }
@@ -195,7 +206,37 @@ function getTargeter(game, parent, target, slot, aiSet) {
 	}
 }
 
-function tryActivateAbility(game, parent, target, slot, aiSet, tryOtherTargets) {
+function tryActivateAbility(game, parent, target, slot, aiSet) {
+	// if the ability has a helper script for validation, call it
+	// otherwise use the default which checks for an effect from the spell on the target to
+	// avoid duplicates
+	if (slot.getAbility().hasFunction("aiCheckTargetValid")) {
+		var targetValid = slot.getAbility().executeFunction("aiCheckTargetValid", slot, target);
+		
+		if (targetValid == false) {
+			return { 'endTurn' : false };
+		}
+	} else {
+		var targetCreature = target.getCreature();
+		if (targetCreature != null) {
+			// check to see if this ability has already been applied to the target
+			var effect = targetCreature.getEffects().getEffectCreatedBySlot(slot.getAbilityID());
+			if (effect != null) {
+				return { 'endTurn' : false };
+			}
+		}
+	}
+
+	if (slot.getAbility().getSpellLevel() > 0) {
+		// if this is a spell, check for conditions causing total spell failure
+		// this will not factor in concealment, but if it too high then the spell
+		// is very unlikely to be cast successfully
+		if ( slot.getAbility().getSpellFailurePercentage(parent) >= 70 ) {
+			// no use in attempting to cast the spell
+			return { 'endTurn' : false };
+		}
+	}
+
 	var targeter = getTargeter(game, parent, target, slot, aiSet);
 	
 	// if we could not activate the ability, it means we most likely don't
@@ -213,25 +254,31 @@ function tryActivateAbility(game, parent, target, slot, aiSet, tryOtherTargets) 
 	if (condition.equals("TargetSelect")) {
 		// activate the ability;
 		targeter.performLeftClickAction();
+		
+		//println("AI activating " + slot.getAbility().getID() + " with target count " +
+		//	targeter.getDesirableTargetCount() + " desirable, " + targeter.getUndesirableTargetCount() + " undesirable.");
+		
 		game.sleepStandardDelay(4);
 		
-		// we maybe have enough AP to activate another ability
+		// we may have enough AP to activate another ability
 		return { 'endTurn' : false };
 	}
 	
-	if (tryOtherTargets) {
-		// if we didn't have a valid selection with our target, check for
-		// a list of valid selections
-		var selectable = targeter.getAllowedPoints();
+	// if we didn't have a valid selection with our target, check for
+	// a list of valid selections
+	var selectable = targeter.getAllowedPoints();
 	
-		if (!selectable.isEmpty()) {
-			// targeter has specific clickable points, so choose the first one
-			targeter.setMousePosition(selectable.get(0));
-			targeter.performLeftClickAction();
-			game.sleepStandardDelay(4);
+	if (!selectable.isEmpty()) {
+		// targeter has specific clickable points, so choose the first one
+		targeter.setMousePosition(selectable.get(0));
+		targeter.performLeftClickAction();
 		
-			return { 'endTurn' : false };
-		}
+		//println("AI activating " + slot.getAbility().getID() + " with target count " +
+		//	targeter.getDesirableTargetCount() + " desirable, " + targeter.getUndesirableTargetCount() + " undesirable.");
+		
+		game.sleepStandardDelay(4);
+		
+		return { 'endTurn' : false };
 	}
 	
 	// we weren't able to activate the targeter
@@ -275,11 +322,14 @@ function moveTowardsForAbility(game, parent, slot, preferredTarget) {
 
 	// now move towards the target as needed until we either run out of AP or are in position to
 	// use the ability
-	var curDistance = game.distance(parent.getPosition(), preferredTarget) / 5;
+	var curDistance = parent.getLocation().getDistance(preferredTarget);
+	
+	// infinite loop protection
+	var loopNum = 0;
 	
 	while (curDistance > preferredDistance) {
 		// if creature cannot move any more
-		if (parent.getTimer().getMovementLeft() == 0 || parent.isImmobilized())
+		if (parent.timer.getMovementLeft() == 0 || parent.stats.isImmobilized())
 			return { 'endTurn' : true };
 	
 		var moved = game.ai.moveTowards(parent, preferredTarget, preferredDistance);
@@ -290,7 +340,12 @@ function moveTowardsForAbility(game, parent, slot, preferredTarget) {
 			return { 'endTurn' : false };
 		}
 		
-		var curDistance = game.distance(parent.getPosition(), preferredTarget) / 5;
+		var curDistance = parent.getLocation().getDistance(preferredTarget);
+		
+		if (loopNum > 30)
+			return { 'endTurn' : true };
+		
+		loopNum++;
 	}
 	
 	// make sure we still have enough AP to use the ability
@@ -319,12 +374,12 @@ function findBestTarget(game, preferredDistance, parent, slot) {
 	
 	// if it is self targeted
 	if (preferredDistance == 0) {
-		return parent.getPosition();
+		return parent.getLocation();
 	}
 	
 	// for summon spells, try to find an empty tile to summon the creature onto
 	if (actionType.equals("Summon")) {
-		var position = game.ai.findClosestEmptyTile(parent.getPosition(), preferredDistance);
+		var position = game.ai.findClosestEmptyTile(parent.getLocation().toPoint(), preferredDistance);
 		
 		// we return the position that was found, even if it is null
 		// this should be a very rare event since it requires all tiles around the caster
@@ -346,7 +401,7 @@ function findBestTarget(game, preferredDistance, parent, slot) {
 	}
 	
 	if (target != null)
-		return target.getPosition();
+		return target.getLocation();
 	else
 		return null;
 }
@@ -360,7 +415,7 @@ function findBestHealTarget(game, creatures, parent, slot) {
 	var bestHP = 1.0;
 	
 	for (var i = 0; i < creatures.size(); i++) {
-		var hpFraction = creatures.get(i).getCurrentHP() / creatures.get(i).stats().getMaxHP();
+		var hpFraction = creatures.get(i).getCurrentHitPoints() / creatures.get(i).stats.getMaxHP();
 		
 		// favor earlier (closer) entries in the inequality when ties arise
 		if (hpFraction < bestHP) {

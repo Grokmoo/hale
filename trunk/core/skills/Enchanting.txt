@@ -1,9 +1,0 @@
-name Enchanting
-verb Enchant
-verbPast Enchanted
-untrained false
-keyAttribute Int
-restrictToRole Mage
-hasArmorPenalty false
-craft true
-icon "icons/enchanting"

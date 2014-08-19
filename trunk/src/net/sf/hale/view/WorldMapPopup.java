@@ -3,10 +3,9 @@ package net.sf.hale.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
-import net.sf.hale.WorldMapLocation;
-import net.sf.hale.widgets.WorldMapViewer;
+import net.sf.hale.area.Transition;
+import net.sf.hale.rules.WorldMapLocation;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.Widget;
@@ -36,7 +35,7 @@ public class WorldMapPopup extends PopupWindow {
 	 * @param parent the parent Widget used to block input
 	 */
 	
-	public WorldMapPopup(Widget parent, AreaTransition transition) {
+	public WorldMapPopup(Widget parent, Transition transition) {
 		super(parent);
 		
 		this.setCloseOnEscape(false);

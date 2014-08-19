@@ -11,6 +11,6 @@ function onUse(game, item, target) {
     effect.getBonuses().addBonus('ConcealmentIgnoring', bonus);
     target.applyEffect(effect);
     
-    target.getInventory().removeItem(item);
+    target.inventory.remove(item);
     game.ai.provokeAttacksOfOpportunity(target);
 }

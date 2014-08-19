@@ -1,3 +1,0 @@
-area "Sonorin Canyon"
-script "triggers/sonorinCanyonBoss"
-addPoints   5 11   4 11   3 10

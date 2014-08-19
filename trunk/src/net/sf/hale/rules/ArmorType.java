@@ -19,12 +19,28 @@
 
 package net.sf.hale.rules;
 
+/**
+ * A specific type of armor such as light, medium, or heavy
+ * @author Jared
+ *
+ */
+
 public class ArmorType {
-	private String name;
+	private final String name;
+	
+	/**
+	 * Creates a new armor type with the specified name
+	 * @param name the name for the armorType
+	 */
 	
 	public ArmorType(String name) {
 		this.name = name;
 	}
+	
+	/**
+	 * Returns the name of this ArmorType
+	 * @return the name
+	 */
 	
 	public String getName() { return name; }
 }

@@ -24,7 +24,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.hale.Sprite;
+import net.sf.hale.resource.Sprite;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;

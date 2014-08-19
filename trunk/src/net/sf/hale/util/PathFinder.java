@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sf.hale.Area;
 import net.sf.hale.Game;
+import net.sf.hale.area.Area;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.Path;
+import net.sf.hale.entity.Trap;
 
 /**
  * Utility functions for path finding between 2 points or between a point and a list of
@@ -36,6 +38,23 @@ import net.sf.hale.entity.Entity;
  */
 
 public class PathFinder {
+	private enum EndPointStatus {
+		Normal, IgnoreParty, IgnoreCreatures;
+	}
+	
+	/**
+	 * Finds the shortest path between the specified start and end points.  Creatures are ignored
+	 * in determining the entity passabilities
+	 * @param mover
+	 * @param end
+	 * @param data
+	 * @return the shortest path or null if no path exists
+	 */
+	
+	public static Path findPathIgnoreCreatures(Creature mover, Point end, Data data) {
+		return findPath(mover, end, Collections.singletonList(end), data, EndPointStatus.IgnoreCreatures);
+	}
+	
 	/**
 	 * Finds the shortest path between the specified start and end points.  Party members are
 	 * ignored in determining the entity passabilities.
@@ -45,8 +64,8 @@ public class PathFinder {
 	 * @return the shortest path or null if no path exists
 	 */
 	
-	public static List<Point> findPathIgnorePartyMembers(Creature mover, Point end, Data data) {
-		return findPath(mover, end, Collections.singletonList(end), data, true);
+	public static Path findPathIgnorePartyMembers(Creature mover, Point end, Data data) {
+		return findPath(mover, end, Collections.singletonList(end), data, EndPointStatus.IgnoreParty);
 	}
 	
 	/**
@@ -61,15 +80,23 @@ public class PathFinder {
 	 * @return the shortest path or null if no path exists
 	 */
 	
-	public static List<Point> findPath(Creature mover, Point end, List<Point> goals, Data data) {
-		return findPath(mover, end, goals, data, false);
+	public static Path findPath(Creature mover, Point end, List<Point> goals, Data data) {
+		return findPath(mover, end, goals, data, EndPointStatus.Normal);
 	}
 	
-	private static List<Point> findPath(Creature mover, Point end, List<Point> goals, Data data, boolean ignoreParty) {
+	private static Path findPath(Creature mover, Point end, List<Point> goals, Data data, EndPointStatus status) {
 		List<Creature> threateningCreatures = computeThreateningCreatures(mover, data);
 		
-		Point start = mover.getPosition();
+		Point start = mover.getLocation().toPoint();
 		Point lowest = new Point();
+		
+		// check the goals to see if the start is already contained in them
+		for (Point goal : goals) {
+			if (goal.equals(start)) {
+				// we are already at the end, so return an empty path
+				return new Path(data.area);
+			}
+		}
 		
 		// compute initial state of open and closed sets based on passabilitiy
 		for (int i = 0; i < data.width; i++) {
@@ -101,16 +128,9 @@ public class PathFinder {
 			// to be along the correct path based on the simple grid distance heuristic
 			int currentIndex = PathFinder.findLowestFScore(data.openSet, data.fScore, lowest);
 			
-			if (ignoreParty) {
-				if (PathFinder.isEndPointIgnorePartyMembers(lowest, goals, data)) {
-					// we are done, find the path using the parents list
-					return PathFinder.getFinalPath(data, start, lowest);
-				}
-			} else {
-				if (PathFinder.isEndPoint(lowest, goals, data)) {
-					// we are done, find the path using the parents list
-					return PathFinder.getFinalPath(data, start, lowest);
-				}
+			if (PathFinder.isEndPoint(lowest, goals, data, status)) {
+				// we are done, find the path using the parents list
+				return PathFinder.getFinalPath(data, start, lowest, threateningCreatures);
 			}
 			
 			data.openSet.remove(currentIndex);
@@ -131,7 +151,7 @@ public class PathFinder {
 				// if the elevation is different from the previous point elevation
 				if (data.area.getElevationGrid().getElevation(adjacent[i].x, adjacent[i].y) != lowestElev) continue;
 				
-				int tentativeGScore = data.gScore[lowest.x][lowest.y] + getCost(adjacent[i], threateningCreatures);
+				int tentativeGScore = data.gScore[lowest.x][lowest.y] + getCost(mover, data, adjacent[i], threateningCreatures);
 				
 				boolean tentativeIsBetter;
 				if (!data.open[adjacent[i].x][adjacent[i].y]) {
@@ -167,21 +187,18 @@ public class PathFinder {
 	private static List<Creature> computeThreateningCreatures(Creature mover, Data data) {
 		List<Creature> creatures = new ArrayList<Creature>();
 		
-		if (mover.stats().isHidden()) return creatures;
+		if (mover.stats.isHidden()) return creatures;
 		if (!Game.isInTurnMode()) return creatures;
 
 		synchronized(data.area.getEntities()) {
 			for (Entity entity : data.area.getEntities()) {
 				if (entity == mover) continue;
-				if (entity.getType() != Entity.Type.CREATURE) continue;
-
+				
+				if (! (entity instanceof Creature)) continue;
+				
 				Creature creature = (Creature)entity;
 
-				if (!creature.getFaction().isHostile(mover)) continue;
-
-				if (creature.moveAoOTakenThisRound(mover)) continue;
-
-				if (!creature.hasAttackOfOpportunityAvailable()) continue;
+				if (!creature.canTakeMoveAoOIgnoringLocation(mover)) continue;
 
 				creatures.add(creature);
 			}
@@ -191,47 +208,47 @@ public class PathFinder {
 	}
 	
 	/*
-	 * Gets the cost for moving into a given position.  Non-threatened tiles are preferred
+	 * Gets the cost for moving into a given position.  Non-threatened tiles and tiles
+	 * without traps are preferred
 	 */
 	
-	private static final int getCost(Point position, List<Creature> threateningCreatures) {
+	private static final int getCost(Creature mover, Data data, Point position, List<Creature> threateningCreatures) {
+		int cost = 1;
+		
+		// add cost for threatening creatures
 		for (Creature creature : threateningCreatures) {
-			if (creature.threatensPosition(position.x, position.y)) return 2;
+			if (creature.threatensPointInCurrentArea(position.x, position.y)) cost++;
 		}
 		
-		return 1;
+		// add cost for traps but only for player characters
+		if (mover.isPlayerFaction()) {
+			Trap trap = data.area.getTrapAtGridPoint(position);
+			if (trap != null && trap.isSpotted() && trap.getFaction().isHostile(mover)) {
+				cost += 2;
+			}
+		}
+		
+		return cost;
 	}
 	
-	/*
-	 * Returns true if the specified point is a member of the goals set.  The point must not currently
-	 * be occuppied by a creature, unless that creature is a party member
-	 */
-	
-	private static final boolean isEndPointIgnorePartyMembers(Point check, List<Point> goals, Data data) {
+	private static final boolean isEndPoint(Point check, List<Point> goals, Data data, EndPointStatus status) {
 		for (Point p : goals) {
 			if (check.x == p.x && check.y == p.y) {
 				Creature c = data.area.getCreatureAtGridPoint(check);
 				
 				if (c == null) return true;
 				
-				for (Creature partyMember : Game.curCampaign.party) {
-					if (partyMember == c) return true;
+				switch (status) {
+				case IgnoreCreatures:
+					return true;
+				case IgnoreParty:
+					for (Creature partyMember : Game.curCampaign.party) {
+						if (partyMember == c) return true;
+					}
+				default:
+					// fall through is intentional
+					return false;
 				}
-			}
-		}
-		
-		return false;
-	}
-	
-	/*
-	 * Returns true if the specified point is a member of the goals set.  The point
-	 * must not currently be occupied by another creature
-	 */
-	
-	private static final boolean isEndPoint(Point check, List<Point> goals, Data data) {
-		for (Point p : goals) {
-			if (check.x == p.x && check.y == p.y) {
-				return data.area.getCreatureAtGridPoint(check) == null;
 			}
 		}
 		
@@ -252,21 +269,37 @@ public class PathFinder {
 	 * start to end points
 	 */
 	
-	private static final List<Point> getFinalPath(Data data, Point start, Point end) {
+	private static final Path getFinalPath(Data data, Point start, Point end, List<Creature> threateningCreatures) {
+		List<Creature> attacksOfOpportunity = new ArrayList<Creature>();
+		
 		List<Point> path = new ArrayList<Point>();
 		Point cur = end;
 		
 		path.add(cur);
+		
 		while (cur.x != start.x || cur.y != start.y) {
-			path.add(new Point(data.parent[cur.x][cur.y]));
 			Point next = data.parent[cur.x][cur.y];
+			path.add(new Point(next));
 			cur = next;
+			
+			// we check for threatening here, that way we don't check the first point
+			// which is the goal point.  AoOs are provoked when moving out of a tile,
+			// and the mover won't move out of the goal tile
+			for (Creature creature : threateningCreatures) {
+				if (creature.threatensPointInCurrentArea(cur.x, cur.y)) {
+					attacksOfOpportunity.add(creature);
+				}
+			}
 		}
+		
+		// remove the last point, which is the starting position where the parent
+		// is already located
+		path.remove(path.size() - 1);
 		
 		if (path.size() > Game.ruleset.getValue("MaximumPathLength"))
 			return null;
 		
-		return path;
+		return new Path(data.area, path, attacksOfOpportunity);
 	}
 	
 	/*

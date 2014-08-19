@@ -11,9 +11,9 @@ function onTargetEnter(game, target, effect) {
 }
 
 function checkDeadlyVines(game, target, spell, parent) {
-	if (!parent.getAbilities().has("DeadlyVines")) return;
+	if (!parent.abilities.has("DeadlyVines")) return;
 
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var damage = parseInt(game.dice().d6() + casterLevel / 4);
 	
@@ -21,19 +21,20 @@ function checkDeadlyVines(game, target, spell, parent) {
 }
 
 function checkCrushingVines(game, target, spell, parent, parentEffect) {
-	if (!parent.getAbilities().has("CrushingVines")) return;
+	if (!parent.abilities.has("CrushingVines")) return;
 	
 	// 50% chance of crushing vines
 	if (game.dice().d2() == 1) return;
 	
-	if ( target.physicalResistanceCheck(spell.getCheckDifficulty(parent)) ) return;
+	if ( target.stats.getPhysicalResistanceCheck(spell.getCheckDifficulty(parent)) ) return;
 	
 	var effect = parentEffect.getSlot().createEffect();
 	effect.setDuration(1);
 	effect.setTitle("Crushing Vines");
+	effect.addNegativeIcon("items/enchant_fastMovement_small");
 	effect.getBonuses().add("Immobilized");
 			
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 		
 	var g2 = game.getBaseParticleGenerator("paralysis");
 	g2.setPosition(position.x, position.y + 10.0);

@@ -1,9 +1,0 @@
-size 6
-faction "Neutral"
-challenge 0
-creature "willowInn_barkeep" -6 -2
-creature "willowInn_barmaid" -5 2
-creature "willowInn_guest01" 0 2
-creature "willowInn_guest02" 1 2
-creature "willowInn_guest03" 4 0
-creature "willowInn_guest04" -1 -2

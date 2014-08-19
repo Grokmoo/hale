@@ -19,13 +19,17 @@
 
 package net.sf.hale.swingeditor;
 
+import java.awt.Canvas;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.AnimationState;
-import net.sf.hale.Area;
+import net.sf.hale.area.Area;
+import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.tileset.AreaTileGrid;
+import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
 /**
@@ -35,16 +39,21 @@ import net.sf.hale.util.Point;
  */
 
 public class AreaRenderer implements AreaTileGrid.AreaRenderer {
-	private Area area;
+	private final Canvas canvas;
+	private final Area area;
 	
+	private Point mouseGrid;
+	private Point mouseScreen;
 	private int scrollX, scrollY;
 	
 	/**
 	 * Creates a new Viewer for the specified Area
 	 * @param area
+	 * @param canvas
 	 */
 	
-	public AreaRenderer(Area area) {
+	public AreaRenderer(Area area, Canvas canvas) {
+		this.canvas = canvas;
 		this.area = area;
 	}
 	
@@ -76,13 +85,18 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		}
 		
 		// handle mouse
+		int mouseX = Mouse.getX() + scrollX;
+		int mouseY = (canvas.getHeight() - Mouse.getY()) + scrollY;
+		mouseGrid = AreaUtil.convertScreenToGrid(mouseX, mouseY);
+		mouseScreen = AreaUtil.convertGridToScreen(mouseGrid);
+		
 		if (Mouse.isButtonDown(0)) {
-			int mouseX = Mouse.getDX();
-			int mouseY = Mouse.getDY();
+			int mouseDX = Mouse.getDX();
+			int mouseDY = Mouse.getDY();
 			
 			if (Mouse.isGrabbed()) {
-				scrollX -= (mouseX);
-				scrollY += (mouseY);
+				scrollX -= (mouseDX);
+				scrollY += (mouseDY);
 			}
 
 			Mouse.setGrabbed(true);
@@ -95,14 +109,11 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		return area;
 	}
 
-	@Override public void drawTransitions() {
-		// TODO Auto-generated method stub
-		
-	}
+	@Override public void drawTransitions() { }
 
-	@Override public void drawInterface(Point selected, AnimationState as) {
-		// TODO Auto-generated method stub
-		
+	@Override public void drawInterface(AnimationState as) { 
+		if (mouseScreen != null) {
+			SpriteManager.getSprite("editor/hexBorder").draw(mouseScreen.x, mouseScreen.y);
+		}
 	}
-
 }

@@ -19,10 +19,9 @@
 
 package net.sf.hale.mainmenu;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -33,6 +32,8 @@ import org.lwjgl.opengl.DisplayMode;
 
 import net.sf.hale.Config;
 import net.sf.hale.Game;
+import net.sf.hale.loading.JSONOrderedObject;
+import net.sf.hale.loading.SaveWriter;
 import net.sf.hale.util.Logger;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ComboBox;
@@ -70,83 +71,62 @@ public class OptionsPopup extends PopupWindow {
 	}
 	
 	/**
-	 * Saves the config specified by the arguments to config.txt
+	 * Saves the config specified by the arguments to config.json
 	 * 
 	 * @param resX ResolutionX
 	 * @param resY ResolutionY
-	 * @param edResX EditorResolutionX
-	 * @param edResY EditorResolutionY
 	 * @param fullscreen true for fullscreen mode, false for windowed mode
 	 * @param tooltipDelay Delay until tooltips appear in milliseconds
 	 * @param combatDelay combat delay in milliseconds
 	 */
 	
-	private void writeConfigToFile(int resX, int resY, int edResX, int edResY,
-			boolean fullscreen, int tooltipDelay, int combatDelay, Map<String, String> keyBindings) {
-		File fout = new File("config.json");
+	private void writeConfigToFile(int resX, int resY, boolean fullscreen, int tooltipDelay,
+			int combatDelay, boolean showFPS, boolean combatAutoScroll,
+			Map<String, String> keyBindings) throws IOException {
+		JSONOrderedObject data = new JSONOrderedObject();
 		
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(fout));
-			
-			out.write("{"); out.newLine();
-			
-			writeSimpleKey(out, "Resolution", "[ " + resX + ", " + resY + " ]", 1);
-			writeSimpleKey(out, "Fullscreen", Boolean.toString(fullscreen), 1);
-			writeSimpleKey(out, "EditorResolution", "[ " + edResX + ", " + edResY + " ]", 1);
-			writeSimpleKey(out, "ShowFPS", Boolean.toString(Game.config.showFPS()), 1);
-			writeSimpleKey(out, "CapFPS", Boolean.toString(Game.config.capFPS()), 1);
-			writeSimpleKey(out, "TooltipDelay", Integer.toString(tooltipDelay), 1);
-			writeSimpleKey(out, "CombatDelay", Integer.toString(combatDelay), 1);
-			writeSimpleKey(out, "ScriptConsoleEnabled", Boolean.toString(Game.config.isScriptConsoleEnabled()), 1);
-			writeSimpleKey(out, "DebugMode", Boolean.toString(Game.config.isDebugModeEnabled()), 1);
-			writeSimpleKey(out, "WarningMode", Boolean.toString(Game.config.isWarningModeEnabled()), 1);
-			writeSimpleKey(out, "CheckForUpdatesInterval", Long.toString(Game.config.getCheckForUpdatesInterval()), 1);
-			if (Game.config.randSeedSet()) {
-				writeSimpleKey(out, "RandSeed", Long.toString(Game.config.getRandSeed()), 1);
-			}
-			
-			out.write("  \"Keybindings\" : {"); out.newLine();
-			
-			// write out keybindings
-			for (String actionName : keyBindings.keySet()) {
-				String keyName = keyBindings.get(actionName);
-				
-				writeSimpleKey(out, actionName, "\"" + keyName + "\"", 2);
-			}
-			
-			out.write("  }"); out.newLine();
-			
-			out.write("}"); out.newLine();
-			
-			out.close();
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Error writing config file.", e);
-		}
-	}
-	
-	private void writeSimpleKey(BufferedWriter out, String key, String value, int indent) throws IOException {
-		for (int i = 0; i < indent; i++) {
-			out.write("  ");
+		File fout = new File(Game.getConfigBaseDirectory() + "config.json");
+		PrintWriter out = new PrintWriter(fout);
+		
+		Integer[] resOut = new Integer[2];
+		resOut[0] = resX;
+		resOut[1] = resY;
+		data.put("Resolution", resOut);
+		data.put("Fullscreen", fullscreen);
+		data.put("ShowFPS", showFPS);
+		data.put("CapFPS", Game.config.capFPS());
+		data.put("CombatAutoScroll", combatAutoScroll);
+		data.put("TooltipDelay", tooltipDelay);
+		data.put("CombatDelay", combatDelay);
+		data.put("ScriptConsoleEnabled", Game.config.isScriptConsoleEnabled());
+		data.put("DebugMode", Game.config.isDebugModeEnabled());
+		data.put("WarningMode", Game.config.isWarningModeEnabled());
+		data.put("CheckForUpdatesInterval", Game.config.getCheckForUpdatesInterval());
+		if (Game.config.randSeedSet()) {
+			data.put("RandSeed", Game.config.getRandSeed());
 		}
 		
-		out.write("\"");
-		out.write(key);
-		out.write("\" : ");
-		out.write(value);
-		out.write(",");
-		out.newLine();
+		JSONOrderedObject bindingsOut = new JSONOrderedObject();
+		for (String actionName : keyBindings.keySet()) {
+			bindingsOut.put(actionName, keyBindings.get(actionName));
+		}
+		data.put("Keybindings", bindingsOut);
+		
+		SaveWriter.writeJSON(data, out);
+		out.close();
 	}
 	
 	private class Content extends DialogLayout {
-		private Label title, keybindingsTitle, editorTitle;
+		private Label title, keybindingsTitle;
 		private Button accept, cancel, reset;
 		
 		private final ToggleButton fullscreen;
 		private final ComboBox<String> modesBox;
 		private final SimpleChangableListModel<String> modesModel;
 		private final Scrollbar tooltipDelay, combatSpeed;
-		private final ComboBox<String> editorModesBox;
-		private final Label modesTitle, tooltipTitle, editorModesTitle;
+		private final ToggleButton fpsCounter;
+		private final ToggleButton autoscrollToggle;
+		private final Label modesTitle, tooltipTitle;
 		private final Label combatSpeedTitle;
 		private final ScrollPane keyBindingsPane;
 		private final KeyBindingsContent keyBindingsContent;
@@ -196,6 +176,14 @@ public class OptionsPopup extends PopupWindow {
 			combatSpeed.setTheme("combatspeedbar");
 			addHorizontalWidgets(combatSpeedTitle, combatSpeed);
 			
+			fpsCounter = new ToggleButton();
+			fpsCounter.setTheme("fpstoggle");
+			addHorizontalWidgets(fpsCounter);
+			
+			autoscrollToggle = new ToggleButton();
+			autoscrollToggle.setTheme("autoscrolltoggle");
+			addHorizontalWidgets(autoscrollToggle);
+			
 			mainV.addGap(DialogLayout.LARGE_GAP);
 			
 			keybindingsTitle = new Label();
@@ -207,24 +195,6 @@ public class OptionsPopup extends PopupWindow {
 			keyBindingsPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
 			keyBindingsPane.setTheme("keybindingspane");
 			addHorizontalWidgets(keyBindingsPane);
-			
-			mainV.addGap(DialogLayout.LARGE_GAP);
-			
-			editorTitle = new Label();
-			editorTitle.setTheme("editortitlelabel");
-			addHorizontalWidgets(editorTitle);
-			
-			editorModesTitle = new Label();
-			editorModesTitle.setTheme("editormodeslabel");
-			
-			editorModesBox = new ComboBox<String>(modesModel);
-			editorModesBox.addCallback(new Runnable() {
-				@Override public void run() {
-					setAcceptEnabled();
-				}
-			});
-			editorModesBox.setTheme("editormodesbox");
-			addHorizontalWidgets(editorModesTitle, editorModesBox);
 			
 			mainV.addGap(DialogLayout.LARGE_GAP);
 			
@@ -279,7 +249,7 @@ public class OptionsPopup extends PopupWindow {
 		}
 		
 		private void setAcceptEnabled() {
-			accept.setEnabled(modesBox.getSelected() != -1 && editorModesBox.getSelected() != -1);
+			accept.setEnabled(modesBox.getSelected() != -1);
 		}
 		
 		private void addHorizontalWidgets(Widget... widgets) {
@@ -315,6 +285,9 @@ public class OptionsPopup extends PopupWindow {
 				}
 			}
 			
+			boolean showFPS = this.fpsCounter.isActive();
+			
+			boolean combatAutoScroll = this.autoscrollToggle.isActive();
 			
 			DisplayMode mode = Game.allDisplayModes.get(this.modesBox.getSelected());
 			boolean fullscreen = this.fullscreen.isActive();
@@ -322,29 +295,32 @@ public class OptionsPopup extends PopupWindow {
 			// get tooltip delay in milliseconds
 			int tooltipDelay = this.tooltipDelay.getValue() * 100;
 			
-			DisplayMode edMode = Game.allDisplayModes.get(this.editorModesBox.getSelected());
-			
 			// get combat speed in milliseconds
-			int combatSpeed = this.combatSpeed.getValue() * 50;
+			int combatSpeed = (6 - this.combatSpeed.getValue()) * 50;
 			
-			writeConfigToFile(mode.getWidth(), mode.getHeight(), edMode.getWidth(),
-					edMode.getHeight(), fullscreen, tooltipDelay, combatSpeed, keyBindings);
+			try {
+				writeConfigToFile(mode.getWidth(), mode.getHeight(), fullscreen, tooltipDelay,
+						combatSpeed, showFPS, combatAutoScroll, keyBindings);
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error writing configuration file", e);
+			}
 			
 			if (mode.getWidth() == Game.config.getResolutionX() && mode.getHeight() == Game.config.getResolutionY() &&
 					fullscreen == Game.config.getFullscreen()) {
 				
-				Game.config = new Config(Game.configFile);
-				return;
+				Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
+			} else {
+				Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
+				mainMenu.restartMenu();
 			}
-			
-			Game.config = new Config(Game.configFile);
-			mainMenu.restartMenu();
 		}
 		
 		private void initializeWidgetsToConfig(Config config) {
 			fullscreen.setActive(config.getFullscreen());
 			tooltipDelay.setValue(config.getTooltipDelay() / 100);
-			combatSpeed.setValue(config.getCombatDelay() / 50);
+			combatSpeed.setValue(6 - (config.getCombatDelay() / 50));
+			fpsCounter.setActive(config.showFPS());
+			autoscrollToggle.setActive(config.autoScrollDuringCombat());
 			
 			modesModel.clear();
 			for (DisplayMode mode : Game.allDisplayModes) {
@@ -353,10 +329,6 @@ public class OptionsPopup extends PopupWindow {
 			
 			int index = Config.getMatchingDisplayMode(config.getResolutionX(), config.getResolutionY());
 			modesBox.setSelected(index);
-			
-			int editorIndex = Config.getMatchingDisplayMode(config.getEditorResolutionX(),
-					config.getEditorResolutionY());
-			editorModesBox.setSelected(editorIndex);
 			
 			keyBindingsContent.initializeWidgetsToConfig(config);
 			

@@ -1,3 +1,0 @@
-"potionStrength" 1 "Superb"
-"potionHealing" 1 "Fine"
-"scoutCommanderInsignia" 1 "Good"

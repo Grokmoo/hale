@@ -20,17 +20,20 @@
 package net.sf.hale.view;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.SavedParty;
+import net.sf.hale.characterbuilder.CharacterBuilder;
 import net.sf.hale.entity.CreatedItem;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.PC;
 import net.sf.hale.mainmenu.CharacterSelector;
 import net.sf.hale.mainmenu.ConfirmQuitPopup;
 import net.sf.hale.mainmenu.MainMenu;
 import net.sf.hale.mainmenu.MainMenuAction;
-import net.sf.hale.rules.SavedParty;
-import net.sf.hale.util.CreatureWriter;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ScrollPane;
@@ -113,6 +116,13 @@ public class CampaignConclusionPopup extends PopupWindow {
 	}
 	
 	private void nextCampaign() {
+		Iterator<Creature> partyIter = Game.curCampaign.party.allCreaturesIterator();
+		while (partyIter.hasNext()) {
+			Creature current = partyIter.next();
+			
+			current.abilities.cancelAllAuras();
+		}
+		
 		MainMenuAction action = new MainMenuAction(MainMenuAction.Action.NewGame);
 		action.setPreActionCallback(new CampaignLoader());
 		
@@ -123,7 +133,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 	private class CampaignLoader implements Runnable {
 		private String partyName;
 		private String campaignID;
-		private List<Creature> characters;
+		private List<PC> characters;
 		private String difficulty;
 		private int currencyCP;
 		private List<CreatedItem> createdItems;
@@ -131,7 +141,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 		private CampaignLoader() {
 			this.campaignID = nextCampaignID;
 			this.difficulty = Game.ruleset.getDifficultyManager().getCurrentDifficulty();
-			this.characters = new ArrayList<Creature>();
+			this.characters = new ArrayList<PC>();
 			
 			for (CharacterSelector selector : content.window.selectors) {
 				characters.add(selector.getCreature());
@@ -149,7 +159,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 		@Override public void run() {
 			MainMenu.writeLastOpenCampaign(campaignID);
 			
-			Game.entityManager.clearEntities();
+			EntityManager.clear();
 			
 			MainMenu mainMenu = new MainMenu();
 			
@@ -158,8 +168,8 @@ public class CampaignConclusionPopup extends PopupWindow {
 			}
 			
 			Game.curCampaign.addPartyCreatures(characters, partyName);
-			Game.curCampaign.party.setSelected(0);
-			Game.curCampaign.partyCurrency.addCP(currencyCP);
+			Game.curCampaign.party.setSelected(characters.get(0));
+			Game.curCampaign.partyCurrency.addValue(currencyCP);
 			mainMenu.setExitOnLoad();
 			
 			mainMenu.setExitCallback(new MainMenuExitCallback(difficulty));
@@ -178,11 +188,6 @@ public class CampaignConclusionPopup extends PopupWindow {
 		@Override public void run() {
 			// persist the difficulty
 			Game.ruleset.getDifficultyManager().setCurrentDifficulty(difficulty);
-			
-			// reload all player character sprites as textures have been reloaded
-			for (Creature creature : Game.curCampaign.party) {
-				creature.getSubIcons().cacheSprites();
-			}
 		}
 	}
 	
@@ -239,13 +244,11 @@ public class CampaignConclusionPopup extends PopupWindow {
 			int minLevel = Integer.MAX_VALUE;
 			int maxLevel = 0;
 			
-			for (Creature creature : Game.curCampaign.party) {
-				if (creature.isSummoned() || !creature.isPlayerSelectable()) continue;
+			for (PC creature : Game.curCampaign.party) {
+				minLevel = Math.min(minLevel, creature.roles.getTotalLevel());
+				maxLevel = Math.max(maxLevel, creature.roles.getTotalLevel());
 				
-				minLevel = Math.min(minLevel, creature.getRoles().getTotalLevel());
-				maxLevel = Math.max(maxLevel, creature.getRoles().getTotalLevel());
-				
-				String exportedID = CreatureWriter.saveCharacter(creature);
+				String exportedID = CharacterBuilder.savePC(creature);
 				
 				ids.add(exportedID);
 			}
@@ -300,7 +303,7 @@ public class CampaignConclusionPopup extends PopupWindow {
 			selectorPane = new ScrollPane(selectorPaneContent);
 			selectorPane.setFixed(ScrollPane.Fixed.HORIZONTAL);
 			
-			for (Creature creature : Game.curCampaign.party) {
+			for (PC creature : Game.curCampaign.party) {
 				if (creature.isSummoned()) continue;
 				
 				CharacterSelector selector = new CharacterSelector(creature, CampaignConclusionPopup.this.content);

@@ -22,7 +22,7 @@ package net.sf.hale.loading;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.util.Point;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
@@ -114,7 +114,8 @@ public class LoadingWaitPopup extends PopupWindow {
 			
 			if (bgSprite != null) {
 				GL11.glColor3f(1.0f, 1.0f, 1.0f);
-				bgSprite.draw(bgSpriteOffset);
+				//bgSprite.draw(bgSpriteOffset.x, bgSpriteOffset.y);
+				bgSprite.draw(0, 0, getWidth(), getHeight());
 			}
 		}
 		

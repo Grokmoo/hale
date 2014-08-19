@@ -1,5 +1,5 @@
 function onActivate(game, slot) {
-   game.addMenuLevel("Intense Casting");
+   if (!game.addMenuLevel("Intense Casting")) return;
 
    for (var i = 5; i <= 15; i += 5) {
       var cb = game.createButtonCallback(slot, "enableIntenseCasting");
@@ -16,6 +16,7 @@ function onActivate(game, slot) {
 function enableIntenseCasting(game, slot, level) {
 	var effect = slot.createEffect();
 	effect.setTitle(slot.getAbility().getName());
+	effect.addPositiveIcon("items/enchant_spellDamage_small");
 	
 	effect.getBonuses().addPenalty('SpellFailure', -(level + 5));
 	effect.getBonuses().addBonus('SpellDamage', level);

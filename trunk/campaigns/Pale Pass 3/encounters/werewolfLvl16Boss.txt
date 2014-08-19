@@ -1,8 +1,0 @@
-size 2
-faction "Hostile"
-challenge 160
-creature "werewolfGreater" 1 1
-creature "werewolf" -2 1
-creature "werewolf" 2 -1
-creature "werewolf" -1 -1
-creature "werewolf" 0 -1

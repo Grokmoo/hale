@@ -19,49 +19,78 @@
 
 package net.sf.hale.util;
 
+/**
+ * A mutable point class containing x and y coordinates.  This is useful in numerically
+ * intensive places when speed is important
+ * @author Jared
+ *
+ */
+
 public class Point {
-	public int x, y;
 	
-	public boolean valid = true;
+	/**
+	 * The x coordinate
+	 */
 	
-	public Point(boolean valid) {
-		this.valid = valid;
+	public int x;
+	
+	/**
+	 * The y coordinate
+	 */
+	
+	public int y;
+	
+	/**
+	 * Creates a new Point with the specified coordinates
+	 * @param x
+	 * @param y
+	 */
+	
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
 	}
 	
-	public Point(int a, int b) {
-		x = a;
-		y = b;
-	}
-	
-	public Point(double x, double y) {
-		this.x = (int)x;
-		this.y = (int)y;
-	}
+	/**
+	 * Creates a new Point with x and y coordinates equal to zero
+	 */
 	
 	public Point() {
-		x = 0;
-		y = 0;
+		this.x = 0;
+		this.y = 0;
 	}
 	
+	/**
+	 * Creates a new Point with the same coordinates as the specified Point
+	 * @param other the other Point
+	 */
+	
 	public Point(Point other) {
-		this.valid = other.valid;
 		this.x = other.x;
 		this.y = other.y;
 	}
 	
-	public boolean equals(Point p) {
-		if (p == null) return false;
+	/**
+	 * Two points are equal only if their coordinates are equal.  Note that since
+	 * Points are mutable, this can change
+	 */
+	
+	@Override public boolean equals(Object other) {
+		if (! (other instanceof Point) ) return false;
 		
-		if (!valid || !p.valid) return false;
-		
-		if (p.x == x && p.y == y) return true;
-		
-		return false;
+		return ((Point)other).x == this.x && ((Point)other).y == this.y;
 	}
 	
-	public double angleTo(Point b) {
+	/**
+	 * Returns the angle between this point and the specified other point, assuming both points
+	 * are in grid coordinates
+	 * @param otherGrid
+	 * @return the angle between this point and the specified point, in radians
+	 */
+	
+	public double angleTo(Point otherGrid) {
 		Point aScreen = AreaUtil.convertGridToScreen(this);
-		Point bScreen = AreaUtil.convertGridToScreen(b);
+		Point bScreen = AreaUtil.convertGridToScreen(otherGrid);
 		
 		int xDiff = bScreen.x - aScreen.x;
 		
@@ -72,23 +101,22 @@ public class Point {
 		else return Math.atan((double)yDiff / (double)xDiff) + Math.PI;
 	}
 	
-	public double screenDistance(Point b) {
+	/**
+	 * Returns the distance between this point and the specified point, in screen pixels.
+	 * This assumes that both this point and the specified point are in grid coordinates
+	 * @param otherGrid
+	 * @return the distance between this grid point and the specified grid point, in pixels
+	 */
+	
+	public double screenDistance(Point otherGrid) {
 		Point aScreen = AreaUtil.convertGridToScreen(this);
-		Point bScreen = AreaUtil.convertGridToScreen(b);
+		Point bScreen = AreaUtil.convertGridToScreen(otherGrid);
 		
 		int distSquared = AreaUtil.euclideanDistance2(aScreen.x, aScreen.y, bScreen.x, bScreen.y);
 		return Math.sqrt(distSquared);
 	}
 	
-	public Point toScreen() {
-		return AreaUtil.convertGridToScreenAndCenter(this);
-	}
-	
-	public Point toGrid() {
-		return AreaUtil.convertScreenToGrid(this);
-	}
-	
-	public String toString() {
-		return "(" + x + ", " + y + " : " + valid + ")";
+	@Override public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 }

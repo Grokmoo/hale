@@ -1,4 +1,0 @@
-size 0
-faction "Hostile"
-challenge 15
-creature "snakegiant" 0 0

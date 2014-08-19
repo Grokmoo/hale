@@ -10,7 +10,7 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = parseInt(3 + casterLevel / 3);
 	
@@ -22,11 +22,12 @@ function onTargetSelect(game, targeter) {
 	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect = targeter.getSlot().createEffect("effects/ward");
+	effect.addPositiveIcon("items/enchant_spellResistance_small");
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	
 	var g1 = game.getBaseParticleGenerator("shield");
-	g1.setPosition(target.getPosition());
+	g1.setPosition(target.getLocation());
 	g1.setDurationInfinite();
 	effect.addAnimation(g1);
 	

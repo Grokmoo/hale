@@ -1,9 +1,0 @@
-name "Powerful Blows"
-type "Offensive"
-description "When using Forceful Blows mode, you can now select a damage bonus of up to 80 for a corresponding attack penalty of up to 40."
-activateable false
-
-icon "icons/powerfulBlows"
-
-addPrereq Stat LevelAttackBonus 40
-addPrereq Ability ForcefulBlows

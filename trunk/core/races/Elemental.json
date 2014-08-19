@@ -1,7 +1,6 @@
 { "name" : "Elemental",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedMedium",
+  "defaultWeapon" : "unarmedMedium",
   
   "racialTypes" : [
     "Elemental"

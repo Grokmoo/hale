@@ -1,6 +1,6 @@
 /*
  * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
+ * Copyright (C) 2012 Jared Stephen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,983 +19,462 @@
 
 package net.sf.hale.entity;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import de.matthiasmann.twl.Color;
 
-import net.sf.hale.AreaTrigger;
-import net.sf.hale.Encounter;
 import net.sf.hale.Game;
 import net.sf.hale.ability.AbilitySlot;
 import net.sf.hale.ability.CreatureAbilitySet;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.ScriptFunctionType;
-import net.sf.hale.ability.Scriptable;
-import net.sf.hale.ability.AbilityActivator;
-import net.sf.hale.bonus.Bonus;
+import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.bonus.StatManager;
-import net.sf.hale.editor.reference.CreatureReferenceList;
-import net.sf.hale.editor.reference.ReferenceList;
-import net.sf.hale.editor.reference.Referenceable;
+import net.sf.hale.icon.ComposedCreatureIcon;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
+import net.sf.hale.icon.IconRenderer;
+import net.sf.hale.icon.SimpleIcon;
+import net.sf.hale.icon.SubIcon;
+import net.sf.hale.icon.SubIconRenderer;
+import net.sf.hale.interfacelock.EntityOffsetAnimation;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
-import net.sf.hale.quickbar.Quickbar;
-import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.Attack;
 import net.sf.hale.rules.Damage;
-import net.sf.hale.rules.DamageType;
-import net.sf.hale.rules.Faction;
-import net.sf.hale.rules.LootList;
-import net.sf.hale.rules.Race;
-import net.sf.hale.rules.Role;
 import net.sf.hale.rules.RoleSet;
-import net.sf.hale.rules.RoundTimer;
-import net.sf.hale.rules.Ruleset;
-import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
-import net.sf.hale.rules.SubIcon;
-import net.sf.hale.rules.Ruleset.Gender;
 import net.sf.hale.util.AreaUtil;
+import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
-public class Creature extends Entity implements Referenceable, AbilityActivator {
-	private Ruleset.Gender gender = null;
-	private String race = null;
-	private String name = null;
-	private String portrait = null;
+/**
+ * A creature is an entity that moves and interacts with the world around.
+ * Creatures include player characters and non player characters
+ * @author Jared
+ *
+ */
+
+public abstract class Creature extends Entity {
 	
-	private Scriptable aiScriptManager;
-	private int minCurrencyReward = 0;
-	private int maxCurrencyReward = 0;
-	private Set<AbilityActivator> moveAoOsThisRound;
-	private int attacksOfOpportunityThisRound = 0;
-	private RoundTimer roundTimer;
-	private boolean alreadySearchedForHiddenCreatures = false;
-	private boolean isCurrentlyMoving = false;
-	private boolean pregenerated;
-	private boolean aiActive = false;
-	private StatManager statManager;
+	private final CreatureTemplate template;
 	
-	private int experiencePoints = 0;
-	private int currentHP = 1;
-	private int temporaryHP = 0;
-	private boolean dying = false;
-	private boolean dead = false;
-	private boolean summoned = false;
-	private int summonedDuration = 0;
-	private int summonedRoundNumber = 0;
-	private boolean immortal = false;
-	private int unspentSkillPoints = 0;
-	private Encounter aiEncounter;
-	private LootList loot;
-	private Inventory inventory;
-	private SkillSet skillset;
-	private RoleSet roleSet;
-	private CreatureAbilitySet abilities;
-	private Quickbar quickbar;
+	private final IconRenderer renderer;
+	
+	// animation state of the creature in the area relative to its
+	// normal position
+	private Point animatingOffset;
+	private EntityOffsetAnimation offsetAnimation;
+	
+	// the encounter is the group containing this creature; it is also used
+	// for group aspects of the AI
+	private Encounter encounter;
+	
+	private boolean[][] visibility;
+	
+	private int currentHitPoints, temporaryHitPoints;
+	
+	// the round number at which this creature will be unsummoned
+	// for creatures which are not summoned creatures, this value will be equal to -1
+	private int summonExpiration;
+	
+	// number of attacks of opportunity this creature has left for this round
+	private int attacksOfOpportunityAvailable;
+	
+	private volatile boolean isCurrentlyMoving;
+	
+	private boolean alreadySearchedForHiddenCreatures;
+	
+	// the list of targets that this creature has already taken a movement caused
+	// AoO against this round.  This will extremely rarely hold more than 1 or 2 members,
+	// so List is better for Set, even though we will be searching it
+	private final List<Creature> moveAoOsThisRound;
+	
+	/**
+	 * Controls all primary and secondary statistics for this creature
+	 */
+	
+	public final StatManager stats;
+	
+	/**
+	 * Holds all equipped and unequipped items
+	 */
+	
+	public final Inventory inventory;
+	
+	/**
+	 * The set of roles currently held by this creature
+	 */
+	
+	public final RoleSet roles;
+	
+	/**
+	 * The skills and associated skill points for this creature
+	 */
+	
+	public final SkillSet skills;
+	
+	/**
+	 * The set of abilities currently owned by this creature
+	 */
+	
+	public final CreatureAbilitySet abilities;
+	
+	/**
+	 * The timer keeping track of this creature's Action Points (AP)
+	 */
+	
+	public final RoundTimer timer;
+	
+	@Override public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
+		super.load(data, area, refHandler);
+		
+		this.currentHitPoints = data.get("currentHitPoints", 0);
+		
+		if (data.containsKey("temporaryHitPoints"))
+			this.temporaryHitPoints = data.get("temporaryHitPoints", 0);
+		else
+			this.temporaryHitPoints = 0;
+		
+		if (data.containsKey("summonExpiration"))
+			this.summonExpiration = data.get("summonExpiration", 0);
+		else
+			this.summonExpiration = -1;
+		
+		this.skills.load(data.getObject("skills"));
+		this.roles.load(data.getObject("roles"), false);
+		this.abilities.load(data.getObject("abilities"), refHandler);
+		this.inventory.load(data.getObject("inventory"), refHandler);
+		
+		stats.recomputeAllStats();
+		timer.reset();
+	}
 	
 	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = super.save();
+		JSONOrderedObject out = super.save();
 		
-		if (Game.curCampaign.party.isPCPartyMember(this)) {
-			data.put("isPCPartyMember", true);
-			data.put("name", name);
-			data.put("gender", gender.toString());
-			data.put("race", race);
-			data.put("portrait", portrait);
-			
-			if (this.drawOnlyHandSubIcons) {
-				data.put("drawOnlyHandSubIcons", true);
-			}
-			
-			if (subIconList != null) {
-				if (subIconList.getHairIcon() != null) {
-					data.put("hairIcon", subIconList.getHairIcon());
-					data.put( "hairColor", '#' + Integer.toHexString(subIconList.getHairColor().toARGB()) );
-				}
+		out.put("currentHitPoints", currentHitPoints);
+		
+		if (temporaryHitPoints > 0)
+			out.put("temporaryHitPoints", temporaryHitPoints);
+		
+		if (summonExpiration > 0)
+			out.put("summonExpiration", summonExpiration);
+		
+		out.put("inventory", inventory.save());
+		out.put("roles", roles.save());
+		out.put("skills", skills.save());
+		out.put("abilities", abilities.save());
+		
+		return out;
+	}
+	
+	/**
+	 * Creates a new Creature by parsing the specified JSON.  The template
+	 * has already been defined, and then additional data is read from the JSON
+	 * to fully define the creature
+	 * @param template
+	 * @param parser
+	 */
+	
+	protected Creature(CreatureTemplate template, SimpleJSONParser parser) {
+		super(template);
+		
+		this.template = template;
+		this.renderer = createIconRenderer();
+		
+		// parse attributes
+		stats = new StatManager(this);
+		SimpleJSONObject obj = parser.getObject("attributes");
+		int[] attributes = new int[6];
+		attributes[0] = obj.get("strength", 0);
+		attributes[1] = obj.get("dexterity", 0);
+		attributes[2] = obj.get("constitution", 0);
+		attributes[3] = obj.get("intelligence", 0);
+		attributes[4] = obj.get("wisdom", 0);
+		attributes[5] = obj.get("charisma", 0);
+		stats.setAttributes(attributes);
+		
+		// parse skills
+		skills = new SkillSet(this);
+		if (parser.containsKey("skills"))
+			skills.load(parser.getObject("skills"));
+		
+		// parse abilities
+		abilities = new CreatureAbilitySet(this);
+		if (parser.containsKey("abilities")) {
+			SimpleJSONArray abilitiesArray = parser.getArray("abilities");
+			for (SimpleJSONArrayEntry entry : abilitiesArray) {
+				obj = entry.getObject();
 				
-				if (subIconList.getBeardIcon() != null) {
-					data.put("beardIcon", subIconList.getBeardIcon());
-					data.put( "beardColor", '#' + Integer.toHexString(subIconList.getBeardColor().toARGB()) );
-				}
+				String id = obj.get("id", null);
+				int level = obj.get("levelObtained", 0);
 				
-				data.put( "skinColor", '#' + Integer.toHexString(subIconList.getSkinColor().toARGB()) );
-				data.put( "clothingColor", '#' + Integer.toHexString(subIconList.getClothingColor().toARGB()) );
-
+				try {
+					abilities.add(Game.ruleset.getAbility(id), level);
+				} catch (Exception e) {
+					Logger.appendToErrorLog("Error loading ability " + id, e);
+				}
 			}
-			
-			if (subIconList == null || drawOnlyHandSubIcons) {
-				data.put("icon", getIcon());
-				data.put( "iconColor", '#' + Integer.toHexString(getIconColor().toARGB()) );
-			}
-			
-			data.put("strength", statManager.get(Stat.BaseStr));
-			data.put("dexterity", statManager.get(Stat.BaseDex));
-			data.put("constitution", statManager.get(Stat.BaseCon));
-			data.put("intelligence", statManager.get(Stat.BaseInt));
-			data.put("wisdom", statManager.get(Stat.BaseWis));
-			data.put("charisma", statManager.get(Stat.BaseCha));
 		}
 		
-		data.put("xp", experiencePoints);
-		data.put("currentHP", currentHP);
+		// parse roles
+		roles = new RoleSet(this);
+		roles.load(parser.getObject("roles"), true);
 		
-		// if the encounter is not set, then the creature faction must be set directly
-		if (this.getEncounter() == null)
-			data.put("faction", this.getFaction().getName());
+		timer = new RoundTimer(this);
 		
-		if (temporaryHP > 0) data.put("temporaryHP", temporaryHP);
+		summonExpiration = -1;
 		
-		if (dying) data.put("dying", true);
-		if (dead) data.put("dead", true);
+		moveAoOsThisRound = new ArrayList<Creature>(2);
 		
-		if (summoned) {
-			data.put("summoned", true);
-			data.put("summonedDuration", summonedDuration);
-			data.put("summonedRoundNumber", summonedRoundNumber);
-		}
+		animatingOffset = new Point();
 		
-		if (immortal) data.put("immortal", true);
+		// 1 hit point prevents this creature from starting out dead
+		currentHitPoints = 1;
 		
-		data.put("unspentSkillPoints", unspentSkillPoints);
-		
-		if (loot.alreadyGenerated())
-			data.put("lootAlreadyGenerated", true);
-		
-		JSONOrderedObject invData = inventory.save();
-		if (!invData.isEmpty())
-			data.put("inventory", invData);
-		
-		JSONOrderedObject skillData = skillset.save();
-		if (!skillData.isEmpty())
-			data.put("skillSet", skillData);
-		
-		data.put("roleSet", roleSet.save());
-		
-		JSONOrderedObject abilityData = abilities.save();
-		if (!abilityData.isEmpty())
-			data.put("abilitySet", abilityData);
-		
-		if (quickbar != null)
-			data.put("quickbar", quickbar.save());
-		
-		return data;
-	}
-	
-	@Override public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
-		super.load(data, refHandler);
-		
-		this.experiencePoints = data.get("xp", 0);
-		this.currentHP = data.get("currentHP", 0);
-		
-		if (data.containsKey("faction"))
-			this.setFaction(data.get("faction", null));
-		
-		if (data.containsKey("temporaryHP"))
-			this.temporaryHP = data.get("temporaryHP", 0);
-		
-		if (data.containsKey("dying"))
-			this.dying = data.get("dying", false);
-		
-		if (data.containsKey("dead"))
-			this.dead = data.get("dead", false);
-		
-		if (data.containsKey("summoned")) {
-			this.summoned = data.get("summoned", false);
-			this.summonedDuration = data.get("summonedDuration", 0);
-			this.summonedRoundNumber = data.get("summonedRoundNumber", 0);
-			this.aiActive = summoned;
-		}
-		
-		if (data.containsKey("immortal"))
-			this.immortal = data.get("immortal", false);
-		
-		this.unspentSkillPoints = data.get("unspentSkillPoints", 0);
-		
-		if (data.containsKey("lootAlreadyGenerated"))
-			this.loot.setAlreadyGenerated(data.get("lootAlreadyGenerated", false));
-		
-		if (data.containsKey("skillSet"))
-			skillset.load(data.getObject("skillSet"));
-		else
-			skillset.clear();
-		
-		// clear pre-loaded abilities
-		abilities.clear();
-		Game.ruleset.getRace(race).addAbilitiesToCreature(this);
-		
-		// add the roles which will also add role abilities
-		this.roleSet = RoleSet.load(data.getObject("roleSet"), this);
-		
-		if (data.containsKey("abilitySet"))
-			abilities.load(data.getObject("abilitySet"), refHandler);
-		
-		if (data.containsKey("inventory"))
-			inventory.load(data.getObject("inventory"), refHandler);
-		else
-			inventory.clear();
-		
-		// quickbar needs to be loaded last since it reference inventory and abilities
-		if (data.containsKey("quickbar"))
-			quickbar.load(data.getObject("quickbar"));
-		
-		this.reloadAllSubIcons();
-		this.stats().recomputeAllStats();
-		
-		if (isPlayerSelectable() || summoned) {
-			roundTimer.reset();
+		// parse inventory Note that Inventory MUST be initialized last
+		inventory = new Inventory(this);
+		try {
+			inventory.load(parser.getObject("inventory"), null);
+		} catch (LoadGameException e) {
+			Logger.appendToErrorLog("Error loading inventory for " + template.getID(), e);
 		}
 	}
 	
-	public Creature(String id, String portrait, String icon, String name, Ruleset.Gender gender, Race race, String faction,
-					boolean playerSelectable, Point position, String description) {
-		super(id, icon, position, description, faction);
-		this.type = Entity.Type.CREATURE;
-		this.name = name;
-		this.gender = gender;
-		this.portrait = portrait;
-		this.setPlayerSelectable(playerSelectable);
-		this.inventory = new Inventory(this);
-		this.skillset = new SkillSet();
-		this.roleSet = new RoleSet(this);
-		this.roundTimer = new RoundTimer(this);
+	/**
+	 * Creates a new creature from the specified template.  This is used for
+	 * creating buildable characters in the character editor, and for loading PCs
+	 * @param template the creature template
+	 */
+	
+	protected Creature(CreatureTemplate template) {
+		super(template);
 		
-		this.statManager = new StatManager(this);
+		this.template = template;
 		
-		this.loot = new LootList();
+		// only initialize the icon renderer if race and gender are defined
+		// this is only applicable for the character builder, where they might
+		// not be defined yet
+		if (template.getRace() != null && template.getGender() != null) {
+			this.renderer = createIconRenderer();
+		} else
+			this.renderer = IconFactory.emptyIcon;
 		
-		this.abilities = new CreatureAbilitySet(this);
+		stats = new StatManager(this);
+		roles = new RoleSet(this);
+		skills = new SkillSet(this);
+		abilities = new CreatureAbilitySet(this);
+		timer = new RoundTimer(this);
 		
-		if (playerSelectable) {
-			quickbar = new Quickbar(this);
-		}
+		summonExpiration = -1;
 		
-		setRace(race);
+		moveAoOsThisRound = new ArrayList<Creature>(2);
 		
-		moveAoOsThisRound = new HashSet<AbilityActivator>();
+		animatingOffset = new Point();
+		
+		// 1 hit point prevents this creature from starting out dead
+		currentHitPoints = 1;
+		
+		// Note that Inventory MUST be initialized last
+		inventory = new Inventory(this);
 	}
 	
-	public Creature(String id, String name) {
-		super(id);
-		this.type = Entity.Type.ENTITY;
-		this.name = name;
-	}
+	/**
+	 * Creates a new copy of the specified creature.  Permanent creature data such as
+	 * stats, inventory, roles, skills, and abilities are copied.  No other data is copied,
+	 * however
+	 * @param other the creature to copy
+	 */
 	
-	public Creature(Creature other) { 
+	protected Creature(Creature other) {
 		super(other);
 		
-		this.type = Entity.Type.CREATURE;
-		this.name = other.name;
-		this.gender = other.gender;
-		this.race = other.race;
-		this.portrait = other.portrait;
-		this.experiencePoints = other.experiencePoints;
-		this.currentHP = other.currentHP;
-		this.temporaryHP = other.temporaryHP;
-		this.dying = other.dying;
-		this.dead = other.dead;
+		this.template = other.template;
+		this.renderer = createIconRenderer();
 		
-		this.statManager = new StatManager(other.statManager, this);
+		stats = new StatManager(other.stats, this);
+		roles = new RoleSet(other.roles, this);
+		skills = new SkillSet(other.skills, this);
+		abilities = new CreatureAbilitySet(other.abilities, this);
+		timer = new RoundTimer(this);
 		
-		this.roundTimer = new RoundTimer(other.roundTimer, this);
+		summonExpiration = -1;
 		
-		this.inventory = new Inventory(other.getInventory(), this);
-		this.skillset = new SkillSet(other.skillset);
-		this.roleSet = new RoleSet(other.roleSet, this);
+		moveAoOsThisRound = new ArrayList<Creature>(2);
 		
-		this.minCurrencyReward = other.minCurrencyReward;
-		this.maxCurrencyReward = other.maxCurrencyReward;
+		animatingOffset = new Point();
 		
-		this.loot = new LootList(other.loot);
+		// 1 hit point prevents this creature from starting out dead
+		currentHitPoints = 1;
 		
-		this.immortal = other.immortal;
-		
-		this.unspentSkillPoints = other.unspentSkillPoints;
-		
-		this.abilities = new CreatureAbilitySet(other.abilities, this);
-		
-		if (other.aiScriptManager != null)
-			this.aiScriptManager = new Scriptable(other.aiScriptManager);
-
-		if (other.quickbar != null)
-			this.quickbar = new Quickbar(other.quickbar, this);
-		
-		moveAoOsThisRound = new HashSet<AbilityActivator>();
-		
-		this.pregenerated = other.pregenerated;
+		// Note that Inventory MUST be initialized last
+		inventory = new Inventory(other.inventory, this);
 	}
 	
-	public boolean isPregenerated() { return pregenerated; }
-	
-	public void setPregenerated(boolean pregenerated) { this.pregenerated = pregenerated; }
-	
-	@Override public RoundTimer getTimer() { return roundTimer; }
-	
-	public Quickbar getQuickbar() { return quickbar; }
-	
-	public void setAIScript(String scriptLocation) {
-		if (scriptLocation == null) {
-			this.aiScriptManager = null;
+	private IconRenderer createIconRenderer() {
+		Icon icon = template.getIcon();
+		if (icon instanceof ComposedCreatureIcon) {
+			return new SubIconRenderer((ComposedCreatureIcon)icon, template.getRace(), template.getGender());
 		} else {
-
-			String script = ResourceManager.getScriptResourceAsString(scriptLocation);
-
-			this.aiScriptManager = new Scriptable(script, scriptLocation, false);
+			return icon;
 		}
 	}
 	
-	public String getAIScript() {
-		return aiScriptManager.getScriptLocation();
+	/**
+	 * Sets the animation which controls the offset point
+	 * @param animation the offset animation, or null to cancel any
+	 * current offset animation
+	 */
+	
+	public void setOffsetAnimation(EntityOffsetAnimation animation) {
+		if (offsetAnimation != null)
+			offsetAnimation.cancel();
+		
+		offsetAnimation = animation;
+		
+		if (offsetAnimation != null)
+			offsetAnimation.setAnimatingPoint(this.animatingOffset);
 	}
 	
-	public boolean hasAI() {
-		return aiScriptManager != null;
+	/**
+	 * Flags this creature as currently moving, or not
+	 * @param isMoving
+	 */
+	
+	public void setCurrentlyMoving(boolean isMoving) {
+		this.isCurrentlyMoving = isMoving;
 	}
 	
-	public Scriptable getAI() {
-		return aiScriptManager;
+	public boolean isCurrentlyMoving() {
+		return isCurrentlyMoving;
 	}
 	
-	public int getUnspentSkillPoints() { return unspentSkillPoints; }
-	public void setUnspentSkillPoints(int points) { this.unspentSkillPoints = points; }
+	/**
+	 * Sets the current value of the animating offset point.  If there
+	 * is an animation playing, this will be overridden on the next
+	 * animation update
+	 * @param x
+	 * @param y
+	 */
 	
-	public boolean isImmortal() { return immortal; }
-	public void setImmortal(boolean immortal) { this.immortal = immortal; }
-	
-	public Color getHairColor() {
-		if (subIconList == null) return Color.WHITE;
-		
-		return subIconList.getHairColor();
+	public void setOffsetPoint(int x, int y) {
+		animatingOffset.x = x;
+		animatingOffset.y = y;
 	}
 	
-	public String getHairIcon() {
-		if (subIconList == null) return null;
-		
-		return subIconList.getHairIcon();
+	/**
+	 * Returns the x coordinate of this creature's animating offset point
+	 * @return the x coordinate
+	 */
+	
+	public int getAnimatingOffsetX() { return animatingOffset.x; }
+	
+	/**
+	 * Returns the y coordinate of this creature's animating offset point
+	 * @return the y coordinate
+	 */
+	
+	public int getAnimatingOffsetY() { return animatingOffset.y; }
+	
+	/**
+	 * Gets the template that this creature is based on
+	 * @return the template
+	 */
+	
+	@Override public CreatureTemplate getTemplate() { return template; }
+	
+	/**
+	 * Returns true if this is a summoned creature which will eventually be unsummoned,
+	 * disappearing from the area, or false if it is a normal creature
+	 * @return whether this is a summoned creature
+	 */
+	
+	public boolean isSummoned() {
+		return summonExpiration != -1;
 	}
 	
-	public void setBeardSubIcon(String icon, Color color) {
-		if (subIconList == null) return;
-		
-		this.subIconList.remove(SubIcon.Type.Beard);
-		
-		SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Beard, getRace(), gender);
-		factory.setPrimaryIcon(icon, color);
-		this.subIconList.add(factory.createSubIcon());
-	}
-	
-	public void setHairSubIcon(String hairSubIcon, Color color) {
-		if (subIconList == null) return;
-		
-		this.subIconList.remove(SubIcon.Type.Hair);
-		
-		SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Hair, getRace(), gender);
-		factory.setPrimaryIcon(hairSubIcon, color);
-		this.subIconList.add(factory.createSubIcon());
-	}
-	
-	public void reloadAllSubIcons() {
-		if (subIconList == null) return;
-
-		String hairIcon = subIconList.getHairIcon();
-		Color hairColor = subIconList.getHairColor();
-
-		String beardIcon = subIconList.getBeardIcon();
-		Color beardColor = subIconList.getBeardColor();
-
-		subIconList.clear();
-
-		if (!drawOnlyHandSubIcons())
-			addBaseSubIcons();
-
-		setHairSubIcon(hairIcon, hairColor);
-		setBeardSubIcon(beardIcon, beardColor);
-
-		inventory.addAllSubIcons();
-	}
-	
-	public void clearSubIcons() {
-		if (this.subIconList == null) return;
-		
-		this.subIconList.clear();
-	}
-	
-	public String getSubIcon(String type) {
-		return subIconList.getIcon(type);
-	}
-	
-	public Color getSubIconColor(String type) {
-		return subIconList.getColor(type);
-	}
-	
-	public String getSubIcon(SubIcon.Type type) {
-		return subIconList.getIcon(type);
-	}
-	
-	public Color getSubIconColor(SubIcon.Type type) {
-		return subIconList.getColor(type);
-	}
-	
-	public void addBaseSubIcons() {
-		if (this.subIconList == null) return;
-		if (this.race == null || this.gender == null) return;
-		
-		Race race = this.getRace();
-		
-		subIconList.remove(SubIcon.Type.BaseBackground);
-		subIconList.remove(SubIcon.Type.BaseForeground);
-		subIconList.remove(SubIcon.Type.Ears);
-		
-		switch (this.gender){
-		case Male:
-			if (race.getMaleBackgroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseBackground, race, gender);
-				factory.setPrimaryIcon(race.getMaleBackgroundIcon(), subIconList.getSkinColor());
-				factory.setSecondaryIcon(race.getMaleClothesIcon(), subIconList.getClothingColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			
-			if (race.getMaleForegroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseForeground, race, gender);
-				factory.setPrimaryIcon(race.getMaleForegroundIcon(), subIconList.getSkinColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			
-			if (race.getMaleEarsIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Ears, race, gender);
-				factory.setPrimaryIcon(race.getMaleEarsIcon(), subIconList.getSkinColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			break;
-		case Female:
-			if (race.getFemaleBackgroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseBackground, race, gender);
-				factory.setPrimaryIcon(race.getFemaleBackgroundIcon(), subIconList.getSkinColor());
-				factory.setSecondaryIcon(race.getFemaleClothesIcon(), subIconList.getClothingColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			
-			if (race.getFemaleForegroundIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.BaseForeground, race, gender);
-				factory.setPrimaryIcon(race.getFemaleForegroundIcon(), subIconList.getSkinColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			
-			if (race.getFemaleEarsIcon() != null) {
-				SubIcon.Factory factory = new SubIcon.Factory(SubIcon.Type.Ears, race, gender);
-				factory.setPrimaryIcon(race.getFemaleEarsIcon(), subIconList.getSkinColor());
-				subIconList.add(factory.createSubIcon());
-			}
-			break;
-		}
-	}
-	
-	public boolean isCurrentlyMoving() { return isCurrentlyMoving; }
-	public void setCurrentlyMoving(boolean currentlyMoving) { this.isCurrentlyMoving = currentlyMoving; }
-	
-	public LootList getLoot() { return loot; }
-	
-	public Encounter getEncounter() { return this.aiEncounter; }
-	public void setEncounter(Encounter encounter) { this.aiEncounter = encounter; }
-	
-	public void setAIActive(boolean active) {
-		this.aiActive = active;
-	}
-	public boolean isAIActive() {
-		return this.aiActive;
-	}
-	
-	@Override public void resetAll() {
-		super.resetAll();
-		
-		if (!this.isDead()) {
-			this.temporaryHP = 0;
-			this.currentHP = this.statManager.get(Stat.MaxHP);
-		}
-		
-		elapseRounds(1);
-	}
-	
-	@Override public void newEncounter() {
-		super.newEncounter();
-		
-		roundTimer.reset();
-		
-		if (!this.isDead()) {
-			if (this.currentHP < this.statManager.get(Stat.MaxHP)) {
-				this.healDamage(1 + this.statManager.get(Stat.MaxHP) / Game.ruleset.getValue("OutsideCombatHealingFactor"));
-			}
-		}
-	}
-	
-	@Override public boolean elapseRounds(int rounds) {
-		super.elapseRounds(rounds);
-		
-		moveAoOsThisRound.clear();
-		
-		inventory.elapseRounds(rounds);
-		
-		roundTimer.reset();
-		
-		attacksOfOpportunityThisRound = 0;
-		
-		if (dying && Game.isInTurnMode()) {
-			takeDamage(rounds, null, false);
-			Game.mainViewer.addMessage("red", getName() + " is dying with " + getCurrentHP() + " HP.");
-		}
-		
-		if (summoned && summonedRoundNumber + summonedDuration <= Game.curCampaign.getDate().getTotalRoundsElapsed())
-			kill();
-		
-		alreadySearchedForHiddenCreatures = false;
-		
-		boolean returnValue = abilities.elapseRounds(rounds);
-		
-		updateViewers();
-		
-		if (this.getCurrentHP() > 0)
-			dying = false;
-		
-		return returnValue;
-	}
-	
-	public boolean moveAoOTakenThisRound(AbilityActivator creature) {
-		return moveAoOsThisRound.contains(creature);
-	}
-	
-	public void takeMoveAoO(Creature creature) {
-		this.moveAoOsThisRound.add(creature);
-	}
-	
-	public void takeAttackOfOpportunity() { attacksOfOpportunityThisRound++; }
-	
-	public boolean hasAttackOfOpportunityAvailable() {
-		return (attacksOfOpportunityThisRound < stats().getAttacksOfOpportunity());
-	}
-	
-	public Attack attack(Creature defender, int itemSlot) {
-		return new Attack(this, defender, itemSlot);
-	}
-	
-	public Attack mainHandAttack(Creature defender) {
-		roundTimer.performAttack();
-		
-		return attack(defender, Inventory.EQUIPPED_MAIN_HAND);
-	}
-	
-	public Attack offHandAttack(Creature defender) {
-		//roundTimer.performAttack();
-		
-		return attack(defender, Inventory.EQUIPPED_OFF_HAND);
-	}
-	
-	public final boolean threatensPosition(int x, int y) {
-		Item weapon = inventory.getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
-		if (weapon == null) weapon = getRace().getDefaultWeapon();
-		
-		int dist = AreaUtil.distance(this.getX(), this.getY(), x, y);
-		if (dist > weapon.getThreatenMax() || dist < weapon.getThreatenMin()) return false;
-		
-		if (this.isHelpless()) return false;
-		
-		if (!this.getVisibility()[x][y]) return false;
-		
-		if (!weapon.threatens()) return false;
-		
-		// can only attack on same elevation with melee weapons
-		if (weapon.isMeleeWeapon()) {
-			byte curElev = Game.curCampaign.curArea.getElevationGrid().getElevation(this.getX(), this.getY());
-			byte targetElev = Game.curCampaign.curArea.getElevationGrid().getElevation(x, y);
-			if (curElev != targetElev) return false;
-		}
-		
-		return true;
-	}
-	
-	public boolean canAttackPosition(int x, int y) {
-		if (this.isHelpless()) return false;
-		
-		Item weapon = inventory.getEquippedItem(Inventory.EQUIPPED_MAIN_HAND);
-		if (weapon == null) weapon = getRace().getDefaultWeapon();
-		
-		if (!this.getVisibility(x, y)) return false;
-		
-		int dist = AreaUtil.distance(this.getX(), this.getY(), x, y);
-		
-		if (weapon.getWeaponType() == Item.WeaponType.MELEE) {
-			if (dist > weapon.getThreatenMax() || dist < weapon.getThreatenMin()) return false;
-			
-			// can only attack on same elevation with a melee weapon
-			byte curElev = Game.curCampaign.curArea.getElevationGrid().getElevation(this.getX(), this.getY());
-			byte targetElev = Game.curCampaign.curArea.getElevationGrid().getElevation(x, y);
-			if (curElev != targetElev) return false;
-			
-		} else if (weapon.getWeaponType() == Item.WeaponType.THROWN) {
-			if (dist > weapon.getMaximumRange()) return false;
-		}
-		else {
-			if (dist > weapon.getMaximumRange()) return false;
-			
-			Item quiver = inventory.getEquippedItem(Inventory.EQUIPPED_QUIVER);
-			
-			if (quiver == null || quiver.getWeaponType() != weapon.getWeaponType()) return false;
-		}
-		
-		return true;
-	}
-	
-	public void raiseFromDead() {
-		if (!this.dead) return;
-		
-		this.dead = false;
-		this.dying = false;
-		
-		currentHP = 1;
-		temporaryHP = 0;
-		
-		int xpPenalty = this.stats().get(Stat.CreatureLevel) *
-			Game.ruleset.getValue("DeathXPPenaltyCharacterLevelFactor");
-		
-		int currentXP = this.getExperiencePoints();
-		currentXP = Math.max(0, currentXP - xpPenalty);
-		
-		this.setExperiencePoints(currentXP);
-		
-		Game.mainViewer.updateEntity(this);
-	}
-	
-	public void removeTemporaryHP(int hp) {
-		if (temporaryHP > hp) takeDamage(hp, "Effect");
-		else if (temporaryHP > 0) takeDamage(temporaryHP, "Effect");
-	}
-	
-	public void addTemporaryHP(int hp) {
-		temporaryHP += hp;
-		
-		if (getCurrentHP() > 0) dying = false;
-		
-		if (Game.mainViewer != null) {
-			Game.mainViewer.addFadeAway("" + hp, this.getX(), this.getY(), "blue");
-			Game.mainViewer.updateEntity(this);
-		}
-	}
-	
-	public void healDamage(int damage) {
-		healDamage(damage, true);
-	}
-	
-	public void healDamage(int damage, boolean message) {
-		currentHP += damage;
-		
-		if (currentHP > this.stats().get(Stat.MaxHP)) currentHP = this.stats().get(Stat.MaxHP);
-		if (getCurrentHP() > 0) dying = false;
-		
-		if (Game.mainViewer != null) {
-			Game.mainViewer.addFadeAway("" + damage, this.getX(), this.getY(), "blue");
-			if (message) {
-				Game.mainViewer.addMessage("blue", getName() + " is healed by " + damage + " hit points.");
-			}
-			Game.mainViewer.updateEntity(this);
-		}
-	}
-	
-	private void takeDamage(Damage damage, boolean message) {
-		// dead creatures can't take damage
-		if (this.isDead()) return;
-		
-		getEffects().executeOnAll(ScriptFunctionType.onDamaged, damage);
-		
-		int damageLeftToApply = damage.getTotalAppliedDamage();
-		
-		if (immortal) damageLeftToApply = 0;
-		
-		if (temporaryHP > damageLeftToApply) {
-			temporaryHP -= damageLeftToApply;
-			damageLeftToApply = 0;
-		} else {
-			damageLeftToApply -= temporaryHP;
-			temporaryHP = 0;
-		}
-		
-		currentHP -= damageLeftToApply;
-		
-		if (message && Game.mainViewer != null)
-			Game.mainViewer.addFadeAway("" + damage.getTotalAppliedDamage(), this.getX(), this.getY(), "red");
-		
-		if (getCurrentHP() <= 0 && getCurrentHP() > -20) {
-			dying = true;
-			if (summoned || !isPlayerSelectable()) kill();
-			else if (message && Game.mainViewer != null)
-				Game.mainViewer.addMessage("red", getName() + " is dying with " + getCurrentHP() + " HP.");
-		} else if (getCurrentHP() < -19) {
-			kill();
-		}
-		
-		if (Game.mainViewer != null) {
-			Game.mainViewer.updateEntity(this);
-			if (message)
-				Game.mainViewer.updateInterface();
-		}
-	}
-	
-	public int takeDamageFromAttack(Attack attack, boolean message) {
-		// dead creatures can't take damage
-		if (this.isDead()) return 0;
-		
-		int appliedDamage = attack.computeAppliedDamage(message);
-		
-		takeDamage(attack.getDamage(), message);
-		
-		return appliedDamage;
-	}
-	
-	public int takeDamage(int damage, DamageType damageType, boolean message) {
-		// dead creatures can't take damage
-		if (this.isDead()) return 0;
-		
-		Damage dam = new Damage(this, damageType, damage);
-		dam.computeAppliedDamage(message);
-		takeDamage(dam, message);
-		return dam.getTotalAppliedDamage();
-	}
-	
-	public int takeDamage(int damage, String type) {
-		// dead creatures can't take damage
-		if (this.isDead()) return 0;
-		
-		DamageType damageType = Game.ruleset.getDamageType(type);
-		
-		Damage dam = new Damage(this, damageType, damage);
-		dam.computeAppliedDamage(true);
-		
-		takeDamage(dam, true);
-		
-		return dam.getTotalAppliedDamage();
-	}
-	
-	public void kill() {
-		if (this.immortal) return; 
-		
-		if (currentHP > -20) currentHP = -20;
-		dying = false;
-		dead = true;
-		temporaryHP = 0;
-		
-		getEffects().endAllAnimations();
-		getInventory().endAllEffectAnimations();
-		
-		Game.mainViewer.updateEntity(this);
-		
-		if (hasAI()) {
-			getAI().executeFunction(ScriptFunctionType.onCreatureDeath, this);
-		}
-	}
+	/**
+	 * Sets this creature as a summoned creature which will expire after the specified
+	 * number of rounds have passed
+	 * @param duration
+	 */
 	
 	public void setSummoned(int duration) {
-		this.summoned = true;
-		this.summonedDuration = duration;
-		this.summonedRoundNumber = Game.curCampaign.getDate().getTotalRoundsElapsed();
-	
-	}
-	public boolean isSummoned() { return summoned; }
-	
-	public boolean mentalResistanceCheck(int DC) {
-		return resistanceCheck("Mental Resistance", stats().getMentalResistance(), DC);
+		this.summonExpiration = Game.curCampaign.getDate().getTotalRoundsElapsed() + duration;
 	}
 	
-	public boolean physicalResistanceCheck(int DC) {
-		return resistanceCheck("Physical Resistance", stats().getPhysicalResistance(), DC);
+	/**
+	 * Returns the current number of hits points that this creature has.  This
+	 * represents the amount of damage the creature can take before falling combat
+	 * @return the current hit points
+	 */
+	
+	public int getCurrentHitPoints() {
+		return currentHitPoints + temporaryHitPoints;
 	}
 	
-	public boolean reflexCheck(int DC) {
-		return resistanceCheck("Reflex", stats().getReflexResistance(), DC);
+	/**
+	 * Returns the encounter associated with this creature, or null if no encounter
+	 * has been set
+	 * @return the encounter for this Creature
+	 */
+	
+	public Encounter getEncounter() {
+		return this.encounter;
 	}
 	
-	private boolean resistanceCheck(String name, int modifier, int DC) {
-		int roll = Game.dice.d100();
-		int total = roll + modifier;
+	/**
+	 * Sets the Encounter for this Creature
+	 * @param encounter the encounter for this creature.  The encounter is the group
+	 * of creatures with like faction and can share some AI
+	 */
+	
+	public void setEncounter(Encounter encounter) {
+		this.encounter = encounter;
+	}
+	
+	/*
+	 * Set the location and then recompute visibility (non-Javadoc)
+	 * @see net.sf.hale.entity.Entity#setLocation(net.sf.hale.entity.Location)
+	 */
+	
+	@Override public boolean setLocation(Location newLocation) {
+		Location oldLocation = this.getLocation();
+		Point oldScreen = this.getLocation().getScreenPoint();
+		Point newScreen = newLocation.getScreenPoint();
 		
-		String message = getName() + " attempts " + name + " check with difficulty " + DC +
-						 ": " + roll + " + " + modifier + " = " + total;
-		
-		if (DC > total) {
-			Game.mainViewer.addMessage("orange", message + ". Failed.");
-			return false;
-		} else {
-			Game.mainViewer.addMessage("orange", message + ". Success.");
-			return true;
-		}
-	}
-	
-	public int getSkillRanks(String skillID) {
-		return skillset.getRanks(skillID);
-	}
-	
-	public final int getSkillModifier(String skillID) {
-		return getSkillModifier(Game.ruleset.getSkill(skillID));
-	}
-	
-	public final int getSkillModifier(Skill skill) {
-		int ranks = skillset.getRanks(skill);
-		int modifier = stats().getSkillBonus(skill.getID()) + (stats().get(skill.getKeyAttribute()) - 10) * 2;
-		if (skill.hasArmorPenalty()) modifier -= stats().get(Stat.ArmorPenalty);
-		
-		return ranks + modifier;
-	}
-	
-	public boolean skillCheck(String skillName, int DC) {
-		return skillCheck(skillName, DC, true);
-	}
-	
-	public int getSkillCheck(String skillID) {
-		return getSkillCheck(skillID, 0, false);
-	}
-	
-	public int getSkillCheck(String skillID, int DC, boolean showMessage) {
-		return getSkillCheck(skillID, DC, Game.dice.d100(), showMessage);
-	}
-	
-	private int getSkillCheck(String skillID, int DC, int roll, boolean showMessage) {
-		Skill skill = Game.ruleset.getSkill(skillID);
-		int ranks = getSkillSet().getRanks(skill);
-		
-		// can't use untrained skills unless you have at least 1 rank
-		if (!skill.usableUntrained() && ranks < 1) return 0;
-		
-		int base = getSkillModifier(skill);
-		
-		int total = roll + base;
-		
-		if (showMessage) skillCheckMessage(skill, DC, roll, base, total);
-		
-		return total;
-	}
-	
-	private void skillCheckMessage(Skill skill, int DC, int roll, int base, int total) {
-		String message =  getName() + " attempts " + skill.getName() + " check with difficulty " + DC +
-			": " + roll + " + " + base + " = " + total;
-
-		if (DC > total) {
-			Game.mainViewer.addMessage("orange", message + ". Failed.");
-			Game.mainViewer.addFadeAway(skill.getName() + ": Failure", this.getX(), this.getY(), "grey");
-		} else {
-			Game.mainViewer.addMessage("orange", message + ". Success.");
-			Game.mainViewer.addFadeAway(skill.getName() + ": Success", this.getX(), this.getY(), "grey");
-		}
-	}
-	
-	public boolean skillCheckRoll100(String skillID, int DC) {
-		return skillCheckRoll100(skillID, DC, true);
-	}
-	
-	public boolean skillCheckRoll100(String skillID, int DC, boolean showMessage) {
-		int check = getSkillCheck(skillID, DC, 100, showMessage);
-		return check >= DC;
-	}
-	
-	public boolean skillCheck(String skillName, int DC, boolean showMessage) {
-		int check = getSkillCheck(skillName, DC, showMessage);
-		
-		return check >= DC;
-	}
-	
-	public void setRace(Race race) {
-		// clear all old racial abilities
-		abilities.removeRacialAbilities();
-		
-		if (race == null) return;
-		
-		this.race = race.getID();
-		
-		race.addAbilitiesToCreature(this);
-	}
-	
-	public void setGender(Ruleset.Gender gender) {
-		this.gender = gender;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setPortrait(String portrait) {
-		this.portrait = portrait;
-	}
-	
-	public int getMinCurrencyReward() { return this.minCurrencyReward; }
-	public int getMaxCurrencyReward() { return this.maxCurrencyReward; }
-	
-	public void setMinCurrencyReward(int reward) { this.minCurrencyReward = reward; }
-	public void setMaxCurrencyReward(int reward) { this.maxCurrencyReward = reward; }
-	
-	// used to determine if the creature can move
-	@Override public boolean isImmobilized() { return dying || dead || stats().isImmobilized(); }
-	
-	// used to determine if the creature can perform non-movement actions
-	public boolean isHelpless() { return dying || dead || stats().isHelpless(); }
-	
-	public boolean isDying() { return dying; }
-	public boolean isDead() { return dead; }
-	
-	public void setExperiencePoints(int xp) { this.experiencePoints = xp; }
-	public void addExperiencePoints(int xp) { this.experiencePoints += xp; }
-	public int getExperiencePoints() { return this.experiencePoints; }
-	
-	public int getCurrentHP() { return currentHP + temporaryHP; }
-	public Inventory getInventory() { return inventory; }
-	public SkillSet getSkillSet() { return skillset; }
-	public RoleSet getRoles() { return roleSet; }
-	
-	@Override public int getCasterLevel() { return roleSet.getCasterLevel(); }
-	
-	public CreatureAbilitySet getAbilities() { return abilities; }
-	
-	@Override public StatManager stats() { return statManager; }
-	
-	public Race getRace() {
-		if (race == null)
-			return Game.ruleset.getRace(Game.ruleset.getString("DefaultRace"));
-		else
-			return Game.ruleset.getRace(race);
-	}
-	
-	public String getPortrait() { return portrait; }
-	
-	public String getGenderString() {
-		if (gender == null) return Gender.Male.toString();
-		else return gender.toString();
-	}
-	
-	public Ruleset.Gender getGender() {
-		if (gender == null) return Gender.Male;
-		else return gender;
-	}
-	
-	@Override public String getName() { return name; }
-	
-	@Override public boolean setPosition(int x, int y) {
-		Point screenOld = this.getScreenPosition();
-		
-		super.setPosition(x, y);
+		super.setLocation(newLocation);
 		
 		// offset animation positions for inventory
-		Point screenCur = getScreenPosition();
-		for (Item item : inventory.getEquippedItems()) {
-			if (item == null) continue;
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if (inventory.getEquippedItem(slot) == null) continue;
 			
-			item.getEffects().offsetAnimationPositions(screenCur.x - screenOld.x, screenCur.y - screenOld.y);
+			inventory.getEquippedItem(slot).getEffects().offsetAnimationPositions(newScreen.x - oldScreen.x, newScreen.y - oldScreen.y);
 		}
 		
-		if (Game.curCampaign.curArea == null) return true;
+		// run onExit and onEnter scripts for effects
+		List<Effect> oldEffects;
+		if (oldLocation.getArea() == null) {
+			oldEffects = Collections.emptyList();
+		} else {
+			oldEffects = oldLocation.getEffects();
+		}
 		
-		List<Effect> oldEffects = Game.curCampaign.curArea.getEffectsAt(getLastPositionX(), getLastPositionY());
-		//this.moveAurasToCaster();
-		List<Effect> newEffects = Game.curCampaign.curArea.getEffectsAt(getX(), getY());
+		List<Effect> newEffects;
+		if (newLocation.getArea() == null) {
+			newEffects = Collections.emptyList();
+		} else {
+			newEffects = newLocation.getEffects();
+		}
 		
 		for (Effect effect : oldEffects) {
 			// dont run onExit scripts if this creature is the direct target (i.e. if the effect is an aura)
@@ -1011,41 +490,44 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 			}
 		}
 		
+		computeVisibility();
+		
+		// check for interruptions
 		boolean interrupted = false;
 		
-		Trap trap = Game.curCampaign.curArea.getTrapAtGridPoint(this.getX(), this.getY());
-		if (trap != null) {
-			if (trap.springTrap(this)) interrupted = true;
+		Trap trapAtNewLocation = newLocation.getTrap();
+		if (trapAtNewLocation != null) {
+			if (trapAtNewLocation.checkSpringTrap(this))
+				interrupted = true;
 		}
-		
-		if (this.isPlayerSelectable()) {
-			
-			for (String s : Game.curCampaign.curArea.getTriggers()) {
-				AreaTrigger t = Game.curCampaign.getTrigger(s);
 
-				t.checkPlayerMoved(this);
-			}
+		if (isPlayerFaction()) {
+			// fire any scripts for triggers
+			newLocation.getArea().checkPlayerMoved(this);
 			
-			boolean[][] vis = this.getVisibility();
-			
-			if (vis == null) return false;
-			
-			for (Entity e : Game.curCampaign.curArea.getEntities()) {
-				if (e.getX() < 0 || e.getY() < 0 || e.getX() >= vis.length || e.getY() >= vis[0].length) continue;
-				if (!vis[e.getX()][e.getY()]) continue;
-				if (e.getType() != Entity.Type.TRAP) continue;
+			// do any search checks for traps
+			for (Entity entity : newLocation.getArea().getEntities()) {
+				if ( !(entity instanceof Trap))
+					continue;
 				
-				trap = (Trap)e;
+				if (!hasVisibilityInCurrentArea(entity.getLocation().getX(), entity.getLocation().getY()))
+					continue;
 				
-				if (trap.trySearch(this)) {
+				if ( ((Trap)entity).attemptSearch(this)) {
 					interrupted = true;
 				}
 			}
-			
 		}
+		
+		setOffsetPoint(0, 0);
 		
 		return interrupted;
 	}
+	
+	/**
+	 * Causes this creature to perform search checks against any hidden creatures in its
+	 * line of sight
+	 */
 	
 	public void searchForHidingCreatures() {
 		// we only allow searching once per round per creature
@@ -1055,28 +537,41 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		
 		alreadySearchedForHiddenCreatures = true;
 		
-		for (Creature c : Game.curCampaign.curArea.getEntities().getVisibleCreatures(visibility)) {
-			if (!c.stats().isHidden()) continue;
+		for (Creature creature : getVisibleCreatures()) {
+			if (!creature.stats.isHidden()) continue;
 			
-			if (c.getFaction().getRelationship(this) != Faction.Relationship.Hostile) continue;
-			
-			doSearchCheck(c, 0);
+			// only search for hostiles
+			if (creature.getFaction().isHostile(this))
+				performSearchCheck(creature, 0);
 		}
 	}
 	
-	public boolean doSearchCheck(Creature target, int penalty) {
+	/**
+	 * Causes this creature to perform a search check for the specified target, with the specified
+	 * extra penalty added to the difficulty of the check.  The difficulty is also affected by the
+	 * distance between this creature and the target, concealment, and the target's hide skill
+	 * @param target
+	 * @param penalty
+	 * @return true if the search check succeeded, false otherwise
+	 */
+	
+	public boolean performSearchCheck(Creature target, int penalty) {
 		int baseDifficulty = Game.ruleset.getValue("SearchCheckCreatureBaseDifficulty");
 		int distanceMultiplier = Game.ruleset.getValue("SearchCheckDistanceMultiplier");
 		
-		int checkPenalty = distanceMultiplier * AreaUtil.distance(this.getX(), this.getY(), target.getX(), target.getY()) + baseDifficulty;
+		int checkPenalty = distanceMultiplier * getLocation().getDistance(target.getLocation()) + baseDifficulty;
 		int concealment = Math.min(100, Game.curCampaign.curArea.getConcealment(this, target));
 		
-		if (skillCheck("Search", target.getSkillModifier("Hide") + checkPenalty + concealment - penalty, true)) {
+		int difficulty = target.skills.getTotalModifier("Hide") + checkPenalty + concealment - penalty;
+		
+		int check = skills.getCheck("Search", difficulty);
+		
+		if (check >= difficulty) {
 			// deactivate hide mode
 			for (AbilitySlot slot : target.abilities.getSlotsWithReadiedAbility("Hide")) {
 				slot.deactivate();
 			}
-			
+
 			Game.areaListener.getCombatRunner().checkAIActivation();
 			return true;
 		} else {
@@ -1084,53 +579,634 @@ public class Creature extends Entity implements Referenceable, AbilityActivator 
 		}
 	}
 	
+	/**
+	 * Returns true if and only if this creature has an encounter defined and that encounter
+	 * is set to AI active, or if this creature is a summoned party member
+	 * @return whether this creature is ai active
+	 */
+	
+	public boolean isAIActive() {
+		if (isPlayerFaction() && isSummoned()) return true;
+		
+		if (encounter == null) return false;
+		
+		return encounter.isAIActive();
+	}
+	
+	/**
+	 * Returns true if this creature has visibility for the specified point
+	 * in the area it is currently within, false otherwise
+	 * @param x the x grid coordinate
+	 * @param y the y grid coordinate
+	 * @return whether this creature has visibility at the specified coordinates
+	 */
+	
+	public final boolean hasVisibilityInCurrentArea(int x, int y) {
+		return visibility[x][y];
+	}
+	
+	/**
+	 * Returns true if this creature currently has visibility at the specified location,
+	 * false otherwise
+	 * @param location
+	 * @return whether this creature has visibility at the specified location
+	 */
+	
+	public final boolean hasVisibility(Location location) {
+		if (location.getArea() != this.getLocation().getArea())
+			return false;
+		
+		return visibility[location.getX()][location.getY()];
+	}
+	
+	/**
+	 * Computes the tiles that are currently visible for this creature and saves
+	 * that information in this creature's visibility matrix.  This method will
+	 * automatically be called whenever the creature's location changes
+	 */
+	
+	public void computeVisibility() {
+		Location location = getLocation();
+		
+		int width = location.getArea().getWidth();
+		int height = location.getArea().getHeight();
+		
+		// recreate the matrix if it is not of the correct size
+		if (visibility == null || visibility.length != width || visibility[0].length != height) {
+			visibility = new boolean[width][height];
+		}
+		
+		location.getArea().getUtil().setVisibilityWithRespectToPosition(visibility,
+				location.getX(), location.getY());
+	}
+	
+	/**
+	 * Adds the visibility of this creature to the specified matrix.  Points that are already
+	 * visible (true) in the matrix are not affected.  Points that are false will be set to true
+	 * if this Creature has visibility on that point.
+	 * 
+	 * Note that passing a matrix that is not of the correct size for this creature location's
+	 * area will result in an exception.  This creature must have a set location before calling
+	 * this function
+	 * 
+	 * @param matrix the matrix to set the visibility of
+	 */
+	
+	public void addVisibilityToMatrix(boolean[][] matrix) {
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				matrix[i][j] = visibility[i][j] || matrix[i][j];
+			}
+		}
+	}
+	
+	/**
+	 * Returns true if this creature can potentially take a movement caused
+	 * Attack of Opportunity (AoO) against the target this round, false otherwise.
+	 * This means that this creature has at least one AoO available, is hostile
+	 * to the target, and has not taken any move AoOs against the target previously
+	 * this round.  It does not check the current position of this creature or the
+	 * target
+	 * @param target the target Creature
+	 * @return whether a move AoO is possible against the target
+	 */
+	
+	public boolean canTakeMoveAoOIgnoringLocation(Creature target) {
+		if (!this.getFaction().isHostile(target)) return false;
+		
+		if (this.attacksOfOpportunityAvailable < 1) return false;
+		
+		if (this.moveAoOsThisRound.contains(target)) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * The specified target is added to the list of creatures that this
+	 * creature has taken a move based attack of opportunity (AoO) against this round.
+	 * Creatures may only make one move based AoO per target per round
+	 * @param target
+	 */
+	
+	public void takeMoveAoO(Creature target) {
+		moveAoOsThisRound.add(target);
+	}
+	
+	/**
+	 * Decrements the count of available attacks of opportuntity for this creature. If the
+	 * count reaches zero, this creature will no longer threaten locations and may not take
+	 * any further attacks of opportunity until the next round.
+	 */
+	
+	public void takeAttackOfOpportunity() {
+		this.attacksOfOpportunityAvailable--;
+	}
+	
+	/**
+	 * Returns the current off hand weapon wielded by this creature, or null if no
+	 * weapon is being wielded off hand
+	 * @return the off hand weapon
+	 */
+	
+	public Weapon getOffHandWeapon() {
+		EquippableItem item = inventory.getEquippedItem(Inventory.Slot.OffHand);
+		
+		if (item instanceof Weapon) {
+			return (Weapon)item;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Returns the current main hand weapon for this creature.  This is either the
+	 * weapon equipped in this creature's main hand, or if no weapon is equipped,
+	 * the racial default weapon for this creature
+	 * @return the current main hand weapon
+	 */
+	
+	public Weapon getMainHandWeapon() {
+		EquippableItem item = this.inventory.getEquippedItem(Inventory.Slot.MainHand);
+		
+		if (item == null) {
+			return template.getRace().getDefaultWeapon();
+		} else {
+			return (Weapon)item;
+		}
+	}
+	
+	/**
+	 * Returns true if this creature's weapon currently threatens the specified location,
+	 * meaning that creatures provoking an attack of opportunity from that location will
+	 * suffer an attack of opportunity from this creature.
+	 * 
+	 * @param location the location to verify
+	 * @return whether or not this creature threatens the specified location with attacks
+	 * of opportunity
+	 */
+	
+	public boolean threatensLocation(Location location) {
+		// can only threaten creatures in the same area
+		if (location.getArea() != this.getLocation().getArea()) return false;
+		
+		return threatensPointInCurrentArea(location.getX(), location.getY());
+	}
+	
+	/**
+	 * Returns true if this creature currently threatens the specified point in the area
+	 * that this creature is located in currently.  See {@link #threatensLocation(Location)}
+	 * @param x
+	 * @param y
+	 * @return whether or not this creature threatens the specified point with attacks
+	 * of opportunity
+	 */
+	
+	public boolean threatensPointInCurrentArea(int x, int y) {
+		if (this.isDying() || this.isDead()) return false;
+		
+		if (this.attacksOfOpportunityAvailable < 1) return false;
+		
+		if (this.stats.isHelpless()) return false;
+		
+		// must be able to see the tile
+		if (!this.visibility[x][y]) return false;
+				
+		Weapon weapon = getMainHandWeapon();
+		if (!weapon.getTemplate().threatensAoOs()) return false;
+		
+		int thisX = getLocation().getX();
+		int thisY = getLocation().getY();
+		
+		int distance = AreaUtil.distance(thisX, thisY, x, y);
+		if (distance > weapon.getTemplate().getMaxRange() || distance < weapon.getTemplate().getMinRange())
+			return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Returns true if this Creature is currently capable of executing a standard attack against
+	 * the specified position.  This creature's weapon must be capable of reaching the location,
+	 * and this creature must have enough Action Points to perform the attack.  If this creature's
+	 * weapon requires ammo, it must be equipped
+	 * @param location
+	 * @return whether this creature can attack the location
+	 */
+	
+	public boolean canAttack(Location location) {
+		if (!timer.canAttack()) return false;
+		
+		// can't attack across areas
+		if (location.getArea() != this.getLocation().getArea()) return false;
+		
+		if (stats.isHelpless()) return false;
+		
+		if (!visibility[location.getX()][location.getY()]) return false;
+		
+		// can only attack on the same elevation
+		if (getLocation().getElevation() != location.getElevation()) return false;
+		
+		int distance = location.getDistance(this);
+		
+		Weapon weapon = getMainHandWeapon();
+		
+		// check the range requirement
+		if (distance > weapon.getTemplate().getMaxRange() || distance < weapon.getTemplate().getMinRange())
+			return false;
+		
+		// ranged weapons have ammo
+		if (weapon.getTemplate().getWeaponType() == WeaponTemplate.Type.Ranged) {
+			Ammo quiver = inventory.getEquippedQuiver();
+			
+			if (!weapon.getTemplate().isAmmoForThisWeapon(quiver))
+				return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Gives this Creature the specified number of temporary hit points.
+	 * Temporary hit points act as normal hit points, but only last for a
+	 * limited time, at which point any unused points are removed.  When taking
+	 * damage, temporary hit points are lost first.
+	 * @param amount
+	 */
+	
+	public void addTemporaryHitPoints(int amount) {
+		// can't heal dead creatures
+		if (isDead()) return;
+		
+		this.temporaryHitPoints += amount;
+		
+		this.updateListeners();
+	}
+	
+	/**
+	 * Removes up to the specified quantity of temporary hit points.  If this
+	 * Creature has fewer temporary hit points than what is specified, the Creature's
+	 * temporary hit points are set to zero.  This method will not affect the Creature's
+	 * ordinary hit point pool.
+	 * 
+	 * See {@link #addTemporaryHitPoints(int)}
+	 * @param amount
+	 */
+	
+	public void removeTemporaryHitPoints(int amount) {
+		if (this.temporaryHitPoints > amount) {
+			takeDamage(amount, "Effect");
+		} else {
+			takeDamage(this.temporaryHitPoints, "Effect");
+		}
+	}
+	
+	/**
+	 * Applies the specified amount of damage of the specified type to this Creature.
+	 * The damage is modified by this Creature's resistances.  Temporary hit points
+	 * are lost before ordinary hit points.
+	 * @param amount
+	 * @param type
+	 */
+	
+	public void takeDamage(int amount, String type) {
+		Damage damage = new Damage(this, Game.ruleset.getDamageType(type), amount);
+		damage.computeAppliedDamage();
+		takeDamage(damage);
+	}
+	
+	/**
+	 * Applies the specified damage to this creature.  The damage will be modified
+	 * by this Creature's resistances.  Temporary hit points are lost before ordinary
+	 * hit points.
+	 * @param damage
+	 */
+	
+	public void takeDamage(Damage damage) {
+		// dead creatures can't take damage
+		if (isDead()) return;
+		
+		getEffects().executeOnAll(ScriptFunctionType.onDamaged, damage);
+		
+		int damageLeftToApply = damage.getTotalAppliedDamage();
+		
+		Game.mainViewer.addFadeAway(Integer.toString(damageLeftToApply), getLocation().getX(),
+				getLocation().getY(), new Color(0xFFFF2200));
+		
+		if (temporaryHitPoints > damageLeftToApply) {
+			temporaryHitPoints -= damageLeftToApply;
+			damageLeftToApply = 0;
+		} else {
+			damageLeftToApply -= temporaryHitPoints;
+			temporaryHitPoints = 0;
+		}
+		
+		currentHitPoints -= damageLeftToApply;
+		
+		// show a message about the applied damage
+		Game.mainViewer.addMessage("red", damage.getMessage());
+		
+		if (isDead()) {
+			Game.mainViewer.updateEntity(this);
+		}
+		
+		this.updateListeners();
+	}
+	
+	/**
+	 * Heals the specified number of hit points
+	 * @param amount the number of hit points to heal this creature
+	 */
+	
+	public void healDamage(int amount) {
+		// can't heal dead creatures
+		if (isDead()) return;
+		
+		amount = Math.max(0, Math.min(amount, stats.getMaxHP() - currentHitPoints));
+		
+		currentHitPoints += amount;
+		
+		Game.mainViewer.addMessage("blue", getTemplate().getName() + " was healed for " + amount + " hit points.");
+		
+		Game.mainViewer.addFadeAway(Integer.toString(amount), getLocation().getX(),
+				getLocation().getY(), new Color(0xFF33CCFF));
+		
+		this.updateListeners();
+	}
+	
+	/**
+	 * If this creature is dead, raises it.  Its hit points are set to 1.  Note that
+	 * this method is the only way of healing a creature whose hit points have reached
+	 * -20.
+	 */
+	
+	public void raiseFromDead() {
+		if (!isDead()) return;
+		
+		this.temporaryHitPoints = 0;
+		this.currentHitPoints = 1;
+		
+		Game.mainViewer.addFadeAway("Raised", getLocation().getX(),
+				getLocation().getY(), new Color(0xFF33CCFF));
+		Game.mainViewer.addMessage("blue", getTemplate().getName() + " was raised.");
+	}
+	
+	/**
+	 * Returns true if this creature is dying, meaning it is unable to take
+	 * any actions and is losing hit points.  Creatures become dying when they
+	 * reach 0 hit points.  If a dying creature is not healed, it will eventually
+	 * reach -20 hit points and die.
+	 * @return whether this creature is dying
+	 */
+	
+	public boolean isDying() {
+		return getCurrentHitPoints() < 1 && getCurrentHitPoints() > -20;
+	}
+	
+	/**
+	 * Returns true if and only if this creature has reached -20 or fewer hit points
+	 * and is dead.
+	 * @return whether this creature is dead
+	 */
+	
+	public boolean isDead() {
+		if (!isPlayerFaction() || isSummoned()) {
+			return getCurrentHitPoints() <= 0;
+		} else {
+			return getCurrentHitPoints() <= -20;
+		}
+	}
+	
+	/**
+	 * Finds a path from this creature's location to a point the specified distance away from the target
+	 * location.  If the distance away is zero, finds a path to exactly the target location.
+	 * If no path can be found, returns null
+	 * @param target
+	 * @param distanceAway
+	 * @return a path from this location to the new location
+	 */
+	
+	public Path findPathTo(Location target, int distanceAway) {
+		return getLocation().getArea().getUtil().findShortestPath(this, target.toPoint(), distanceAway);
+	}
+	
+	/**
+	 * Starts the process of performing an attack against the specified creature.
+	 * AP is deducted from this creature's timer and the attack is created.
+	 * @param target
+	 * @return the newly created attack
+	 */
+	
+	public Attack performMainHandAttack(Creature target) {
+		timer.performAttack();
+		
+		return new Attack(this, target, Inventory.Slot.MainHand);
+	}
+	
+	/**
+	 * Starts the process of performing an off hand attack against the specified creature.
+	 * AP is not deducted; it is assumed that the amount is deducted separately when
+	 * performing the main hand attack
+	 * @param target
+	 * @return the newly created attack
+	 */
+	
+	public Attack performOffHandAttack(Creature target) {
+		return new Attack(this, target, Inventory.Slot.OffHand);
+	}
+	
+	/**
+	 * Starts the process of performing a single attack against the specified creature.  The single
+	 * attack does not cost any Action Points.  This method is most frequently used for attacks of 
+	 * opportunity but can also be used for any other attack that should not cost action points
+	 * @param target
+	 * @return the newly created attack
+	 */
+	
+	public Attack performSingleAttack(Creature target, Inventory.Slot slot) {
+		return new Attack(this, target, slot);
+	}
+	
+	@Override public void areaDraw(int x, int y) {
+		renderer.drawCentered(x + animatingOffset.x, y + animatingOffset.y, Game.TILE_SIZE, Game.TILE_SIZE);
+	}
+	
+	@Override public void uiDraw(int x, int y) {
+		renderer.draw(x, y);
+	}
+	
+	/**
+	 * Returns the renderer for this creature's icon.  This can be the icon itself or
+	 * an external renderer
+	 * @return the icon renderer for this creature
+	 */
+
+	public IconRenderer getIconRenderer() {
+		return renderer;
+	}
+	
+	/**
+	 * Returns true if the icon renderer for this creature is a SubIconRenderer,
+	 * false otherwise
+	 * @return whether this creature is rendered with subIcons
+	 */
+	
+	public boolean drawsWithSubIcons() {
+		return renderer instanceof SubIconRenderer;
+	}
+	
+	/**
+	 * Returns the screen position for sub icons of the specified type
+	 * @param subIconType
+	 * @return the screen position
+	 */
+	
+	public Point getSubIconScreenPosition(String subIconType) {
+		Point screen = getLocation().getScreenPoint();
+		
+		SubIcon subIcon = ((SubIconRenderer)renderer).getSubIcon(subIconType);
+		Point offset = subIcon.getOffset();
+		
+		screen.x += offset.x + subIcon.getWidth() / 2;
+		screen.y += offset.y + subIcon.getHeight() / 2;
+		
+		return screen;
+	}
+	
+	/**
+	 * Called whenever an item is equipped, to add the subIcon associated
+	 * with that item
+	 * @param item
+	 * @param slot the inventory slot being equipped into
+	 */
+	
+	protected void addSubIcon(EquippableItem item, Inventory.Slot slot) {
+		if (! (renderer instanceof SubIconRenderer) ) return;
+
+		SimpleIcon icon = item.getTemplate().getSubIcon();
+		if (icon == null) return;
+
+		// first check if this item has a sub icon override
+		SubIcon.Type type = item.getTemplate().getSubIconTypeOverride();
+		if (type == null) {
+			// if it does not, use the default setting from the inventory slot
+			type = slot.getSubIconType(item);
+		}
+		
+		if (type == null) return;
+		
+		if (!template.getRace().drawsSubIconType(type)) return;
+		
+		SubIcon.Factory factory = new SubIcon.Factory(type, template.getRace(), template.getGender());
+		factory.setPrimaryIcon(icon.getSpriteID(), icon.getColor());
+		factory.setSecondaryIcon(null, ((ComposedCreatureIcon)template.getIcon()).getClothingColor());
+		factory.setCoversBeard(item.getTemplate().coversBeard());
+		factory.setCoversHair(item.getTemplate().coversHair());
+		
+		((SubIconRenderer)renderer).add(factory.createSubIcon());
+	}
+	
+	/**
+	 * Called whenever an item is unequipped, to remove the subIcon
+	 * associated with that item
+	 * @param item
+	 * @param slot the inventory slot being unequipped from
+	 */
+	
+	protected void removeSubIcon(EquippableItem item, Inventory.Slot slot) {
+		if (! (renderer instanceof SubIconRenderer) ) return;
+		
+		// first check if this item has a sub icon override
+		SubIcon.Type type = item.getTemplate().getSubIconTypeOverride();
+		
+		if (type == null) {
+			// if it does not, use the default setting from the inventory slot
+			type = slot.getSubIconType(item);
+		}
+		
+		if (type == null) return;
+		
+		((SubIconRenderer)renderer).remove(type);
+	}
+	
+	@Override public boolean elapseTime(int numRounds) {
+		super.elapseTime(numRounds);
+		
+		moveAoOsThisRound.clear();
+		
+		inventory.elapseTime(numRounds);
+		
+		timer.reset();
+		
+		this.attacksOfOpportunityAvailable = stats.getAttacksOfOpportunity();
+		
+		if (isSummoned() && summonExpiration <= Game.curCampaign.getDate().getTotalRoundsElapsed()) {
+			this.currentHitPoints = -20;
+			this.temporaryHitPoints = 0;
+			Game.mainViewer.updateEntity(this);
+		}
+		
+		this.alreadySearchedForHiddenCreatures = false;
+		
+		boolean returnValue = abilities.elapseTime(numRounds);
+		
+		updateListeners();
+		
+		return returnValue;
+	}
+	
+	/**
+	 * Resets time for this Creature, meaning hit points are fully restored
+	 */
+	
+	public void resetTime() {
+		stats.recomputeAllStats();
+		timer.reset();
+		
+		if (!isDead()) {
+			temporaryHitPoints = 0;
+			currentHitPoints = stats.get(Stat.MaxHP);
+		}
+		
+		elapseTime(1);
+	}
+	
+	/**
+	 * Causes all animations on this creature and all held items to end
+	 */
+	
+	public void endAllAnimations() {
+		inventory.endAllAnimations();
+		
+		getEffects().endAllAnimations();
+	}
+	
+	/**
+	 * Gets the list of creatures that are visible to this creature
+	 * @return the list of creatures
+	 */
+	
+	public List<Creature> getVisibleCreatures() {
+		return getLocation().getArea().getEntities().getVisibleCreatures(this);
+	}
+	
 	@Override protected void applyEffectBonuses(Effect effect) {
-		statManager.addAll(effect.getBonuses());
+		if (inventory == null) {
+			// inventory being null indicates that we are in the constructor and
+			// this object is not fully initialized
+			// in which case, we cannot yet compute our stats
+			stats.addAllNoRecompute(effect.getBonuses());
+		} else {
+			stats.addAll(effect.getBonuses());
+		}
 	}
 	
 	@Override protected void removeEffectBonuses(Effect effect) {
-		statManager.removeAll(effect.getBonuses());
+		stats.removeAll(effect.getBonuses());
 	}
 	
-	@Override public String toString() {
-		return getID();
-	}
-	
-	@Override public String getReferenceType() {
-		return "Creature";
-	}
-	
-	@Override public ReferenceList getReferenceList() {
-		return new CreatureReferenceList(this);
-	}
-	
-	@Override public String getFullName() {
-		return name;
-	}
-	
-	@Override public int getBaseSpellFailure(int spellLevel) {
-		Role role = roleSet.getBaseRole();
+	@Override public int compareTo(Entity other) {
+		if (other instanceof Creature) return super.compareTo(other);
 		
-		int abilityScore = statManager.get(role.getSpellCastingAttribute());
-		int casterLevel = getCasterLevel();
-		
-		int failure = role.getSpellFailureBase() + role.getSpellFailureSpellLevelFactor() * spellLevel;
-		failure -= (abilityScore - 10) * role.getSpellFailureAbilityScoreFactor();
-		failure -= casterLevel * role.getSpellFailureCasterLevelFactor();
-		failure -= statManager.get(Bonus.Type.SpellFailure);
-		
-		return failure;
-	}
-	
-	@Override public int getSpellResistance() {
-		return stats().get(Bonus.Type.SpellResistance);
-	}
-	
-	@Override public int getSpellCastingAttribute() {
-		return stats().get(roleSet.getBaseRole().getSpellCastingAttribute());
-	}
-
-	@Override public boolean isValidEffectTarget() {
-		return !this.isDead();
+		return 1;
 	}
 }

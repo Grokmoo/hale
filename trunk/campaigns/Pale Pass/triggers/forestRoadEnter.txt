@@ -1,3 +1,0 @@
-area "Forest Road"
-script "triggers/onForestRoadEnter"
-addPoints

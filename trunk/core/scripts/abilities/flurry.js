@@ -1,12 +1,12 @@
 function canActivate(game, parent) {
-	var apCost = parent.stats().getAttackCost() * 3;
+	var apCost = parent.stats.getAttackCost() * 3;
 
-	if (!parent.getTimer().canPerformAction(apCost)) return false;
+	if (!parent.timer.canPerformAction(apCost)) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
-	if (!weapon.isMeleeWeapon()) return false;
+	var weapon = parent.getMainHandWeapon();
+	if (!weapon.isMelee()) return false;
 	
-	var offHand = parent.getInventory().getOffHandWeapon();
+	var offHand = parent.getOffHandWeapon();
 	if (offHand == null) return false;
 	
 	return true
@@ -62,7 +62,7 @@ function performAttack(game, targeter) {
 	var g1 = game.getBaseParticleGenerator("sparkle");
 	g1.setDurationInfinite();
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(target.getPosition());
+	g1.setPosition(target.getLocation());
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));
 	g1.setGreenDistribution(game.getFixedDistribution(0.0));
 	effect.addAnimation(g1);

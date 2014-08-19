@@ -1,8 +1,0 @@
-name "Immobilization Immunity
-type "Racial Abilities"
-description "This creature is immune to effects causing immobilization or helplessness."
-activateable false
-
-icon "icons/criticalHitImmunity"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('ImmobilizationImmunity'); parent.applyEffect(effect); }"

@@ -14,13 +14,13 @@ function runTurn(game, parent) {
 function tryRoar(game, parent) {
 	// attempt to use the Grimbok's "roar" ability
 
-	var slots = parent.getAbilities().getSlotsWithReadiedAbility("GrimbokRoar");
+	var slots = parent.abilities.getSlotsWithReadiedAbility("GrimbokRoar");
 	for (var i = 0; i < slots.size(); i++) {
 		var slot = slots.get(i);
 		
 		if (slot.canActivate()) {
 			// the ability can be used, so use it
-			var allSlots = parent.getAbilities().createAISet();
+			var allSlots = parent.abilities.createAISet();
 			
 			var targeter = allSlots.activateAndGetTargeter(slot);
 			

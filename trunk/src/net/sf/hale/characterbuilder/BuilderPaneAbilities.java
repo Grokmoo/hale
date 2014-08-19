@@ -25,7 +25,7 @@ import java.util.List;
 
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -136,7 +136,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		int roleLevel = getCharacter().getLevel(role) + 1;
 		
 		List<AbilitySelectionList> raceLists =
-				getCharacter().getWorkingCopy().getRace().getAbilitySelectionsAddedAtLevel(creatureLevel);
+				getCharacter().getWorkingCopy().getTemplate().getRace().getAbilitySelectionsAddedAtLevel(creatureLevel);
 		
 		List<AbilitySelectionList> roleLists =
 			getCharacter().getSelectedRole().getAbilitySelectionsAddedAtLevel(roleLevel);
@@ -167,13 +167,14 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		int selectionsRemaining = 0;
 		currentSelection = null;
 		
-		Creature workingCopy = getCharacter().getWorkingCopy();
+		PC workingCopy = getCharacter().getWorkingCopy();
 		
 		for (Selection selection : selections) {
 			if (!selection.isMade()) {
 				if (currentSelection == null) {
 					currentSelection = selection;
-					AbilitySelectionListPane pane = new AbilitySelectionListPane(selection.list, workingCopy, this);
+					AbilitySelectionListPane pane = new AbilitySelectionListPane(selection.list,
+							workingCopy, this, true);
 					pane.addAbilitySelectorCallback(this);
 					abilitiesPane.setContent(pane);
 				}
@@ -308,9 +309,9 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 			case MOUSE_BTNDOWN:
 			case MOUSE_BTNUP:
 				return false;
+			default:
+				return super.handleEvent(evt);
 			}
-			
-			return super.handleEvent(evt);
 		}
 
 		@Override public void leftClicked() { }

@@ -1,6 +1,6 @@
 /*
  * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
+ * Copyright (C) 2012 Jared Stephen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,169 +23,133 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
+import net.sf.hale.HasScriptState;
+import net.sf.hale.ScriptState;
 import net.sf.hale.ability.Aura;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.EffectTarget;
 import net.sf.hale.ability.EntityEffectSet;
 import net.sf.hale.ability.ScriptFunctionType;
-import net.sf.hale.interfacelock.EntityOffsetAnimation;
+import net.sf.hale.area.Area;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
 import net.sf.hale.loading.Saveable;
-import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Faction;
-import net.sf.hale.ScriptState;
-import net.sf.hale.rules.SubIconList;
-import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.util.SimpleJSONObject;
 import net.sf.hale.view.ConversationPopup;
 
-import org.lwjgl.opengl.GL11;
+/**
+ * The abstract base class for all items and creatures in the world.  The Comparable interface is
+ * used when drawing entities in the area - containers are drawn below doors which are drawn below
+ * creatures
+ * @author Jared
+ *
+ */
 
-import de.matthiasmann.twl.Color;
-
-public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveable {
-	public enum Type {
-		ENTITY, CREATURE, ITEM, CONTAINER, DOOR, TRAP,
-	};
+public abstract class Entity implements EffectTarget, Saveable, HasScriptState, Comparable<Entity> {
 	
-	protected SubIconList subIconList;
+	// the immutable parts of this entity that are duplicated by others
+	private final EntityTemplate template;
+	
 	private String faction;
-	private Point screenPosition;
-	private String description;
-	private String icon;
-	private Sprite iconSprite;
-	private Color iconColor;
-	protected Type type = Type.ENTITY;
-	private String conversationScript = null;
-	protected boolean[][] visibility;
-	private EntityOffsetAnimation curOffsetAnimation;
-	protected boolean drawOnlyHandSubIcons;
-	private List<EntityViewer> viewers;
-	private Point animatingOffset;
 	
-	private String id;
-	private ScriptState scriptState;
-	private final Point position;
-	private final Point lastPosition = new Point(0, 0);
-	private boolean playerSelectable;
-	private EntityEffectSet effects;
+	private Location location;
 	
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("id", id);
-		data.put("type", getType().toString());
-		data.put("ref", SaveGameUtil.getRef(this));
-		
-		if (position.valid) {
-			data.put("xPosition", position.x);
-			data.put("yPosition", position.y);
-		}
+	// used by scripts to store variables
+	private final ScriptState scriptState;
+	
+	private final EntityEffectSet effects;
+	
+	// widgets currently viewing this entity that need to be updated
+	// when changes are made
+	private List<EntityListener> viewers;
 
-		if (playerSelectable) data.put("playerSelectable", playerSelectable);
-		
-		JSONOrderedObject effectsData = effects.save();
-		if (effectsData.size() > 0)
-			data.put("effects", effectsData);
-		
-		if (!scriptState.isEmpty())
-			data.put("scriptState", scriptState.save());
-		
-		return data;
-	}
+	/**
+	 * Creates an entity from the specified template
+	 * @param template the template to use as the base for this entity
+	 */
 	
-	public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
-		refHandler.add(data.get("ref", null), this);
+	protected Entity(EntityTemplate template) {
+		if (template == null)
+			throw new NullPointerException("entity template must not be null");
 		
-		if (data.containsKey("xPosition")) {
-			position.x = data.get("xPosition", 0);
-			position.y = data.get("yPosition", 0);
-			position.valid = true;
-		} else {
-			position.x = 0;
-			position.y = 0;
-			position.valid = false;
-		}
+		this.template = template;
 		
-		screenPosition = AreaUtil.convertGridToScreen(position);
+		this.scriptState = new ScriptState();
 		
-		if (data.containsKey("playerSelectable")) playerSelectable = data.get("playerSelectable", false);
-		
-		if (data.containsKey("effects"))
-			effects.load(data.getObject("effects"), refHandler, this);
-		else
-			effects.clear();
-		
-		if (data.containsKey("scriptState"))
-			scriptState = ScriptState.load(data.getObject("scriptState"));
+		this.effects = new EntityEffectSet();
 		
 		this.faction = Game.ruleset.getString("DefaultFaction");
+		
+		this.location = Location.Inventory;
+		
+		this.viewers = new ArrayList<EntityListener>();
 	}
 	
-	protected Entity(String id) {
-		this(id, "", new Point(false), null, null);
+	/**
+	 * Used for creating a copy of an entity.  Copies permanent fields (effects, faction)
+	 * but not everything (such as location, script state)
+	 * @param other
+	 */
+	
+	protected Entity(Entity other) {
+		this.template = other.template;
+		
+		this.scriptState = new ScriptState(other.scriptState);
+		
+		this.effects = new EntityEffectSet(other.effects, this);
+		this.faction = other.faction;
+		
+		this.location = Location.Inventory;
+		this.viewers = new ArrayList<EntityListener>();
 	}
 	
-	public Entity(Entity e) {
-		this(e.id, e.icon, new Point(e.position), e.description, e.faction);
+	/**
+	 * Parses the current entity state based on the specified JSON data
+	 * @param data the data to parse
+	 * @param area the area that this entity is located in
+	 * @param refHandler the object handling references
+	 */
+	
+	public void load(SimpleJSONObject data, Area area, ReferenceHandler refHandler) throws LoadGameException {
+		this.faction = data.get("faction", null);
 		
-		this.playerSelectable = e.playerSelectable;
-		this.conversationScript = e.conversationScript;
+		refHandler.add(data.get("ref", null), this);
 		
-		if (e.subIconList != null) {
-			this.subIconList = new SubIconList(e.subIconList);
+		if (data.containsKey("location"))
+			this.location = Location.load(data.getObject("location"), area);
+		else
+			this.location = Location.Inventory;
+		
+		if (data.containsKey("scriptState"))
+			this.scriptState.load(data.getObject("scriptState"));
+		
+		if (data.containsKey("effects")) {
+			this.effects.load(data.getObject("effects"), refHandler, this);
 		}
-		
-		this.iconColor = e.iconColor;
-		this.drawOnlyHandSubIcons = e.drawOnlyHandSubIcons;
-		
-		effects = new EntityEffectSet(e.effects, this);
 	}
 	
-	public Entity(String id, String icon, int x, int y) {
-		this(id, icon, new Point(x, y), null, null);
-	}
-	
-	public Entity(String id, String icon, String description) {
-		this(id, icon, new Point(false), description, null);
-	}
-	
-	public Entity(String id, String icon, Point position, String description, String faction) {
-		this.id = id;
-		setIcon(icon);
-		this.position = position;
-		this.screenPosition = AreaUtil.convertGridToScreen(position);
-		this.playerSelectable = false;
-		this.description = description;
-		this.faction = faction;
+	@Override public JSONOrderedObject save() {
+		JSONOrderedObject out = new JSONOrderedObject();
 		
-		effects = new EntityEffectSet();
-		viewers = new ArrayList<EntityViewer>();
+		out.put("id", template.getID());
+		out.put("class", getClass().getSimpleName());
+		out.put("ref", SaveGameUtil.getRef(this));
+		out.put("faction", faction);
 		
-		animatingOffset = new Point();
+		if (location.getArea() != null)
+			out.put("location", location.save());
 		
-		scriptState = new ScriptState();
-	}
-	
-	public Point getSubIconScreenPosition(String type) {
-		Point screenPoint = new Point(screenPosition);
+		if (!scriptState.isEmpty())
+			out.put("scriptState", scriptState.save());
 		
-		if (subIconList == null) return screenPoint;
+		if (effects.size() > 0)
+			out.put("effects", effects.save());
 		
-		Sprite sprite = subIconList.getSprite(type);
-		Point offset = subIconList.getOffset(type);
-		
-		if (sprite == null || offset == null)
-			return screenPoint;
-		
-		screenPoint.x += offset.x + sprite.getWidth() / 2;
-		screenPoint.y += offset.y + sprite.getHeight() / 2;
-		return screenPoint;
+		return out;
 	}
 	
 	/**
@@ -194,7 +158,7 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 	 * @param viewer the EntityViewer to add
 	 */
 	
-	public void addViewer(EntityViewer viewer) {
+	public void addViewer(EntityListener viewer) {
 		viewers.add(viewer);
 	}
 	
@@ -204,140 +168,264 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 	 * @param viewer the viewer to remove
 	 */
 	
-	public void removeViewer(EntityViewer viewer) {
+	public void removeViewer(EntityListener viewer) {
 		viewers.remove(viewer);
 	}
 	
 	/**
 	 * Causes all EntityViewers that are registered with this Entity via
-	 * {@link #addViewer(EntityViewer)} to be updated via {@link EntityViewer#entityUpdated()}
+	 * {@link #addViewer(EntityListener)} to be updated via {@link EntityListener#entityUpdated()}
 	 */
 	
-	public void updateViewers() {
-		for (EntityViewer viewer : viewers) {
-			viewer.entityUpdated();
+	public void updateListeners() {
+		for (EntityListener viewer : viewers) {
+			viewer.entityUpdated(this);
 		}
 	}
 	
-	public void closeViewers() {
-		for (EntityViewer viewer : viewers) {
-			viewer.closeViewer();
+	/**
+	 * Closes and removes all currently active viewers
+	 */
+	
+	public void removeAllListeners() {
+		for (EntityListener viewer : viewers) {
+			viewer.removeListener();
 		}
 		
 		viewers.clear();
 	}
-	
-	public SubIconList getSubIcons() { return subIconList; }
-	
-	public boolean drawWithSubIcons() { return subIconList != null; }
-	
-	public boolean drawOnlyHandSubIcons() {
-		return this.drawOnlyHandSubIcons;
+
+	@Override public int getSpellResistance() {
+		return 0;
+	}
+
+	@Override public boolean isValidEffectTarget() {
+		return true;
 	}
 	
-	public void setDrawOnlyHandSubIcons(boolean draw) {
-		this.drawOnlyHandSubIcons = draw;
+	@Override public Object get(String key) {
+		return scriptState.get(key);
 	}
-	
-	public void setDrawWithSubIcons(boolean draw) {
-		if (!draw) {
-			subIconList = null;
-		} else {
-			subIconList = new SubIconList();
-		}
+
+	@Override public void put(String key, Object value) {
+		scriptState.put(key, value);
 	}
-	
-	public void cancelOffsetAnimation() {
-		if (curOffsetAnimation != null)
-			curOffsetAnimation.cancel();
-	}
-	
-	public void addOffsetAnimation(EntityOffsetAnimation animation) {
-		if (curOffsetAnimation != null)
-			curOffsetAnimation.cancel();
-		
-		this.curOffsetAnimation = animation;
-	}
-	
-	public Point getAnimatingOffsetPoint() {
-		return this.animatingOffset;
-	}
-	
-	public final void draw(Point p) {
-		draw(p.x, p.y);
-	}
-	
-	public final void draw(int x, int y) {
-		if (icon != null) {
-			GL11.glColor4ub(iconColor.getR(), iconColor.getG(), iconColor.getB(), iconColor.getA());
-			iconSprite.drawWithOffset(x, y);
-		}
-		
-		if (subIconList != null) {
-			subIconList.draw(x, y);
-		}
-	}
-	
-	public final void drawForArea(int x, int y) {
-		if (icon != null) {
-			GL11.glColor4ub(iconColor.getR(), iconColor.getG(), iconColor.getB(), iconColor.getA());
-			iconSprite.drawWithOffset(x + animatingOffset.x, y + animatingOffset.y);
-		}
-		
-		if (subIconList != null) {
-			subIconList.draw(x + animatingOffset.x, y + animatingOffset.y);
-		}
-	}
-	
-	public boolean getVisibility(Point p) { return visibility[p.x][p.y]; }
-	
-	public boolean getVisibility(int x, int y) { return visibility[x][y]; }
-	
-	public boolean[][] getVisibility() { return visibility; }
-	
-	public void setVisibility(boolean newArea) {
-		if (visibility == null || newArea) visibility = Game.curCampaign.curArea.getMatrixOfSize();
-		
-		Game.areaListener.getAreaUtil().setVisibilityWithRespectToPosition(visibility, position);
-	}
-	
-	public void startConversation(Entity talker) {
-		ConversationPopup popup = new ConversationPopup(this, talker, this.getConversationScript());
-		popup.startConversation();
-	}
-	
-	public void setConversationScript(String script) { this.conversationScript = script; }
-	public String getConversationScript() { return this.conversationScript; }
-	
-	public boolean isSelected() { return Game.selectedEntity == this; }
-	
-	public void resetAll() { }
-	
-	public void newEncounter() { }
 	
 	/**
-	 * Elapses the specified number of rounds for all effects applied to this Entity
-	 * not otherwise being tracked and all effects created by this Entity
-	 * @param rounds the number of rounds to elapse
-	 * @return true if and only if this Entity has Effects applied to other entities
-	 * that it continues to track after calling this method.
+	 * Gets the template that this entity is based on
+	 * @return the template
 	 */
 	
-	public boolean elapseRounds(int rounds) {
-		effects.elapseRounds(this, rounds);
+	public EntityTemplate getTemplate() { return template; }
+	
+	/**
+	 * Gets the faction this entity is associated with
+	 * @return the faction
+	 */
+	
+	public Faction getFaction() { return Game.ruleset.getFaction(faction); }
+	
+	/**
+	 * Gets the current location of this entity
+	 * @return the entity location
+	 */
+	
+	public Location getLocation() { return location; }
+	
+	/**
+	 * Gets the set of effects currently applied to this entity
+	 * @return the set of effects
+	 */
+	
+	public EntityEffectSet getEffects() { return effects; }
+	
+	/**
+	 * A shortcut for {@link EntityTemplate#getName()} for this
+	 * creature's template
+	 * @return the name of this entity
+	 */
+	
+	public String getName() {
+		return template.getName();
+	}
+	
+	/**
+	 * Sets the location of this entity to the specified coordinates within
+	 * the area that this entity currently resides.
+	 * @param x
+	 * @param y
+	 * 
+	 * Note that for creatures, visibility will be automatically recomputed
+	 * when this function is called
+	 * @return true if the location was set succesfully without any interruptions.
+	 * false if the location was set, but the entity's movement was interrupted
+	 * by one or more traps or triggers.
+	 */
+	
+	public boolean setLocationInCurrentArea(int x, int y) {
+		try {
+		
+			Area area = location.getArea();
+			
+			// set the current player area if this entity is not in an area
+			if (area == null) area = Game.curCampaign.curArea;
+			
+			return setLocation(new Location(area, x, y));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/**
+	 * Sets the location of this entity to a new location with the specified parameters.
+	 * See {@link #setLocation(Location)}
+	 * @param area
+	 * @param x
+	 * @param y
+	 * @return if the location was set succesfully without any interruptions.
+	 * false if the location was set, but the entity's movement was interrupted
+	 * by one or more traps or triggers.
+	 */
+	
+	public boolean setLocation(Area area, int x, int y) {
+		return setLocation(new Location(area, x, y));
+	}
+	
+	/**
+	 * Sets the location of this entity to the specified Location
+	 * @param newLocation the location specifying the area and coordinates
+	 * within that area
+	 * 
+	 * Note that for creatures, visibility will be automatically recomputed
+	 * when this function is called
+	 * @return true if the location was set succesfully without any interruptions.
+	 * false if the location was set, but the entity's movement was interrupted
+	 * by one or more traps or triggers.
+	 */
+	
+	public boolean setLocation(Location newLocation) {
+		Location oldLocation = this.location;
+		
+		Point oldScreen = this.location.getScreenPoint();
+		Point newScreen = newLocation.getScreenPoint();
+		
+		this.location = newLocation;
+		
+		effects.offsetAnimationPositions(newScreen.x - oldScreen.x, newScreen.y - oldScreen.y);
+		effects.moveAuras();
+		
+		if (oldLocation == null || oldLocation.getArea() == null) {
+			// not within an area, do nothing
+			
+		} else if (oldLocation.getArea() == newLocation.getArea()) {
+			// moving within an area
+			this.location.getArea().getEntities().moveEntity(this, oldLocation);
+		} else {
+			// moving to a new area
+			oldLocation.getArea().getEntities().removeEntity(this);
+			newLocation.getArea().getEntities().addEntity(this);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Sets the faction for this Entity
+	 * @param faction
+	 */
+	
+	public void setFaction(Faction faction) {
+		this.faction = faction.getName();
+	}
+	
+	/**
+	 * Sets the faction for this Entity
+	 * @param faction the ID of the faction
+	 */
+	
+	public void setFaction(String faction) {
+		setFaction(Game.ruleset.getFaction(faction));
+	}
+	
+	/**
+	 * Returns true if the faction of this entity is the player character
+	 * faction, false otherwise
+	 * @return whether this entity is a member of the player character faction
+	 */
+	
+	public boolean isPlayerFaction() {
+		return faction.equals(Game.ruleset.getString("PlayerFaction"));
+	}
+	
+	/**
+	 * Draws this Entity for the UI view
+	 * @param x the x screen coordinate
+	 * @param y the y screen coordinate
+	 */
+	
+	public void uiDraw(int x, int y) {
+		template.getIcon().draw(x, y);
+	}
+	
+	/**
+	 * Draws this Entity for the main area view
+	 * @param x the x screen coordinate
+	 * @param y the y screen coordinate
+	 */
+	
+	public void areaDraw(int x, int y) {
+		template.getIcon().drawCentered(x, y, Game.TILE_SIZE, Game.TILE_SIZE);
+	}
+	
+	/**
+	 * Elapses the specified number of rounds for this entity, all applied
+	 * effects, and any children entities (such as items in a creature's inventory)
+	 * @param numRounds
+	 */
+	
+	public boolean elapseTime(int numRounds) {
+		effects.elapseRounds(this, numRounds);
 		
 		return false;
 	}
 	
-	public EntityEffectSet getEffects() { return effects; }
+	/**
+	 * Starts a conversation between this entity and the specified talker.
+	 * This entity's conversation script is used.
+	 * @param talker
+	 */
+	
+	public void startConversation(PC talker) {
+		ConversationPopup popup = new ConversationPopup(this, talker, template.getConversation());
+		popup.startConversation();
+	}
+	
+	/**
+	 * Creates a new effect with no script
+	 * @return a new effect
+	 */
 	
 	public Effect createEffect() {
 		return new Effect();
 	}
 	
+	/**
+	 * Creates a new effect with the specified script
+	 * @param scriptID
+	 * @return a new effect
+	 */
+	
 	public Effect createEffect(String scriptID) {
 		return new Effect(scriptID);
 	}
+	
+	/**
+	 * Creates a new aura with the specified script
+	 * @param scriptID
+	 * @return a new effect
+	 */
 	
 	public Aura createAura(String scriptID) {
 		return new Aura(scriptID);
@@ -351,133 +439,40 @@ public abstract class Entity implements Comparable<Entity>, EffectTarget, Saveab
 		
 		effect.startAnimations();
 		
-		this.effects.add(effect, position.valid);
+		effects.add(effect, getLocation().getArea() != null);
+		
+		this.updateListeners();
 	}
 	
-	@Override public int getSpellResistance() { return 0; }
-	
 	@Override public void removeEffect(Effect effect) {
+		if (effect == null) return;
+		
 		effect.executeFunction(ScriptFunctionType.onRemove, effect);
 		
 		removeEffectBonuses(effect);
 		
 		effect.endAnimations();
 		
-		this.effects.remove(effect);
+		effects.remove(effect);
+		
+		this.updateListeners();
 	}
+	
+	/**
+	 * Called when adding an effect.  The default implementation does nothing
+	 * @param effect
+	 */
 	
 	protected void applyEffectBonuses(Effect effect) { }
+	
+	/**
+	 * Called when removing an effect.  The default implementation does nothing
+	 * @param effect
+	 */
+	
 	protected void removeEffectBonuses(Effect effect) { }
 	
-	public final boolean positionValid() { return position.valid; }
-	public final int getX() { return position.x; }
-	public final int getY() { return position.y; }
-	
-	public int getLastPositionX() { return lastPosition.x; }
-	public int getLastPositionY() { return lastPosition.y; }
-	
-	public Point getScreenPosition() {
-		return AreaUtil.convertGridToScreenAndCenter(this.getX(), this.getY());
-	}
-	
-	public boolean setPosition(Point position) {
-		boolean returnValue = setPosition(position.x, position.y);
-		
-		this.position.valid = position.valid;
-		
-		return returnValue;
-	}
-	
-	public void invalidatePosition() {
-		this.position.valid = false;
-	}
-	
-	public boolean setPosition(int x, int y) {
-		this.lastPosition.x = this.position.x;
-		this.lastPosition.y = this.position.y;
-		this.lastPosition.valid = this.position.valid;
-		
-		this.position.x = x;
-		this.position.y = y;
-		this.position.valid = true;
-		
-		Point screenOld = screenPosition;
-		screenPosition = AreaUtil.convertGridToScreen(position);
-		
-		effects.offsetAnimationPositions(screenPosition.x - screenOld.x, screenPosition.y - screenOld.y);
-		effects.moveAuras();
-		
-		if (Game.curCampaign.curArea != null) {
-			Game.curCampaign.curArea.getEntities().moveEntity(this);
-		}
-		
-		animatingOffset.x = 0;
-		animatingOffset.y = 0;
-		
-		return false;
-	}
-	
-	public Point getPosition() { return new Point(position); }
-	
-	public void setID(String id) { this.id = id; }
-	public void setPlayerSelectable(boolean playerSelectable) { this.playerSelectable = playerSelectable; }
-	public void setFaction(Faction faction) { this.faction = faction.getName(); }
-	public void setFaction(String faction) { this.faction = faction; }
-	public void setDescription(String description) { this.description = description; }
-	
-	public void setIcon(String icon) {
-		this.icon = icon;
-		if (icon != null) {
-			this.iconSprite = SpriteManager.getSprite(icon);
-		}
-	}
-	
-	public void setIconColor(Color color) {
-		if (color == null) this.iconColor = Color.WHITE;
-		else this.iconColor = color;
-	}
-	
-	public boolean isPlayerSelectable() { return playerSelectable; }
-	public String getID() { return id; }
-	public Color getIconColor() { return iconColor; }
-	public String getIcon() { return icon; }
-	public String getDescription() { return description; }
-	public String getName() { return id; }
-	public Type getType() { return type; }
-	public Faction getFaction() { return Game.ruleset.getFaction(faction); }
-
-	public boolean isCreature() { return type == Entity.Type.CREATURE; }
-	
-	public Object get(String ref) { return scriptState.get(ref); }
-	
-	public void put(String ref, Object data) {
-		scriptState.put(ref, data);
-	}
-	
-	public String getFullName() {
-		return id;
-	}
-	
 	@Override public int compareTo(Entity other) {
-		int thisPriority = 0;
-		int otherPriority = 0;
-		
-		switch (this.getType()) {
-		case DOOR: thisPriority = 1; break;
-		case TRAP: thisPriority = 2; break;
-		case CONTAINER: thisPriority = 3; break;
-		case CREATURE: thisPriority = 4; break;
-		}
-		
-		switch (other.getType()) {
-		case DOOR: otherPriority = 1; break;
-		case TRAP: otherPriority = 2; break;
-		case CONTAINER: otherPriority = 3; break;
-		case CREATURE: otherPriority = 4; break;
-		}
-		
-		if (thisPriority > otherPriority) return 1;
-		if (thisPriority < otherPriority) return -1;
-		else return this.hashCode() - other.hashCode();
+		return hashCode() - other.hashCode();
 	}
 }

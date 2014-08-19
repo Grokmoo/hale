@@ -78,4 +78,16 @@ public class Weight {
 		nf.setMaximumFractionDigits(3);
 		return nf.format(grams / 1000.0);
 	}
+	
+	/**
+	 * Returns a formatted string representing the specified weight in kilograms
+	 * @param grams
+	 * @return a String with the weight in kilograms
+	 */
+	
+	public static String toStringKilograms(int grams) {
+		NumberFormat nf = NumberFormat.getInstance();
+		nf.setMaximumFractionDigits(3);
+		return nf.format(grams / 1000.0);
+	}
 }

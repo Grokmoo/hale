@@ -1,9 +1,0 @@
-size 5
-faction "Neutral"
-challenge 0
-creature "deepDwarfPeasant05" -4 0
-creature "deepDwarfPeasant06" -3 2
-creature "deepDwarfPeasant04" 0 3
-creature "deepDwarfPeasant01" 4 0
-creature "deepDwarfPeasant02" 3 -1
-creature "deepDwarfPeasant03" 1 -4

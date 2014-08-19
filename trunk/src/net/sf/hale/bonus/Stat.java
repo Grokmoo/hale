@@ -27,7 +27,7 @@ public enum Stat {
 	MentalResistance("Mental Resistance"), PhysicalResistance("Physical Resistance"), ReflexResistance("Reflex Resistance"),
 	WeightLimit("Weight Limit"),
 	AttacksOfOpportunity("Attacks of Opportunity"),
-	ArmorClass("Armor Class"), TouchArmorClass("Armor Class to Touch"),
+	ArmorClass("Defense"), TouchArmorClass("Defense to Touch"),
 	ShieldAttackPenalty("Shield Attack Penalty"), ArmorPenalty("Armor Penalty"),
 	MovementBonus("Movement Bonus"), MovementCost("Movement Cost"),
 	InitiativeBonus("Initiative Bonus"),

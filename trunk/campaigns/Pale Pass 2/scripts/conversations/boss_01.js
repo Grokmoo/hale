@@ -17,7 +17,7 @@ function convo01b(game, parent, target, conversation) {
 }
 
 function convo02(game, parent, target, conversation) {
-	conversation.addText("Thats unlikely, I'm afraid.  All ready, he has raised an army that has the nations of the surface trembling in fear.");
+	conversation.addText("Thats unlikely, I'm afraid.  Already, he has raised an army that has the nations of the surface trembling in fear.");
 	
 	conversation.addText("Soon, you and the last few remaining descendants will be dead, and his power will be complete.");
 	
@@ -34,7 +34,7 @@ function convo02b(game, parent, target, conversation) {
 }
 
 function onExit(game, parent, talker, conversation) {
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
     conversation.exit();
     game.clearRevealedAreas();
 }

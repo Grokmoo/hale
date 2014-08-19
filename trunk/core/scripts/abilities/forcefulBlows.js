@@ -1,6 +1,8 @@
 function enablePowerfulBlows(game, slot, level) {
    var effect = slot.createEffect();
    effect.setTitle(slot.getAbility().getName());
+   effect.addPositiveIcon("items/enchant_damage_small");
+   effect.addPositiveIcon("items/enchant_attack_small");
    
    effect.getBonuses().addPenalty('OneHandedMeleeWeaponAttack', -level);
    effect.getBonuses().addPenalty('TwoHandedMeleeWeaponAttack', -level);
@@ -18,9 +20,9 @@ function enablePowerfulBlows(game, slot, level) {
 }
 
 function onActivate(game, slot) {
-   game.addMenuLevel("Powerful Blows");
+   if (!game.addMenuLevel("Powerful Blows")) return;
 
-   var improved = slot.getParent().getAbilities().has("PowerfulBlows");
+   var improved = slot.getParent().abilities.has("PowerfulBlows");
    
    var max = 20;
    if (improved) max = 40;

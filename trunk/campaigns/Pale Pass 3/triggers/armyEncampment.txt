@@ -1,3 +1,0 @@
-area "Army Encampment"
-script "triggers/armyEncampment"
-addPoints   38 38   38 39   38 37   40 42   38 41   38 40   39 41

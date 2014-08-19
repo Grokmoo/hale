@@ -81,6 +81,9 @@ public class Updater extends Thread {
 	}
 	
 	private void finish() {
+		// remove the updates available file
+		new File(Game.getConfigBaseDirectory() + "updateAvailable.txt").delete();
+		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override public void run() {
 				try {

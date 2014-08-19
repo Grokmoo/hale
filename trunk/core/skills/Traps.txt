@@ -1,9 +1,0 @@
-name "Traps"
-verb Trap
-verbPast Crafted
-untrained false
-keyAttribute Dex
-hasArmorPenalty false
-restrictToRole Rogue
-craft true
-icon "icons/traps"

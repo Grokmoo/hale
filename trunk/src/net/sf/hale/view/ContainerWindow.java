@@ -22,7 +22,7 @@ package net.sf.hale.view;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.rules.ItemList;
+import net.sf.hale.entity.PC;
 
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ThemeInfo;
@@ -37,7 +37,7 @@ import de.matthiasmann.twl.ThemeInfo;
 public class ContainerWindow extends GameSubWindow {
 	private int buttonGap;
 	
-	private Creature opener;
+	private PC opener;
 	private Container container;
 	
 	private final Button takeAllButton;
@@ -46,7 +46,7 @@ public class ContainerWindow extends GameSubWindow {
 	
 	/**
 	 * Creates a new empty container window.  This widget will not have any content
-	 * until {@link #setOpenerContainer(Creature, Container)} is called and then
+	 * until {@link #setOpenerContainer(PC, Container)} is called and then
 	 * {@link #updateContent()}
 	 */
 	
@@ -94,17 +94,7 @@ public class ContainerWindow extends GameSubWindow {
 	private void takeAll() {
 		if (opener == null || container == null) return;
 		
-		ItemList list = container.getItems();
-		
-		for (int i = 0; i < list.size(); i++) {
-			opener.getInventory().pickupItemAction(list.getItem(i), list.getQuantity(i));
-		}
-		
-		list.clear();
-		
-		if (container.getDescription().equals(Game.ruleset.getString("TempContainerDescription"))) {
-			Game.curCampaign.curArea.removeEntity(container);
-		}
+		opener.inventory.getTakeAllCallback(container).run();
 		
 		this.setVisible(false);
 	}
@@ -116,7 +106,7 @@ public class ContainerWindow extends GameSubWindow {
 	 * @param container the container that is being viewed
 	 */
 	
-	public void setOpenerContainer(Creature opener, Container container) {
+	public void setOpenerContainer(PC opener, Container container) {
 		this.opener = opener;
 		this.container = container;
 	}
@@ -130,12 +120,12 @@ public class ContainerWindow extends GameSubWindow {
 		
 		if (this.opener == null || this.container == null) return;
 		
-		this.setTitle(opener.getName() + " opens " + container.getName());
+		this.setTitle(opener.getTemplate().getName() + " opens " + container.getTemplate().getName());
 		
 		takeAllButton.setEnabled(!Game.isInTurnMode());
 		
 		if (this.container != null) {
-			viewer.updateContent(ItemListViewer.Mode.CONTAINER, this.opener, null, this.container.getItems());
+			viewer.updateContent(ItemListViewer.Mode.CONTAINER, this.opener, null, this.container.getCurrentItems());
 		} else {
 			viewer.updateContent(ItemListViewer.Mode.CONTAINER, this.opener, null, null);
 		}

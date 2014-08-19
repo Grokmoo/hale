@@ -24,7 +24,7 @@ generator.setAlphaSpeedDistribution(game.getFixedDistribution(-0.8));
 
 //Example for fireball
 //ParticleGenerator g1 = Game.particleManager.get("bolt");
-//g1.setVelocityDurationBasedOnSpeed(Game.selectedEntity.getPosition(), gridPoint, 400.0f);
+//g1.setVelocityDurationBasedOnSpeed(Game.selectedEntity.getLocation().toPoint(), gridPoint, 400.0f);
 //g1.setGreenVelocityDistribution(new GaussianDistribution(-1.0f, 0.01f));
 //g1.setBlueVelocityDistribution(new GaussianDistribution(-6.0f, 0.01f));
 //

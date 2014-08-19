@@ -48,8 +48,8 @@ public class CreatureSubEditor extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		
-		JLabel id = new JLabel("ID: " + creature.getID());
-		JLabel name = new JLabel("Name: " + creature.getName());
+		JLabel id = new JLabel("ID: " + creature.getTemplate().getID());
+		JLabel name = new JLabel("Name: " + creature.getTemplate().getName());
 		
 		add(id, c);
 		

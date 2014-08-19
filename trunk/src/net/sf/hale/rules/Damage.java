@@ -22,6 +22,7 @@ package net.sf.hale.rules;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.DifficultyManager;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 
@@ -35,6 +36,7 @@ import net.sf.hale.entity.Creature;
 public class Damage {
 	private Creature parent;
 	private int totalDamage;
+	private String message;
 	
 	private List<Entry> entries;
 
@@ -109,11 +111,10 @@ public class Damage {
 	/**
 	 * Computes the total amount of damage that should be applied to the owner creature
 	 * from all the damage amounts and types that have been added to this damage
-	 * @param message whether to add a message to the main message viewer based on this damage
 	 * @return the total amount of damage to apply
 	 */
 	
-	public int computeAppliedDamage(boolean message) {
+	public int computeAppliedDamage() {
 		DifficultyManager diffManager = Game.ruleset.getDifficultyManager();
 		
 		this.totalDamage = 0;
@@ -122,36 +123,44 @@ public class Damage {
 		
 		for (Entry entry : entries) {
 			int baseDamageOfType = entry.damage;
-			if (parent.isPlayerSelectable()) {
+			if (parent.getFaction() == Game.ruleset.getFaction(Game.ruleset.getString("PlayerFaction"))) {
 				// apply difficulty settings to PCs
 				baseDamageOfType = baseDamageOfType * diffManager.getDamageFactorOnPCs() / 100;
 			}
 			
-			int damage = parent.stats().getAppliedDamage(baseDamageOfType, entry.type);
+			int damage = parent.stats.getAppliedDamage(baseDamageOfType, entry.type);
 			
 			totalDamage += damage;
 			
 			if (entry.type != null) {
-				int dr = parent.stats().getDamageReduction(entry.type);
-				int percent = parent.stats().getDamageImmunity(entry.type);
+				int dr = parent.stats.getDamageReduction(entry.type);
+				int percent = parent.stats.getDamageImmunity(entry.type);
 				
 				str.append(" (" + baseDamageOfType + " " + entry.type.getName());
-				if (dr > 0) str.append(", DR " + dr);
+				if (dr > 0) str.append(", " + dr + " Damage Reduction");
 				
-				if (percent > 0) str.append(", " + percent + "% Immun");
-				else if (percent < 0) str.append(", " + percent + "% Vuln");
+				if (percent > 0) str.append(", " + percent + "% Immune");
+				else if (percent < 0) str.append(", " + (-percent) + "% Vulnerable");
 				str.append(")");
 			}
 		}
 		
 		str.append(".");
-		str.insert(0, parent.getName() + " takes " + totalDamage + " damage");
+		str.insert(0, parent.getTemplate().getName() + " takes " + totalDamage + " damage");
 		
-		if (message && !parent.isImmortal() && Game.mainViewer != null) {
-			Game.mainViewer.addMessage("red", str.toString());
-		}
+		message = str.toString();
 		
 		return totalDamage;
+	}
+	
+	/**
+	 * Gets the descriptive message showing the amount of damage applied by this damage
+	 * object
+	 * @return the descriptive message
+	 */
+	
+	public String getMessage() {
+		return message;
 	}
 	
 	/**
@@ -178,6 +187,12 @@ public class Damage {
 		
 		return false;
 	}
+	
+	/**
+	 * A single entry in a damage list
+	 * @author Jared
+	 *
+	 */
 	
 	private class Entry {
 		private final DamageType type;

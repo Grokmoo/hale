@@ -130,6 +130,15 @@ public class RightClickMenuLevel extends Widget {
 	}
 	
 	/**
+	 *  the title
+	 * @return the title for this menu level as a string
+	 */
+	
+	public String getTitle() {
+		return title.getText();
+	}
+	
+	/**
 	 * Returns the last button that was clicked in this Menu Level.  Used to determine
 	 * the parent button for new menu levels created from this menu level
 	 * @return the last button that was clicked in this Menu Level

@@ -1,9 +1,9 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("MassCurse")) {
+	if (slot.getParent().abilities.has("MassCurse")) {
 		var targeter = game.createCircleTargeter(slot);
 		targeter.setRadius(4);
 		targeter.setRelationshipCriterion("Hostile");
-		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.addAllowedPoint(slot.getParent().getLocation());
 		targeter.activate();
 	} else {
 		var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Hostile");
@@ -22,7 +22,7 @@ function onTargetSelect(game, targeter) {
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (parent.getAbilities().has("MassCurse")) {
+	if (parent.abilities.has("MassCurse")) {
 		if (!spell.checkSpellFailure(parent)) return;
 	
 		var targets = targeter.getAffectedCreatures();
@@ -35,7 +35,7 @@ function onTargetSelect(game, targeter) {
 		
 		var targetsCursed = targets.size();
 		
-		if (parent.getAbilities().has("Drain")) {
+		if (parent.abilities.has("Drain")) {
 			targeter.setRelationshipCriterion("Friendly");
 			for (var i = 0; i < targets.size() && i < targetsCursed; i++) {
 				var target = targets.get(i);
@@ -65,16 +65,16 @@ function performTouch(game, targeter, duration) {
 	
 	applyCurse(game, targeter, target, duration);
 	
-	if (parent.getAbilities().has("Drain"))
+	if (parent.abilities.has("Drain"))
 		bolsterAlly(game, targeter, parent, duration);
 }
 
 function bolsterAlly(game, targeter, target, duration) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
-	if (parent.getAbilities().has("Enfeeble")) {
+	if (parent.abilities.has("Enfeeble")) {
 		var attrPenalty = 1 + parseInt(casterLevel / 6);
 	
 		var effect = targeter.getSlot().createEffect();
@@ -82,11 +82,13 @@ function bolsterAlly(game, targeter, target, duration) {
 		effect.setTitle(spell.getName() + " Drain");
 		effect.getBonuses().addBonus('Con', attrPenalty);
 		effect.getBonuses().addBonus('Dex', attrPenalty);
+		effect.addPositiveIcon("items/enchant_constitution_small");
+		effect.addPositiveIcon("items/enchant_dexterity_small");
 		
 		var g1 = game.getBaseParticleGenerator("sparkle");
 		g1.setDuration(1.0);
 		g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-		g1.setPosition(target.getPosition());
+		g1.setPosition(target.getLocation());
 		g1.setRedDistribution(game.getFixedDistribution(0.0));
 		g1.setBlueDistribution(game.getFixedDistribution(0.0));
 		g1.setGreenDistribution(game.getFixedDistribution(1.0));
@@ -99,7 +101,7 @@ function bolsterAlly(game, targeter, target, duration) {
 function applyCurse(game, targeter, target, duration) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	var acPenalty = -10 - casterLevel;
 	
@@ -107,18 +109,21 @@ function applyCurse(game, targeter, target, duration) {
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	effect.getBonuses().addPenalty('ArmorClass', 'Stackable', acPenalty);
+	effect.addNegativeIcon("items/enchant_armor_small");
 	
-	if (parent.getAbilities().has("Enfeeble")) {
+	if (parent.abilities.has("Enfeeble")) {
 		var attrPenalty = -1 - parseInt(casterLevel / 6);
 	
 		effect.getBonuses().addPenalty('Con', attrPenalty);
 		effect.getBonuses().addPenalty('Dex', attrPenalty);
+		effect.addNegativeIcon("items/enchant_constitution_small");
+		effect.addNegativeIcon("items/enchant_dexterity_small");
 	}
 	
 	var anim = game.getBaseAnimation("rune");
 	anim.addFrames("animations/rune2-", 1, 4);
 	anim.setDurationInfinite();
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y + 15.0);
 	effect.addAnimation(anim);
 	   

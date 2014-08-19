@@ -1,8 +1,0 @@
-name "Reflexive Attacks"
-type "General"
-activateable false
-description "You gain an additional 2 possible Attacks of Opportunity each round.  You still can only gain one attack per opportunity."
-
-icon "icons/reflexiveAttacks"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('AttacksOfOpportunity', 'Stackable', 2); parent.applyEffect(effect); }"

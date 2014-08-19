@@ -25,12 +25,15 @@ import java.util.List;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.widgets.BasePortraitViewer;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.EditField;
+import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
@@ -70,13 +73,13 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		Color.FUCHSIA, Color.PURPLE, new Color(0xFF501002) };
 	
 	private Widget appearanceHolder;
-	private SubIconViewer characterViewer;
+	private CharacterViewer characterViewer;
 	private PortraitViewer portraitViewer;
 	
 	private int gap, smallGap;
 	private String noNameMessage, noGenderMessage, noPortraitMessage;
 	
-	private Creature workingCopy;
+	private PC workingCopy;
 	
 	private Label nameLabel;
 	private EditField nameField;
@@ -157,7 +160,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		appearanceHolder = new AppearanceArea();
 		add(appearanceHolder);
 		
-		characterViewer = new SubIconViewer();
+		characterViewer = new CharacterViewer();
 		characterViewer.setTheme("characterviewer");
 		appearanceHolder.add(characterViewer);
 		
@@ -182,10 +185,10 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		randomName.addCallback(new Runnable() {
 			@Override public void run() {
 				// setting the name field text will fire the nameField callback
-				if (workingCopy.getGender() == Ruleset.Gender.Male) {
-					nameField.setText(workingCopy.getRace().getRandomMaleName());
+				if (workingCopy.getTemplate().getGender() == Ruleset.Gender.Male) {
+					nameField.setText(workingCopy.getTemplate().getRace().getRandomMaleName());
 				} else {
-					nameField.setText(workingCopy.getRace().getRandomFemaleName());
+					nameField.setText(workingCopy.getTemplate().getRace().getRandomFemaleName());
 				}
 			}
 		});
@@ -471,7 +474,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	
 	private void updateWorkingCopy() {
 		workingCopy = getCharacter().getWorkingCopy();
-		characterViewer.setSubIconList(workingCopy.getSubIcons());
+		characterViewer.character = workingCopy;
+		
 		portraitViewer.setCreature(workingCopy);
 		
 		// set next button state
@@ -683,7 +687,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		private Ruleset.Gender gender;
 		
 		private GenderSelector(Ruleset.Gender gender, String icon) {
-			super(gender.toString(), icon, false);
+			super(gender.toString(), IconFactory.createIcon(icon), false);
 			this.gender = gender;
 			this.setSelectable(true);
 		}
@@ -794,6 +798,24 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		
 		@Override public void run() {
 			callback.colorSet(color);
+		}
+	}
+	
+	private class CharacterViewer extends Widget {
+		private PC character;
+		
+		@Override protected void paintWidget(GUI gui) {
+			if (character != null) {
+				character.uiDraw(getInnerX(), getInnerY());
+			}
+		}
+		
+		@Override public int getPreferredInnerWidth() {
+			return Game.TILE_SIZE;
+		}
+		
+		@Override public int getPreferredInnerHeight() {
+			return Game.TILE_SIZE;
 		}
 	}
 }

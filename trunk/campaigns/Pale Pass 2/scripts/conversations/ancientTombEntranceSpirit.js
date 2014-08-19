@@ -14,7 +14,7 @@ function startConversation(game, parent, target, conversation) {
         conversation.addText("Hello again mortal.");
         
         conversation.addResponse("Tell me more about the trials in this tomb.", "trials01");
-        conversation.addResponse("Farewll.", "onExit");
+        conversation.addResponse("Farewell.", "onExit");
     } else {
         conversation.addText("What brings you into my tomb, mortal?");
         
@@ -24,7 +24,7 @@ function startConversation(game, parent, target, conversation) {
 }
 
 function convo02(game, parent, target, conversation) {
-    conversation.addText("The key was broken and stolen from this place many years ago.  Only one pice remains.");
+    conversation.addText("The key was broken and stolen from this place many years ago.  Only one piece remains.");
     
     conversation.addResponse("I know.  I need that piece.", "convo03");
     conversation.addResponse("I see.  Goodbye, then.", "onExit");

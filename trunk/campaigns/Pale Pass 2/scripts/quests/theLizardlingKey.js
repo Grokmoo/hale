@@ -5,7 +5,7 @@ function startQuest(game) {
     
     var entry = quest.createSubEntry("Find the Key");
     
-    entry.addText("The Lizardling Domain contains one key fragment.  Find the Lizardling King, and obtain the fragment from him.  The Lizardling Domain is located to the NorthEast of the Mushroom Forest.");
+    entry.addText("The Lizardling Domain contains one key fragment.  Find the Lizardling King, and obtain the fragment from him.  The Lizardling Domain is located to the Northeast of the Mushroom Forest.");
 }
 
 function talkKing(game) {

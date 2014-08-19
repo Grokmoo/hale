@@ -1,9 +1,0 @@
-name "Proficiency, Maces"
-description "You are able to use maces and morningstars in combat."
-activateable false
-
-type "Weapon Proficiencies"
-
-icon "icons/proficiencyMaces"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Mace'); effect.getBonuses().addWeaponProficiency('Morningstar'); parent.applyEffect(effect); }"

@@ -25,10 +25,10 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JFrame;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 import net.sf.hale.Config;
-import net.sf.hale.EntityManager;
 import net.sf.hale.Game;
 import net.sf.hale.loading.AsyncTextureLoader;
 import net.sf.hale.resource.ResourceManager;
@@ -51,11 +51,20 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	 */
 	
 	public static void main(String[] args) {
+		// determine system type
+		String osString = System.getProperty("os.name").toLowerCase();
+
+		Game.OSType osType;
+		if (osString.contains("win")) osType = Game.OSType.Windows;
+		else if (osString.contains("mac")) osType = Game.OSType.Mac;
+		else osType = Game.OSType.Unix;
+
+		Game.initializeOSSpecific(osType);
+		
 		// create the basic objects used by the campaign editor
 		Game.textureLoader = new AsyncTextureLoader();
-		Game.config = new Config(Game.configFile);
+		Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
 		Game.scriptEngineManager = new JSEngineManager();
-		Game.entityManager = new EntityManager();
 		Game.dice = new Dice();
 		
 		ResourceManager.registerCorePackage();
@@ -75,24 +84,21 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	}
 
 	private EditorMenuBar menuBar;
-
+	private AreaPalette palette;
 	private Canvas canvas;
 	private OpenGLThread glThread;
 	
 	private SwingEditor() {
 		addComponentListener(this);
-		setSize(Game.config.getEditorResolutionX(), Game.config.getEditorResolutionY());
+		setSize(Game.config.getResolutionX(), Game.config.getResolutionY());
 		setTitle("Hale Campaign Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		menuBar = new EditorMenuBar(this);
-		setJMenuBar(menuBar);
 		
 		// set up the OpenGL canvas
 		canvas = new Canvas() {
 			@Override public void addNotify() {
 				super.addNotify();
-				glThread = new OpenGLThread(canvas);
+				glThread = new OpenGLThread(SwingEditor.this);
 				glThread.start();
 			}
 			
@@ -101,6 +107,15 @@ public class SwingEditor extends JFrame implements ComponentListener {
 			}
 		};
 		add(canvas, BorderLayout.CENTER);
+		
+		palette = new AreaPalette();
+		add(palette, BorderLayout.EAST);
+		
+		// make the menu bar appear on top of the canvas rather than below
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+		
+		menuBar = new EditorMenuBar(this);
+		setJMenuBar(menuBar);
 	}
 	
 	/**
@@ -110,6 +125,16 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	
 	public void setLogEntry(String entry) {
 		menuBar.setLogText(entry);
+	}
+	
+	/**
+	 * Returns the palette used for selecting components to be painted
+	 * to the current area
+	 * @return the area palette
+	 */
+	
+	public AreaPalette getPalette() {
+		return palette;
 	}
 	
 	/**

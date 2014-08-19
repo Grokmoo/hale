@@ -18,7 +18,7 @@ function startQuest(game) {
     game.currentArea().removeEntity(game.currentArea().getEntityWithID("willowInn_guest03"));
     game.currentArea().removeEntity(game.currentArea().getEntityWithID("willowInn_guest04"));
     
-    game.currentArea().getEntityWithID("willowInn_barmaid").setPosition(13, 5);
+    game.currentArea().getEntityWithID("willowInn_barmaid").setLocationInCurrentArea(13, 5);
 }
 
 function seeVision(game) {

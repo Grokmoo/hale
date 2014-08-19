@@ -75,12 +75,11 @@ public class SaveWriter {
 			Class<?> arrayClz = value.getClass();
 			Class<?> c = arrayClz.getComponentType();
 
-			out.append('[');
-			out.println();
 			boolean needSep = false;
-
 			String indentPlusOne = indent + "  ";
 			
+			out.append('[');
+			out.println();
 			out.append(indentPlusOne);
 			
 			if (c.isPrimitive()) {
@@ -161,6 +160,7 @@ public class SaveWriter {
 					SaveWriter.writeJSONValue(o, out, indentPlusOne);
 				}
 			}
+			
 			out.println();
 			out.append(indent);
 			out.append(']');

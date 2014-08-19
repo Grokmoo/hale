@@ -1,6 +1,0 @@
-name "Paladin"
-
-subList "PaladinAbilities" 0.5 0.5
-
-subList "Melee"            0.5 4.0
-subList "Defense"          4.0 4.0

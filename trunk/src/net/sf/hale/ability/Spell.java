@@ -21,12 +21,13 @@ package net.sf.hale.ability;
 
 import java.util.List;
 
+import de.matthiasmann.twl.Color;
+
 import net.sf.hale.Game;
 import net.sf.hale.ScriptInterface;
 import net.sf.hale.bonus.Bonus;
-import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.FileKeyMap;
+import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * A Spell is a special type of Ability with some additional information such
@@ -46,16 +47,16 @@ public class Spell extends Ability {
 	 * @param id the ID String of the Spell
 	 * @param script the script contents of the Spell
 	 * @param scriptLocation the resource location of the script for the Spell
-	 * @param map the FileKeyMap containing keys with values for the data making up
+	 * @param data the JSON containing keys with values for the data making up
 	 * this Spell
 	 */
 	
-	protected Spell(String id, String script, String scriptLocation, FileKeyMap map) {
-		super(id, script, scriptLocation, map, false);
+	protected Spell(String id, String script, String scriptLocation, SimpleJSONObject data) {
+		super(id, script, scriptLocation, data, false);
 		
-		this.verbalComponent = map.getValue("verbalcomponent", true);
-		this.somaticComponent = map.getValue("somaticcomponent", true);
-		this.spellResistanceApplies = map.getValue("spellresistance", true);
+		this.verbalComponent = data.get("hasVerbalComponent", true);
+		this.somaticComponent = data.get("hasSomaticComponent", true);
+		this.spellResistanceApplies = data.get("spellResistanceApplies", true);
 	}
 	
 	/**
@@ -96,56 +97,53 @@ public class Spell extends Ability {
 	 * In addition to the actions performed by the parent Object,
 	 * also performs search checks for the parent Entity.
 	 * 
-	 * See {@link Ability#activate(AbilityActivator)}
+	 * See {@link #activate(Creature)}
 	 */
 	
-	@Override public void activate(AbilityActivator parent) {
+	@Override public void activate(Creature parent) {
 		super.activate(parent);
 		
-		if (parent instanceof Creature) {
-			ScriptInterface.performSearchChecksForCreature((Creature)parent,
-					Game.ruleset.getValue("HideCastSpellPenalty"));
-		}
+		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideCastSpellPenalty"));
 	}
 	
-	@Override public int getCooldown(AbilityActivator parent) {
+	@Override public int getCooldown(Creature parent) {
 		int baseCooldown = super.getCooldown(parent);
 		
-		return baseCooldown - parent.stats().get(Bonus.Type.SpellCooldown);
+		return baseCooldown - parent.stats.get(Bonus.Type.SpellCooldown);
 	}
 	
 	/**
 	 * Determines whether the parent casting this Spell should suffer random Spell
 	 * failure.  It is assumed that the parent is suffering no additional failure due
 	 * to target concealment.  This is typically the situation when the caster is casting
-	 * a spell targeting themselves, an ally, or a point in the Area (not a hostile creature)
+	 * a point in the Area (not a hostile creature)
 	 * 
 	 * @param parent the parent Creature that is casting this Spell
 	 * @return true if the spell should be cast successfully, false if the spell should fail
 	 */
 	
-	public boolean checkSpellFailure(AbilityActivator parent) {
-		return checkSpellFailure(parent, 0);
+	public boolean checkSpellFailure(Creature parent) {
+		return checkSpellFailure(parent, 0, null);
 	}
 	
 	/**
 	 * Determines whether the parent casting this Spell should suffer random Spell failure.
-	 * The parent takes a concealment penalty based on the concealment between themselves
-	 * and the specified target.  This concealment penalty will most commonly be 0.  This
-	 * is the typical case when casting a spell targeting a single hostile creature.
+	 * For hostile or neutral targets, the parent takes a concealment penalty based on the concealment between themselves
+	 * and the specified target.  This concealment penalty will most commonly be 0.  For friendly
+	 * targets (or when the caster is the target), concealment penalty is always zero
 	 * 
 	 * @param parent the Creature casting this Spell
 	 * @param target the target Creature for this Spell
 	 * @return true if the spell should be cast successfully, false if the spell should fail
 	 */
 	
-	public boolean checkSpellFailure(AbilityActivator parent, Creature target) {
-		if (parent.getX() == target.getX() && parent.getY() == target.getY())
-			return checkSpellFailure(parent, 0);
+	public boolean checkSpellFailure(Creature parent, Creature target) {
+		if (parent.getLocation().equals(target.getLocation()) || parent.getFaction().isFriendly(target))
+			return checkSpellFailure(parent, 0, target);
 		
-		int concealment = Game.curCampaign.curArea.getConcealment(parent, target);
+		int concealment = parent.getLocation().getArea().getConcealment(parent, target);
 		
-		return checkSpellFailure(parent, concealment);
+		return checkSpellFailure(parent, concealment, target);
 	}
 	
 	/**
@@ -159,13 +157,13 @@ public class Spell extends Ability {
 	 * @return true if the spell should be cast successfully, false if the spell should fail
 	 */
 	
-	public boolean checkSpellFailure(AbilityActivator parent, List<Creature> targets) {
+	public boolean checkSpellFailure(Creature parent, List<Creature> targets) {
 		int bestConcealment = 0;
 		for (Creature defender : targets) {
-			bestConcealment = Math.max(bestConcealment, Game.curCampaign.curArea.getConcealment(parent, defender));
+			bestConcealment = Math.max(bestConcealment, parent.getLocation().getArea().getConcealment(parent, defender));
 		}
 		
-		return checkSpellFailure(parent, bestConcealment);
+		return checkSpellFailure(parent, bestConcealment, null);
 	}
 	
 	/**
@@ -175,133 +173,119 @@ public class Spell extends Ability {
 	 * @return the spell failure chance
 	 */
 	
-	public int getSpellFailurePercentage(AbilityActivator parent) {
-		int failure = parent.getBaseSpellFailure(getSpellLevel(parent));
+	public int getSpellFailurePercentage(Creature parent) {
+		int failure = parent.stats.getBaseSpellFailure(getSpellLevel(parent)) +
+				parent.roles.getThreatenedSpellFailure();
 		
 		if (verbalComponent) {
-			int verbalFailure = -parent.stats().get(Bonus.Type.VerbalSpellFailure);
-			failure += Math.max(0, verbalFailure);
-			
-			// if area is silenced or parent creature is silenced
-			if (Game.curCampaign.curArea.isSilenced(parent.getX(), parent.getY()) ||
-					parent.stats().has(Bonus.Type.Silence)) {
-				return 100;
-			}
+			failure += parent.roles.getVerbalSpellFailure();
 		}
 		
 		if (somaticComponent) {
-			// add the spell failure from armor
-			int armorFailure = parent.stats().get(Stat.ArmorPenalty) - parent.stats().get(Bonus.Type.ArmorSpellFailure);
-			failure += Math.max(0, armorFailure);
+			failure += parent.roles.getSomaticSpellFailure();
 		}
 		
-		// determine the failure due to threatening creatures
-		List<Creature> threatens = Game.areaListener.getCombatRunner().getThreateningCreatures(parent);
-		if (threatens.size() != 0) {
-			int meleeCombatFailure = 0;
-			for (Creature attacker : threatens) {
-				int curFailure = 30;
-				
-				// concealment for the caster against attackers decreases spell failure
-				int concealment = Game.curCampaign.curArea.getConcealment(attacker, parent);
-				curFailure = curFailure * (100 - concealment) / 100;
-				meleeCombatFailure += Math.max(0, curFailure);
-			}
-			
-			meleeCombatFailure = Math.max(0, meleeCombatFailure - parent.stats().get(Bonus.Type.MeleeSpellFailure));
-			
-			failure += meleeCombatFailure;
-		}
-		
-		// spell failure due to deafness
-		if (parent.stats().has(Bonus.Type.Deaf) && verbalComponent) {
-			int deafnessPenalty = 30;
-			failure += deafnessPenalty;
-		}
-		
-		return failure;
+		return Math.min(100, failure);
 	}
 	
 	/*
 	 * The base method used to determine spell failure in all of the above cases
 	 */
 	
-	private boolean checkSpellFailure(AbilityActivator parent, int concealmentPenalty) {
-		int failure = parent.getBaseSpellFailure(getSpellLevel(parent)) + concealmentPenalty;
+	private boolean checkSpellFailure(Creature parent, int concealmentPenalty, Creature target) {
+		int failure = parent.stats.getBaseSpellFailure(getSpellLevel(parent));
 		int check = Game.dice.d100();
 		
-		String message = null;
+		boolean verbal = false, threatening = false, concealment = false;
+		
+		StringBuilder message = new StringBuilder();
+		message.append(parent.getTemplate().getName());
+		message.append(" casts ").append(getName());
+		
+		if (target != null) {
+			message.append(" on ").append(target.getName());
+		}
+		
+		message.append(" with ");
 		
 		if (verbalComponent) {
-			int verbalFailure = -parent.stats().get(Bonus.Type.VerbalSpellFailure);
-			failure += Math.max(0, verbalFailure);
-			
-			// if area is silenced or parent creature is silenced
-			if (Game.curCampaign.curArea.isSilenced(parent.getX(), parent.getY()) ||
-					parent.stats().has(Bonus.Type.Silence)) {
-				Game.mainViewer.addMessage("red", parent.getName() + " failed to cast " + getName() + " due to silence.");
+			int verbalFailure = parent.roles.getVerbalSpellFailure();
+
+			if (verbalFailure >= Integer.MAX_VALUE / 10) {
+				// this implies the parent or area is silenced
+				message.append("100% failure due to silence : Failure.");
+				Game.mainViewer.addMessage(message.toString());
+				Game.mainViewer.addFadeAway("Spell Failed!", parent.getLocation().getX(),
+						parent.getLocation().getY(), new Color(0xFFAbA9A9));
 				return false;
 			}
+			
+			if (verbalFailure > 0) {
+				verbal = true;
+				failure += verbalFailure;
+			}
 		}
+		
 		
 		if (somaticComponent) {
-			// add the spell failure from armor
-			int armorFailure = parent.stats().get(Stat.ArmorPenalty) - parent.stats().get(Bonus.Type.ArmorSpellFailure);
-			failure += Math.max(0, armorFailure);
+			failure += parent.roles.getSomaticSpellFailure();
 		}
 		
-		// determine the failure due to threatening creatures
-		List<Creature> threatens = Game.areaListener.getCombatRunner().getThreateningCreatures(parent);
-		if (threatens.size() != 0) {
-			int meleeCombatFailure = 0;
-			for (Creature attacker : threatens) {
-				int curFailure = 30;
+		int threatenedFailure = parent.roles.getThreatenedSpellFailure();
+		if (threatenedFailure > 0) {
+			threatening = true;
+			failure += threatenedFailure;
+		}
+		
+		if (concealmentPenalty > 0) {
+			concealment = true;
+			failure += concealmentPenalty;
+		}
+		
+		int failureCount = (verbal ? 1 : 0) + (threatening ? 1 : 0) + (concealment ? 1 : 0);
+		
+		message.append(Math.max(0, failure));
+		message.append("% failure");
+		
+		// now create the failure component message if needed
+		if (failureCount > 0) {
+			message.append(" due to ");
+			
+			if (verbal) {
+				message.append("deafness");
 				
-				// concealment for the caster against attackers decreases spell failure
-				int concealment = Game.curCampaign.curArea.getConcealment(attacker, parent);
-				curFailure = curFailure * (100 - concealment) / 100;
-				meleeCombatFailure += Math.max(0, curFailure);
+				if (failureCount == 3)
+					message.append(", ");
+				else if (failureCount == 2)
+					message.append(" and ");
+				
+				failureCount--;
 			}
 			
-			meleeCombatFailure = Math.max(0, meleeCombatFailure - parent.stats().get(Bonus.Type.MeleeSpellFailure));
-			
-			message = parent.getName() + " suffers an extra " + meleeCombatFailure +
-				"% spell failure due to threatening creatures";
-			
-			failure += meleeCombatFailure;
-		}
-		
-		if (concealmentPenalty != 0) {
-			if (message == null) {
-				message = parent.getName() + " suffers an extra " + concealmentPenalty +
-					"% spell failure due to target concealment";
-			} else {
-				message += " and " + concealmentPenalty + "% spell failure due to target concealment";
+			if (concealment) {
+				message.append("concealment");
+				
+				if (failureCount == 2)
+					message.append(" and ");
 			}
-		}
-		
-		// spell failure due to deafness
-		if (parent.stats().has(Bonus.Type.Deaf) && verbalComponent) {
-			int deafnessPenalty = 30;
-			failure += deafnessPenalty;
-			if (message == null) {
-				message = parent.getName() + " suffers an extra " + deafnessPenalty + "% spell failure due to deafness";
-			} else {
-				message += " and " + deafnessPenalty + "% spell failure due to deafness";
+			
+			if (threatening) {
+				message.append("threatening creatures");
 			}
-		}
-		
-		if (message != null) {
-			message += ".";
-			Game.mainViewer.addMessage("green", message);
 		}
 		
 		if (check <= failure) {
-			Game.mainViewer.addMessage("red", parent.getName() + " failed to cast " + getName() + " with " + failure + "% failure.");
-			return false;
+			message.append(" : Failure.");
+			
+			Game.mainViewer.addFadeAway("Spell Failed!", parent.getLocation().getX(),
+					parent.getLocation().getY(), new Color(0xFFAbA9A9));
 		} else {
-			return true;
+			message.append(" : Success.");
 		}
+		
+		Game.mainViewer.addMessage(message.toString());
+		
+		return check > failure;
 	}
 	
 	/**
@@ -316,18 +300,19 @@ public class Spell extends Ability {
 	 * @param damageType the {@link net.sf.hale.rules.DamageType} of the damage to apply
 	 */
 	
-	public void applyDamage(AbilityActivator parent, Creature target, int damage, String damageType) {
+	public void applyDamage(Creature parent, Creature target, int damage, String damageType) {
 		// determine multiplier from the parent caster
-		int spellDamageMult = parent.stats().get(Bonus.Type.SpellDamage) +
-			parent.stats().get(damageType, Bonus.Type.DamageForSpellType);
+		int spellDamageMult = parent.stats.get(Bonus.Type.SpellDamage) +
+			parent.stats.get(damageType, Bonus.Type.DamageForSpellType);
 		
 		damage = (damage * (100 + spellDamageMult)) / 100;
 		
 		// determine spell resistance factor
-		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats().get(Bonus.Type.SpellResistance) : 0 );
+		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Bonus.Type.SpellResistance) : 0 );
 		
 		if (spellResistance != 0) {
-			Game.mainViewer.addMessage("blue", target.getName() + "'s Spell Resistance absorbs " + spellResistance + "% of the spell.");
+			Game.mainViewer.addMessage("blue", target.getTemplate().getName() + "'s Spell Resistance absorbs " +
+					spellResistance + "% of the spell.");
 		}
 		
 		int damageMult = 100 - spellResistance;
@@ -335,6 +320,11 @@ public class Spell extends Ability {
 		
 		damage = (damage * damageMult) / 100;
 		target.takeDamage(damage, damageType);
+		
+		// check to add the parent as a hostile to the target
+		if (parent.getFaction().isHostile(target) && target.getEncounter() != null) {
+			target.getEncounter().checkAddHostile(parent);
+		}
 	}
 	
 	/**
@@ -347,12 +337,12 @@ public class Spell extends Ability {
 	 * @param damage the number of hit points to heal
 	 */
 	
-	public void applyHealing(AbilityActivator parent, Creature target, int damage) {
-		int bonusHealingFactor = parent.stats().get(Bonus.Type.SpellHealing);
+	public void applyHealing(Creature parent, Creature target, int damage) {
+		int bonusHealingFactor = parent.stats.get(Bonus.Type.SpellHealing);
 
 		damage = (damage * (100 + bonusHealingFactor)) / 100;
 
-		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats().get(Bonus.Type.SpellResistance) : 0 );
+		int spellResistance = Math.max( 0, spellResistanceApplies ? target.stats.get(Bonus.Type.SpellResistance) : 0 );
 		
 		if (spellResistance == 0) {
 			target.healDamage(damage);
@@ -367,10 +357,10 @@ public class Spell extends Ability {
 	 * @see net.sf.hale.ability.Ability#setSpellDuration(net.sf.hale.ability.Effect, net.sf.hale.ability.AbilityActivator)
 	 */
 	
-	@Override public void setSpellDuration(Effect effect, AbilityActivator parent) {
+	@Override public void setSpellDuration(Effect effect, Creature parent) {
 		int duration = effect.getRoundsRemaining();
 		// compute SpellDuration bonus
-		int durationBonus = parent.stats().get(Bonus.Type.SpellDuration);
+		int durationBonus = parent.stats.get(Bonus.Type.SpellDuration);
 		duration = duration * (100 + durationBonus) / 100;
 		
 		// compute spell resistance modification
@@ -382,38 +372,30 @@ public class Spell extends Ability {
 		effect.setDuration(duration);
 	}
 	
-	public int getCheckDifficulty(AbilityActivator parent) {
-		return 50 + ( parent.getSpellCastingAttribute() - 10 ) * 2 + 3 * parent.getCasterLevel();
+	public int getCheckDifficulty(Creature parent) {
+		return 50 + ( parent.stats.getSpellCastingAttribute() - 10 ) * 2 + 3 * parent.stats.getCasterLevel();
 	}
 	
-	@Override public void appendDetails(StringBuilder sb, AbilityActivator parent) {
-		sb.append("<p><span style=\"font-family: vera-blue\">Spell</span></p>");
+	@Override public void appendDetails(StringBuilder sb, Creature parent) {
+		sb.append("<p><span style=\"font-family: medium-blue\">Spell</span></p>");
 		
 		super.appendDetails(sb, parent);
 		
-		sb.append("<table style=\"font-family: vera; vertical-align: middle; margin-top: 1em;\">");
+		sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-top: 1em;\">");
 		
 		sb.append("<tr><td style=\"width: 10ex;\">");
-		sb.append("Spell Level</td><td style=\"font-family: vera-blue\">");
+		sb.append("Spell Level</td><td style=\"font-family: medium-blue\">");
 		sb.append(getSpellLevel(parent)).append("</td></tr>");
 		
 		sb.append("</table>");
 		
-		sb.append("<table style=\"font-family: vera; vertical-align: middle;\">");
-		if (verbalComponent) {
-			sb.append("<tr><td>Verbal Component</td></tr>");
-		}
-		
-		if (somaticComponent) {
-			sb.append("<tr><td>Somatic Component</td></tr>");
-		}
-		
+		sb.append("<table style=\"font-family: medium; vertical-align: middle;\">");
 		if (spellResistanceApplies) {
 			sb.append("<tr><td>Affected by ");
 		} else {
 			sb.append("<tr><td>Ignores ");
 		}
-		sb.append("<span style=\"font-family: vera-red\">Spell Resistance</span></td></tr>");
+		sb.append("<span style=\"font-family: medium-red\">Spell Resistance</span></td></tr>");
 		sb.append("</table>");
 	}
 }

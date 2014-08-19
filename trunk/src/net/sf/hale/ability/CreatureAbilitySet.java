@@ -109,12 +109,12 @@ public class CreatureAbilitySet implements Saveable {
 	public void load(SimpleJSONObject data, ReferenceHandler refHandler) {
 		if (data.containsKey("abilities")) {
 			for (SimpleJSONArrayEntry entry : data.getArray("abilities")) {
-			SimpleJSONObject entryData = entry.getObject();
-			
-			String id = entryData.get("abilityID", null);
-			int level = entryData.get("levelObtained", 0);
-			
-			loadAbility(Game.ruleset.getAbility(id), level, false, false);
+				SimpleJSONObject entryData = entry.getObject();
+
+				String id = entryData.get("abilityID", null);
+				int level = entryData.get("levelObtained", 0);
+
+				loadAbility(Game.ruleset.getAbility(id), level, false, false);
 			}
 		}
 		
@@ -129,14 +129,6 @@ public class CreatureAbilitySet implements Saveable {
 				this.add( AbilitySlot.load(entry.getObject(), refHandler, parent) );
 			}
 		}
-	}
-	
-	/**
-	 * Creates a new CreatureAbilitySet with no parent.
-	 */
-	
-	public CreatureAbilitySet() {
-		this(null);
 	}
 	
 	/**
@@ -507,6 +499,7 @@ public class CreatureAbilitySet implements Saveable {
 		
 		if (!slot.isEmpty()) {
 			Ability ability = slot.getAbility();
+			
 			AbilityWithActiveCount awac = this.activateableAbilities.get(ability.getType()).get(ability.getID());
 			awac.count++;
 		}
@@ -568,6 +561,24 @@ public class CreatureAbilitySet implements Saveable {
 		}
 		
 		return abilities;
+	}
+	
+	/**
+	 * Gets a list of all abilities with associated role, race, and level obtained status
+	 * in this set
+	 * @return the list of all ability instances
+	 */
+	
+	public List<AbilityInstance> getAllAbilityInstances() {
+		List<AbilityInstance> instances = new ArrayList<AbilityInstance>();
+		
+		for (String type : abilities.keySet()) {
+			for (String abilityID : abilities.get(type).keySet()) {
+				instances.add(abilities.get(type).get(abilityID));
+			}
+		}
+		
+		return instances;
 	}
 	
 	/**
@@ -756,6 +767,23 @@ public class CreatureAbilitySet implements Saveable {
 	}
 	
 	/**
+	 * Immediately cancels all effects being tracked by ability slots for this creature.
+	 * This is used at the end of combat for creatures that were killed during the combat
+	 */
+	
+	public void cancelAllEffects() {
+		for (String type : abilitySlots.keySet()) {
+			for (AbilitySlot slot : abilitySlots.get(type)) {
+				slot.cancelAllEffects();
+			}
+		}
+		
+		for (AbilitySlot slot : tempAbilitySlots) {
+			slot.cancelAllEffects();
+		}
+	}
+	
+	/**
 	 * Cancels all currently active aura effects, ending them immediately
 	 * @return the list of all ability slots that were deactivated as a result
 	 * of canceling their auras, and can be reactivated
@@ -799,7 +827,7 @@ public class CreatureAbilitySet implements Saveable {
 	 * tracked after this method finishes elapsing rounds
 	 */
 	
-	public boolean elapseRounds(int rounds) {
+	public boolean elapseTime(int rounds) {
 		boolean hasActiveEffects = false;
 		
 		for (String type : abilitySlots.keySet()) {
@@ -888,13 +916,13 @@ public class CreatureAbilitySet implements Saveable {
 	public void readyAbilityInSlot(Ability ability, AbilitySlot slot) {
 		if (ability != null && !ability.isActivateable()) {
 			Logger.appendToWarningLog("Attempted to ready ability " + ability.getID() + " on " +
-					parent.getID() + " but ability is not activateable.");
+					parent.getTemplate().getID() + " but ability is not activateable.");
 			return;
 		}
 		
 		if (ability != null && ability.isFixed()) {
 			Logger.appendToWarningLog("Attempted to ready ability " + ability.getID() + " on " +
-					parent.getID() + " but ability is fixed.");
+					parent.getTemplate().getID() + " but ability is fixed.");
 			return;
 		}
 		
@@ -922,14 +950,14 @@ public class CreatureAbilitySet implements Saveable {
 	public void readyAbilityInFirstEmptySlot(Ability ability) {
 		if (!ability.isActivateable()) {
 			Logger.appendToWarningLog("Attempted to ready ability " + ability.getID() + " on " +
-					parent.getID() + " but ability is not activateable.");
+					parent.getTemplate().getID() + " but ability is not activateable.");
 			return;
 		}
 		
 		AbilitySlot slot = this.getFirstEmptySlotOfType(ability.getType());
 		if (slot == null) {
 			Logger.appendToWarningLog("Attempted to ready ability " + ability.getID() + " on " +
-					parent.getID() + " but no empty slots available.");
+					parent.getTemplate().getID() + " but no empty slots available.");
 			return;
 		}
 		

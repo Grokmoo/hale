@@ -19,7 +19,8 @@
 
 package net.sf.hale.tileset;
 
-import net.sf.hale.Sprite;
+import net.sf.hale.Game;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 
 /**
@@ -29,9 +30,11 @@ import net.sf.hale.resource.SpriteManager;
  */
 
 public class Tile {
-	private String tileID;
-	private String spriteID;
+	private final String tileID;
+	private final String spriteID;
+	
 	private Sprite sprite;
+	private int offsetX, offsetY;
 	
 	/**
 	 * Creates a new Tile with the specified tile ID and sprite ID (used by the
@@ -52,6 +55,9 @@ public class Tile {
 	
 	public void cacheSprite() {
 		this.sprite = SpriteManager.getImage(spriteID);
+		
+		this.offsetX = (Game.TILE_SIZE - sprite.getWidth()) / 2;
+		this.offsetY = (Game.TILE_SIZE - sprite.getHeight()) / 2;
 	}
 	
 	/**
@@ -61,7 +67,7 @@ public class Tile {
 	 */
 	
 	protected final void draw(int screenX, int screenY) {
-		sprite.drawWithOffset(screenX, screenY);
+		sprite.draw(screenX + offsetX, screenY + offsetY);
 	}
 	
 	/**

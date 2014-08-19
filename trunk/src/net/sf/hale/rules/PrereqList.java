@@ -28,24 +28,22 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.LineKeyList;
-import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
 
 /**
  * A List of Prerequisites that a Creature must meet prior to being able to
  * select a Role, Ability, or anything else with prereqs.  The list can include
- * required skill ranks, stats, proficiencies, roles, and abilities.
+ * required skill ranks, stats, proficiencies, roles, and abilities.  This class
+ * is immutable.
  * 
  * @author Jared Stephen
  *
  */
 
 public class PrereqList {
-	private enum Type {
-		skill, ability, role, stat, weaponproficiency, armorproficiency;
-	}
-	
-	private final SkillSet skillPrereqs;
+	private final Map<String, Integer> skillPrereqs;
 	private final List<String> abilityPrereqs;
 	
 	private final Map<Stat, Integer> statPrereqs;
@@ -64,7 +62,7 @@ public class PrereqList {
 	 */
 	
 	public PrereqList() {
-		skillPrereqs = new SkillSet();
+		skillPrereqs = new HashMap<String, Integer>();
 		abilityPrereqs = new ArrayList<String>();
 		statPrereqs = new HashMap<Stat, Integer>();
 		
@@ -75,79 +73,20 @@ public class PrereqList {
 		roleLevelPrereqs = new ArrayList<Integer>();
 	}
 	
-	private void addSkillPrereq(String skillID, int ranks) {
-		skillPrereqs.addRanks(skillID, ranks);
-	}
-	
-	private void addAbilityPrereq(String abilityID) {
-		abilityPrereqs.add(abilityID);
-	}
-	
-	private void addWeaponProficiencyPrereq(String baseWeapon) {
-		weaponProficiencyPrereqs.add(baseWeapon);
-	}
-	
-	private void addArmorProficiencyPrereq(String armorType) {
-		armorProficiencyPrereqs.add(armorType);
-	}
-	
-	private void addStatPrereq(String statString, int value) {
-		Stat stat = Stat.valueOf(statString);
-		if (stat == null) {
-			Logger.appendToErrorLog("Error.  Stat prereq " + statString + " not found.");
-			return;
-		}
-		
-		statPrereqs.put(stat, value);
-		
-	}
-	
-	private void addRolePrereq(String role, int level) {
-		rolePrereqs.add(role);
-		roleLevelPrereqs.add(level);
-	}
-	
 	/**
-	 * Adds a new prerequisite from the specified LineKeyList.  The
-	 * LineKeyList must contain a list of tokens specifying the prereq.
-	 * These keys are read off using the {@link net.sf.hale.util.LineKeyList#next()}
-	 * method.  The first token must be one of "skill", "ability", "role", "stat",
-	 * "weaponproficiency", or "armorproficiency".  Case is ignored for this token.
-	 * The next token must then specify the String ID of the skill, ability, role, stat,
-	 * weapon type, or armor type to be required.  For skill, role, and stat, a third
-	 * token is required, representing the integer value of the skill, role, or stat.
-	 * 
-	 * @param sLine the LineKeyList that the tokens representing the prereq to add
-	 * will be read off of
+	 * Creates a new PrereqList from the specified data.
+	 * Adds prereqs as specified in the JSON data.  The valid types are "skills",
+	 * "abilities", "roles", "stats", "weapons", and "armor".
+	 * @param data the data to parse
 	 */
 	
-	public void addPrereq(LineKeyList sLine) {
-		Type type = Type.valueOf(sLine.next().toLowerCase());
+	public PrereqList(SimpleJSONObject data) {
+		this();
 		
-		try {
-			switch (type) {
-			case skill:
-				addSkillPrereq(sLine.next(), sLine.nextInt());
-				break;
-			case ability:
-				addAbilityPrereq(sLine.next());
-				break;
-			case role:
-				addRolePrereq(sLine.next(), sLine.nextInt());
-				break;
-			case stat:
-				addStatPrereq(sLine.next(), sLine.nextInt());
-				break;
-			case weaponproficiency:
-				addWeaponProficiencyPrereq(sLine.next());
-				break;
-			case armorproficiency:
-				addArmorProficiencyPrereq(sLine.next());
-				break;
+		for (PrereqType type : PrereqType.values()) {
+			if (data.containsKey(type.name())) {
+				type.parse(data.getArray(type.name()), this);
 			}
-		} catch (Exception e) {
-			Logger.appendToWarningLog("Error parsing prereq in " + sLine.getFilePath() +
-					" on line " + sLine.getLineNumber());
 		}
 	}
 	
@@ -166,7 +105,7 @@ public class PrereqList {
 			Role cc = Game.ruleset.getRole(rolePrereqs.get(i));
 			
 			if (cc != null) {
-				if (c.getRoles().getLevel(cc) >= 1) {
+				if (c.roles.getLevel(cc) >= 1) {
 					return true;
 				}
 			}
@@ -191,7 +130,7 @@ public class PrereqList {
 			int level = roleLevelPrereqs.get(i);
 			
 			if (cc != null) {
-				if (c.getRoles().getLevel(cc) >= level) {
+				if (c.roles.getLevel(cc) >= level) {
 					return true;
 				}
 			}
@@ -219,29 +158,48 @@ public class PrereqList {
 	
 	public boolean meetsPrereqs(Creature c) {
 		for (Stat stat : statPrereqs.keySet()) {
-			if (c.stats().get(stat) < statPrereqs.get(stat)) return false;
+			if (!meetsStatPrereq(c, stat)) return false;
 		}
 		
-		for (String skillID : skillPrereqs.getSkills()) {
-			int ranksRequired = skillPrereqs.getRanks(skillID);
-			if (c.getSkillSet().getRanks(skillID) < ranksRequired) return false;
+		for (String skillID : skillPrereqs.keySet()) {
+			if (!meetsSkillPrereq(c, skillID)) return false;
 		}
 		
 		if (!meetsRolePrereqs(c)) return false;
 		
 		for (String abilityID : abilityPrereqs) {
-			if (!c.getAbilities().has(abilityID)) return false;
+			if (!meetsAbilityPrereq(c, abilityID)) return false;
 		}
 		
-		for (String s : weaponProficiencyPrereqs) {
-			if (!c.stats().hasWeaponProficiency(s)) return false;
+		for (String baseWeapon : weaponProficiencyPrereqs) {
+			if (!meetsWeaponProficiencyPrereq(c, baseWeapon)) return false;
 		}
 		
-		for (String s : armorProficiencyPrereqs) {
-			if (!c.stats().hasArmorProficiency(s)) return false;
+		for (String armorType : armorProficiencyPrereqs) {
+			if (!meetsArmorProficiencyPrereq(c, armorType)) return false;
 		}
 					
 		return true;
+	}
+	
+	private boolean meetsStatPrereq(Creature c, Stat stat) {
+		return c.stats.get(stat) >= statPrereqs.get(stat);
+	}
+	
+	private boolean meetsSkillPrereq(Creature c, String skillID) {
+		return c.skills.getRanks(skillID) >= skillPrereqs.get(skillID);
+	}
+	
+	private boolean meetsAbilityPrereq(Creature c, String abilityID) {
+		return c.abilities.has(abilityID);
+	}
+	
+	private boolean meetsWeaponProficiencyPrereq(Creature c, String baseWeapon) {
+		return c.stats.hasWeaponProficiency(baseWeapon);
+	}
+	
+	private boolean meetsArmorProficiencyPrereq(Creature c, String armorType) {
+		return c.stats.hasArmorProficiency(armorType);
 	}
 	
 	/**
@@ -262,37 +220,56 @@ public class PrereqList {
 		return (skillPrereqs.size() == 0);
 	}
 	
+	private void appendMetOrNotMet(Creature c, boolean isMet, StringBuilder sb) {
+		sb.append("<tr><td style=\"width: 10ex; text-align: center; vertical-align: middle\">");
+		if (c == null) {
+			// don't show anything
+		} else if (isMet) {
+			sb.append("<span style=\"font-family: green;\">Met </span>");
+		} else {
+			sb.append("<span style=\"font-family: red;\">Not Met </span>");
+		}
+		sb.append("</td><td>");
+	}
+	
 	/**
 	 * Appends a String HTML description of this List of Prereqs to the
 	 * specified StringBuilder.  This will include a mention of all
 	 * required prereqs for this list to be met by a Creature.
 	 * 
 	 * @param sb the StringBuilder to append to
+	 * @param c the creature to compare to or null to not show whether prereqs are met
 	 */
 	
-	public void appendDescription(StringBuilder sb) {
+	public void appendDescription(StringBuilder sb, Creature c) {
 		if (isEmpty()) return;
 		
-		sb.append("<div style=\"font-family: vera-bold-blue; margin-top : 1em;\">Prereqs</div>");
+		sb.append("<div style=\"font-family: medium-bold-blue; margin-top : 1em;\">Prerequisites</div>");
 		
+		sb.append("<table>");
 		for (Stat stat : statPrereqs.keySet()) {
-			sb.append("<p><span style=\"font-family: purple;\">").append(stat.name);
-			sb.append("</span> ").append(statPrereqs.get(stat)).append("</p>");
+			appendMetOrNotMet(c, c != null && meetsStatPrereq(c, stat), sb);
+
+			sb.append("<span style=\"font-family: purple;\">").append(stat.name);
+			sb.append("</span> ").append(statPrereqs.get(stat)).append("</td></tr>");
 		}
 		
-		for (String skillID : skillPrereqs.getSkills()) {
+		for (String skillID : skillPrereqs.keySet()) {
 			Skill skill = Game.ruleset.getSkill(skillID);
 			
 			if (skill == null)
 				throw new NullPointerException("Skill " + skillID + " not found in prereq list.");
 			
-			sb.append("<p>").append(skillPrereqs.getRanks(skillID));
+			appendMetOrNotMet(c, c != null && meetsSkillPrereq(c, skillID), sb);
+			
+			sb.append(skillPrereqs.get(skillID));
 			sb.append(" ranks in <span style=\"font-family: blue;\">");
-			sb.append(skill.getName()).append("</span></p>");
+			sb.append(skill.getNoun()).append("</span></td></tr>");
 		}
 		
-		if (rolePrereqs.size() > 0)
-			sb.append("<p>");
+		if (rolePrereqs.size() > 0) {
+			appendMetOrNotMet(c, c != null && meetsRolePrereqs(c), sb);
+		}
 		
 		for (int i = 0; i < rolePrereqs.size(); i++) {
 			Role role = Game.ruleset.getRole(rolePrereqs.get(i));
@@ -308,7 +285,7 @@ public class PrereqList {
 			if (i != rolePrereqs.size() - 1) 
 				sb.append(" OR ");
 			else
-				sb.append("</p>");
+				sb.append("</td></tr>");
 		}
 		
 		for (String abilityID : abilityPrereqs) {
@@ -317,19 +294,95 @@ public class PrereqList {
 			if (ability == null)
 				throw new NullPointerException("Ability " + abilityID + " not found in prereq list.");
 			
-			sb.append("<p>Ability: ");
+			appendMetOrNotMet(c, c != null && meetsAbilityPrereq(c, abilityID), sb);
+			
+			sb.append("Ability: ");
 			sb.append("<span style=\"font-family: orange;\">");
-			sb.append(ability.getName()).append("</span></p>");
+			sb.append(ability.getName()).append("</span></td></tr>");
 		}
 		
 		for (String s : weaponProficiencyPrereqs) {
+			appendMetOrNotMet(c, c != null && meetsWeaponProficiencyPrereq(c, s), sb);
+			
 			sb.append("<p>Weapon Proficiency: ");
-			sb.append("<span style=\"font-family: red;\">").append(s).append("</span></p>");
+			sb.append("<span style=\"font-family: red;\">").append(s).append("</span></td></tr>");
 		}
 		
 		for (String s : armorProficiencyPrereqs) {
+			appendMetOrNotMet(c, c != null && meetsArmorProficiencyPrereq(c, s), sb);
+			
 			sb.append("<p>Armor Proficiency: ");
-			sb.append("<span style=\"font-family: green;\">").append(s).append("</span></p>");
+			sb.append("<span style=\"font-family: green;\">").append(s).append("</span></td></tr>");
+		}
+		
+		sb.append("</table>");
+	}
+	
+	private enum PrereqType {
+		skills(new SkillParser()),
+		abilities(new AbilityParser()),
+		roles(new RoleParser()),
+		stats(new StatParser()),
+		weapons(new WeaponParser()),
+		armor(new ArmorParser());
+		
+		private PrereqParser parser;
+		
+		private PrereqType(PrereqParser parser) {
+			this.parser = parser;
+		}
+		
+		private void parse(SimpleJSONArray data, PrereqList prereqList) {
+			for (SimpleJSONArrayEntry entry : data) {
+				parser.parse(entry, prereqList);
+			}
+		}
+	}
+	
+	private interface PrereqParser {
+		public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList);
+	}
+	
+	private static class ArmorParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			prereqList.armorProficiencyPrereqs.add(entry.getString());
+		}
+	}
+	
+	private static class WeaponParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			prereqList.weaponProficiencyPrereqs.add(entry.getString());
+		}
+	}
+	
+	private static class StatParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			SimpleJSONObject in = entry.getObject();
+			
+			Stat stat = Stat.valueOf(in.get("type", null));
+			prereqList.statPrereqs.put(stat, in.get("value", 0));
+		}
+	}
+	
+	private static class RoleParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			SimpleJSONObject in = entry.getObject();
+			
+			prereqList.rolePrereqs.add(in.get("id", null));
+			prereqList.roleLevelPrereqs.add(in.get("level", 0));
+		}
+	}
+	
+	private static class AbilityParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			prereqList.abilityPrereqs.add(entry.getString());
+		}
+	}
+	
+	private static class SkillParser implements PrereqParser {
+		@Override public void parse(SimpleJSONArrayEntry entry, PrereqList prereqList) {
+			SimpleJSONObject in = entry.getObject();
+			prereqList.skillPrereqs.put(in.get("id", null), in.get("ranks", 0));
 		}
 	}
 }

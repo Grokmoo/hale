@@ -1,8 +1,0 @@
-name "Fire Mage"
-type "Elementalist Abilities"
-description "You have trained in the use of fire magic, gaining a 10% bonus to all fire damage from spells."
-activateable false
-
-icon "icons/fireMage"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addSpellDamageBonus('Fire', 'Stackable', 10); parent.applyEffect(effect); }"

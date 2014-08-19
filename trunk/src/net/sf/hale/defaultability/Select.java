@@ -21,7 +21,8 @@ package net.sf.hale.defaultability;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * A DefaultAbility for selecting a specified Creature
@@ -35,20 +36,21 @@ public class Select implements DefaultAbility {
 		return "Select";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		Creature target = Game.curCampaign.curArea.getCreatureAtGridPoint(targetPosition);
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		Creature target = targetPosition.getCreature();
 		
 		// note that we purposely allow you to select the already selected creature
 		// this makes the interface a little nicer; showing cancel above the selected
 		// creature looks strange
 		
-		return (target != null && target.isPlayerSelectable());
+		return (target != null && target instanceof PC);
 	}
 		
-	@Override public void activate(Creature parent, Point targetPosition) {
-		Creature target = Game.curCampaign.curArea.getCreatureAtGridPoint(targetPosition);
+	@Override public void activate(PC parent, Location targetPosition) {
+		Creature target = targetPosition.getCreature();
 		
 		Select.selectCreature(target);
+		Game.areaViewer.addDelayedScrollToCreature(target);
 		
 		Game.areaListener.computeMouseState();
 	}
@@ -62,16 +64,12 @@ public class Select implements DefaultAbility {
 	 */
 	
 	public static void selectCreature(Creature creature) {
-		if (creature == null) return;
-		
-		if (!creature.isPlayerSelectable()) return;
+		if (!(creature instanceof PC)) return;
 		
 		Game.curCampaign.party.setSelected(creature);
 		Game.selectedEntity = Game.curCampaign.party.getSelected();
 		Game.mainViewer.containerWindow.setVisible(false);
 		Game.mainViewer.updateInterface();
-		
-		Game.areaViewer.addDelayedScrollToCreature(creature);
 	}
 
 	@Override public DefaultAbility getInstance() {

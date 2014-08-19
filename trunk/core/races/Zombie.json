@@ -1,7 +1,6 @@
 { "name" : "Zombie",
-  "size" : "Medium",
   "baseMovementCost" : 2000,
-  "unarmedWeapon" : "unarmedMediumThreatens",
+  "defaultWeapon" : "unarmedMediumThreatens",
   
   "racialTypes" : [
     "Humanoid", "Undead"

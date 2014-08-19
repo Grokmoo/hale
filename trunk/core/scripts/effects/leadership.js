@@ -6,11 +6,11 @@ function createEffect(aura, target, roundElapsed) {
 	var slot = aura.getSlot();
 	var parent = slot.getParent();
 	
-	var chaBonus = (parent.stats().getCha() - 10) * 2;
-	if (parent.getAbilities().has("PersonalMagnetism"))
+	var chaBonus = (parent.stats.getCha() - 10) * 2;
+	if (parent.abilities.has("PersonalMagnetism"))
 		chaBonus = chaBonus * 2;
 	
-	var lvlBonus = parent.getRoles().getLevel("Paladin");
+	var lvlBonus = parent.roles.getLevel("Paladin");
 	
 	var amount = 10 + chaBonus + lvlBonus;
 
@@ -23,7 +23,7 @@ function createEffect(aura, target, roundElapsed) {
 		targetEffect.getBonuses().addBonus('SpellFailure', amount);
 		targetEffect.getBonuses().addBonus('ConcealmentIgnoring', amount);
 		
-		if (parent.getAbilities().has("PositiveEnergy")) {
+		if (parent.abilities.has("PositiveEnergy")) {
 			targetEffect.getBonuses().addAttackBonusVsRacialType("Undead", amount);
 			targetEffect.getBonuses().addDamageBonusVsRacialType("Undead", 2 * amount);
 			

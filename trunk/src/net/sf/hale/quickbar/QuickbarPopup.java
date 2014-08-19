@@ -65,7 +65,7 @@ public class QuickbarPopup extends PopupWindow {
 	
 	private class Content extends DialogLayout {
 		private Content() {
-			Quickbar quickbar = Game.curCampaign.party.getSelected().getQuickbar();
+			Quickbar quickbar = Game.curCampaign.party.getSelected().quickbar;
 			
 			Group mainH = createParallelGroup();
 			Group mainV = createSequentialGroup();

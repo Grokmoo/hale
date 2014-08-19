@@ -72,10 +72,19 @@ public class RightClickMenu extends PopupWindow {
 	 * at the top of the new level.  The new menu level will be shown
 	 * to the right of any existing levels.
 	 * @param title the title string for the new menu level
+	 * @return true if the menu level was added, false if it could not be added
 	 */
 	
-	public void addMenuLevel(String title) {
+	public boolean addMenuLevel(String title) {
 		popupShouldToggle = false;
+		
+		// first disallow adding a level with the same title as a previous
+		// this is a bit of a hacky way to prevent duplicates
+		for (RightClickMenuLevel level : levels) {
+			if (level.getTitle().equals(title)) {
+				return false;
+			}
+		}
 		
 		RightClickMenuLevel newMenu;
 		
@@ -94,6 +103,8 @@ public class RightClickMenu extends PopupWindow {
 		
 		levels.add(newMenu);
 		content.add(newMenu);
+		
+		return true;
 	}
 	
 	/**

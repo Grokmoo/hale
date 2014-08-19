@@ -1,7 +1,7 @@
 function isTargetValid(game, target, slot) {
-	var weapon = target.getInventory().getEquippedMainHand();
+	var weapon = target.inventory.getEquippedMainHand();
 	
-	if (weapon == null || !weapon.isMeleeWeapon())
+	if (weapon == null || !weapon.isMelee())
 		return false;
 		
 	return true;
@@ -26,7 +26,7 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	if (!isTargetValid(game, target)) return;
 	
@@ -35,19 +35,19 @@ function onTargetSelect(game, targeter) {
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	
 	// we have already validated the weapon
-	var weapon = target.getInventory().getEquippedMainHand();
+	var weapon = target.inventory.getEquippedMainHand();
 	
-	effect.getBonuses().addBonus("WeaponAttack", 10);
+	effect.getBonuses().addBonus("WeaponAttack", 5 + casterLevel);
 	effect.getBonuses().addBonus("WeaponCriticalChance", 10);
 	
-	if (targeter.getSlot().getParent().getAbilities().has("FlamingWeapon")) {
+	if (targeter.getSlot().getParent().abilities.has("FlamingWeapon")) {
 		// apply the flaming weapon effect
 	
 		var minDamage = parseInt(1 + casterLevel / 4);
@@ -56,11 +56,11 @@ function onTargetSelect(game, targeter) {
 		
 		var generator = game.getBaseParticleGenerator("flame");
 		
-		if (target.drawWithSubIcons()) {
+		if (target.drawsWithSubIcons()) {
 			var pos = target.getSubIconScreenPosition("MainHandWeapon");
 			generator.setPosition(pos.x - 5.0, pos.y - 5.0);
 		} else {
-			var pos = target.getPosition().toScreen();
+			var pos = target.getLocation().getCenteredScreenPoint();
 			generator.setPosition(pos.x - 15.0, pos.y - 15.0);
 		}
 		
@@ -69,21 +69,40 @@ function onTargetSelect(game, targeter) {
 	
 	weapon.applyEffect(effect);
 	
-	if (target.drawWithSubIcons()) {
+	if (target.drawsWithSubIcons()) {
 		var anim = game.getBaseAnimation("subIconFlash");
-		anim.addFrame(target.getSubIcon("MainHandWeapon"));
-		anim.setColor(target.getSubIconColor("MainHandWeapon"));
+		anim.addFrame(target.getIconRenderer().getIcon("MainHandWeapon"));
+		anim.setColor(target.getIconRenderer().getColor("MainHandWeapon"));
 		
 		var pos = target.getSubIconScreenPosition("MainHandWeapon");
 		anim.setPosition(pos.x, pos.y);
 	} else {
 		var anim = game.getBaseAnimation("iconFlash");
-		anim.addFrame(target.getIcon());
-		anim.setColor(target.getIconColor());
-		var pos = target.getScreenPosition();
+		anim.addFrameAndSetColor(target.getTemplate().getIcon());
+		var pos = target.getLocation().getCenteredScreenPoint();
 		anim.setPosition(pos.x, pos.y);
 	}
 		
 	game.runAnimationNoWait(anim);
 	game.lockInterface(anim.getSecondsRemaining());
+}
+
+function aiCheckTargetValid(game, slot, targetPosition) {
+	var target = targetPosition.getCreature();
+	if (target == null) {
+		return false;
+	}
+
+	if ( !isTargetValid(game, target) ) {
+		return false;
+	}
+	
+	var weapon = target.inventory.getEquippedMainHand();
+	var effect = weapon.getEffects().getEffectCreatedBySlot(slot.getAbilityID());
+	
+	if (effect != null) {
+		return false;
+	} else {
+		return true;
+	}
 }

@@ -1,10 +1,10 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("Meteor")) {
+	if (slot.getParent().abilities.has("Meteor")) {
 		var targeter = game.createCircleTargeter(slot);
         targeter.setMaxRange(12);
         targeter.setRadius(5);
         targeter.activate();
-	} else if (slot.getParent().getAbilities().has("Fireball")) {
+	} else if (slot.getParent().abilities.has("Fireball")) {
 	    var targeter = game.createCircleTargeter(slot);
         targeter.setMaxRange(12);
         targeter.setRadius(4);
@@ -22,9 +22,9 @@ function onTargetSelect(game, targeter) {
     // cast the spell
     targeter.getSlot().activate();
 	
-	if (targeter.getSlot().getParent().getAbilities().has("Meteor")) {
+	if (targeter.getSlot().getParent().abilities.has("Meteor")) {
 		performMeteor(game, targeter);
-    } else if (targeter.getSlot().getParent().getAbilities().has("Fireball")) {
+    } else if (targeter.getSlot().getParent().abilities.has("Fireball")) {
 	    performFireball(game, targeter);
     } else {
 	    performFirebolt(game, targeter);
@@ -34,7 +34,7 @@ function onTargetSelect(game, targeter) {
 function performMeteor(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	// check for spell failure
 	if (!spell.checkSpellFailure(parent)) return;
@@ -63,7 +63,7 @@ function performMeteor(game, targeter) {
 		
 		var damage = parseInt( (game.dice().d10(2) + casterLevel) / 3 );
 		
-		var delay = target.getPosition().screenDistance(explosionCenter) / 200.0;
+		var delay = target.getLocation().getScreenDistance(explosionCenter) / 200.0;
 		var callback = spell.createDelayedCallback("applyDamage");
 		callback.setDelay(delay);
 		callback.addArguments([parent, target, damage, targeter]);
@@ -93,7 +93,7 @@ function performMeteor(game, targeter) {
 
 function animateMeteor(game, parent, target, damage, targeter) {
 	var g1 = game.getBaseAnimation("explosion");
-	g1.setPosition(target.getScreenPosition());
+	g1.setPosition(target.getLocation().getCenteredScreenPoint());
 	game.runAnimationNoWait(g1);
 	
 	applyDamage(game, parent, target, damage, targeter);
@@ -102,7 +102,7 @@ function animateMeteor(game, parent, target, damage, targeter) {
 function performFireball(game, targeter) {
     var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	// check for spell failure
 	if (!spell.checkSpellFailure(parent)) return;
@@ -110,7 +110,7 @@ function performFireball(game, targeter) {
 	var explosionCenter = targeter.getMouseGridPosition();
 	
 	var g1 = game.getBaseParticleGenerator("bolt");
-	g1.setVelocityDurationBasedOnSpeed(parent.getPosition(), explosionCenter, 400.0);
+	g1.setVelocityDurationBasedOnSpeed(parent.getLocation().toPoint(), explosionCenter, 400.0);
 	g1.setGreenSpeedDistribution(game.getGaussianDistribution(-1.0, 0.05));
 	g1.setBlueSpeedDistribution(game.getGaussianDistribution(-6.0, 0.05));
 	
@@ -127,8 +127,8 @@ function performFireball(game, targeter) {
 	for (var i = 0; i < targets.size(); i++) {
 		var target = targets.get(i);
 		
-		var delayG1 = target.getPosition().screenDistance(parent.getPosition()) / g1.getSpeed();
-		var delayG2 = target.getPosition().screenDistance(explosionCenter) / 200.0;
+		var delayG1 = target.getLocation().getScreenDistance(parent.getLocation()) / g1.getSpeed();
+		var delayG2 = target.getLocation().getScreenDistance(explosionCenter) / 200.0;
 		
 		var damage = game.dice().d6(2) + casterLevel;
 		
@@ -146,7 +146,7 @@ function performFirebolt(game, targeter) {
     var spell = targeter.getSlot().getAbility();
     var parent = targeter.getParent();
     var target = targeter.getSelectedCreature();
-    var casterLevel = parent.getCasterLevel();
+    var casterLevel = parent.stats.getCasterLevel();
 	
 	// check for spell failure
     if (!spell.checkSpellFailure(parent, target)) return;
@@ -156,11 +156,11 @@ function performFirebolt(game, targeter) {
    
     // create the particle effect
     var generator = game.getBaseParticleGenerator("bolt");
-    generator.setVelocityDurationBasedOnSpeed(parent.getPosition(), target.getPosition(), 400.0);
+    generator.setVelocityDurationBasedOnSpeed(parent.getLocation().toPoint(), target.getLocation().toPoint(), 400.0);
     generator.setGreenSpeedDistribution(game.getGaussianDistribution(-1.0, 0.05));
     generator.setBlueSpeedDistribution(game.getGaussianDistribution(-6.0, 0.05));
    
-    var delay = target.getPosition().screenDistance(parent.getPosition()) / generator.getSpeed();
+    var delay = target.getLocation().getScreenDistance(parent.getLocation()) / generator.getSpeed();
    
     // create the callback that will apply damage at the appropriate time
     var callback = spell.createDelayedCallback("applyDamage");
@@ -178,17 +178,17 @@ function applyDamage(game, parent, target, damage, targeter) {
 
     spell.applyDamage(parent, target, damage, "Fire");
 	
-	if (parent.getAbilities().has("BurningFlames")) {
-		var damageOverTime = parseInt(parent.getCasterLevel() / 4);
+	if (parent.abilities.has("BurningFlames")) {
+		var damageOverTime = parseInt(parent.stats.getCasterLevel() / 4);
    
 		var effect = targeter.getSlot().createEffect("effects/damageOverTime");
 		effect.setTitle("Burning Flames");
 		effect.put("damagePerRound", damageOverTime);
-		effect.put("type", "Fire");
+		effect.put("damageType", "Fire");
 	
 		effect.setDuration(2);
 	
-		var pos = target.getScreenPosition();
+		var pos = target.getLocation().getCenteredScreenPoint();
 	
 		var g1 = game.getBaseParticleGenerator("flame");
 		g1.setPosition(pos.x - game.dice().rand(2, 8), pos.y + game.dice().rand(0, 10));

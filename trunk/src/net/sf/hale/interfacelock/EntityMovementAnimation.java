@@ -50,11 +50,11 @@ public class EntityMovementAnimation extends EntityOffsetAnimation {
 	 */
 	
 	public EntityMovementAnimation(Entity mover, int deltaX, int deltaY, int xOffset, int yOffset) {
-		super(mover.getAnimatingOffsetPoint());
+		super();
 		
 		this.mover = mover;
-		this.initialGridX = mover.getX();
-		this.initialGridY = mover.getY();
+		this.initialGridX = mover.getLocation().getX();
+		this.initialGridY = mover.getLocation().getY();
 		
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
@@ -71,7 +71,9 @@ public class EntityMovementAnimation extends EntityOffsetAnimation {
 	@Override protected boolean runAnimation(float seconds) {
 		elapsed += seconds;
 		
-		if (elapsed > duration || elapsed < 0.0 || initialGridX != mover.getX() || initialGridY != mover.getY()) {
+		if (elapsed > duration || elapsed < 0.0 || initialGridX != mover.getLocation().getX() ||
+				initialGridY != mover.getLocation().getY()) {
+			
 			resetOffset();
 			return true;
 		} else {

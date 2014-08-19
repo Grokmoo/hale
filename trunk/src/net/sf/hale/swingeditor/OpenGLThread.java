@@ -41,6 +41,7 @@ public class OpenGLThread extends Thread {
 	private AreaRenderer viewer;
 	private AreaRenderer newViewer;
 	
+	private SwingEditor parent;
 	private Canvas canvas;
 	
 	private volatile boolean running;
@@ -53,8 +54,9 @@ public class OpenGLThread extends Thread {
 	 * @param parent
 	 */
 	
-	public OpenGLThread(Canvas parent) {
-		this.canvas = parent;
+	public OpenGLThread(SwingEditor parent) {
+		this.parent = parent;
+		this.canvas = parent.getOpenGLCanvas();
 		this.draw = true;
 		this.resize = true;
 	}
@@ -135,6 +137,9 @@ public class OpenGLThread extends Thread {
 		}
 		
 		viewer.getArea().getTileGrid().cacheSprites();
+		
+		parent.getPalette().setArea(viewer.getArea());
+		parent.validate();
 	}
 	
 	@Override public void run() {

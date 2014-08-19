@@ -1,20 +1,22 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return weapon.isMeleeWeapon();
+	return weapon.isMelee();
 }
 
 function onActivate(game, slot) {
 	var targeter = game.createCircleTargeter(slot);
 	targeter.setRadius(1);
 	targeter.setRelationshipCriterion("Hostile");
-	targeter.addAllowedPoint(slot.getParent().getPosition());
+	targeter.addAllowedPoint(slot.getParent().getLocation());
 	targeter.activate();
 }
 
 function onTargetSelect(game, targeter) {
+	targeter.getSlot().activate();
+
 	var ability = targeter.getSlot().getAbility();
 
     // perform the attack in a new thread as the standardAttack will
@@ -27,7 +29,7 @@ function onTargetSelect(game, targeter) {
 function performAttack(game, targeter) {
 	var parent = targeter.getParent();
 	
-	parent.getTimer().performAttack();
+	parent.timer.performAttack();
 	
 	// apply a temporary effect with the attack penalty
 	var effect = parent.createEffect();

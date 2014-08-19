@@ -45,7 +45,7 @@ function askTrouble(game, parent, talker, conversation) {
 function askForMoney(game, parent, talker, conversation) {
     // only allow the player one chance to perform the conversation check and get a good amount
     if (parent.get("paymentAmount") == null) {
-        var check = talker.getSkillCheck("Speech");
+        var check = game.campaign().getBestPartySkillCheck("Speech");
         
         if (check > 70) {
             parent.put("paymentAmount", 3);

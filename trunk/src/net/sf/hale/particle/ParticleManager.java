@@ -157,11 +157,11 @@ public class ParticleManager {
 	}
 	
 	public void add(Animated animated) {
+		animated.initialize();
+		
 		synchronized(animationsToAdd) {
 			animationsToAdd.add(animated);
 		}
-		
-		animated.initialize();
 	}
 	
 	/**

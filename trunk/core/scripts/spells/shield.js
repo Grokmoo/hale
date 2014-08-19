@@ -1,5 +1,5 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("ElementalShield")) {
+	if (slot.getParent().abilities.has("ElementalShield")) {
 		showElementalMenu(game, slot);
 	} else {
 		var targeter = game.createListTargeter(slot);
@@ -9,7 +9,7 @@ function onActivate(game, slot) {
 }
 
 function showElementalMenu(game, slot) {
-	game.addMenuLevel("Elemental Shield");
+	if (!game.addMenuLevel("Elemental Shield")) return;
 
 	var types = ["Fire", "Cold", "Electrical", "Acid"];
 	
@@ -36,18 +36,18 @@ function onTargetSelect(game, targeter, type) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = parseInt(3 + casterLevel / 3);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect;
 	
-	if (targeter.getSlot().getParent().getAbilities().has("ElementalShield")) {
+	if (targeter.getSlot().getParent().abilities.has("ElementalShield")) {
 		var dr = parseInt(5 + casterLevel / 2);
 	
 		effect = targeter.getSlot().createEffect("effects/elementalShield");
@@ -55,7 +55,7 @@ function onTargetSelect(game, targeter, type) {
 		effect.put("type", type);
 		
 		var g1 = game.getBaseParticleGenerator("continuousRing");
-		g1.setPosition(target.getPosition());
+		g1.setPosition(target.getLocation());
 		if (type == "Fire") {
 			g1.setGreenSpeedDistribution(game.getGaussianDistribution(-1.0, 0.05));
 			g1.setBlueSpeedDistribution(game.getGaussianDistribution(-6.0, 0.05));
@@ -79,9 +79,11 @@ function onTargetSelect(game, targeter, type) {
 		effect = targeter.getSlot().createEffect();
 	}
 	
+	effect.addPositiveIcon("items/enchant_armor_small");
+	
 	// add the basic shield animation
 	var anim = game.getBaseAnimation("shieldLoop");
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10.0);
 	anim.setDurationInfinite();
 	effect.addAnimation(anim);
@@ -89,7 +91,7 @@ function onTargetSelect(game, targeter, type) {
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
 	
-	var lvls = parent.getRoles().getLevel("War Wizard");
+	var lvls = parent.roles.getLevel("War Wizard");
 	var acBonus = parseInt(15 + casterLevel + 4 * lvls);
 	
 	
@@ -98,7 +100,7 @@ function onTargetSelect(game, targeter, type) {
 	target.applyEffect(effect);
 	
 	var anim = game.getBaseAnimation("shieldFlash");
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y);
 	
 	game.runAnimationNoWait(anim);

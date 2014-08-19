@@ -39,7 +39,7 @@ function endQuest(game) {
     
 	if (quest.hasSubEntry("Quest Complete")) return;
 	
-    var entry = quest.createSubEntry("Quest complete");
+    var entry = quest.createSubEntry("Quest Complete");
     
     entry.addText("You found and freed the Goblin Smith's sons.");
     

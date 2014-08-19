@@ -24,13 +24,21 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.AmmoTemplate;
+import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItem;
+import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
-import net.sf.hale.entity.InventoryCallbackFactory;
 import net.sf.hale.entity.Item;
-import net.sf.hale.rules.ItemList;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemTemplate;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.TrapTemplate;
+import net.sf.hale.entity.Weapon;
+import net.sf.hale.entity.WeaponTemplate;
+import net.sf.hale.rules.Currency;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.widgets.ItemIconHover;
 import net.sf.hale.widgets.ItemIconViewer;
@@ -67,7 +75,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	};
 	
 	private enum Filter {
-		All, Weapons, Armor, Apparel, Ammo, Misc, Usable, Ingredients, Traps, Quest;
+		All, Weapons, Armor, Usable, Ingredients, Traps, Quest;
 	};
 	
 	private int gridGap;
@@ -80,10 +88,9 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	private List<ItemIconViewer> viewers;
 	
 	private Mode mode;
-	private Creature creature;
+	private PC creature;
 	private Merchant merchant;
 	private ItemList items;
-	private InventoryCallbackFactory callbackFactory;
 	
 	private Filter activeFilter;
 	private ToggleButton activeButton;
@@ -155,16 +162,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	}
 	
 	private void applyModeToViewer(ItemIconViewer viewer, Item item) {
-		boolean prof = false;
-		switch (item.getItemType()) {
-		case SHIELD: case ARMOR: case GLOVES: case HELMET: case BOOTS:
-			if (!creature.stats().hasArmorProficiency(item.getArmorType().getName())) prof = true;
-			break;
-		case WEAPON:
-			if (!creature.stats().hasWeaponProficiency(item.getBaseWeapon().getName())) prof = true;
-			break;
-		}
-		viewer.setStateProficiencies(prof);
+		viewer.setStateProficiencies(!item.getTemplate().hasPrereqsToEquip(creature));
 		
 		boolean unafford = false;
 		
@@ -174,15 +172,20 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 					merchant.getCurrentSellPercentage());
 			unafford = maxAffordable < 1;
 			break;
+		case CONTAINER:
+			break;
+		case INVENTORY:
+			break;
 		}
 		viewer.setStateUnaffordable(unafford);
 	}
 	
 	private void updateViewers() {
 		int viewerIndex = 0;
-		for (int itemIndex = 0; itemIndex < items.size(); itemIndex++) {
-			Item item = items.getItem(itemIndex);
-			if (!itemMatchesFilter(item)) continue;
+		
+		// update the viewers, adding new ones as needed
+		for (ItemList.Entry entry : items) {
+			if (!itemMatchesFilter(entry.getID()) ) continue;
 			
 			ItemIconViewer viewer;
 			if (viewerIndex == viewers.size()) {
@@ -196,17 +199,17 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 				viewer = viewers.get(viewerIndex);
 			}
 			
-			viewer.setItemIndex(itemIndex);
+			Item item = entry.createItem();
 			
 			switch (mode) {
 			case INVENTORY:
-				viewer.setItem(item, items.getQuantity(itemIndex), creature, null, null);
+				viewer.setItem(item, entry.getQuantity(), creature, null, null);
 				break;
 			case CONTAINER:
-				viewer.setItem(item, items.getQuantity(itemIndex), null, Game.mainViewer.containerWindow.getContainer(), null);
+				viewer.setItem(item, entry.getQuantity(), null, Game.mainViewer.containerWindow.getContainer(), null);
 				break;
 			case MERCHANT:
-				viewer.setItem(item, items.getQuantity(itemIndex), null, null, merchant);
+				viewer.setItem(item, entry.getQuantity(), null, null, merchant);
 				break;
 			}
 			
@@ -233,12 +236,11 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	 * @param items the List of items to view
 	 */
 	
-	public void updateContent(Mode mode, Creature creature, Merchant merchant, ItemList items) {
+	public void updateContent(Mode mode, PC creature, Merchant merchant, ItemList items) {
 		this.mode = mode;
 		this.creature = creature;
 		this.merchant = merchant;
 		this.items = items;
-		this.callbackFactory = creature.getInventory().getCallbackFactory();
 		
 		updateViewers();
 	}
@@ -249,52 +251,16 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	 */
 	
 	private void addEquippedHovers(ItemIconViewer viewer) {
-		Item item = viewer.getItem();
-		if (item == null) return;
 		if (!Game.mainViewer.inventoryWindow.isVisible()) return;
 		
-		InventoryWindow inv = Game.mainViewer.inventoryWindow;
+		if (! (viewer.getItem() instanceof EquippableItem)) return;
+		
+		EquippableItem item = (EquippableItem)viewer.getItem();
 		
 		List<ItemIconViewer> viewersToAdd = new ArrayList<ItemIconViewer>();
 		
-		switch (item.getItemType()) {
-		case WEAPON:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_MAIN_HAND));
-			
-			ItemIconViewer offHand = inv.getEquippedViewer(Inventory.EQUIPPED_OFF_HAND);
-			if (offHand.getItem() != null && offHand.getItem().getItemType() == Item.ItemType.WEAPON)
-				viewersToAdd.add(offHand);
-			break;
-		case ARMOR:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_ARMOR));
-			break;
-		case GLOVES:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_GLOVES));
-			break;
-		case HELMET:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_HELMET));
-			break;
-		case CLOAK:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_CLOAK));
-			break;
-		case BOOTS:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_BOOTS));
-			break;
-		case BELT:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_BELT));
-			break;
-		case AMULET:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_AMULET));
-			break;
-		case RING:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_RING_RIGHT));
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_RING_LEFT));
-			break;
-		case AMMO:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_QUIVER));
-			break;
-		case SHIELD:
-			viewersToAdd.add(inv.getEquippedViewer(Inventory.EQUIPPED_OFF_HAND));
+		for ( Inventory.Slot slot : EquippableItemTemplate.validSlotsForType.get(item.getTemplate().getType()) ) {
+			viewersToAdd.add(Game.mainViewer.inventoryWindow.getEquippedViewer(slot));
 		}
 		
 		for (ItemIconViewer equippedViewer : viewersToAdd) {
@@ -317,21 +283,23 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		case MERCHANT:
 			hover.setValue("Buy Price", merchant.getCurrentSellPercentage());
 			break;
+		case CONTAINER:
+			break;
 		}
 		
 		// set type specific information
-		if (item != null) {
-			switch (item.getItemType()) {
-			case SHIELD: case ARMOR: case GLOVES: case HELMET: case BOOTS:
-				if ( !creature.stats().hasArmorProficiency(item.getArmorType().getName()) ) {
-					hover.setRequiresText("Armor Proficiency: " + item.getArmorType().getName());
-				}
-				break;
-			case WEAPON:
-				if ( !creature.stats().hasWeaponProficiency(item.getBaseWeapon().getName()) ) {
-					hover.setRequiresText("Weapon Proficiency: " + item.getBaseWeapon().getName());
-				}
-				break;
+		if (item instanceof Armor) {
+			Armor armor = (Armor)item;
+			
+			if ( !creature.stats.hasArmorProficiency(armor.getTemplate().getArmorType().getName()) ) {
+				hover.setRequiresText("Armor Proficiency: " + armor.getTemplate().getArmorType().getName());
+			}
+			
+		} else if (item instanceof Weapon) {
+			Weapon weapon = (Weapon)item;
+			
+			if ( !creature.stats.hasWeaponProficiency(weapon.getTemplate().getBaseWeapon().getName()) ) {
+				hover.setRequiresText("Weapon Proficiency: " + weapon.getTemplate().getBaseWeapon().getName());
 			}
 		}
 		
@@ -379,23 +347,22 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 	@Override public void rightClicked(ItemIconViewer viewer, int x, int y) {
 		Item item = viewer.getItem();
 		int quantity = viewer.getQuantity();
-		int index = viewer.getItemIndex();
 		
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		
 		menu.clear();
-		menu.addMenuLevel(item.getFullName());
+		menu.addMenuLevel(item.getLongName());
 		menu.setPosition(x - 2, y - 25);
 		
 		switch (mode) {
 		case INVENTORY:
-			addInventoryButtons(item, quantity, index, menu);
+			addInventoryButtons(item, quantity, menu);
 			break;
 		case MERCHANT:
-			addMerchantButtons(item, quantity, index, menu);
+			addMerchantButtons(item, quantity, menu);
 			break;
 		case CONTAINER:
-			addContainerButtons(item, quantity, index, menu);
+			addContainerButtons(item, quantity, menu, Game.mainViewer.containerWindow.getContainer());
 			break;
 		}
 		
@@ -404,9 +371,8 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			menu.disableAllButtons();
 		
 		Button details = new Button("View Details");
-		details.addCallback(callbackFactory.getDetailsCallback(item, x, y));
+		details.addCallback(item.getExamineDetailsCallback(x, y));
 		menu.addButton(details);
-		
 		
 		menu.show();
 		
@@ -416,25 +382,41 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		}
 	}
 	
-	private void addContainerButtons(Item item, int quantity, int index, RightClickMenu menu) {
-		if (creature.getTimer().canPerformAction(Game.ruleset.getValue("PickUpAndWieldItemCost"))) {
-			if ((creature.getInventory().getEquippedMainHand() == null && item.getItemType() == Item.ItemType.WEAPON) ||
-				(creature.getInventory().getEquippedOffHand() == null && item.getItemType() == Item.ItemType.SHIELD)) {
-				
+	private void addContainerButtons(Item item, int quantity, RightClickMenu menu, Container container) {
+		if (item instanceof EquippableItem && 
+			creature.timer.canPerformAction(Game.ruleset.getValue("PickUpAndWieldItemCost"))) {
+			
+			EquippableItem eItem = (EquippableItem)item;
+			
+			boolean addButton = false;
+			switch (eItem.getTemplate().getType()) {
+			case Weapon:
+				if (creature.inventory.getEquippedMainHand() == null)
+					addButton = true;
+				break;
+			case Shield:
+				if (creature.inventory.getEquippedOffHand() == null)
+					addButton = true;
+				break;
+			default:
+				// do nothing
+			}
+			
+			if (addButton) {
 				Button button = new Button("Take and Wield");
-				button.addCallback(callbackFactory.getTakeAndWieldCallback(item, index));
+				button.addCallback(creature.inventory.getTakeAndWieldCallback(eItem, container));
 				menu.addButton(button);
 			}
 		}
 		
-		if (creature.getTimer().canPerformAction(Game.ruleset.getValue("PickUpItemCost"))) {
+		if (creature.timer.canPerformAction(Game.ruleset.getValue("PickUpItemCost"))) {
 			Button button = new Button("Take");
-			button.addCallback(callbackFactory.getTakeCallback(item, index, 1));
+			button.addCallback(creature.inventory.getTakeCallback(item, 1, container));
 			menu.addButton(button);
 			
 			if (quantity > 1) {
 				button = new Button("Take Multiple...");
-				button.addCallback(callbackFactory.getTakeCallback(item, index, quantity));
+				button.addCallback(creature.inventory.getTakeCallback(item, quantity, container));
 				menu.addButton(button);
 			}
 		}
@@ -447,141 +429,130 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		return Math.min(quantityAvailable, maxAffordable);
 	}
 	
-	private void addMerchantButtons(Item item, int quantity, int index, RightClickMenu menu) {
+	private void addMerchantButtons(Item item, int quantity, RightClickMenu menu) {
 		int maxBuy = getMerchantBuyMaxQuantity(merchant, item, quantity);
 		
 		StringBuilder buyText = new StringBuilder();
 		buyText.append("Buy for ");
-		buyText.append(item.getQualityValue().shortString(merchant.getCurrentSellPercentage()));
-		if (item.getValueStackSize() != 1) {
-			buyText.append(" per ");
-			buyText.append(item.getValueStackSize());
-		}
+		buyText.append(Currency.shortString(item.getQualityValue(), merchant.getCurrentSellPercentage()));
 		
 		Button button = new Button(buyText.toString());
-		button.addCallback(callbackFactory.getBuyCallback(item, merchant, 1));
+		button.addCallback(creature.inventory.getBuyCallback(item, 1, merchant));
 		button.setEnabled(maxBuy >= 1);
 		menu.addButton(button);
 		
 		if (maxBuy > 1) {
 			button = new Button("Buy Multiple...");
-			button.addCallback(callbackFactory.getBuyCallback(item, merchant, maxBuy));
+			button.addCallback(creature.inventory.getBuyCallback(item, maxBuy, merchant));
 			menu.addButton(button);
 		}
 	}
 	
-	private void addInventoryButtons(Item item, int quantity, int index, RightClickMenu menu) {
-		if (merchant != null && !item.isQuestItem()) {
+	private void checkEquipButton(Button button, EquippableItem item) {
+		if (!creature.timer.canPerformEquipAction(item)) {
+			button.setEnabled(false);
+			button.setTooltipContent("Not enough AP to equip");
+		} else if (!creature.inventory.hasPrereqsToEquip(item)) {
+			button.setEnabled(false);
+			button.setTooltipContent("You do not have proficiency with this Item");
+		} else if (!creature.inventory.canEquip(item, null)) {
+			button.setEnabled(false);
+			button.setTooltipContent("The currently equipped item may not be removed.");
+		}
+	}
+	
+	private void addInventoryButtons(Item item, int quantity, RightClickMenu menu) {
+		if (merchant != null && !item.getTemplate().isQuest()) {
 			StringBuilder sellText = new StringBuilder();
 			sellText.append("Sell for ");
-			sellText.append(item.getQualityValue().shortString(merchant.getCurrentBuyPercentage()));
-			if (item.getValueStackSize() != 1) {
-				sellText.append(" per ");
-				sellText.append(item.getValueStackSize());
-			}
+			sellText.append(Currency.shortString(item.getQualityValue(), merchant.getCurrentBuyPercentage()));
 			
 			Button button = new Button(sellText.toString());
-			button.addCallback(callbackFactory.getSellCallback(item, merchant, 1));
+			button.addCallback(creature.inventory.getSellCallback(item, 1, merchant));
 			menu.addButton(button);
 			
 			if (quantity > 1) {
 				button = new Button("Sell Multiple...");
-				button.addCallback(callbackFactory.getSellCallback(item, merchant, quantity));
+				button.addCallback(creature.inventory.getSellCallback(item, quantity, merchant));
 				menu.addButton(button);
 			}
 		}
 		
-		if ( creature.getInventory().hasPrereqsToEquip(item) ) {
+		if (item instanceof EquippableItem) {
+			EquippableItem eItem = (EquippableItem)item;
+			
 			Button button = new Button("Equip");
-			button.addCallback(callbackFactory.getEquipCallback(item));
-			
-			if (!creature.getTimer().canPerformEquipAction(item)) {
-				button.setEnabled(false);
-				button.setTooltipContent("Not enough AP to equip");
-			}
-			
-			if (!creature.getInventory().canUnequipCurrentItemInSlot(item, 0)) {
-				button.setEnabled(false);
-				button.setTooltipContent("The currently equipped item cannot be removed.");
-			}
+			button.addCallback(creature.inventory.getEquipCallback(eItem, null));
+			checkEquipButton(button, eItem);
 			
 			menu.addButton(button);
-		}
-
-		if (creature.getInventory().canEquipAsOffHandWeapon(item)) {
-			Button button = new Button("Equip Off Hand");
-			button.addCallback(callbackFactory.getEquipOffHandCallback(item));
 			
-			if (!creature.getTimer().canPerformEquipAction(item)) {
-				button.setEnabled(false);
-				button.setTooltipContent("Not enough AP to equip");
+			if (eItem instanceof Weapon && creature.inventory.canEquip(eItem, Inventory.Slot.OffHand)) {
+				Button offHandButton = new Button("Equip Off Hand");
+				offHandButton.addCallback(creature.inventory.getEquipCallback(eItem, Inventory.Slot.OffHand));
+				checkEquipButton(offHandButton, eItem);
+				
+				menu.addButton(offHandButton);
 			}
-			
-			if (!creature.getInventory().canUnequipCurrentItemInSlot(item, Inventory.EQUIPPED_OFF_HAND)) {
-				button.setEnabled(false);
-				button.setTooltipContent("The currently equipped item cannot be removed.");
-			}
-			
-			menu.addButton(button);
 		}
 		
 		if (item.canUse(creature)) {
-			Button button = new Button(item.getUseButtonText());
-			button.addCallback(callbackFactory.getUseCallback(item));
+			Button button = new Button(item.getTemplate().getUseText());
+			button.addCallback(item.getUseCallback(creature));
 			menu.addButton(button);
 		}
 
-		if ((creature.getTimer().canPerformAction(Game.ruleset.getValue("GiveItemCost")) ||
+		if ((creature.timer.canPerformAction(Game.ruleset.getValue("GiveItemCost")) ||
 				!Game.isInTurnMode()) && Game.curCampaign.party.size() > 1) {
 			Button button = new Button("Give >>");
-			button.addCallback(callbackFactory.getGiveCallback(item, 1));
+			button.addCallback(creature.inventory.getGiveCallback(item, 1));
 			menu.addButton(button);
 
 			if (quantity > 1) {
 				button = new Button("Give Multiple >>");
-				button.addCallback(callbackFactory.getGiveCallback(item, quantity));
+				button.addCallback(creature.inventory.getGiveCallback(item, quantity));
 				menu.addButton(button);
 			}
 		}
-		if (!item.isQuestItem() && creature.getTimer().canPerformAction(Game.ruleset.getValue("DropItemCost"))) {
+		if (!item.getTemplate().isQuest() && creature.timer.canPerformAction(Game.ruleset.getValue("DropItemCost"))) {
 			Button button = new Button("Drop");
-			button.addCallback(callbackFactory.getDropCallback(index, 1));
+			button.addCallback(creature.inventory.getDropCallback(item, 1));
 			menu.addButton(button);
 
 			if (quantity > 1) {
 				button = new Button("Drop Multiple...");
-				button.addCallback(callbackFactory.getDropCallback(index, quantity));
+				button.addCallback(creature.inventory.getDropCallback(item, quantity));
 				menu.addButton(button);
 			}
 		}
 	}
 	
-	private boolean itemMatchesFilter(Item item) {
+	private boolean itemMatchesFilter(String itemID) {
+		ItemTemplate template = EntityManager.getItemTemplate(itemID);
+		
 		switch (activeFilter) {
-		case All: return true;
-		case Weapons: return item.getItemType() == Item.ItemType.WEAPON;
+		case All:
+			return true;
+		case Weapons:
+			return (template instanceof WeaponTemplate) || (template instanceof AmmoTemplate);
 		case Armor:
-			switch (item.getItemType()) {
-			case ARMOR: case SHIELD: case GLOVES: case HELMET: case BOOTS:
-				return !item.getArmorType().getName().equals(Game.ruleset.getString("DefaultArmorType"));
+			if (! (template instanceof EquippableItemTemplate) ) {
+				return false;
 			}
-			break;
-		case Apparel:
-			switch (item.getItemType()) {
-			case CLOAK: case BELT: case AMULET: case RING:
+			switch ( ((EquippableItemTemplate)template).getType() ) {
+			case Cloak: case Belt: case Amulet: case Ring: case Gloves:
+			case Helmet: case Boots: case Armor: case Shield:
 				return true;
-			case GLOVES: case HELMET: case BOOTS: case ARMOR: case SHIELD:
-				return item.getArmorType().getName().equals(Game.ruleset.getString("DefaultArmorType"));
+			case Ammo: case Weapon:
+				return false;
 			}
 			break;
-		case Ammo: return item.getItemType() == Item.ItemType.AMMO;
-		case Misc: return item.getItemType() == Item.ItemType.ITEM;
-		case Usable: return item.isUsable();
-		case Ingredients: return item.isIngredient();
-		case Traps: return item.getType() == Entity.Type.TRAP;
-		case Quest: return item.isQuestItem();
+		case Usable: return template.isUsable();
+		case Ingredients: return template.isIngredient();
+		case Traps: return template instanceof TrapTemplate;
+		case Quest: return template.isQuest();
 		}
-
+		
 		return false;
 	}
 	
@@ -638,15 +609,18 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			
 			switch (mode) {
 			case INVENTORY:
-				if (target.getItemParent() != null && target.getItemEquipSlot() == -1) return false;
+				if (target.getParentPC() != null && target.getItemEquipSlot() == null) return false;
 				
-				if (target.getItem().isCursed()) return false;
+				if (target.getItem() instanceof EquippableItem) {
+					if ( !((EquippableItem)target.getItem()).getTemplate().isUnequippable() )
+						return false;
+				}
 				break;
 			case CONTAINER:
-				if (target.getItemParent() == null) return false;
+				if (target.getParentPC() == null) return false;
 				break;
 			case MERCHANT:
-				if (target.getItemParent() == null) return false;
+				if (target.getParentPC() == null) return false;
 				break;
 			}
 			
@@ -654,13 +628,13 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		}
 		
 		private void dragDropMerchantFromEquipped(DragTarget target) {
-			target.getItemParent().getInventory().getCallbackFactory().getSellEquippedCallback(target.getItemEquipSlot(), merchant).run();
+			target.getParentPC().inventory.getSellEquippedCallback(target.getItemEquipSlot(), merchant).run();
 		}
 		
 		private void dragDropMerchantFromInventory(DragTarget target) {
-			int maxQuantity = target.getItemParent().getInventory().getQuantity(target.getItem());
-			
-			target.getItemParent().getInventory().getCallbackFactory().getSellCallback(target.getItem(), merchant, maxQuantity).run();
+			int maxQuantity = target.getParentPC().inventory.getUnequippedItems().getQuantity(target.getItem());
+
+			target.getParentPC().inventory.getSellCallback(target.getItem(), maxQuantity, merchant).run();
 		}
 		
 		private void dragDropInventoryFromMerchant(DragTarget target) {
@@ -668,34 +642,31 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			int merchantQuantity = target.getItemMerchant().getCurrentItems().getQuantity(target.getItem());
 			int maxQuantity = getMerchantBuyMaxQuantity(merchant, target.getItem(), merchantQuantity);
 			
-			creature.getInventory().getCallbackFactory().getBuyCallback(target.getItem(), target.getItemMerchant(), maxQuantity).run();
+			if (maxQuantity > 0) {
+				// don't allow buy attempts when the item can't be afforded
+				creature.inventory.getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
+			}
 		}
 		
 		private void dragDropInventoryFromEquipped(DragTarget target) {
-			creature.getInventory().getCallbackFactory().getUnequipCallback(target.getItem()).run();
+			creature.inventory.getUnequipCallback(target.getItemEquipSlot()).run();
 		}
 		
 		private void dragDropInventoryFromContainer(DragTarget target) {
 			Container container = target.getItemContainer();
 			
-			int index = container.getItems().findItem(target.getItem());
-			int quantity = container.getItems().getQuantity(index);
+			int quantity = container.getCurrentItems().getQuantity(target.getItem());
 			
-			creature.getInventory().getCallbackFactory().getTakeCallback(target.getItem(), index, quantity).run();
+			creature.inventory.getTakeCallback(target.getItem(), quantity, target.getItemContainer()).run();
 		}
 		
 		private void dragDropContainerFromInventory(DragTarget target) {
-			Inventory srcInventory = target.getItemParent().getInventory();
+			Inventory srcInventory = target.getParentPC().inventory;
 			
-			int slot = srcInventory.getEquippedSlot(target.getItem());
-			
-			if (slot == -1) {
-				int index = srcInventory.getUnequippedItems().findItem(target.getItem());
-				int quantity = srcInventory.getUnequippedItems().getQuantity(index);
-				
-				srcInventory.getCallbackFactory().getDropCallback(index, quantity).run();
+			if (target.getItemEquipSlot() == null) {
+				srcInventory.getDropEquippedCallback(target.getItemEquipSlot()).run();
 			} else {
-				srcInventory.getCallbackFactory().getDropEquippedCallback(slot).run();
+				srcInventory.getDropCallback(target.getItem(), srcInventory.getTotalQuantity(target.getItem())).run();
 			}
 		}
 		
@@ -716,7 +687,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 						dragDropInventoryFromContainer(target);
 					} else if (target.getItemMerchant() != null) {
 						dragDropInventoryFromMerchant(target);
-					} else if (target.getItemEquipSlot() != -1) {
+					} else if (target.getItemEquipSlot() != null) {
 						dragDropInventoryFromEquipped(target);
 					}
 					break;
@@ -724,7 +695,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 					dragDropContainerFromInventory(target);
 					break;
 				case MERCHANT:
-					if (target.getItemEquipSlot() != -1)
+					if (target.getItemEquipSlot() != null)
 						dragDropMerchantFromEquipped(target);
 					else
 						dragDropMerchantFromInventory(target);

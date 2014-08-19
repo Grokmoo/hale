@@ -35,9 +35,9 @@ import net.sf.hale.Game;
 import net.sf.hale.mainmenu.CampaignGroupSelector.CampaignDescriptor;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.util.FileKeyMap;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONParser;
 
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -268,12 +268,13 @@ public class CampaignPopup extends PopupWindow {
 				if (!f.isDirectory() || f.getName().startsWith(".")) continue;
 
 				// get the id, name, and description for the campaign
-				FileKeyMap fileMap = new FileKeyMap(new File(f.getPath() + "/campaign.txt"));
+				SimpleJSONParser parser = new SimpleJSONParser(new File(f.getPath() + "/campaign" +
+						ResourceType.JSON.getExtension()));
 				
 				String id = fileName;
 				String description = FileUtil.readFileAsString(f.getPath() + "/description" +
 						ResourceType.HTML.getExtension());
-				String name = fileMap.getValue("name", fileName);
+				String name = parser.get("name", fileName);
 				
 				campaigns.add(new CampaignDescriptor(id, name, description));
 			}
@@ -295,10 +296,15 @@ public class CampaignPopup extends PopupWindow {
 				ZipEntry entry = file.getEntry("description" + ResourceType.HTML.getExtension());
 				String description = ResourceManager.getResourceAsString(file.getInputStream(entry));
 				
-				FileKeyMap fileMap = new FileKeyMap( file.getInputStream(file.getEntry("campaign.txt")) );
-				String name = fileMap.getValue("name", id);
+				ZipEntry campaignEntry = file.getEntry("campaign" + ResourceType.JSON.getExtension());
+				SimpleJSONParser parser = new SimpleJSONParser(file.getName() + "/campaign",
+						file.getInputStream(campaignEntry));
+				
+				String name = parser.get("name", id);
 				
 				campaigns.add(new CampaignDescriptor(id, name, description));
+				
+				file.close();
 			}
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error generating list of campaigns.", e);

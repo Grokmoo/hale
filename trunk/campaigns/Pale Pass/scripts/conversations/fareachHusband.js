@@ -25,7 +25,7 @@ function completeQuest(game, parent, talker, conversation) {
     game.put("missingHusbandQuestCompleted", true);
     
     game.currentArea().removeEntity(parent);
-    parent.setPosition(11, 9);
+    parent.setLocationInCurrentArea(11, 9);
     game.getArea("Fareach").getEntities().addEntity(parent);
     
     conversation.exit();

@@ -19,27 +19,19 @@
 
 package net.sf.hale.rules;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sf.hale.Game;
-import net.sf.hale.editor.reference.MerchantReferenceList;
-import net.sf.hale.editor.reference.ReferenceList;
-import net.sf.hale.editor.reference.Referenceable;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Item;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.LootList;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.util.FileKeyMap;
-import net.sf.hale.util.LineKeyList;
-import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
-public class Merchant implements Referenceable, Saveable {
+public class Merchant implements Saveable {
 	private final LootList baseItems;
 	private String name;
 	private int buyValuePercentage;
@@ -68,22 +60,25 @@ public class Merchant implements Referenceable, Saveable {
 	public void load(SimpleJSONObject data) {
 		this.lastRespawnRounds = data.get("lastRespawnRound", 0);
 		
-		this.currentItems = new ItemList("merchant");
+		this.currentItems = new ItemList();
 		this.currentItems.load(data.getArray("currentItems"));
 	}
 	
 	public Merchant(String id) {
 		this.id = id;
 		
-		this.baseItems = new LootList();
+		SimpleJSONParser parser = new SimpleJSONParser("merchants/" + id, ResourceType.JSON);
 		
-		this.confirmOnExit = false;
-		this.usesSpeechSkill = true;
-		this.buyValuePercentage = 100;
-		this.sellValuePercentage = 100;
-		this.respawnHours = 0;
+		this.name = parser.get("name", null);
+		this.sellValuePercentage = parser.get("sellValuePercentage", 0);
+		this.buyValuePercentage = parser.get("buyValuePercentage", 0);
+		this.usesSpeechSkill = parser.get("usesSpeechSkill", false);
+		this.confirmOnExit = parser.get("confirmOnExit", false);
+		this.respawnHours = parser.get("respawnHours", 0);
 		
-		readMerchantFile(id);
+		this.baseItems = new LootList(parser.getArray("items"));
+		
+		parser.warnOnUnusedKeys();
 		
 		this.currentBuyPercentage = buyValuePercentage;
 		this.currentSellPercentage = sellValuePercentage;
@@ -97,16 +92,10 @@ public class Merchant implements Referenceable, Saveable {
 		return respawnHours;
 	}
 	
-	public void setRespawnHours(int respawn) {
-		this.respawnHours = respawn;
-	}
-	
 	public LootList getBaseItems() { return baseItems; }
 	
-	public void setUsesSpeechSkill(boolean usesSpeechSkill) { this.usesSpeechSkill = usesSpeechSkill; }
 	public boolean usesSpeechSkill() { return usesSpeechSkill; }
 	
-	public void setConfirmOnExit(boolean confirmOnExit) { this.confirmOnExit = confirmOnExit; }
 	public boolean confirmOnExit() { return confirmOnExit; }
 
 	private boolean checkRespawn() {
@@ -134,11 +123,8 @@ public class Merchant implements Referenceable, Saveable {
 		return currentItems;
 	}
 	
-	@Override
 	public String getID() { return id; }
 	public String getName() { return name; }
-	
-	public void setName(String name) { this.name = name; }
 	
 	public void setPartySpeech(int partySpeech) {
 		if (usesSpeechSkill) {
@@ -178,100 +164,30 @@ public class Merchant implements Referenceable, Saveable {
 		
 		if (Game.curCampaign.getPartyCurrency().getValue() < cost) return;
 		
-		Item soldItem = new Item(item);
+		Item soldItem = EntityManager.getItem(item.getTemplate().getID(), item.getQuality());
 		
-		Game.curCampaign.getPartyCurrency().addCP(-cost);
-		creature.getInventory().addItem(soldItem, quantity);
+		Game.curCampaign.getPartyCurrency().addValue(-cost);
+		creature.inventory.getUnequippedItems().add(soldItem, quantity);
 		
-		currentItems.removeItem(item, quantity);
+		if (currentItems.getQuantity(item) != Integer.MAX_VALUE) { 
+			currentItems.remove(item, quantity);
+		}
 		
 		Game.mainViewer.updateInterface();
 	}
 	
 	public void buyItem(Item item, Creature creature, int quantity) {
-		if (item.isQuestItem()) return;
+		if (item.getTemplate().isQuest()) return;
 		
 		int cost = Currency.getPlayerSellCost(item, quantity, currentBuyPercentage).getValue();
 		
-		Game.curCampaign.getPartyCurrency().addCP(cost);
-		creature.getInventory().getUnequippedItems().removeItem(item, quantity);
-		currentItems.addItem(item, quantity);
+		Game.curCampaign.getPartyCurrency().addValue(cost);
+		creature.inventory.getUnequippedItems().remove(item, quantity);
 		
+		if (currentItems.getQuantity(item) != Integer.MAX_VALUE) {
+			currentItems.add(item, quantity);
+		}
 		
 		Game.mainViewer.updateInterface();
-	}
-	
-	private void readMerchantFile(String ref) {
-		FileKeyMap keyMap = new FileKeyMap("merchants/" + ref + ResourceType.Text.getExtension());
-		
-		if (keyMap.has("name")) name = keyMap.getLast("name").next();
-		if (keyMap.has("sellvaluepercentage")) sellValuePercentage = keyMap.getLast("sellvaluepercentage").nextInt();
-		if (keyMap.has("buyvaluepercentage")) buyValuePercentage = keyMap.getLast("buyvaluepercentage").nextInt();
-		if (keyMap.has("usesspeechskill")) usesSpeechSkill = keyMap.getLast("usesspeechskill").nextBoolean();
-		if (keyMap.has("confirmonexit")) confirmOnExit = keyMap.getLast("confirmonexit").nextBoolean();
-		if (keyMap.has("respawnhours")) respawnHours = keyMap.getLast("respawnhours").nextInt();
-		
-		List<LootList.Entry> lootEntries = new ArrayList<LootList.Entry>();
-		
-		for (LineKeyList line : keyMap.get("additems")) {
-			String itemListID = line.next();
-			int probability = line.nextInt();
-			LootList.ProbabilityMode mode = LootList.ProbabilityMode.valueOf(line.next().toUpperCase());
-			
-			lootEntries.add(new LootList.Entry(itemListID, probability, mode));
-		}
-		baseItems.addAll(lootEntries);
-		
-		keyMap.checkUnusedKeys();
-	}
-	
-	public void saveToFile() {
-		File fout = new File("campaigns/" + Game.curCampaign.getID() + "/merchants/" + id + ".txt");
-		
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(fout));
-			
-			out.write("name \"" + name + "\"");
-			out.newLine();
-			
-			out.write("usesSpeechSkill " + this.usesSpeechSkill);
-			out.newLine();
-			
-			out.write("confirmOnExit " + this.confirmOnExit);
-			out.newLine();
-			
-			out.write("buyValuePercentage " + this.buyValuePercentage);
-			out.newLine();
-			
-			out.write("sellValuePercentage " + this.sellValuePercentage);
-			out.newLine();
-			
-			out.write("respawnhours " + this.respawnHours);
-			out.newLine();
-			
-			for (int i = 0; i < baseItems.size(); i++) {
-				LootList.Entry entry = baseItems.getEntry(i);
-				
-				out.write("additems \"" + entry.itemListID + "\" " + entry.probability + " " + entry.mode.toString());
-				out.newLine();
-			}
-			
-			out.close();
-			
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Error saving merchant " + id, e);
-		}
-	}
-	
-	@Override public String toString() {
-		return id; 
-	}
-	
-	@Override public String getReferenceType() {
-		return "Merchant";
-	}
-	
-	@Override public ReferenceList getReferenceList() {
-		return new MerchantReferenceList(this);
 	}
 }

@@ -17,7 +17,7 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	// cast the spell
 	targeter.getSlot().activate();
@@ -30,7 +30,7 @@ function onTargetSelect(game, targeter) {
 	anim.setGreen(1.0);
 	anim.setBlue(1.0);
 	
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10);
 	
 	game.runAnimationNoWait(anim);

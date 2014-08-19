@@ -22,9 +22,8 @@ package net.sf.hale.swingeditor;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.EntityManager;
 
 
 /**
@@ -34,7 +33,6 @@ import net.sf.hale.entity.Item;
  */
 
 public enum AssetType {
-	Items(new ItemCallback(), "items"),
 	Creatures(new CreatureCallback(), "creatures");
 	
 	private String containingDirectory;
@@ -59,7 +57,7 @@ public enum AssetType {
 	/**
 	 * Returns the asset associated with this asset type
 	 * @param assetID the resource ID of the asset
-	 * @return
+	 * @return the asset associated with this asset type
 	 */
 	
 	public Object getAsset(String assetID) {
@@ -84,27 +82,13 @@ public enum AssetType {
 		callback.setMode(editor);
 	}
 	
-	private static class ItemCallback implements Callback {
-		@Override public void setMode(AssetEditor editor) {
-			editor.setMode(EditorManager.getItemsModel());
-		}
-
-		@Override public Item getAsset(String assetID) {
-			return Game.entityManager.getItem(assetID);
-		}
-
-		@Override public JPanel getSubEditor(JFrame parent, String assetID) {
-			return new ItemSubEditor(parent, getAsset(assetID));
-		}
-	}
-	
 	private static class CreatureCallback implements Callback {
 		@Override public void setMode(AssetEditor editor) {
 			editor.setMode(EditorManager.getCreaturesModel());
 		}
 
 		@Override public Creature getAsset(String assetID) {
-			return Game.entityManager.getCreature(assetID);
+			return EntityManager.getNPC(assetID);
 		}
 
 		@Override public JPanel getSubEditor(JFrame parent, String assetID) {

@@ -1,3 +1,0 @@
-area "Werewolf Den"
-script "triggers/werewolfDen"
-addPoints

@@ -23,10 +23,10 @@ import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Cutscene;
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.ability.DelayedScriptCallback;
 import net.sf.hale.ability.Scriptable;
 import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.Point;
 import de.matthiasmann.twl.Button;
@@ -188,7 +188,8 @@ public class CutscenePopup extends PopupWindow {
 		@Override protected void paintWidget(GUI gui) {
 			if (bgSprite != null) {
 				GL11.glColor3f(1.0f, 1.0f, 1.0f);
-				bgSprite.draw(bgSpriteOffset);
+				//bgSprite.draw(bgSpriteOffset.x, bgSpriteOffset.y);
+				bgSprite.draw(0, 0, getWidth(), getHeight());
 			}
 		}
 		

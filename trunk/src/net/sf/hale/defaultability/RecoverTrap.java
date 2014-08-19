@@ -19,12 +19,13 @@
 
 package net.sf.hale.defaultability;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Trap;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
 
 /**
  * A default ability for recovering a trap from the area.  If the parent is not adjacent to
@@ -43,19 +44,18 @@ public class RecoverTrap implements DefaultAbility {
 		return "Recover Trap";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canPerformAction("RecoverTrapCost")) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canPerformAction("RecoverTrapCost")) return false;
 		
-		if (!parent.stats().has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
 		
-		trap = Game.curCampaign.curArea.getTrapAtGridPoint(targetPosition);
-		if (trap == null) return false;
-		
-		if (!trap.isArmed()) return false;
+		trap = targetPosition.getTrap();
+		if (trap == null || !trap.isSpotted()) return false;
 		
 		move = new Move();
+		move.setAllowPartyMove(false);
 		
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// need to move towards the door before opening
 			return move.canMove(parent, targetPosition, 1);
 		}
@@ -63,8 +63,8 @@ public class RecoverTrap implements DefaultAbility {
 		return true;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// move towards the door then open
 			move.addCallback(new RecoverCallback(parent));
 			move.moveTowards(parent, targetPosition, 1);
@@ -87,18 +87,25 @@ public class RecoverTrap implements DefaultAbility {
 	 */
 	
 	public boolean recover(Creature parent, Trap trap) {
-		if (AreaUtil.distance(parent.getX(), parent.getY(),
-				trap.getX(), trap.getY()) > 1) return false;
+		if (parent.getLocation().getDistance(trap) > 1) return false;
 		
-		if (trap == null || !parent.getTimer().canPerformAction("RecoverTrapCost")) return false;
+		if (trap == null || !parent.timer.canPerformAction("RecoverTrapCost")) return false;
 		
-		if (!parent.stats().has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
 		
-		parent.getTimer().performAction("RecoverTrapCost");
+		parent.timer.performAction("RecoverTrapCost");
 		
-		if (!trap.isArmed()) return false;
+		boolean isRecovered = trap.attemptRecover(parent);
 		
-		return trap.tryRecover(parent);
+		if (!isRecovered) {
+			Game.mainViewer.addFadeAway("Recover Trap Failed", trap.getLocation().getX(), trap.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		} else {
+			Game.mainViewer.addFadeAway("Trap Recovered", trap.getLocation().getX(), trap.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		}
+		
+		return isRecovered;
 	}
 	
 	@Override public DefaultAbility getInstance() {

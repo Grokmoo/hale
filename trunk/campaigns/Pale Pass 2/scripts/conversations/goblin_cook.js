@@ -80,7 +80,7 @@ function onExitQuestDone(game, parent, target, conversation) {
     
     game.getParty().removeItem("mushroomMeat", 10);
     
-    target.getInventory().addItem("wizardHat02", 1, "Exceptional");
+    target.inventory.getUnequippedItems().add("wizardHat02", "Exceptional");
     
     conversation.exit();
 }

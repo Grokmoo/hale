@@ -1,7 +1,0 @@
-name "Precise Shot"
-type "Offensive"
-description "You are much better able to deal with firing into melee combat, around cover, or through concealment.  You ignore up to 30 points of target concealment with ranged weapons."
-activateable false
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ConcealmentIgnoringRanged', 'Stackable', 30); parent.applyEffect(effect); }"
-icon "icons/preciseShot"

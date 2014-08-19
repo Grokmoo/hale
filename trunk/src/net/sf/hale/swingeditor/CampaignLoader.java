@@ -22,10 +22,11 @@ package net.sf.hale.swingeditor;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
-import net.sf.hale.Campaign;
 import net.sf.hale.Game;
+import net.sf.hale.entity.EntityManager;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Campaign;
 
 /**
  * A class for loading a campaign asynchronously
@@ -70,7 +71,7 @@ public class CampaignLoader extends SwingWorker<Void, Void> {
 		
 		SpriteManager.loadAllPortraits();
 		
-		Game.entityManager.clearEntities();
+		EntityManager.clear();
 		Game.curCampaign = new Campaign(campaignID);
 		
 		if (checkCanceled()) return null;
@@ -108,7 +109,7 @@ public class CampaignLoader extends SwingWorker<Void, Void> {
 	
 	private boolean checkCanceled() {
 		if (monitor.isCanceled()) {
-			Game.entityManager.clearEntities();
+			EntityManager.clear();
 			Game.curCampaign = null;
 			
 			return true;

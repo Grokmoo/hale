@@ -48,8 +48,7 @@ public class DragAndDropHandler {
 	public DragAndDropHandler(DragTarget dragTarget) {
 		this.dragTarget = dragTarget;
 		
-		viewer = new IconViewer(dragTarget.getDragSprite());
-		viewer.setColor(dragTarget.getDragSpriteColor());
+		viewer = new IconViewer(dragTarget.getDragIcon());
 		viewer.setTheme("");
 		Game.mainViewer.add(viewer);
 	}
@@ -72,7 +71,7 @@ public class DragAndDropHandler {
 		
 		switch (evt.getType()) {
 		case MOUSE_DRAGGED:
-			viewer.setPosition(x - viewer.getPreferredWidth() / 2, y - viewer.getPreferredHeight() / 2);
+			viewer.setPosition(x, y);
 			
 			handleDrag(x, y);
 			return true;

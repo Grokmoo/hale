@@ -1,0 +1,60 @@
+{
+  "name" : "Tega",
+  "isPregenerated" : true,
+  "gender" : "Female",
+  "race" : "Human",
+  "portrait" : "Human\/jessica",
+  "icon" : {
+    "skinColor" : "#fff6d39b",
+    "clothingColor" : "#ff808000",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair012",
+        "color" : "#ffc00000"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 18,
+    "dexterity" : 13,
+    "constitution" : 13,
+    "intelligence" : 10,
+    "wisdom" : 10,
+    "charisma" : 10
+  },
+  "skills" : {
+    "CraftWeapons" : 5
+  },
+  "abilities" : [
+    {
+      "id" : "MightyBlow",
+      "levelObtained" : 1
+    }, {
+      "id" : "TrainingBlunt",
+      "levelObtained" : 1
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Warrior",
+    "Warrior" : 1
+  },
+  "inventory" : {
+    "equipped" : {
+      "Armor" : {
+        "id" : "armor_clothes"
+      }
+    },
+    "unequipped" : [
+      
+    ]
+  },
+  "unspentSkillPoints" : 0,
+  "experiencePoints" : 0,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+
+    }
+  }
+}

@@ -44,7 +44,7 @@ function intro02(game, parent, target, conversation) {
 
 function onExitIntro(game, parent, talker, conversation) {
 	parent.put("introDone", true);
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
     conversation.exit();
     game.clearRevealedAreas();
 }

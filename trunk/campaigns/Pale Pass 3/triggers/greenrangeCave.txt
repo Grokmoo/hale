@@ -1,3 +1,0 @@
-area "Greenrange Cave"
-script "triggers/greenrangeCaves"
-addPoints

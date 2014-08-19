@@ -1,9 +1,0 @@
-name "Strong Soul"
-type "General"
-description "You are strong of mind and will, gaining a +10 bonus on all Mental Resistance checks."
-
-icon "icons/strongSoul"
-
-addPrereq Stat Wis 12
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('MentalResistance', 'Stackable', 10); parent.applyEffect(effect); }"

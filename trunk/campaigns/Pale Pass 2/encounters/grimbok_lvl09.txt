@@ -1,4 +1,0 @@
-size 0
-faction "Hostile"
-challenge 80
-creature "grimbok" 0 0

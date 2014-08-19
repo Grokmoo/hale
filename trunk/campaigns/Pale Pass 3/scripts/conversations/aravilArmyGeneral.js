@@ -96,6 +96,7 @@ function convo05(game, parent, target, conversation) {
 
 function convo06(game, parent, target, conversation) {
 	conversation.addText("That should give you a chance to break into the enemy camp and destroy the crystal.  It will be hard fighting, but you seem up to the challenge.");
+	conversation.addText("Good luck.");
 	
 	conversation.addResponse("Very well.  Good luck, general.", "onExit");
 	

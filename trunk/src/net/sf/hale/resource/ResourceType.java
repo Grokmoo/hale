@@ -33,7 +33,6 @@ public enum ResourceType {
 	PNG(".png"), 
 	JPEG(".jpg"),
 	Text(".txt"),
-	SpriteSheet(".sht"),
 	JavaScript(".js"),
 	JSON(".json"),
 	HTML(".html"),

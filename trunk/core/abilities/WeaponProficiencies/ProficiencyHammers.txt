@@ -1,9 +1,0 @@
-name "Proficiency, Hammers"
-description "You are able to use hammers in combat.  This includes light hammers, warhammers, and the two handed maul."
-activateable false
-
-type "Weapon Proficiencies"
-
-icon "icons/proficiencyHammers"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Light Hammer'); effect.getBonuses().addWeaponProficiency('Warhammer'); effect.getBonuses().addWeaponProficiency('Maul'); parent.applyEffect(effect); }"
