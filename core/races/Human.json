@@ -1,8 +1,7 @@
 { "name" : "Human",
   "icon" : "icons/human",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedMedium",
+  "defaultWeapon" : "unarmedMedium",
   "playerSelectable" : true,
   
   "baseAttributes" : [ 10, 10, 10, 10, 10, 10 ],

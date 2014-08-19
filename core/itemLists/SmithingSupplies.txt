@@ -1,8 +1,0 @@
-"bar_iron" 20 "Good"
-"bar_lead" 10 "Good"
-"bar_wood" 20 "Good"
-"leather" 30 "Good"
-"thread" 100 "Good"
-"wire" 100 "Good"
-"coal" 40 "Good"
-"pressure_plate" 10 "Good"

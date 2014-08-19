@@ -20,7 +20,7 @@
 package net.sf.hale.view;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.mainmenu.ConfirmationPopup;
 import net.sf.hale.rules.Merchant;
 
@@ -37,14 +37,14 @@ public class MerchantWindow extends GameSubWindow {
 	private int labelGap;
 	
 	private Merchant merchant;
-	private Creature creature;
+	private PC creature;
 	
 	private final Label sellLabel, buyLabel;
 	private final ItemListViewer viewer;
 	
 	/**
 	 * Creates a new empty MerchantWindow.  The merchant must be set with
-	 * {@link #setMerchant(Merchant)} and the creature set with {@link #updateContent(Creature)}
+	 * {@link #setMerchant(Merchant)} and the creature set with {@link #updateContent(PC)}
 	 * for this Widget to have any content.
 	 */
 	
@@ -104,7 +104,7 @@ public class MerchantWindow extends GameSubWindow {
 		Game.mainViewer.inventoryWindow.setVisible(visible);
 		
 		if (visible) {
-			setPosition(Game.mainViewer.inventoryWindow.getRight(), Game.mainViewer.inventoryWindow.getY());
+			setPosition(Game.mainViewer.inventoryWindow.getX() - getWidth(), Game.mainViewer.inventoryWindow.getY());
 		} else {
 			Game.mainViewer.setMerchant(null);
 		}
@@ -133,7 +133,7 @@ public class MerchantWindow extends GameSubWindow {
 	 * @param creature the creature to buy or sell items to
 	 */
 	
-	public void updateContent(Creature creature) {
+	public void updateContent(PC creature) {
 		if (!this.isVisible()) return;
 		
 		this.creature = creature;

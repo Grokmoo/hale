@@ -1,3 +1,0 @@
-area "Dwarven City"
-script "triggers/dwarvenCityOnLoad"
-addPoints

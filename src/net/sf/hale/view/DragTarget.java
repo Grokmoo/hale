@@ -19,13 +19,12 @@
 
 package net.sf.hale.view;
 
-import de.matthiasmann.twl.Color;
-import net.sf.hale.Sprite;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilityActivator;
 import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Merchant;
 
 /**
@@ -37,18 +36,11 @@ import net.sf.hale.rules.Merchant;
 
 public interface DragTarget {
 	/**
-	 * Gets the sprite that should be shown under the cursor while dragging
-	 * @return the sprite to show under the drag cursor
+	 * Gets the icon that is drawn under the cursor while dragging
+	 * @return the icon to draw under the drag cursor
 	 */
 	
-	public Sprite getDragSprite();
-	
-	/**
-	 * Returns the color that should be applied to the drag sprite
-	 * @return the color to apply to the drag sprite
-	 */
-	
-	public Color getDragSpriteColor();
+	public Icon getDragIcon();
 	
 	/**
 	 * Returns the item that this drag target can drag, or null
@@ -59,12 +51,12 @@ public interface DragTarget {
 	public Item getItem();
 	
 	/**
-	 * Returns the parent of the item that this drag target can drag, or null
+	 * Returns the parent of the item or ability that this drag target can drag, or null
 	 * if the drag target does not drag an item or the item does not have a parent creature
 	 * @return the parent of the item being dragged
 	 */
 	
-	public Creature getItemParent();
+	public PC getParentPC();
 	
 	/**
 	 * Returns the container of the item that this drag target can drag, or null
@@ -83,12 +75,12 @@ public interface DragTarget {
 	public Merchant getItemMerchant();
 	
 	/**
-	 * Returns the equipment slot that the item being dragged currently resides in, or -1
+	 * Returns the equipment slot that the item being dragged currently resides in, or null
 	 * if the item is not an equipped item
 	 * @return the equipment slot
 	 */
 	
-	public int getItemEquipSlot();
+	public Inventory.Slot getItemEquipSlot();
 	
 	/**
 	 * Returns the ability that this drag target can drag, or null
@@ -97,12 +89,4 @@ public interface DragTarget {
 	 */
 	
 	public Ability getAbility();
-	
-	/**
-	 * Returns the parent of the ability that this drag target can drag, or null
-	 * if this drag target does not drag an ability
-	 * @return the parent of the ability that is dragged by this drag target
-	 */
-	
-	public AbilityActivator getAbilityParent();
 }

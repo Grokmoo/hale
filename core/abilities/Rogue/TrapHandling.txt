@@ -1,8 +1,0 @@
-name "Trap Handling"
-type "Rogue Abilities"
-description "You are able to place, disarm, and recover traps using your Traps skill."
-activateable false
-
-icon "icons/trapHandling"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('TrapHandling'); parent.applyEffect(effect); }"

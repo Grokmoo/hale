@@ -19,16 +19,22 @@
 
 package net.sf.hale.view;
 
-import net.sf.hale.Area;
-import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
+import net.sf.hale.area.Area;
+import net.sf.hale.area.Transition;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.Location;
 import net.sf.hale.entity.Trap;
+import net.sf.hale.util.Point;
 
 import org.lwjgl.opengl.GL11;
 
+import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
+import de.matthiasmann.twl.Label;
+import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
@@ -44,8 +50,14 @@ import de.matthiasmann.twl.renderer.Image;
 
 public class MiniMapWindow extends GameSubWindow {
 	private Image tile, impass, friendly, neutral, hostile, container, door, trap, transition;
+	private Image viewport;
+	private int scale, areaViewerWidth, areaViewerHeight;
+	private boolean scrollToSelectedCreatureOnLayout;
 	
 	private Area area;
+	
+	private int legendGap;
+	private Button legend;
 	
 	private ScrollPane scrollPane;
 	private Content content;
@@ -60,6 +72,27 @@ public class MiniMapWindow extends GameSubWindow {
 		scrollPane = new ScrollPane(content);
 		scrollPane.setTheme("mappane");
 		this.add(scrollPane);
+		
+		legend = new Button();
+		legend.setTheme("legendbutton");
+		legend.addCallback(new Runnable() {
+			@Override public void run() {
+				LegendPopup popup = new LegendPopup(Game.mainViewer);
+				popup.setPosition(legend.getX(), legend.getBottom());
+				popup.openPopup();
+			}
+		});
+		this.add(legend);
+	}
+	
+	@Override protected void layout() {
+		super.layout();
+		
+		Widget closeButton = getChild(1);
+		
+		legend.setPosition(getInnerX(), getInnerY());
+		legend.setSize(legend.getPreferredWidth(), closeButton.getHeight());
+		legend.setPosition(closeButton.getX() - legend.getWidth() - legendGap, closeButton.getY());
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
@@ -75,10 +108,15 @@ public class MiniMapWindow extends GameSubWindow {
 		trap = themeInfo.getImage("trap");
 		transition = themeInfo.getImage("transition");
 		
+		viewport = themeInfo.getImage("viewport");
+		
 		content.tileSize = tile.getWidth();
 		content.tileWidth = content.tileSize * 3 / 4;
 		content.tileHalf = content.tileSize / 2;
 		content.tileQuarter = content.tileSize / 4;
+		
+		legendGap = themeInfo.getParameter("legendgap", 0);	
+		scale = Game.TILE_SIZE / content.tileSize;
 	}
 	
 	@Override public void setVisible(boolean visible) {
@@ -86,15 +124,26 @@ public class MiniMapWindow extends GameSubWindow {
 		
 		// scroll to selected creature
 		if (visible) {
-			Entity selected = Game.curCampaign.party.getSelected();
-			
-			int screenX = selected.getX() * content.tileWidth;
-			int screenY = selected.getY() * content.tileSize;
-			if (selected.getX() % 2 == 1) screenY += content.tileHalf;
-			
-			scrollPane.setScrollPositionX(screenX - scrollPane.getWidth() / 2);
-			scrollPane.setScrollPositionY(screenY - scrollPane.getHeight() / 2);
+			scrollToSelectedCreature();
 		}
+	}
+	
+	/**
+	 * Causes the scrollpane containing the minimap to scroll to the creature
+	 * that is currently selected by the player
+	 */
+	
+	public void scrollToSelectedCreature() {
+		Entity selected = Game.curCampaign.party.getSelected();
+		
+		Location location = selected.getLocation();
+		
+		int screenX = location.getX() * content.tileWidth;
+		int screenY = location.getY() * content.tileSize;
+		if (location.getX() % 2 == 1) screenY += content.tileHalf;
+		
+		scrollPane.setScrollPositionX(screenX - scrollPane.getWidth() / 2);
+		scrollPane.setScrollPositionY(screenY - scrollPane.getHeight() / 2);
 	}
 	
 	public void updateContent(Area area) {
@@ -102,12 +151,18 @@ public class MiniMapWindow extends GameSubWindow {
 			this.area = area;
 			this.setTitle(area.getName());
 			
-			invalidateLayout();
-			scrollPane.invalidateLayout();
+			this.setSize( Math.min(Game.areaViewer.getInnerWidth(), getMaxWidth()),
+					Math.min(Game.areaViewer.getInnerHeight(), getMaxHeight()) );
+			
 			if (getWidth() > getMaxWidth() || getHeight() > getMaxHeight()) {
-				setSize(getMaxWidth(), getMaxHeight());
+				
 			}
+			
+			scrollToSelectedCreatureOnLayout = true;
 		}
+		
+		areaViewerWidth = Game.areaViewer.getInnerWidth() / scale;
+		areaViewerHeight = Game.areaViewer.getInnerHeight() / scale;
 	}
 	
 	@Override public int getMaxWidth() {
@@ -120,6 +175,29 @@ public class MiniMapWindow extends GameSubWindow {
 	
 	private class Content extends Widget {
 		private int tileSize, tileWidth, tileHalf, tileQuarter;
+		
+		@Override protected void layout() {
+			if (scrollToSelectedCreatureOnLayout) {
+				scrollToSelectedCreature();
+				scrollToSelectedCreatureOnLayout = false;
+			}
+		}
+		
+		@Override protected boolean handleEvent(Event evt) {
+			switch (evt.getType()) {
+			case MOUSE_ENTERED:
+				return true;
+			case MOUSE_BTNDOWN: case MOUSE_DRAGGED:
+				int x = (evt.getMouseX() - getInnerX() + tileQuarter) * scale;
+				int y = (evt.getMouseY() - getInnerY() + tileHalf) * scale;
+				
+				Game.areaViewer.addDelayedScrollToScreenPoint(new Point(x, y));
+				
+				return true;
+			default:
+				return super.handleEvent(evt);
+			}
+	    }
 		
 		@Override public int getPreferredWidth() {
 			return tileWidth * area.getWidth() - tileHalf + getBorderHorizontal();
@@ -154,10 +232,7 @@ public class MiniMapWindow extends GameSubWindow {
 					else
 						tile.draw(as, screenX, screenY);
 					
-					// only draw entities for visible tiles
-					if (!visible[x][y]) continue;
-					
-					AreaTransition areaTransition = area.getTransitionAtGridPoint(x, y);
+					Transition areaTransition = area.getTransitionAtGridPoint(x, y);
 					if (areaTransition != null && areaTransition.isActivated())
 						transition.draw(as, screenX, screenY);
 					
@@ -168,8 +243,12 @@ public class MiniMapWindow extends GameSubWindow {
 						door.draw(as, screenX, screenY);
 					
 					Trap areaTrap = area.getTrapAtGridPoint(x, y);
-					if (areaTrap != null && areaTrap.isVisible())
+					
+					if (areaTrap != null && areaTrap.isSpotted())
 						trap.draw(as, screenX, screenY);
+					
+					// only draw creatures for visible tiles
+					if (!visible[x][y]) continue;
 					
 					Creature creature = area.getCreatureAtGridPoint(x, y);
 					if (creature != null) {
@@ -190,7 +269,105 @@ public class MiniMapWindow extends GameSubWindow {
 				}
 			}
 			
+			int viewportX = Game.areaViewer.getScrollX() / scale;
+			int viewportY = Game.areaViewer.getScrollY() / scale;
+			
+			viewport.draw(as, viewportX, viewportY, areaViewerWidth, areaViewerHeight);
+			
 			GL11.glPopMatrix();
 		}
 	}
+	
+	private class LegendPopup extends PopupWindow {
+		private LegendPopup(Widget owner) {
+			super(owner);
+			
+			Content content = new Content();
+			add(content);
+		}
+		
+		private class Content extends Widget {
+			private int labelGap;
+			private Label[] labels;
+			private Image[] images;
+			
+			private static final int numRows = 7;
+			
+			private Content() {
+				labels = new Label[numRows];
+				images = new Image[numRows];
+				
+				for (int i = 0; i < numRows; i++) {
+					labels[i] = new Label();
+					add(labels[i]);
+				}
+				
+				labels[0].setTheme("friendlylabel");
+				labels[1].setTheme("neutrallabel");
+				labels[2].setTheme("hostilelabel");
+				labels[3].setTheme("containerlabel");
+				labels[4].setTheme("doorlabel");
+				labels[5].setTheme("traplabel");
+				labels[6].setTheme("transitionlabel");
+				
+				images[0] = friendly;
+				images[1] = neutral;
+				images[2] = hostile;
+				images[3] = container;
+				images[4] = door;
+				images[5] = trap;
+				images[6] = transition;
+			}
+			
+			@Override protected void applyTheme(ThemeInfo themeInfo) {
+				super.applyTheme(themeInfo);
+				
+				this.labelGap = themeInfo.getParameter("labelgap", 0);
+			}
+			
+			@Override protected void layout() {
+				setSize(getPreferredWidth(), getPreferredHeight());
+				
+				int curY = getInnerY();
+				
+				for (int i = 0; i < numRows; i++) {
+					labels[i].setSize(labels[i].getPreferredWidth(), images[i].getHeight());
+					labels[i].setPosition(getInnerX() + images[i].getWidth() + labelGap, curY);
+					
+					curY = labels[i].getBottom();
+				}
+			}
+			
+			@Override protected void paintWidget(GUI gui) {
+				AnimationState as = getAnimationState();
+				
+				int curY = getInnerY();
+				for (int i = 0; i < numRows; i++) {
+					images[i].draw(as, getInnerX(), curY);
+					curY += images[i].getHeight();
+				}
+			}
+			
+			@Override public int getPreferredInnerWidth() {
+				int max = 0;
+				
+				for (int i = 0; i < numRows; i++) {
+					max = Math.max(max, images[i].getWidth() + labels[i].getPreferredWidth() + labelGap);
+				}
+				
+				return max;
+			}
+			
+			@Override public int getPreferredInnerHeight() {
+				int height = 0;
+				for (int i = 0; i < numRows; i++) {
+					height += images[i].getHeight();
+				}
+				
+				return height;
+			}
+		}
+	}
+	
+	
 }

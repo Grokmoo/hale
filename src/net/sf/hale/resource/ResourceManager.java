@@ -57,6 +57,10 @@ public class ResourceManager {
 	
 	private static List<ResourcePackage> packages = new ArrayList<ResourcePackage>(2);
 	
+	public static List<ResourcePackage> getPackages() {
+		return packages;
+	}
+	
 	/**
 	 * Removes the resource with the specified path from the Campaign Package, if
 	 * any is found.
@@ -151,7 +155,7 @@ public class ResourceManager {
 	 * If no directory package is found and a zip package is found, it is
 	 * created and added to the manager.
 	 * 
-	 * If no package is found, an error is logged and no packages are created.
+	 * If no package is found, an exception is thrown and no packages are created
 	 * 
 	 * Registering a package also clears any cached resources.
 	 */
@@ -170,7 +174,7 @@ public class ResourceManager {
 				removePackageOfType(PackageType.Campaign);
 				registerPackage(zipFile, PackageType.Campaign);
 			} else {
-				Logger.appendToErrorLog("Package could not be found at " + directoryPath + " or " + zipPath);
+				throw new IllegalStateException("Package could not be found at " + directoryPath + " or " + zipPath);
 			}			
 		}
 		
@@ -273,6 +277,13 @@ public class ResourceManager {
 		
 		return resources;
 	}
+	
+	/**
+	 * Returns true if one or more resource packages contain a resource with the specified
+	 * resource path, false otherwise
+	 * @param path
+	 * @return whether a resource with the specified path exists
+	 */
 	
 	public static boolean hasResource(String path) {
 		for (ResourcePackage resourcePackage : packages) {

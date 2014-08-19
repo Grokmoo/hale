@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Set;
 
@@ -62,6 +64,16 @@ public class SimpleJSONParser {
 	
 	public SimpleJSONParser(String resource) {
 		initialize(ResourceManager.getReader(resource), resource);
+	}
+	
+	/**
+	 * Creates a JSONParser parsing the specified input stream
+	 * @param id the ID used for informational purposes if an error occurs
+	 * @param input
+	 */
+	
+	public SimpleJSONParser(String id, InputStream input) {
+		initialize(new InputStreamReader(input), id);
 	}
 	
 	/**
@@ -250,5 +262,14 @@ public class SimpleJSONParser {
 	
 	public Set<String> keySet() {
 		return result.keySet();
+	}
+	
+	/**
+	 * Returns the object containing the data parsed by this Parser
+	 * @return the object containing the data parsed by this Parser
+	 */
+	
+	public SimpleJSONObject getObject() {
+		return result;
 	}
 }

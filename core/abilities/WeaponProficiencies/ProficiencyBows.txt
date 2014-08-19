@@ -1,9 +1,0 @@
-name "Proficiency, Bows"
-description "You are able to use shortbows and longbows in combat."
-activateable false
-
-type "Weapon Proficiencies"
-
-icon "icons/proficiencyBows"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Shortbow'); effect.getBonuses().addWeaponProficiency('Longbow'); parent.applyEffect(effect); }"

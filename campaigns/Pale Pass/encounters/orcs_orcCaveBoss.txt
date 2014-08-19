@@ -1,8 +1,0 @@
-size 2
-faction "Neutral"
-challenge 25
-creature "orcChieftan_lvl03" 0 0
-creature "orcArcher_lvl01" -2 0
-creature "orcArcher_lvl01" 1 1
-creature "orcWarrior_lvl01" -1 0
-creature "orcWarrior_lvl01" 0 1

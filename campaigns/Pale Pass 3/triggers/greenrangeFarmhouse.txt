@@ -1,3 +1,0 @@
-area "Farmhouse"
-script "triggers/greenrangeFarmhouse"
-addPoints   5 5   5 6

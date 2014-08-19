@@ -1,3 +1,0 @@
-area "Underground Lake"
-script "triggers/lizardlingKingEnter"
-addPoints   26 37   25 36

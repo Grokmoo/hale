@@ -20,13 +20,14 @@
 package net.sf.hale.quickbar;
 
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemList.Entry;
+import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Item;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Quality;
 import net.sf.hale.widgets.RightClickMenu;
 
 /**
@@ -37,18 +38,20 @@ import net.sf.hale.widgets.RightClickMenu;
  *
  */
 
-public class ItemUseSlot extends QuickbarSlot {
-	private Item item;
-	private Creature parent;
-	
-	private Color spriteColor;
+public class ItemUseSlot extends QuickbarSlot implements ItemList.Listener{
+	private Item item; // cached copy of the item being used
+	private ItemList.Entry entry;
+	private PC parent;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
 		data.put("type", "use");
-		data.put("itemID", item.getID());
-		data.put("itemQuality", item.getQuality().getName());
+		data.put("itemID", item.getTemplate().getID());
+		
+		if (item.getTemplate().hasQuality()) {
+			data.put("itemQuality", item.getQuality().getName());
+		}
 		
 		return data;
 	}
@@ -59,53 +62,54 @@ public class ItemUseSlot extends QuickbarSlot {
 	 * @param parent
 	 */
 	
-	public ItemUseSlot(Item item, Creature parent) {
-		this.item = item;
+	public ItemUseSlot(ItemList.Entry entry, PC parent) {
+		this.entry = entry;
 		this.parent = parent;
-		this.spriteColor = item.getIconColor();
-		if (spriteColor == null) spriteColor = Color.WHITE;
+		this.item = entry.createItem();
+		
+		parent.inventory.getUnequippedItems().addListener(this);
 	}
 	
-	@Override public Sprite getSprite() {
-		return SpriteManager.getSprite(item.getIcon());
-	}
-
-	@Override public Color getSpriteColor() {
-		return spriteColor;
+	@Override public Icon getIcon() {
+		return item.getTemplate().getIcon();
 	}
 
 	@Override public String getLabelText() {
-		int quantity = parent.getInventory().getQuantity(item);
-		
-		return Integer.toString(quantity);
+		return Integer.toString(entry.getQuantity());
 	}
 
 	@Override public boolean isChildActivateable() {
-		return parent.getTimer().canPerformAction(item.getUseAPCost());
+		return parent.timer.canPerformAction(item.getTemplate().getUseAP());
 	}
 
-	@Override public void childActivate() {
-		if (item.canUse(parent) && parent.getInventory().getQuantity(item) > 0) {
-			parent.getInventory().getCallbackFactory().getUseCallback(item).run();
+	@Override public void childActivate(QuickbarSlotButton button) {
+		if (item.canUse(parent) && entry.getQuantity() > 0) {
+			item.getUseCallback(parent).run();
+		}
+		
+		if (entry.getQuantity() == 0) {
+			button.getClearSlotCallback().run();
+		} else {
+			// cache a new copy of the item, as the old one may have been used up
+			item = entry.createItem();
 		}
 	}
 	
-	@Override public void createRightClickMenu(QuickbarSlotButton widget) {
+	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
-		menu.addMenuLevel(item.getName());
+		menu.addMenuLevel(item.getTemplate().getName());
 		
-		Button activate = new Button(item.getUseButtonText());
+		Button activate = new Button(item.getTemplate().getUseText());
 		activate.setEnabled(isActivateable());
-		activate.addCallback(new QuickbarSlotButton.ActivateSlotCallback(this));
+		activate.addCallback(button.getActivateSlotCallback(this));
 		menu.addButton(activate);
 		
 		Button examine = new Button("View Details");
-		Runnable cb = parent.getInventory().getCallbackFactory().getDetailsCallback(item, menu.getX(), menu.getY());
-		examine.addCallback(cb);
+		examine.addCallback(item.getExamineDetailsCallback(menu.getX(), menu.getY()));
 		menu.addButton(examine);
 		
 		Button clearSlot = new Button("Clear Slot");
-		clearSlot.addCallback(new QuickbarSlotButton.ClearSlotCallback(widget));
+		clearSlot.addCallback(button.getClearSlotCallback());
 		menu.addButton(clearSlot);
 		
 		menu.show();
@@ -116,18 +120,28 @@ public class ItemUseSlot extends QuickbarSlot {
 	}
 
 	@Override public String getTooltipText() {
-		return "Use " + item.getFullName();
+		return "Use " + item.getLongName();
 	}
 	
-	@Override public Sprite getSecondarySprite() { return null; }
-	
-	@Override public Color getSecondarySpriteColor() { return Color.WHITE; }
+	@Override public Icon getSecondaryIcon() { return null; }
 
 	@Override public String getSaveDescription() {
-		return "Use \"" + item.getID() + "\" \"" + item.getQuality().getName() + "\"";
+		return "Use \"" + item.getTemplate().getID() + "\" \"" + item.getQuality().getName() + "\"";
 	}
 
-	@Override public QuickbarSlot getCopy(Creature parent) {
-		return new ItemUseSlot(new Item(this.item), parent);
+	@Override public QuickbarSlot getCopy(PC parent) {
+		return new ItemUseSlot(this.entry, parent);
+	}
+
+	@Override public void itemListItemAdded(String id, Quality quality, int quantity) { }
+
+	@Override public boolean itemListEntryRemoved(Entry entry) {
+		if (entry == this.entry) {
+			parent.quickbar.setSlot(null, this.getIndex());
+			Game.mainViewer.updateInterface();
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

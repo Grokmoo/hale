@@ -5,15 +5,15 @@ function onAttack(game, attack, effect) {
 	var defender = attack.getDefender();
 	
 	var parent = effect.getSlot().getParent();
-	var lvls = parent.getRoles().getLevel("Duelist");
+	var lvls = parent.roles.getLevel("Duelist");
 	
 	if (parent == defender) {
 		attack.setDefenderAC(attack.getDefenderAC() + 10 + 4 * lvls);
 	}
 	
-	if (parent.getAbilities().has("Parry")) {
-		var dist = game.distance(parent, attacker);
-		if (dist <= 5)
+	if (parent.abilities.has("Parry")) {
+		var dist = parent.getLocation().getDistance(attacker);
+		if (dist <= 1)
 			attack.addExtraAttack(-10 - 2 * lvls);
 	}
 }
@@ -25,12 +25,12 @@ function onDefense(game, attack, effect) {
 	var defender = attack.getDefender();
 	
 	var parent = effect.getSlot().getParent();
-	var lvls = parent.getRoles().getLevel("Duelist");
+	var lvls = parent.roles.getLevel("Duelist");
 	
 	if (parent == attacker) {
 		attack.addExtraAttack(10 + 4 * lvls);
 		
-		if (parent.getAbilities().has("DeadlyDuel"))
+		if (parent.abilities.has("DeadlyDuel"))
 			attack.addExtraDamage(lvls);
 	}
 }

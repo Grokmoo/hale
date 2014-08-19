@@ -11,6 +11,6 @@ function onUse(game, item, target) {
     effect.getBonuses().addDamageReduction('Physical', bonus);
     target.applyEffect(effect);
     
-    target.getInventory().removeItem(item);
+    target.inventory.remove(item);
     game.ai.provokeAttacksOfOpportunity(target);
 }

@@ -29,6 +29,6 @@ function orcAnnoyedResponse(game, parent, talker, conversation) {
 }
 
 function onExit(game, parent, talker, conversation) {
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
     conversation.exit();
 }

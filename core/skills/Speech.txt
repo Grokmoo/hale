@@ -1,7 +1,0 @@
-name Speech
-verb Speak
-verbPast Spoke
-untrained true
-keyAttribute Cha
-hasArmorPenalty false
-icon "icons/speech"

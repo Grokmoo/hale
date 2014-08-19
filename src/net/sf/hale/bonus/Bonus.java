@@ -38,11 +38,11 @@ public class Bonus implements Saveable {
 		
 		// racial type bonuses
 		AttackVsRacialType("Attack"), DamageVsRacialType("Damage"),
-		ArmorClassVsRacialType("Armor Class"),
+		ArmorClassVsRacialType("Defense"),
 		
 		// armor type bonuses
 		ArmorTypeMovementPenalty("Movement Penalty"), ArmorTypeArmorPenalty("Armor Penalty"),
-		ArmorTypeArmorClass("Armor Class"),
+		ArmorTypeArmorClass("Defense"),
 		
 		// base weapon bonuses
 		BaseWeaponAttack("Attack"), BaseWeaponDamage("Damage"), BaseWeaponSpeed("Speed"),
@@ -71,7 +71,7 @@ public class Bonus implements Saveable {
 		VerbalSpellFailure("Verbal Spell Failure"),
 		SpellFailure("Spell Success"), MeleeSpellFailure("Spell Success due to Threatening Creatures"),
 		SpellCooldown("Spell Cooldown"),
-		Attack, Damage, AttackCost("Attack Cost"), ArmorClass("Armor Class"), ArmorPenalty("Armor Penalty"),
+		Attack, Damage, AttackCost("Attack Cost"), ArmorClass("Defense"), ArmorPenalty("Armor Penalty"),
 		ShieldAttack("Attack while using a Shield"),
 		LightMeleeWeaponDamage("Light Melee Weapon Damage"),
 		OneHandedMeleeWeaponDamage("One Handed Melee Weapon Damage"),
@@ -83,7 +83,7 @@ public class Bonus implements Saveable {
 		MainHandDamage("Main Hand Damage"), OffHandDamage("Off Hand Damage"),
 		DualWieldAttack("Attack while Dual Wielding"),
 		DualWieldStrDamage("Damage Bonus due to Strength while Dual Wielding"),
-		DualWieldArmorClass("Armor Class while Dual Wielding"),
+		DualWieldArmorClass("Defense while Dual Wielding"),
 		Concealment, ConcealmentIgnoring("Ignore Concealment on Others"),
 		ConcealmentIgnoringRanged("Ignore Concealment on Others with Ranged Weapons"),
 		ConcealmentNegation("Concealment Negated"), Movement, RangePenalty("Range Penalty"),

@@ -13,7 +13,7 @@ function enableSong(game, slot, song) {
 	generator.setLineEnd(15.0, 0.0);
 	generator.setDurationInfinite();
 	
-	var position = slot.getParent().getScreenPosition();
+	var position = slot.getParent().getLocation().getCenteredScreenPoint();
 	generator.setPosition(position.x, position.y - 20.0);
 	generator.setStopParticlesAtOpaque(false);
 	generator.setDrawParticlesInOpaque(true);
@@ -46,9 +46,9 @@ function onReactivate(game, slot) {
 }
 
 function onActivate(game, slot) {
-	var abilities = slot.getParent().getAbilities();
+	var abilities = slot.getParent().abilities;
 
-	game.addMenuLevel("Bardsong");
+	if (!game.addMenuLevel("Bardsong")) return;
 	
 	if (abilities.has("SongOfLuck"))
 		addButton(game, slot, "songOfLuck", "Song of Luck");

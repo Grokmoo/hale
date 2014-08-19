@@ -26,7 +26,6 @@ import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.ability.Scriptable;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.widgets.BasePortraitViewer;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
@@ -64,10 +63,10 @@ public class ConversationPopup extends PopupWindow {
 	 * Creates a new ConversationPopup which will show the specified conversation
 	 * @param parent the parent entity which initiated the conversation
 	 * @param target the target entity being talked to
-	 * @param convoID the conversation script to use
+	 * @param script the conversation script to use
 	 */
 	
-	public ConversationPopup(Entity parent, Entity target, String convoID) {
+	public ConversationPopup(Entity parent, Entity target, Scriptable script) {
 		super(Game.mainViewer);
 		this.parent = parent;
 		this.target = target;
@@ -75,20 +74,19 @@ public class ConversationPopup extends PopupWindow {
 		setCloseOnClickedOutside(false);
 		setCloseOnEscape(false);
 		
-		String script = ResourceManager.getScriptResourceAsString(convoID);
-		this.script = new Scriptable(script, convoID, false);
+		this.script = script;
 		
 		content = new Content();
 		add(content);
 		
-		if (parent.getType() == Entity.Type.CREATURE) {
+		if (parent instanceof Creature) {
 			parentPortrait = new PortraitViewer( (Creature)parent );
-			parentName = new Label(parent.getName());
+			parentName = new Label(parent.getTemplate().getName());
 		}
-			
-		if (target.getType() == Entity.Type.CREATURE) {
+		
+		if (target instanceof Creature) {
 			targetPortrait = new PortraitViewer( (Creature)target );
-			targetName = new Label(target.getName());
+			targetName = new Label(target.getTemplate().getName());
 		}
 	}
 	

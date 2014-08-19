@@ -27,10 +27,11 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sf.hale.Game;
-import net.sf.hale.util.FileKeyMap;
-import net.sf.hale.util.LineKeyList;
-import net.sf.hale.util.Logger;
 import net.sf.hale.util.Pointf;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
 /**
  * An AbilitySelectionList provides a means for choosing one of a specific subset
@@ -52,7 +53,7 @@ public class AbilitySelectionList {
 	
 	private final Map<String, Pointf> subLists;
 	
-	private ArrayList<Connector> connectors;
+	private List<Connector> connectors;
 	
 	/**
 	 * Create a new AbilitySelectionList with the specified id and using the resource
@@ -65,38 +66,58 @@ public class AbilitySelectionList {
 	public AbilitySelectionList(String id, String resourcePath) {
 		this.id = id;
 		
-		FileKeyMap map = new FileKeyMap(resourcePath);
+		SimpleJSONParser parser = new SimpleJSONParser(resourcePath);
 		
-		this.name = map.getValue("name", id);
+		this.name = parser.get("name", null);
 		
-		this.subLists = new HashMap<String, Pointf>();
-		for (LineKeyList line : map.get("sublist")) {
-			subLists.put( line.next(), new Pointf(line.nextFloat(), line.nextFloat()) );
-		}
-		
-		this.abilities = new HashMap<Ability, Pointf>();
-		for (LineKeyList line : map.get("add")) {
-			try {
-				String abilityID = line.next();
-
-				Ability ability = Game.ruleset.getAbility(abilityID);
-
-				if (ability == null)
-					Logger.appendToWarningLog("Ability " + abilityID + " not found in selection list " + id);
-
-				abilities.put(ability, new Pointf(line.nextFloat(), line.nextFloat()));
-			} catch (Exception e) {
-				Logger.appendToErrorLog("Error reading abilitySelectionList on line " + line.getLineNumber(), e);
+		if (parser.containsKey("subLists")) {
+			this.subLists = new HashMap<String, Pointf>();
+			SimpleJSONObject subListsIn = parser.getObject("subLists");
+			
+			for (String listID : subListsIn.keySet()) {
+				SimpleJSONObject subListIn = subListsIn.getObject(listID);
+				
+				this.subLists.put(listID, new Pointf(subListIn.get("x", 0.0f), subListIn.get("y", 0.0f)));
 			}
+			
+		} else {
+			this.subLists = Collections.emptyMap();
 		}
 		
-		this.connectors = new ArrayList<Connector>();
-		for (LineKeyList line : map.get("connect")) {
-			connectors.add( new Connector(line.nextFloat(), line.nextFloat(), ConnectorType.valueOf(line.next())) );
+		if (parser.containsKey("abilities")) {
+			this.abilities = new HashMap<Ability, Pointf>();
+			
+			SimpleJSONObject abilitiesIn = parser.getObject("abilities");
+			
+			for (String abilityID : abilitiesIn.keySet()) {
+				Ability ability = Game.ruleset.getAbility(abilityID);
+				if (ability == null)
+					throw new IllegalArgumentException("Ability " + abilityID + " not found in selection list " + id);
+				
+				SimpleJSONObject abilityIn = abilitiesIn.getObject(abilityID);
+				
+				abilities.put(ability, new Pointf(abilityIn.get("x", 0.0f), abilityIn.get("y", 0.0f)));
+			}
+			
+		} else {
+			this.abilities = Collections.emptyMap();
 		}
-		this.connectors.trimToSize();
 		
-		map.checkUnusedKeys();
+		if (parser.containsKey("connectors")) {
+			this.connectors = new ArrayList<Connector>();
+			
+			SimpleJSONArray connectorsIn = parser.getArray("connectors");
+			for (SimpleJSONArrayEntry entryIn : connectorsIn) {
+				SimpleJSONObject connectorIn = entryIn.getObject();
+				
+				ConnectorType type = ConnectorType.valueOf(connectorIn.get("type", null));
+				this.connectors.add( new Connector(connectorIn.get("x", 0.0f), connectorIn.get("y", 0.0f), type));
+			}
+		} else {
+			this.connectors = Collections.emptyList();
+		}
+		
+		parser.warnOnUnusedKeys();
 	}
 	
 	/**

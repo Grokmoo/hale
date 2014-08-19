@@ -1,6 +1,0 @@
-size 1
-faction "Hostile"
-challenge 15
-creature "wolfmedium_lvl03" 0 0
-creature "wolfsmall_lvl01" 1 0
-creature "wolfsmall_lvl01" 1 -1

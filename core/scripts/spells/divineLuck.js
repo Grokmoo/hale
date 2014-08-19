@@ -2,14 +2,14 @@ function onActivate(game, slot) {
 	var targeter = game.createCircleTargeter(slot);
 	targeter.setRadius(4);
 	targeter.setRelationshipCriterion("Friendly");
-	targeter.addAllowedPoint(slot.getParent().getPosition());
+	targeter.addAllowedPoint(slot.getParent().getLocation());
 	targeter.activate();
 }
 
 function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = parseInt(game.dice().randInt(5, 10));
 	
@@ -18,7 +18,7 @@ function onTargetSelect(game, targeter) {
 	
 	if (!spell.checkSpellFailure(parent)) return;
 	
-	if (parent.getAbilities().has("DivineAura")) {
+	if (parent.abilities.has("DivineAura")) {
 		// do the divine luck aura
 		
 		var aura = targeter.getSlot().createAura("effects/divineAura");
@@ -28,7 +28,7 @@ function onTargetSelect(game, targeter) {
 	
 		// the flashing cross effect
 		var g1 = game.getBaseParticleGenerator("haloCross");
-		g1.setPosition(parent.getPosition());
+		g1.setPosition(parent.getLocation());
 		g1.setDurationInfinite();
 		aura.addAnimation(g1);
 	
@@ -45,11 +45,13 @@ function onTargetSelect(game, targeter) {
 		for (var i = 0; i < creatures.size(); i++) {
 			var effect = targeter.getSlot().createEffect();
 			effect.setDuration(duration);
+			effect.addPositiveIcon("items/enchant_attack_small");
+			effect.addPositiveIcon("items/enchant_damage_small");
 			effect.setTitle(spell.getName());
 			effect.getBonuses().addBonus('Attack', 'Morale', attackBonus);
 			effect.getBonuses().addBonus('Damage', 'Morale', damageBonus);
 		
-			if (parent.getAbilities().has("Resistance")) {
+			if (parent.abilities.has("Resistance")) {
 				effect.getBonuses().addBonus('MentalResistance', 'Morale', resistanceBonus);
 				effect.getBonuses().addBonus('PhysicalResistance', 'Morale', resistanceBonus);
 				effect.getBonuses().addBonus('ReflexResistance', 'Morale', resistanceBonus);
@@ -57,7 +59,7 @@ function onTargetSelect(game, targeter) {
 		
 			// create the animation
 			var anim = game.getBaseAnimation("sparkleAnim");
-			var position = creatures.get(i).getScreenPosition();
+			var position = creatures.get(i).getLocation().getCenteredScreenPoint();
 			anim.setPosition(position.x, position.y);
 			game.runAnimationNoWait(anim);
 	   

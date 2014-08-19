@@ -1,7 +1,0 @@
-size 5
-faction "Neutral"
-challenge 0
-creature "peasant07" -3 -4
-creature "peasant08" -5 -3
-creature "peasant09" -3 3
-creature "peasant10" 4 3

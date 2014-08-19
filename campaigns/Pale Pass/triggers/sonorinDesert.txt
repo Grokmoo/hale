@@ -1,3 +1,0 @@
-area "Sonorin Desert"
-script "triggers/sonorinDesert"
-addPoints   71 63   72 63   70 63   73 62   74 62   75 61

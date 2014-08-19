@@ -25,15 +25,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.hale.ability.AbilityActivator;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.defaultability.Move;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.Encounter;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.Path;
 import net.sf.hale.interfacelock.MovementHandler;
 import net.sf.hale.rules.Faction;
 import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 
 /**
@@ -49,13 +49,30 @@ public class AIScriptInterface {
 	/**
 	 * Returns a path for the parent to the specified position, or null if no path
 	 * exists
+	 * @param x the x coordinate in the current area
+	 * @param y the y coordinate in the current area
 	 * @return the path to the specified position
 	 */
 	
-	public static List<Point> getMovementPath(Creature parent, Point position) {
+	public static Path getMovementPath(Creature parent, int x, int y) {
 		Move move = new Move();
 		
-		if (!move.canMove(parent, position, 0)) return null;
+		if (!move.canMove(parent, parent.getLocation().getInSameArea(x, y), 0)) return null;
+		
+		return move.getComputedPath();
+	}
+	
+	/**
+	 * Returns a path for the parent to the specified position, or null if no path
+	 * exists
+	 * @param location
+	 * @return the path to the specified position
+	 */
+	
+	public static Path getMovementPath(Creature parent, Location location) {
+		Move move = new Move();
+		
+		if (!move.canMove(parent, location, 0)) return null;
 		
 		return move.getComputedPath();
 	}
@@ -79,7 +96,26 @@ public class AIScriptInterface {
 	 */
 	
 	public static boolean moveTowards(Creature parent, int x, int y, int distanceAway) {
-		return moveTowards(parent, new Point(x, y), distanceAway, true);
+		return moveTowards(parent, new Location(parent.getLocation().getArea(), x, y), distanceAway, true);
+	}
+	
+	/**
+	 * The parent creature will attempt to find a path and then move along that path towards the
+	 * target position within the current area, until it is the specified distance away.  The function
+	 * will wait until movement is completed before returning.
+	 * 
+	 * This function will return true if movement occurred, even if it was interrupted.  It will
+	 * only return false if no movement occurred.
+	 * 
+	 * @param parent the Creature that will attempt to move
+	 * @param location the position that parent will move towards.
+	 * @param distanceAway the desired distance from parent to target upon completion of the move
+	 * @param provokeAoOs whether to provoke Attacks of opportunity from threatening creatures
+	 * @return true if the parent moved, false otherwise
+	 */
+	
+	public static boolean moveTowards(Creature parent, int x, int y, int distanceAway, boolean provokeAoOs) {
+		return moveTowards(parent, new Location(parent.getLocation().getArea(), x, y), distanceAway, provokeAoOs);
 	}
 	
 	/**
@@ -91,21 +127,21 @@ public class AIScriptInterface {
 	 * only return false if no movement occurred.
 	 * 
 	 * @param parent the Creature that will attempt to move
-	 * @param position the position that parent will move towards.
+	 * @param location the position that parent will move towards.
 	 * @param distanceAway the desired distance from parent to target upon completion of the move
 	 * @param provokeAoOs whether to provoke Attacks of opportunity from threatening creatures
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, Point position, int distanceAway, boolean provokeAoOs) {
+	public static boolean moveTowards(Creature parent, Location location, int distanceAway, boolean provokeAoOs) {
 		Move move = new Move();
-		move.setTruncatePath(true);
+		move.setTruncatePath(false);
 		
-		if (!move.canMove(parent, position, distanceAway)) {
+		if (!move.canMove(parent, location, distanceAway)) {
 			return false;
 		}
 		
-		if (!move.moveTowards(parent, position, distanceAway, provokeAoOs)) {
+		if (!move.moveTowards(parent, location, distanceAway, provokeAoOs)) {
 			return false;
 		}
 		
@@ -139,13 +175,13 @@ public class AIScriptInterface {
 	 * creatures.
 	 * 
 	 * @param parent the Creature that will attempt to move
-	 * @param position the position that parent will move towards.
+	 * @param location the position that parent will move towards.
 	 * @param distanceAway the desired distance from parent to target upon completion of the move
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, Point position, int distanceAway) {
-		return moveTowards(parent, position, distanceAway, true);
+	public static boolean moveTowards(Creature parent, Location location, int distanceAway) {
+		return moveTowards(parent, location, distanceAway, true);
 	}
 	
 	/**
@@ -217,7 +253,7 @@ public class AIScriptInterface {
 		Creature bestCreature = null;
 		
 		for (Creature c : creatures) {
-			int cDamage = c.stats().get(Stat.MaxHP) - c.getCurrentHP();
+			int cDamage = c.stats.get(Stat.MaxHP) - c.getCurrentHitPoints();
 			
 			if (cDamage > bestDamage) {
 				bestCreature = c;
@@ -248,9 +284,9 @@ public class AIScriptInterface {
 		Creature bestCreature = null;
 		
 		for (Creature c : creatures) {
-			if (c.stats().get(Stat.MaxHP) > bestMaxHP) {
+			if (c.stats.get(Stat.MaxHP) > bestMaxHP) {
 				bestCreature = c;
-				bestMaxHP = c.stats().get(Stat.MaxHP);
+				bestMaxHP = c.stats.get(Stat.MaxHP);
 			}
 		}
 		
@@ -276,7 +312,8 @@ public class AIScriptInterface {
 
 		//compute the simple distance
 		for (Creature target : creatures) {
-			int distance = AreaUtil.distance(parent.getX(), parent.getY(), target.getX(), target.getY());
+			int distance = AreaUtil.distance(parent.getLocation().getX(), parent.getLocation().getY(),
+					target.getLocation().getX(), target.getLocation().getY());
 
 			if (distance < smallestDistance) {
 				closest.clear();
@@ -295,90 +332,16 @@ public class AIScriptInterface {
 	}
 	
 	/**
-	 * Returns the creature meeting the specified relationship with parent and being the nearest
-	 * in the sense explained below.
-	 * 
-	 * If parent is using a melee weapon, finds the creature with the shortest path
-	 * distance that parent would need to travel in order to attack.  If parent has a
-	 * weapon with a reach greater than one tile and there are multiple creatures parent
-	 * can attack without moving, then creatures with a smaller hex grid distance to parent
-	 * are preferred.
-	 * 
-	 * If parent is using a non-melee (ranged or thrown) weapon, finds the creature with the shortest
-	 * hex distance to parent.
-	 * 
-	 * In either case, ties are decided randomly.
-	 * 
-	 * @param parent the creature to compare faction relationship with and whose
-	 * visibility and position are used
-	 * @param relationship The faction relationship between parent and the target that is found.
-	 * Must be either "Hostile", "Neutral", or "Friendly"
-	 * @return the nearest creature to parent meeting the criterion for the purposes of attacking.
-	 * If no creatures are found, returns null.  If multiple creatures are tied, returns one from
-	 * the list chosen randomly.
+	 * Returns the set of creatures known to the specified parent that can potentially
+	 * be attacked currently.  this set can then be sorted, etc by the caller
+	 * @param parent
+	 * @return the set of potentially attackable creatures
 	 */
 	
-	public static Creature findNearestCreatureToAttack(Creature parent, String relationship) {
-		try {
-			// list of creatures tied for closest
-			List<Creature> closest = new ArrayList<Creature>();
-
-			List<Creature> creatures = getLiveVisibleCreatures(parent, relationship);
-
-			int smallestDistance = Integer.MAX_VALUE;
-
-			if (parent.getInventory().getMainWeapon().getWeaponType() != Item.WeaponType.MELEE) {
-				// for non-melee weapons, compute using the simple distance; we actually want closest
-				for (Creature target : creatures) {
-					int distance = AreaUtil.distance(parent.getX(), parent.getY(), target.getX(), target.getY());
-
-					if (distance < smallestDistance) {
-						closest.clear();
-						smallestDistance = distance;
-						closest.add(target);
-					} else if (distance == smallestDistance) {
-						closest.add(target);
-					}
-				}
-			} else {
-				// for melee, compute using the distance to move towards the creature
-
-				int reach = parent.getInventory().getMainWeapon().getWeaponReachMax();
-
-				for (Creature target : creatures) {
-					int distance = AreaUtil.distance(parent.getX(), parent.getY(), target.getX(), target.getY());
-
-					// if the creature is not in melee range, compute the distance by finding a path
-					if (distance > reach) {
-						List<Point> path =
-							Game.areaListener.getAreaUtil().findShortestPath(parent, target.getPosition(), reach);
-
-						// distance is path length + 1
-						if (path != null) distance = path.size() + 1;
-						else distance = Integer.MAX_VALUE;
-					}
-
-					if (distance < smallestDistance) {
-						closest.clear();
-						smallestDistance = distance;
-						closest.add(target);
-					} else if (distance == smallestDistance) {
-						closest.add(target);
-					}
-				}
-			}
-
-			if (closest.size() == 0) return null;
-			else {
-				// return randomly chosen target from list of closest
-				return closest.get(Game.dice.rand(0, closest.size() - 1));
-			}
-
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Error finding creature to attack ", e);
-		}
-
-		return null;
+	public static AITargetSet getPotentialAttackTargets(Creature parent) {
+		List<Creature> creatures = getLiveVisibleCreatures(parent, Faction.Relationship.Hostile.toString());
+		
+		return new AITargetSet(parent, creatures);
 	}
 	
 	/**
@@ -399,17 +362,17 @@ public class AIScriptInterface {
 		// if parent has an encounter, use the encounter hostile list to save
 		// needing to compute the list of visible creatures.  All visible creatures
 		// will be on the knownHostiles list
-		if (encounter != null) creatures = encounter.getKnownHostiles();
+		if (encounter != null) creatures = encounter.getHostiles();
 		else creatures = getLiveVisibleCreatures(parent, "Hostile");
 		
-		for (Creature c : creatures) {
-			if (c.isDying() || c.isDead()) continue;
+		for (Creature target : creatures) {
+			if (target.isDying() || target.isDead()) continue;
 			
-			if ( !parent.canAttackPosition(c.getX(), c.getY()) ) continue;
+			if ( !parent.canAttack(target.getLocation())) continue;
 			
-			if (c.stats().isHidden()) continue;
+			if (target.stats.isHidden()) continue;
 			
-			attackable.add(c);
+			attackable.add(target);
 		}
 		
 		return attackable;
@@ -426,7 +389,7 @@ public class AIScriptInterface {
 	 * (as is the case for scroll casters).
 	 */
 	
-	public static List<Creature> getTouchableCreatures(AbilityActivator parent, String relationship) {
+	public static List<Creature> getTouchableCreatures(Creature parent, String relationship) {
 		ArrayList<Creature> creatures = new ArrayList<Creature>();
 		
 		Faction activeFaction = parent.getFaction();
@@ -435,7 +398,7 @@ public class AIScriptInterface {
 		
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
-		Point[] positions = AreaUtil.getAdjacentTiles(parent.getX(), parent.getY());
+		Point[] positions = AreaUtil.getAdjacentTiles(parent.getLocation().getX(), parent.getLocation().getY());
 		
 		for (Point p : positions) {
 			Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(p);
@@ -449,7 +412,7 @@ public class AIScriptInterface {
 		
 		// add the creature standing at the same position as caster.  This will be different
 		// than just adding the caster for spells cast from scrolls
-		Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(parent.getX(), parent.getY());
+		Creature c = Game.curCampaign.curArea.getCreatureAtGridPoint(parent.getLocation().getX(), parent.getLocation().getY());
 		if (c != null && (rel == null || activeFaction.getRelationship(activeFaction) == rel)) {
 			creatures.add(c);
 		}
@@ -469,7 +432,7 @@ public class AIScriptInterface {
 	 * @return the list of all creatures visible to parent meeting the specified constraints.
 	 */
 	
-	public static List<Creature> getVisibleCreaturesWithinRange(AbilityActivator parent, String relationship, int range) {
+	public static List<Creature> getVisibleCreaturesWithinRange(Creature parent, String relationship, int range) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
@@ -478,7 +441,8 @@ public class AIScriptInterface {
 		Iterator<Creature> iter = creatures.iterator();
 		while (iter.hasNext()) {
 			Creature c = iter.next();
-			if (AreaUtil.distance(c.getX(), c.getY(), parent.getX(), parent.getY()) * 5 > range) {
+			if (AreaUtil.distance(c.getLocation().getX(), c.getLocation().getY(),
+					parent.getLocation().getX(), parent.getLocation().getY()) * 5 > range) {
 				iter.remove();
 			}
 		}
@@ -499,12 +463,13 @@ public class AIScriptInterface {
 	 * constraint.
 	 */
 	
-	public static List<Creature> getAllCreaturesWithinRange(AbilityActivator parent, String relationship, int range) {
+	public static List<Creature> getAllCreaturesWithinRange(Creature parent, String relationship, int range) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
 		List<Creature> creatures =
-			Game.curCampaign.curArea.getEntities().getCreaturesWithinRadius(parent.getX(), parent.getY(), range / 5);
+			Game.curCampaign.curArea.getEntities().getCreaturesWithinRadius(parent.getLocation().getX(),
+					parent.getLocation().getY(), range / 5);
 		
 		if (rel != null) {
 			Iterator<Creature> iter = creatures.iterator();
@@ -528,7 +493,7 @@ public class AIScriptInterface {
 	 * @return the list of all creatures visible to parent meeting the specified constraints.
 	 */
 	
-	public static List<Creature> getLiveVisibleCreatures(AbilityActivator parent, String relationship) {
+	public static List<Creature> getLiveVisibleCreatures(Creature parent, String relationship) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
@@ -536,7 +501,7 @@ public class AIScriptInterface {
 		List<Creature> creatures;
 		
 		if (rel == Faction.Relationship.Hostile && encounter != null) {
-			creatures = encounter.getKnownHostiles(); 
+			creatures = encounter.getHostiles();
 		} else {
 			creatures = AreaUtil.getVisibleCreatures(parent, rel);
 		}
@@ -544,7 +509,7 @@ public class AIScriptInterface {
 		Iterator<Creature> iter = creatures.iterator();
 		while (iter.hasNext()) {
 			Creature c = iter.next();
-			if (c.isDead() || c.isDying() || c.stats().isHidden()) {
+			if (c.isDead() || c.isDying() || c.stats.isHidden()) {
 				iter.remove();
 			}
 		}
@@ -552,20 +517,22 @@ public class AIScriptInterface {
 		return creatures;
 	}
 	
-	public static void sortCreatureListClosestFirst(AbilityActivator parent, List<Creature> creatures) {
+	public static void sortCreatureListClosestFirst(Creature parent, List<Creature> creatures) {
 		Collections.sort(creatures, new CreatureSorter(parent));
 	}
 	
 	private static class CreatureSorter implements Comparator<Creature> {
-		private AbilityActivator parent;
+		private Creature parent;
 		
-		private CreatureSorter(AbilityActivator parent) {
+		private CreatureSorter(Creature parent) {
 			this.parent = parent;
 		}
 
 		@Override public int compare(Creature a, Creature b) {
-			return AreaUtil.distance(a.getX(), a.getY(), parent.getX(), parent.getY()) -
-					AreaUtil.distance(b.getX(), b.getY(), parent.getX(), parent.getY());
+			return AreaUtil.distance(a.getLocation().getX(), a.getLocation().getY(),
+					parent.getLocation().getX(), parent.getLocation().getY()) -
+					AreaUtil.distance(b.getLocation().getX(), b.getLocation().getY(),
+							parent.getLocation().getX(), parent.getLocation().getY());
 		}
 	}
 }

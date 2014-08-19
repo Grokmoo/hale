@@ -23,11 +23,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.hale.Area;
 import net.sf.hale.Game;
-import net.sf.hale.ability.AbilityActivator;
+import net.sf.hale.area.Area;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Path;
 import net.sf.hale.rules.Faction;
+
+/**
+ * A class with utility helper functions for an Area, especially
+ * dealing with line of sight and path finding
+ * @author Jared
+ *
+ */
 
 public class AreaUtil {
 	private final int width;
@@ -60,12 +68,10 @@ public class AreaUtil {
 		pathFindData = new PathFinder.Data(area);
 	}
 	
-	public static List<Creature> getVisibleCreatures(AbilityActivator activeCreature, Faction.Relationship rel) {
-		boolean[][] visible = activeCreature.getVisibility();
-		
+	public static List<Creature> getVisibleCreatures(Creature activeCreature, Faction.Relationship rel) {
 		Faction activeFaction = activeCreature.getFaction();
 		
-		List<Creature> creatures = Game.curCampaign.curArea.getEntities().getVisibleCreatures(visible);
+		List<Creature> creatures = activeCreature.getVisibleCreatures();
 		Iterator<Creature> iter = creatures.iterator();
 		while (iter.hasNext()) {
 			Creature c = iter.next();
@@ -73,7 +79,7 @@ public class AreaUtil {
 			Faction.Relationship curRel = activeFaction.getRelationship(c.getFaction());
 			if (rel != null && curRel != rel) {
 				iter.remove();
-			} else if (c.stats().isHidden()) {
+			} else if (c.stats.isHidden()) {
 				iter.remove();
 			}
 		}
@@ -101,22 +107,23 @@ public class AreaUtil {
 		}
 	}
 	
-	public void updateVisibility(Area area) {
+	public void updateVisibility() {
 		updateTransparency(area.getTransparency());
 		for (Creature c : Game.curCampaign.party) {
-			c.setVisibility(false);
+			c.computeVisibility();
 		}
-		setPartyVisibility(area);
+		setPartyVisibility();
 	}
 	
-	public void setPartyVisibility(Area area) {
+	public void setPartyVisibility() {
 		boolean[][] visible = area.getVisibility();
 		boolean[][] explored = area.getExplored();
 		
 		setMatrix(visible, false);
 		
-		for (Creature c : Game.curCampaign.party) {
-			if (c.getVisibility() != null && c.isPlayerSelectable()) orMatrix(c.getVisibility(), visible);
+		for (Creature creature : Game.curCampaign.party) {
+			if (creature instanceof PC)
+				creature.addVisibilityToMatrix(visible);
 		}
 
 		Game.timer.getTemporaryVisibilityAreas(visible);
@@ -259,6 +266,24 @@ public class AreaUtil {
 	}
 	
 	/**
+	 * Finds the shortest possible path from the position of the mover to the end point,
+	 * ignoring the positions of all creatures
+	 * @param mover
+	 * @param end
+	 * @param distanceAway
+	 * @return the shortest available path or null if no path exists
+	 */
+	
+	public Path findShortestPathIgnoreCreatures(Creature mover, Point end) {
+		boolean[][] entityPass = area.getEntities().getDoorPassabilities(mover);
+		
+		synchronized(pathFindData) {
+			pathFindData.setEntityPassabilities(entityPass);
+			return PathFinder.findPathIgnoreCreatures(mover, end, pathFindData);
+		}
+	}
+	
+	/**
 	 * Finds the shortest possible path from the position of the moving creature to the specified
 	 * end position using the passability rules for the current area, ignoring the positions of all
 	 * party members
@@ -267,18 +292,11 @@ public class AreaUtil {
 	 * @return the shortest available path or null if no path exists
 	 */
 	
-	public List<Point> findShortestPathIgnoreParty(Creature mover, Point end, boolean[][] entityPass) {
+	public Path findShortestPathIgnoreParty(Creature mover, Point end, boolean[][] entityPass) {
 		synchronized(pathFindData) {
 			pathFindData.setEntityPassabilities(entityPass);
 			
-			List<Point> path = PathFinder.findPathIgnorePartyMembers(mover, end, pathFindData);
-			
-			if (path != null) {
-				// remove final element as that is the current position of mover
-				path.remove(path.size() - 1);
-			}
-			
-			return path;
+			return PathFinder.findPathIgnorePartyMembers(mover, end, pathFindData);
 		}
 	}
 	
@@ -294,7 +312,7 @@ public class AreaUtil {
 	 * @return the shortest available path or null if no path exists
 	 */
 	
-	public List<Point> findShortestPath(Creature mover, Point end, int distanceAway) {
+	public Path findShortestPath(Creature mover, Point end, int distanceAway) {
 		List<Point> goals = new ArrayList<Point>();
 		
 		// add the appropriate set of goal points
@@ -311,14 +329,7 @@ public class AreaUtil {
 		synchronized(pathFindData) {
 			pathFindData.setEntityPassabilities(entityPass);
 		
-			List<Point> path = PathFinder.findPath(mover, end, goals, pathFindData);
-			
-			if (path != null) {
-				// remove final element as that is the current position of mover
-				path.remove(path.size() - 1);
-			}
-			
-			return path;
+			return PathFinder.findPath(mover, end, goals, pathFindData);
 		}
 	}
 	

@@ -20,7 +20,6 @@
 package net.sf.hale.rules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -31,124 +30,188 @@ import java.util.Set;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
-import net.sf.hale.ability.AbilitySlot;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.util.FileKeyMap;
-import net.sf.hale.util.LineKeyList;
-import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+
+/**
+ * A class representing the character archetype or class of a creature.  This defines
+ * many of the basic stats, such as attack, damage, hit points, and skills.
+ * @author Jared
+ *
+ */
 
 public class Role {
-	private final String descriptionFile;
 	private final String id;
 	private final String name;
-	private final String icon;
-	private final int skillsPerLevel;
+	
+	private final Icon icon;
+	
+	private final int skillPointsPerLevel;
 	private final int hpPerLevel;
-	private final int level1HP;
+	private final int hpAtLevelOne;
 	private final int attackBonusPerLevel;
 	private final int damageBonusPerLevel;
-	private final int maxLevel;
+	
+	private final int maximumLevel;
 	
 	private final Stat spellCastingAttribute;
-	
 	private final int spellFailureBase;
 	private final int spellFailureSpellLevelFactor;
 	private final int spellFailureAbilityScoreFactor;
 	private final int spellFailureCasterLevelFactor;
 	
-	private final boolean playerSelectable;
-	private final boolean baseRole;
-	private final int[] defaultPlayerAttributeSelections;
+	private final int maximumSpellLevel;
+	
+	private final boolean isPlayer;
+	private final boolean isBase;
+	
+	private final Map<Stat, Integer> defaultPlayerAttributes;
+	private final List<String> defaultPlayerSkillSelections;
 	
 	private final PrereqList prereqs;
 	
 	private final Map<Integer, LevelUpList> levelUpLists;
 	
-	public Role(String id, String path) {
+	/**
+	 * Creates a new Role by parsing the specified JSON data
+	 * @param id
+	 * @param data
+	 */
+	
+	public Role(String id, SimpleJSONObject data) {
 		this.id = id;
 		
-		this.levelUpLists = new HashMap<Integer, LevelUpList>();
+		name = data.get("name", id);
 		
-		prereqs = new PrereqList();
-		
-		FileKeyMap map = new FileKeyMap(path);
-		
-		name = map.getValue("name", id);
-		icon = map.getValue("icon", null);
-		playerSelectable = map.getValue("playerselectable", false);
-		descriptionFile = map.getValue("descriptionfile", "descriptions/roles/" + name + ResourceType.HTML.getExtension());
-		baseRole = map.getValue("baserole", false);
-		
-		damageBonusPerLevel = map.getValue("damagebonusperlevel", 1);
-		attackBonusPerLevel = map.getValue("attackbonusperlevel", 1);
-		level1HP = map.getValue("level1hp", 6);
-		hpPerLevel = map.getValue("hpperlevel", 2);
-		skillsPerLevel = map.getValue("skillpointsperlevel", 5);
-		maxLevel = map.getValue("maxlevel", 0);
-		
-		String castingAttString = map.getValue("spellcastingattribute", null);
-		spellCastingAttribute = castingAttString == null ? Stat.Wis : Stat.valueOf(castingAttString);
-
-		spellFailureBase = map.getValue("spellfailurebase", 0);
-		spellFailureSpellLevelFactor = map.getValue("spellfailurespelllevelfactor", 0);
-		spellFailureAbilityScoreFactor = map.getValue("spellfailureabilityscorefactor", 0);
-		spellFailureCasterLevelFactor = map.getValue("spellfailurecasterlevelfactor", 0);
-		
-		for (LineKeyList line : map.get("addprereq")) {
-			prereqs.addPrereq(line);
+		if (data.containsKey("icon")) {
+			icon = IconFactory.createIcon(data.getObject("icon"));
+		} else {
+			icon = IconFactory.emptyIcon;
 		}
 		
-		for (LineKeyList line : map.get("level")) {
-			int level = line.nextInt();
-			String type = line.next().toLowerCase();
+		isPlayer = data.get("isPlayer", false);
+		isBase = data.get("isBase", false);
+		
+		SimpleJSONObject statsIn = data.getObject("stats");
+		
+		damageBonusPerLevel = statsIn.get("damageBonusPerLevel", 0);
+		attackBonusPerLevel = statsIn.get("attackBonusPerLevel", 0);
+		skillPointsPerLevel = statsIn.get("skillPointsPerLevel", 0);
+		hpPerLevel = statsIn.get("hpPerLevel", 0);
+		
+		if (statsIn.containsKey("hpAtLevelOne")) {
+			hpAtLevelOne = statsIn.get("hpAtLevelOne", 0);
+		} else {
+			hpAtLevelOne = hpPerLevel;
+		}
+		
+		if (statsIn.containsKey("maximumLevel")) {
+			maximumLevel = statsIn.get("maximumLevel", 0);
+		} else {
+			maximumLevel = Integer.MAX_VALUE;
+		}
+		
+		if (statsIn.containsKey("maximumSpellLevel")) {
+			maximumSpellLevel = statsIn.get("maximumSpellLevel", 0);
+		} else {
+			maximumSpellLevel = 0;
+		}
+		
+		if (statsIn.containsKey("spellCastingAttribute")) {
+			spellCastingAttribute = Stat.valueOf(statsIn.get("spellCastingAttribute", null));
+			spellFailureBase = statsIn.get("spellFailureBase", 0);
+			spellFailureSpellLevelFactor = statsIn.get("spellFailureSpellLevelFactor", 0);
+			spellFailureAbilityScoreFactor = statsIn.get("spellFailureAbilityScoreFactor", 0);
+			spellFailureCasterLevelFactor = statsIn.get("spellFailureCasterLevelFactor", 0);
+		} else {
+			spellCastingAttribute = null;
+			spellFailureBase = 0;
+			spellFailureSpellLevelFactor = 0;
+			spellFailureAbilityScoreFactor = 0;
+			spellFailureCasterLevelFactor = 0;
+		}
+		
+		defaultPlayerAttributes = new HashMap<Stat, Integer>();
+		defaultPlayerSkillSelections = new ArrayList<String>(5);
+		if (data.containsKey("defaultSelections")) {
+			SimpleJSONObject selectionsIn = data.getObject("defaultSelections");
 			
-			LevelUpList levelUpList = getLevelUpList(level);
+			for (String key : selectionsIn.keySet()) {
+				if (key.equals("skills")) {
+					SimpleJSONArray skillsIn = selectionsIn.getArray(key);
+					for (SimpleJSONArrayEntry entry : skillsIn) {
+						defaultPlayerSkillSelections.add(entry.getString());
+					}
+				} else {
+					Stat stat = Stat.valueOf(key);
+					int value = selectionsIn.get(key, 0);
+					
+					defaultPlayerAttributes.put(stat, value);
+				}
+			}
+		}
+		
+		if (data.containsKey("prereqs")) {
+			prereqs = new PrereqList(data.getObject("prereqs"));
+		} else {
+			prereqs = new PrereqList();
+		}
+		
+		levelUpLists = new HashMap<Integer, LevelUpList>();
+		
+		if (data.containsKey("casterLevelsAdded")) {
+			SimpleJSONArray casterLevelsIn = data.getArray("casterLevelsAdded");
 			
-			if (type.equals("addcasterlevel")) {
+			for (SimpleJSONArrayEntry entry : casterLevelsIn) {
+				int level = entry.getInt(0);
+				
+				LevelUpList levelUpList = getLevelUpList(level);
 				levelUpList.casterLevelAdded++;
+			}
+		}
+		
+		if (data.containsKey("abilitiesAdded")) {
+			SimpleJSONObject abilitiesIn = data.getObject("abilitiesAdded");
+			
+			for (String abilityID : abilitiesIn.keySet()) {
+				int level = abilitiesIn.get(abilityID, 0);
 				
-			} else if (type.equals("addability")) {
-				String abilityID = line.next();
-				
+				// verify the ability exists
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				if (ability == null) {
-					throw new IllegalArgumentException("Ability ID \"" + abilityID + "\" not found while reading " + this.id);
+					throw new IllegalArgumentException("Ability ID \"" + abilityID +
+							"\" not found while reading " + id);
 				}
 				
-				levelUpList.abilities.add(ability.getID());
-				
-			} else if (type.equals("selectabilityfromlist")) {
-				String aslID = line.next();
-				
-				AbilitySelectionList asl = Game.ruleset.getAbilitySelectionList(aslID);
-				if (asl == null) {
-					throw new IllegalArgumentException("Ability Selection List \"" + aslID + "\" not found while reading " + this.id);
-				}
-				
-				levelUpList.abilitySelectionLists.add(aslID);
-				
-			} else if (type.equals("addabilityslot")) {
-				levelUpList.abilitySlots.add(line.next());
-				
-			} else {
-				Logger.appendToWarningLog("Invalid key " + type + " in " + line.getFilePath() +
-						" on " + line.getLineNumber());
+				LevelUpList levelUpList = getLevelUpList(level);
+				levelUpList.abilities.add(abilityID);
 			}
 		}
 		
-		LineKeyList line = map.getLast("defaultplayerattributeselections");
-		if (line == null) this.defaultPlayerAttributeSelections = null;
-		else {
-			this.defaultPlayerAttributeSelections = new int[6];
-			for (int i = 0; i < 6; i++) {
-				this.defaultPlayerAttributeSelections[i] = line.nextInt();
+		if (data.containsKey("abilitySelectionsFromList")) {
+			SimpleJSONObject selectionsIn = data.getObject("abilitySelectionsFromList");
+			
+			for (String listID : selectionsIn.keySet()) {
+				AbilitySelectionList list = Game.ruleset.getAbilitySelectionList(listID);
+				if (list == null) {
+					throw new IllegalArgumentException("Ability Selection List \"" + listID +
+							"\" not found while reading " + id);
+				}
+				
+				SimpleJSONArray listLevelsIn = selectionsIn.getArray(listID);
+				for (SimpleJSONArrayEntry entry : listLevelsIn) {
+					LevelUpList levelUpList = getLevelUpList(entry.getInt(0));
+					levelUpList.abilitySelectionLists.add(listID);
+				}
 			}
 		}
-		
-		map.checkUnusedKeys();
 	}
 	
 	/**
@@ -168,64 +231,201 @@ public class Role {
 		return list;
 	}
 	
-	public int[] getDefaultPlayerAttributeSelections() {
-		if (defaultPlayerAttributeSelections == null) return null;
-		
-		return Arrays.copyOf(defaultPlayerAttributeSelections, 6);
+	/**
+	 * Gets the list of default player skill selections, in order.
+	 * Note that this list is unmodifiable
+	 * @return the list of default player skill selections
+	 */
+	
+	public List<String> getDefaultPlayerSkillSelections() {
+		return Collections.unmodifiableList(defaultPlayerSkillSelections);
 	}
 	
-	public int getLevel1HP() { return level1HP; }
+	/**
+	 * Returns the default player point selection for the specified attribute
+	 * @param stat the attribute (strength, dexterity, constitution, intelligence, wisdom, or charisma
+	 * @return the default player point selection
+	 */
+	
+	public int getDefaultPlayerAttributeSelection(Stat stat) {
+		Integer value = this.defaultPlayerAttributes.get(stat);
+		
+		if (value == null) {
+			return 0;
+		} else {
+			return value.intValue();
+		}
+	}
+	
+	/**
+	 * Returns the number of hit points that this role adds at level one
+	 * @return the level one hit points
+	 */
+	
+	public int getHPAtLevelOne() { return hpAtLevelOne; }
+	
+	/**
+	 * Gets the HTML description for this role
+	 * @return the HTML description
+	 */
 	
 	public String getDescription() {
-		return ResourceManager.getResourceAsString(descriptionFile);
+		return ResourceManager.getResourceAsString("descriptions/roles/" +
+				id + ResourceType.HTML.getExtension());
 	}
+	
+	/**
+	 * Returns the spell casting attribute, one of {@link Stat#Str}, {@link Stat#Dex}, {@link Stat#Con},
+	 * {@link Stat#Int}, {@link Stat#Wis}, or {@link Stat#Cha}, or null if this role does not
+	 * cast spells
+	 * @return the spell casting attribute
+	 */
 	
 	public Stat getSpellCastingAttribute() { return spellCastingAttribute; }
 	
+	/**
+	 * Gets the base spell failure value, used in computing spell failure
+	 * @return the base spell failure value
+	 */
+	
 	public int getSpellFailureBase() { return spellFailureBase; }
+	
+	/**
+	 * Gets the factor that the spell level is multiplied by when computing spell failure
+	 * @return the spell level spell failure factor
+	 */
+	
 	public int getSpellFailureSpellLevelFactor() { return spellFailureSpellLevelFactor; }
+	
+	/**
+	 * Gets the factor that the ability score is multiplied by when computing spell failure
+	 * @return the factor that the ability score is multiplied by
+	 */
+	
 	public int getSpellFailureAbilityScoreFactor() { return spellFailureAbilityScoreFactor; }
+	
+	/**
+	 * Gets the factor that the caster level is multiplied by when computing spell failure
+	 * @return the caster level factor
+	 */
+	
 	public int getSpellFailureCasterLevelFactor() { return spellFailureCasterLevelFactor; }
 	
-	public boolean isBaseRole() { return baseRole; }
-	public boolean isPlayerSelectable() { return playerSelectable; }
+	/**
+	 * Returns the maximum level of spells that this role can cast.  For roles that do not
+	 * cast spells or roles that are not a base role (see {@link #isBase()}, this method
+	 * should return zero.
+	 * @return the maximum spell level for this role
+	 */
+	
+	public int getMaximumSpellLevel() { return maximumSpellLevel; }
+	
+	/**
+	 * Returns true if this is a base role (one that can be added at level one), or false otherwise
+	 * @return whether this is a base role
+	 */
+	
+	public boolean isBase() { return isBase; }
+	
+	/**
+	 * Returns true if this is a role that players can select when leveling up or creating a character,
+	 * false otherwise
+	 * @return whether this is a player selectable role
+	 */
+	
+	public boolean isPlayer() { return isPlayer; }
+	
+	/**
+	 * Returns the unique ID string for this role
+	 * @return the unique ID
+	 */
 	
 	public String getID() { return id; }
+	
+	/**
+	 * Returns the name of this role
+	 * @return the name
+	 */
+	
 	public String getName() { return name; }
-	public String getIcon() { return icon; }
-	public int getSkillsPerLevel() { return skillsPerLevel; }
+	
+	/**
+	 * Returns the icon that is used to represent this role.  This will always be non-null,
+	 * but may be an empty icon
+	 * @return the icon for this role
+	 */
+	
+	public Icon getIcon() { return icon; }
+	
+	/**
+	 * Returns the number of skill points that creatures adding this role receive per level,
+	 * in addition to any other bonuses (such as from high intelligence)
+	 * @return the number of skill points per level
+	 */
+	
+	public int getSkillPointsPerLevel() { return skillPointsPerLevel; }
+	
+	/**
+	 * Returns the number of hit points that creatures adding this role receive per level,
+	 * in addition to other bonuses (such as from high constitution).  Note that the 
+	 * hp received at level one may be different, see {@link #getHPAtLevelOne()}
+	 * @return the number of hit points per level
+	 */
+	
 	public int getHPPerLevel() { return hpPerLevel; }
+	
+	/**
+	 * Returns the attack bonus added to the owning creature per level.  This is a flat
+	 * value that will be added to a 1 - 100 random number
+	 * @return the attack bonus per level
+	 */
+	
 	public int getAttackBonusPerLevel() { return attackBonusPerLevel; }
+	
+	/**
+	 * Returns the damage bonus added to the owning creature per level.  This is a percentage
+	 * bonus.
+	 * @return the damage bonus per level
+	 */
+	
 	public int getDamageBonusPerLevel() { return damageBonusPerLevel; }
 	
-	public void appendDescription(StringBuilder sb) {
+	/**
+	 * A detailed description of this role is appended to the specified StringBuilder
+	 * @param sb
+	 * @param c the creature used for determining if prereqs are met or not, or null to not show
+	 * this information
+	 */
+	
+	public void appendDescription(StringBuilder sb, Creature c) {
 		sb.append("<div style=\"font-family: large-red;\">");
 		sb.append(name).append("</div>");
 		
-		sb.append("<div style=\"font-family: vera\">");
-		if (baseRole) sb.append("Base Role");
-		else sb.append("Specialization");
-		sb.append("</div>");
+		if (!isBase) {
+			sb.append("<div style=\"font-family: medium\">");
+			sb.append("Specialization");
+			sb.append("</div>");
+		}
 		
-		if (maxLevel != 0) {
+		if (maximumLevel != Integer.MAX_VALUE) {
 			sb.append("<div>");
 			sb.append("<span style=\"font-family: red\">");
-			sb.append(maxLevel);
+			sb.append(maximumLevel);
 			sb.append("</span>");
 			sb.append(" Level Maximum");
 			sb.append("</div>");
 		}
 		
-		prereqs.appendDescription(sb);
+		prereqs.appendDescription(sb, c);
 		
-		sb.append("<div style=\"font-family: vera-bold-blue; margin-top: 1em;\">");
+		sb.append("<div style=\"font-family: medium-bold-blue; margin-top: 1em;\">");
 		sb.append("Stats");
 		sb.append("</div>");
 		sb.append("<table>");
 		
-		if (baseRole) {
+		if (isBase) {
 			sb.append("<tr><td style=\"text-align:right; width:4ex;\"><span style=\"font-family: blue;\">");
-			sb.append(level1HP);
+			sb.append(hpAtLevelOne);
 			sb.append("</span></td><td style=\"margin-left: 1ex;\"> Hit Points at first level</td></tr>");
 		}
 
@@ -244,27 +444,32 @@ public class Role {
 		sb.append("</span></td><td style=\"margin-left: 1 ex;\">Damage Bonus per level</td></tr>");
 		
 		sb.append("<tr><td style=\"text-align:right; width:4ex;\">+<span style=\"font-family: blue;\">");
-		sb.append(skillsPerLevel);
-		sb.append("</span></td><td style=\"margin-left: 1ex;\"> Skill Points per level</td></tr>");
+		sb.append(skillPointsPerLevel);
+		sb.append("</span></td><td style=\"margin-left: 1ex;\"> Skill Points per level (before Intelligence modifier)</td></tr>");
 		
         sb.append("</table>");
 		
 		sb.append(getDescription());
 	}
 	
-	public boolean creatureCanAdd(Creature c) {
-		if (c == null) return false;
+	/**
+	 * Returns true if and only if the specified creature meets all prereqs for this
+	 * role and is capable of adding one level of this role
+	 * @param creature
+	 * @return whether the creature can add this role
+	 */
+	
+	public boolean creatureCanSelect(Creature creature) {
+		if (creature == null) return false;
 		
-		if (!prereqs.meetsPrereqs(c)) return false;
+		if (!prereqs.meetsPrereqs(creature)) return false;
 		
-		if (baseRole && c.getRoles().getBaseRole() != null) {
-			if (c.getRoles().getBaseRole() != this) return false;
+		if (isBase && creature.roles.getBaseRole() != null) {
+			if (creature.roles.getBaseRole() != this) return false;
 		}
 		
-		if (maxLevel > 0) {
-			int curLevels = c.getRoles().getLevel(this);
-			if (curLevels >= maxLevel) return false;
-		}
+		if (creature.roles.getLevel(this) >= maximumLevel)
+			return false;
 		
 		return true;
 	}
@@ -278,7 +483,7 @@ public class Role {
 	 */
 	
 	public boolean creatureHasRolePrereqs(Creature creature) {
-		if (this.baseRole) return false;
+		if (this.isBase) return false;
 		
 		return prereqs.hasRolePrereqs(creature);
 	}
@@ -317,31 +522,6 @@ public class Role {
 		}
 		
 		return abilities;
-	}
-	
-	/**
-	 * Returns the List of all AbilitySlots that should be added to a Creature
-	 * upon gaining the specified level of this Role.  If their are no AbilitySlots
-	 * to be added, the List will be empty.  Note that this List does not include
-	 * AbilitySlots added due to fixed Abilities being added
-	 * 
-	 * @param level the level that has been gained
-	 * @param parent the parent Creature; owner of the AbilitySlots to be added
-	 * @return the List of AbilitySlots to add
-	 */
-	
-	public List<AbilitySlot> getAbilitySlotsAddedAtLevel(int level, Creature parent) {
-		LevelUpList list = levelUpLists.get(level);
-		if (list == null) return Collections.emptyList();
-		
-		List<String> types = list.abilitySlots;
-		
-		List<AbilitySlot> slots = new ArrayList<AbilitySlot>(types.size());
-		for (String type : types) {
-			slots.add(new AbilitySlot(type, parent));
-		}
-		
-		return slots;
 	}
 	
 	/**
@@ -396,13 +576,11 @@ public class Role {
 	 */
 	
 	private class LevelUpList {
-		private List<String> abilitySlots;
 		private List<String> abilitySelectionLists;
 		private List<String> abilities;
 		private int casterLevelAdded;
 		
 		private LevelUpList() {
-			this.abilitySlots = new ArrayList<String>(0);
 			this.abilitySelectionLists = new ArrayList<String>(0);
 			this.abilities = new ArrayList<String>(0);
 			this.casterLevelAdded = 0;

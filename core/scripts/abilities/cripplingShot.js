@@ -1,9 +1,9 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return !weapon.isMeleeWeapon();
+	return !weapon.isMelee();
 }
 
 function onActivate(game, slot) {
@@ -33,7 +33,7 @@ function performAttack(game, targeter) {
 	// apply a temporary effect with the bonuses
 	var effect = parent.createEffect();
 	
-	if (parent.getAbilities().has("DevastatingShot")) {
+	if (parent.abilities.has("DevastatingShot")) {
 		effect.getBonuses().addBonus('Attack', 'Stackable', 40);
 		effect.getBonuses().addBonus('Damage', 'Stackable', 160);
 	} else {
@@ -44,19 +44,20 @@ function performAttack(game, targeter) {
 
 	// perform the attack
 	if (game.standardAttack(parent, target)) {
-		var checkDC = 50 + 2 * (parent.stats().getDex() - 10) + parent.stats().getLevelAttackBonus() / 2;
+		var checkDC = 50 + 2 * (parent.stats.getDex() - 10) + parent.stats.getLevelAttackBonus() / 2;
 		
 		// check the crippling shot effect
-		if (!target.reflexCheck(checkDC)) {
+		if (!target.stats.getReflexResistanceCheck(checkDC)) {
 			var effect2 = parent.createEffect();
 			effect2.setDuration(3);
+			effect2.addNegativeIcon("items/enchant_fastMovement_small");
 			effect2.setTitle(targeter.getSlot().getAbility().getName());
 			effect2.getBonuses().add('Immobilized');
 			
 			var g1 = game.getBaseParticleGenerator("sparkle");
 			g1.setDurationInfinite();
 			g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-			g1.setPosition(target.getPosition());
+			g1.setPosition(target.getLocation());
 			g1.setBlueDistribution(game.getFixedDistribution(0.0));
 			g1.setGreenDistribution(game.getFixedDistribution(0.0));
 			effect2.addAnimation(g1);
@@ -65,6 +66,7 @@ function performAttack(game, targeter) {
 		} else {
 			var effect2 = parent.createEffect();
 			effect2.setDuration(3);
+			effect2.addNegativeIcon("items/enchant_fastMovement_small");
 			effect2.setTitle(targeter.getSlot().getAbility().getName());
 			effect2.getBonuses().addPenalty('Movement', -50);
 			target.applyEffect(effect2);

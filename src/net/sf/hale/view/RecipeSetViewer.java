@@ -23,11 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Recipe;
-import net.sf.hale.entity.Item;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItemTemplate;
+import net.sf.hale.entity.ItemTemplate;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.rules.Recipe;
 import net.sf.hale.rules.Skill;
-import net.sf.hale.util.StringUtil;
 import net.sf.hale.widgets.ExpandableWidget;
 import net.sf.hale.widgets.IconViewer;
 import de.matthiasmann.twl.Button;
@@ -79,10 +80,10 @@ public class RecipeSetViewer extends Widget {
 		
 		skillButtons = new ArrayList<CraftSkillIconButton>();
 		for (Skill skill : Game.ruleset.getAllSkills()) {
-			if (!skill.isCraftSkill()) continue;
+			if (!skill.isCraft()) continue;
 			
 			CraftSkillIconButton button = new CraftSkillIconButton(skill);
-			button.setTooltipContent(skill.getName());
+			button.setTooltipContent(skill.getNoun());
 			skillButtons.add(button);
 			add(button);
 		}
@@ -139,8 +140,8 @@ public class RecipeSetViewer extends Widget {
 			
 			for (String recipeID : Game.curCampaign.getRecipeIDsForSkill(currentSkill)) {
 				Recipe recipe = Game.curCampaign.getRecipe(recipeID);
-				String itemID = recipe.getResult();
-				String icon = itemID != null ? Game.entityManager.getItem(itemID).getIcon() : null;
+				String itemID = recipe.getResultID();
+				Icon icon = itemID != null ? EntityManager.getItemTemplate(itemID).getIcon() : null;
 				
 				RecipeViewer viewer = new RecipeViewer(recipe, icon, showCraftButtons);
 				
@@ -167,7 +168,7 @@ public class RecipeSetViewer extends Widget {
 		
 		private Button craft;
 		
-		private RecipeViewer(Recipe recipe, String icon, boolean showCraftButton) {
+		private RecipeViewer(Recipe recipe, Icon icon, boolean showCraftButton) {
 			super(icon);
 			this.showCraftButton = showCraftButton;
 			this.recipe = recipe;
@@ -181,7 +182,7 @@ public class RecipeSetViewer extends Widget {
 		
 		// craft callback
 		@Override public void run() {
-			if (recipe.resultIsIngredient()) {
+			if (recipe.isResultIngredient()) {
 				SelectCraftItemPopup popup = new SelectCraftItemPopup(Game.mainViewer, recipe);
 				popup.openPopupCentered();
 			} else {
@@ -207,58 +208,81 @@ public class RecipeSetViewer extends Widget {
 			super.update();
 			
 			// hide recipes where we are no where close to the skill requirement
-			setVisible(currentSkillBestRanks >= recipe.getSkillRequirement() - Game.ruleset.getValue("RecipeVisibleSkillThreshold"));
+			setVisible(currentSkillBestRanks >= recipe.getSkillRankRequirement() - Game.ruleset.getValue("RecipeVisibleSkillThreshold"));
 			
 			if (showCraftButton) {
-				craft.setEnabled(recipe.canCraft() && currentSkillBestRanks >= recipe.getSkillRequirement());
+				craft.setEnabled(recipe.canCraft() && currentSkillBestRanks >= recipe.getSkillRankRequirement());
 			}
 		}
 		
 		@Override protected void appendDescriptionMain(StringBuilder sb) {
-			sb.append("<div style=\"font-family: vera-bold;\">");
+			sb.append("<div style=\"font-family: medium-bold;\">");
 			sb.append(recipe.getName());
 			sb.append("</div>");
 			
-			if (recipe.getSkillRequirement() > currentSkillBestRanks) {
+			if (recipe.getSkillRankRequirement() > currentSkillBestRanks) {
 				sb.append("<div style=\"font-family: red;\">Requires ");
-				sb.append(recipe.getSkillRequirement()).append(" ");
-				sb.append(currentSkill.getName());
+				sb.append(recipe.getSkillRankRequirement()).append(" ");
+				sb.append(currentSkill.getNoun());
 				sb.append("</div>");
 			} else {
 				sb.append("<div style=\"font-family: black;\">Requires ");
 				sb.append("<span style=\"font-family: green;\">");
-				sb.append(recipe.getSkillRequirement());
+				sb.append(recipe.getSkillRankRequirement());
 				sb.append("</span> <span style=\"font-family: blue;\">");
-				sb.append(currentSkill.getName());
+				sb.append(currentSkill.getNoun());
 				sb.append("</span></div>");
 			}
 		}
 		
 		@Override protected void appendDescriptionDetails(StringBuilder sb) {
 			sb.append("<p>Party best ");
-			sb.append(currentSkill.getName()).append(": ");
+			sb.append(currentSkill.getNoun()).append(": ");
 			sb.append(currentSkillBestRanks);
 			sb.append("</p>");
 			
-			sb.append("<div style=\"font-family: vera-bold; margin-top: 1em;\">Ingredients</div>");
-			
-			sb.append("<table>");
-			sb.append("<tr style=\"font-family: vera\"><td style=\"padding-right: 1em; text-align: center; vertical-align: middle\">");
-			sb.append("Recipe</td><td style=\"text-align: center; vertical-align: middle\">Party Quantity");
+			sb.append("<table style=\"margin-top: 1em;\">");
+			sb.append("<tr style=\"font-family: medium\"><td style=\"padding-right: 1em; text-align: center; vertical-align: middle\">");
+			sb.append("Recipe Ingredient</td><td style=\"text-align: center; vertical-align: middle; width: 10ex;\">Party Quantity");
 			sb.append("</td></tr>");
 			
-			if (recipe.getAnyItemOfTypeIngredient() != null) {
+			if (!recipe.getIngredientItemTypes().isEmpty()) {
+				List<EquippableItemTemplate.Type> types = recipe.getIngredientItemTypes(); 
+				int numTypes = recipe.getIngredientItemTypes().size();
+				
 				sb.append("<tr><td>");
-				sb.append("Any <span style=\"font-family: blue;\">");
-				sb.append(StringUtil.upperCaseToWord(recipe.getAnyItemOfTypeIngredient().toString()));
+				sb.append("Any Non-Magical <span style=\"font-family: blue;\">");
+				
+				switch (numTypes) {
+				case 1:
+					sb.append(types.get(0).toString());
+					break;
+				case 2:
+					sb.append(types.get(0));
+					sb.append("</span> or <span style=\"font-family: blue;\">");
+					sb.append(types.get(1));
+					break;
+				default:
+					for (int index = 0; index < numTypes; index++) {
+						if (index == numTypes - 1) {
+							sb.append("</span>, or <span style=\"font-family: blue;\">");
+						} else if (index != 0) {
+							sb.append("</span>, <span style=\"font-family: blue;\">");
+						}
+						
+						sb.append(types.get(index));
+					}
+					break;
+				}
+				
 				sb.append("</span></td><td></td></tr>");
 			}
 			
-			for (int i = 0; i < recipe.getNumIngredients(); i++) {
-				Item ingredient = recipe.getIngredient(i);
-				int quantity = recipe.getIngredientQuantity(i);
+			for (Recipe.Ingredient ingredient : recipe) {
+				ItemTemplate template = EntityManager.getItemTemplate(ingredient.getItemID());
+				int quantity = ingredient.getQuantity();
 				
-				int partyQuantity = Game.curCampaign.party.getQuantity(ingredient.getID());
+				int partyQuantity = Game.curCampaign.party.getQuantity(ingredient.getItemID());
 				
 				sb.append("<tr>");
 				
@@ -271,7 +295,7 @@ public class RecipeSetViewer extends Widget {
 					sb.append(quantity);
 					sb.append("x ");
 				}
-				sb.append(ingredient.getName());
+				sb.append(template.getName());
 				
 				sb.append("</td><td style=\"text-align: center\">");
 				
@@ -291,7 +315,7 @@ public class RecipeSetViewer extends Widget {
 		private Skill skill;
 		
 		private CraftSkillIconButton(Skill skill) {
-			super( SpriteManager.getSprite(skill.getIcon()) );
+			super( skill.getIcon() );
 			
 			this.skill = skill;
 			

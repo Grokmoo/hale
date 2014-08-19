@@ -1,5 +1,5 @@
 function canActivate(game, parent) {
-	var weapon = parent.getInventory().getEquippedMainHand();
+	var weapon = parent.inventory.getEquippedMainHand();
 	
 	return weapon != null;
 }
@@ -8,13 +8,13 @@ function onActivate(game, slot) {
 	var ability = slot.getAbility();
 	var parent = slot.getParent();
 	
-	var weapon = parent.getInventory().getEquippedMainHand();
+	var weapon = parent.inventory.getEquippedMainHand();
 	if (weapon == null) return;
 	
-	var lvls = parent.getRoles().getLevel("Assassin");
+	var lvls = parent.roles.getLevel("Assassin");
 	
 	var duration = 5;
-	if (parent.getAbilities().has("LingeringPoison"))
+	if (parent.abilities.has("LingeringPoison"))
 		duration += 3;
 	
 	slot.setActiveRoundsLeft(duration);
@@ -22,6 +22,7 @@ function onActivate(game, slot) {
 	
 	var effect = slot.createEffect("effects/poison");
 	effect.setDuration(duration);
+	effect.addPositiveIcon("items/enchant_acid_small");
 	effect.setTitle(ability.getName());
 	effect.put("attacksLeft", lvls + 3);
 	
@@ -32,16 +33,18 @@ function onActivate(game, slot) {
 	generator.setBlueDistribution(game.getFixedDistribution(0.6));
 	generator.setRedSpeedDistribution(game.getGaussianDistribution(-0.5, 0.05));
 	generator.setBlueSpeedDistribution(game.getGaussianDistribution(-4.0, 0.05));
-	if (parent.drawWithSubIcons()) {
-		if (weapon.getWeaponType().toString().equals("BOW")) {
-			var pos = parent.getSubIconScreenPosition("OffHandWeapon");
+	if (parent.drawsWithSubIcons()) {
+		var subIconType = weapon.getTemplate().getSubIconTypeOverride();
+		
+		if (subIconType != null) {
+			var pos = parent.getSubIconScreenPosition(subIconType.name());
 			generator.setPosition(pos.x, pos.y);
 		} else {
 			var pos = parent.getSubIconScreenPosition("MainHandWeapon");
 			generator.setPosition(pos.x - 5.0, pos.y - 5.0);
 		}
 	} else {
-		var pos = parent.getPosition().toScreen();
+		var pos = parent.getLocation().getCenteredScreenPoint();
 		generator.setPosition(pos.x - 15.0, pos.y - 15.0);
 	}
 	effect.addAnimation(generator);

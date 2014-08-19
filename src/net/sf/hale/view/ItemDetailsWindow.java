@@ -22,14 +22,22 @@ package net.sf.hale.view;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Recipe;
 import net.sf.hale.ability.Effect;
+import net.sf.hale.bonus.Bonus;
+import net.sf.hale.entity.Ammo;
 import net.sf.hale.entity.Enchantment;
-import net.sf.hale.entity.EntityViewer;
+import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityListener;
 import net.sf.hale.entity.Item;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.entity.Armor;
+import net.sf.hale.entity.EquippableItem;
+import net.sf.hale.entity.Weapon;
+import net.sf.hale.icon.IconFactory;
+import net.sf.hale.rules.BaseWeapon;
+import net.sf.hale.rules.Currency;
+import net.sf.hale.rules.Recipe;
 import net.sf.hale.rules.Skill;
-import net.sf.hale.util.StringUtil;
+import net.sf.hale.rules.Weight;
 import net.sf.hale.widgets.IconViewer;
 
 import de.matthiasmann.twl.DialogLayout;
@@ -47,7 +55,7 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
  *
  */
 
-public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
+public class ItemDetailsWindow extends GameSubWindow implements EntityListener {
 	private Item item;
 	private HTMLTextAreaModel textAreaModel;
 	
@@ -61,7 +69,7 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 	 */
 	
 	public ItemDetailsWindow(Item item) {
-		setTitle("Details for " + item.getName());
+		setTitle("Details for " + item.getTemplate().getName());
 		item.addViewer(this);
 		this.item = item;
         
@@ -70,13 +78,14 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 		this.add(layout);
 		
 		// set up the widgets for the top row
-		String titleString = item.getFullName();
+		String titleString = item.getLongName();
 		
 		IconViewer iconViewer = new IconViewer();
 		iconViewer.setEventHandlingEnabled(false);
-		if (item.getIcon() != null) {
-			iconViewer.setSprite(SpriteManager.getSprite(item.getIcon()));
-			iconViewer.setColor(item.getIconColor());
+		if (item.getTemplate().getIcon() != null) {
+			iconViewer.setIcon(item.getTemplate().getIcon());
+		} else {
+			iconViewer.setIcon(IconFactory.emptyIcon);
 		}
 		Label title = new Label(titleString);
 		title.setTheme("titlelabel");
@@ -112,14 +121,14 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 		buildStaticDescriptionTop();
 		buildStaticDescriptionBottom();
 		
-		entityUpdated();
+		entityUpdated(item);
 	}
 	
-	@Override public void closeViewer() {
+	@Override public void removeListener() {
 		getParent().removeChild(this);
 	}
 	
-	@Override public void entityUpdated() {
+	@Override public void entityUpdated(Entity entity) {
 		textAreaModel.setHtml(getTextAreaContent(item));
 		
 		invalidateLayout();
@@ -131,29 +140,41 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 	 */
 	
 	@Override public void run() {
-		closeViewer();
+		removeListener();
 		item.removeViewer(this);
+	}
+	
+	private void appendEnchantments(EquippableItem item, StringBuilder sb) {
+		List<Enchantment> enchantments = item.getTemplate().getEnchantments();
+		if (enchantments.size() > 0) {
+			sb.append("<div style=\"margin-bottom: 1em;\">");
+			sb.append("<span style=\"font-family: medium-blue;\">Enchantments</span>");
+			for (Enchantment enchantment : enchantments) {
+				sb.append(enchantment.getBonuses().getDescription());
+			}
+			sb.append("</div>");
+		}
 	}
 	
 	private void buildStaticDescriptionTop() {
 		StringBuilder sb = new StringBuilder();
 		
-		this.appendItemTypeString(item, sb);
-		
-		switch (item.getItemType()) {
-		case ARMOR: case SHIELD: case GLOVES: case BOOTS: case HELMET:
-			appendArmorString(item, sb);
-			break;
-		case WEAPON:
-			appendWeaponString(item, sb);
-			break;
+		if (item instanceof Ammo) {
+			// don't show the item type string for ammo
+			appendAmmoString((Ammo)item, sb);
+			appendEnchantments((EquippableItem)item, sb);
+		} else if (item instanceof EquippableItem) {			
+			appendItemTypeString((EquippableItem)item, sb);
+			appendEnchantments((EquippableItem)item, sb);
+			
+			if (item instanceof Armor) {
+				appendArmorString((Armor)item, sb);
+			} else if (item instanceof Weapon) {
+				appendWeaponString((Weapon)item, sb);
+			}
 		}
 		
-		switch (item.getType()) {
-		case ITEM: case TRAP:
-			appendItemString(item, sb);
-			break;
-		}
+		appendItemString(item, sb);
 		
 		staticDescriptionTop = sb.toString();
 	}
@@ -161,13 +182,11 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 	private void buildStaticDescriptionBottom() {
 		StringBuilder sb = new StringBuilder();
 		
-		if (!item.getDescription().equals(Game.ruleset.getString("TempContainerDescription"))) {
-			sb.append("<div style=\"margin-top: 1em;\">");
-			sb.append(item.getDescription());
-			sb.append("</div>");
-		}
+		sb.append("<div style=\"margin-top: 1em;\">");
+		sb.append(item.getTemplate().getDescription());
+		sb.append("</div>");
 		
-		if (item.isIngredient()) {
+		if (item.getTemplate().isIngredient()) {
 			for (Skill skill : Game.ruleset.getAllSkills()) {
 				boolean skillSectionStarted = false;
 
@@ -175,11 +194,11 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 
 					Recipe recipe = Game.curCampaign.getRecipe(recipeID);
 
-					if (!recipe.hasIngredient(item.getID())) continue;
+					if (!recipe.isIngredient(item.getTemplate().getID())) continue;
 
 					if (!skillSectionStarted) {
-						sb.append("<div style=\"font-family: vera-bold; margin-top: 1em;\">");
-						sb.append(skill.getName());
+						sb.append("<div style=\"font-family: medium-bold; margin-top: 1em;\">");
+						sb.append(skill.getNoun());
 						sb.append(" Recipes");
 						skillSectionStarted = true;
 					}
@@ -207,203 +226,223 @@ public class ItemDetailsWindow extends GameSubWindow implements EntityViewer {
 			}
 		}
 		
-		List<Enchantment> enchantments = item.getEnchantments();
-		if (enchantments.size() > 0) {
-			sb.append("<div style=\"margin-bottom: 1em;\">");
-			sb.append("<span style=\"font-family: vera-blue;\">Enchantments</span>");
-			for (Enchantment enchantment : enchantments) {
-				sb.append(enchantment.getBonuses().getDescription());
-			}
-			sb.append("</div>");
-		}
-		
 		sb.append(staticDescriptionBottom);
 		
 		return sb.toString();
 	}
 
 	private void appendItemString(Item item, StringBuilder sb) {
-		sb.append("<table style=\"font-family: vera; vertical-align: middle; margin-bottom: 1em;\">");
+		sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-bottom: 1em;\">");
 		
-		if (item.hasQualityDescription()) {
+		if (item.getTemplate().hasQuality()) {
 			sb.append("<tr><td style=\"width: 10ex;\">");
 			sb.append("Quality");
-			sb.append("</td><td style=\"font-family: vera-red\">");
+			sb.append("</td><td style=\"font-family: medium-red\">");
 			sb.append(item.getQuality().getName());
 			sb.append("</td></tr>");
 		}
 		
 		sb.append("<tr><td style=\"width: 10ex;\">");
 		sb.append("Value");
-		sb.append("</td><td>");
-		sb.append("<span style=\"font-family: vera-green\">");
-		sb.append(item.getQualityValue().shortString());
+		sb.append("</td><td style=\"width: 15ex;\">");
+		sb.append("<span style=\"font-family: medium-green\">");
+		sb.append(new Currency(item.getQualityValue()).shortString());
 		sb.append("</span>");
-		if (item.getValueStackSize() != 1) {
-			sb.append(" per ");
-			sb.append("<span style=\"font-family: vera-green\">");
-			sb.append(item.getValueStackSize());
-			sb.append("</span>");
-		}
 		sb.append("</td></tr>");
 		
 		sb.append("<tr><td style=\"width: 10ex;\">");
 		sb.append("Weight");
 		sb.append("</td><td>");
-		sb.append("<span style=\"font-family: vera-blue\">");
-		sb.append(item.getWeight().toStringKilograms());
+		sb.append("<span style=\"font-family: medium-blue\">");
+		sb.append(Weight.toStringKilograms(item.getTemplate().getWeightInGrams()));
 		sb.append("</span>");
 		sb.append(" kg");
 		sb.append("</td></tr>");
 		
+		if (item.getTemplate().isUsable() && item.getTemplate().getUseAP() != 0) {
+			sb.append("<tr><td>Use Cost");
+			sb.append("</td><td><span style=\"font-family: medium-blue\">");
+			sb.append(item.getTemplate().getUseAP() / 100);
+			sb.append("</span> AP");
+			sb.append("</td></tr>");
+		}
+		
 		sb.append("</table>");
 	}
 	
-	private void appendArmorString(Item item, StringBuilder sb) {
-		String armorClass = Game.numberFormat(1).format(item.getQualityArmorClass());
-		String armorPenalty = Game.numberFormat(1).format(item.getQualityArmorPenalty());
-		String movementPenalty = Game.numberFormat(1).format(item.getQualityMovementPenalty());
+	private void appendAmmoString(Ammo item, StringBuilder sb) {
+		sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">Ammo for ");
 		
-		sb.append("<table style=\"font-family: vera; vertical-align: middle; margin-bottom: 1em;\">");
+		List<BaseWeapon> baseWeapons = item.getTemplate().getUsableBaseWeapons();
+		for (int index = 0; index < baseWeapons.size(); index++) {
+			sb.append("<span style=\"font-family: medium-blue\">");
+			sb.append(baseWeapons.get(index).getName());
+			sb.append("</span>");
+			
+			if (index != baseWeapons.size() - 1)
+				sb.append(", ");
+		}
+		sb.append("</div>");
+	}
+	
+	private void appendArmorString(Armor item, StringBuilder sb) {
+		String armorClass = Game.numberFormat(1).format(item.getQualityModifiedArmorClass());
+		String armorPenalty = Game.numberFormat(1).format(item.getQualityModifiedArmorPenalty());
+		String movementPenalty = Game.numberFormat(1).format(item.getQualityModifiedMovementPenalty());
 		
-		sb.append("<tr><td style=\"width: 16ex;\">");
-		sb.append("Armor Class");
-		sb.append("</td><td style=\"font-family: vera-blue\">");
+		sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-bottom: 1em;\">");
+		
+		sb.append("<tr><td style=\"width: 17ex;\">");
+		sb.append("Defense");
+		sb.append("</td><td style=\"font-family: medium-blue\">");
 		sb.append(armorClass);
 		sb.append("</td></tr>");
 		
 		sb.append("<tr><td>");
 		sb.append("Armor Penalty");
-		sb.append("</td><td style=\"font-family: vera-red\">");
+		sb.append("</td><td style=\"font-family: medium-red\">");
 		sb.append(armorPenalty);
 		sb.append("</td></tr>");
 		
-		if (item.getMovementPenalty() != 0) {
+		if (item.getTemplate().getMovementPenalty() != 0) {
 			sb.append("<tr><td>");
 			sb.append("Movement Penalty");
-			sb.append("</td><td style=\"font-family: vera-red\">");
+			sb.append("</td><td style=\"font-family: medium-red\">");
 			sb.append(movementPenalty);
 			sb.append("</td></tr>");
 		}
 		
-		if (item.getItemType() == Item.ItemType.SHIELD) {
+		if (item.getTemplate().getShieldAttackPenalty() != 0) {
 			sb.append("<tr><td>");
 			sb.append("Attack Penalty");
-			sb.append("</td><td style=\"font-family: vera-red\">");
-			sb.append(item.getShieldAttackPenalty());
+			sb.append("</td><td style=\"font-family: medium-red\">");
+			sb.append(item.getTemplate().getShieldAttackPenalty());
 			sb.append("</td></tr>");
 		}
 		
 		sb.append("</table>");
 	}
 	
-	private void appendWeaponString(Item item, StringBuilder sb) {
-		float damageMult = 1.0f + (float)(item.getQuality().getDamageBonus()) / 100.0f;
+	private void appendWeaponString(Weapon item, StringBuilder sb) {
+		float damageMult = 1.0f + (item.getQualityDamageBonus() + item.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+		String damageMin = Game.numberFormat(1).format(((float)item.getTemplate().getMinDamage() * damageMult));
+		String damageMax = Game.numberFormat(1).format(((float)item.getTemplate().getMaxDamage() * damageMult));
 
-		String damageMin = Game.numberFormat(1).format(((float)item.getDamageMin() * damageMult));
-		String damageMax = Game.numberFormat(1).format(((float)item.getDamageMax() * damageMult));
-
-		sb.append("<table style=\"font-family: vera; vertical-align: middle; margin-bottom: 1em;\">");
+		sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-bottom: 1em;\">");
 		
 		sb.append("<tr><td style=\"width: 13ex;\">");
 		sb.append("Damage");
 		sb.append("</td><td>");
-		sb.append("<span style=\"font-family: vera-red\">");
+		sb.append("<span style=\"font-family: medium-red\">");
 		sb.append(damageMin);
 		sb.append("</span>");
 		sb.append(" to ");
-		sb.append("<span style=\"font-family: vera-red\">");
+		sb.append("<span style=\"font-family: medium-red\">");
 		sb.append(damageMax);
 		sb.append("</span>");
 		sb.append("</td></tr>");
 		
 		sb.append("<tr><td>");
 		sb.append("Damage Type");
-		sb.append("</td><td style=\"font-family: vera-blue\">");
-		sb.append(item.getDamageType().getName());
+		sb.append("</td><td style=\"font-family: medium-blue\">");
+		sb.append(item.getTemplate().getDamageType().getName());
 		sb.append("</td></tr>");
 		
 		sb.append("<tr><td>");
 		sb.append("Critical");
 		sb.append("</td><td>");
-		sb.append("<span style=\"font-family: vera-green\">");
-		if (item.getCriticalThreatRange() == 100) sb.append("100");
-		else sb.append(item.getCriticalThreatRange()).append(" - 100");
+		sb.append("<span style=\"font-family: medium-green\">");
+		if (item.getTemplate().getCriticalThreat() == 100) sb.append("100");
+		else sb.append(item.getTemplate().getCriticalThreat()).append(" - 100");
 		sb.append("</span>");
 		sb.append(" / x");
-		sb.append("<span style=\"font-family: vera-blue\">");
-		sb.append(item.getCriticalMultiplier());
+		sb.append("<span style=\"font-family: medium-blue\">");
+		sb.append(item.getTemplate().getCriticalMultiplier());
 		sb.append("</span>");
 		sb.append("</td></tr>");
 
+		sb.append("<tr><td>Attack Bonus</td><td><span style=\"font-family: medium-blue\">");
+		sb.append(item.getQualityAttackBonus());
+		sb.append("</span></td></tr>");
+		
 		sb.append("<tr><td>");
 		sb.append("Attack Cost");
 		sb.append("</td><td>");
-		sb.append("<span style=\"font-family: vera-blue\">");
-		sb.append(item.getAttackCost() / 100);
+		sb.append("<span style=\"font-family: medium-blue\">");
+		sb.append(item.getTemplate().getAttackCost() / 100);
 		sb.append("</span>");
 		sb.append(" AP");
 		sb.append("</td></tr>");
 		
-		if (item.getMaxStrengthBonus() != 0) {
+		if (item.getTemplate().getMaxStrengthBonus() != 0) {
 			sb.append("<tr><td>");
 			sb.append("Max Str Bonus");
-			sb.append("</td><td style=\"font-family: vera-blue\">");
-			sb.append(item.getMaxStrengthBonus());
+			sb.append("</td><td style=\"font-family: medium-blue\">");
+			sb.append(item.getTemplate().getMaxStrengthBonus());
 			sb.append("</td></tr>");
 		}
 		
-		if (item.getRangePenalty() != 0) {
-			String rangePenalty = Game.numberFormat(1).format(((float)item.getRangePenalty() / 20.0f));
+		int minRange = item.getTemplate().getMinRange();
+		int maxRange = item.getTemplate().getMaxRange();
+		sb.append("<tr><td>");
+		sb.append("Range");
+		sb.append("</td><td>");
+		sb.append("<span style=\"font-family: medium-red\">");
+		sb.append(minRange);
+		sb.append("</span>");
+		if (minRange == maxRange && minRange == 1) {
+			sb.append(" hex</td></tr>");
+		} else {
+			sb.append(" to ");
+			sb.append("<span style=\"font-family: medium-red\">");
+			sb.append(maxRange);
+			sb.append("</span>");
+			sb.append(" hexes</td></tr>");
+		}
+		
+		if (item.getTemplate().getRangePenalty() != 0) {
+			String rangePenalty = Game.numberFormat(1).format(((float)item.getTemplate().getRangePenalty() / 20.0f));
 			
 			sb.append("<tr><td>");
 			sb.append("Range Penalty");
 			sb.append("</td><td>");
-			sb.append("<span style=\"font-family: vera-blue\">");
+			sb.append("<span style=\"font-family: medium-blue\">");
 			sb.append(rangePenalty);
 			sb.append("</span>");
-			sb.append(" per 5 feet");
+			sb.append(" per hex");
 			sb.append("</td></tr>");
 		}
 		
 		sb.append("</table>");
 	}
 	
-	private void appendItemTypeString(Item item, StringBuilder sb) {
-		switch (item.getItemType()) {
-		case WEAPON:
-			String weaponType = null;
-			switch (item.getWeaponType()) {
-			case MELEE:
-				weaponType = "Melee";
-				break;
-			case BOW: case CROSSBOW: case SLING:
-				weaponType = "Ranged";
-				break;
-			case THROWN:
-				weaponType = "Thrown";
-				break;
-			}
-
-			sb.append("<div style=\"font-family: vera; margin-bottom: 1em;\">");
-			sb.append("<span style=\"font-family: vera-blue\">");
-			sb.append( StringUtil.upperCaseToWord(item.getWeaponHanded().toString()) );
-			sb.append("</span> <span style=\"font-family: vera-red\">");
-			sb.append(weaponType);
+	private void appendItemTypeString(EquippableItem item, StringBuilder sb) {
+		sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">");
+		
+		switch (item.getTemplate().getType()) {
+		case Weapon:
+			Weapon weapon = (Weapon)item;
+			
+			sb.append("<span style=\"font-family: medium-blue\">");
+			sb.append( weapon.getTemplate().getHanded().name );
+			sb.append("</span> <span style=\"font-family: medium-red\">");
+			sb.append(weapon.getTemplate().getWeaponType());
 			sb.append("</span> ");
-			sb.append( StringUtil.upperCaseToWord(item.getItemType().toString()) );
-			sb.append("</div>");
 			break;
-		case ARMOR: case GLOVES: case BOOTS: case HELMET:
-			if (!item.getArmorType().getName().equals(Game.ruleset.getString("DefaultArmorType"))) {
-				sb.append("<div style=\"font-family: vera; margin-bottom: 1em;\">");
-				sb.append("<span style=\"font-family: vera-blue\">");
-				sb.append(item.getArmorType().getName());
+		case Armor: case Gloves: case Boots: case Helmet:
+			Armor armor = (Armor)item;
+			
+			if (!armor.getTemplate().getArmorType().getName().equals(Game.ruleset.getString("DefaultArmorType"))) {
+				sb.append("<span style=\"font-family: medium-blue\">");
+				sb.append(armor.getTemplate().getArmorType().getName());
 				sb.append("</span> ");
-				sb.append( StringUtil.upperCaseToWord(item.getItemType().toString()) );
-				sb.append("</div>");
 				break;
 			}
+		default:
+			// do nothing
 		}
+		
+		sb.append( item.getTemplate().getType() );
+		sb.append("</div>");
 	}
 }

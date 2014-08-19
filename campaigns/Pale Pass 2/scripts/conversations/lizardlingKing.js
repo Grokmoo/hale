@@ -89,7 +89,7 @@ function askReward(game, parent, target, conversation) {
     conversation.addText("As promised.  I give you a powerful ring I'm sure you'll find useful.");
     
 	game.addPartyXP(10 * game.ruleset().getValue("EncounterXPFactor"));
-    target.getInventory().addItem("ringGreaterProtection", 1, "Good");
+    target.inventory.getUnequippedItems().add("ringGreaterProtection");
     
     game.addMessage(target.getName() + " was given a Ring of Greater Protection.");
     

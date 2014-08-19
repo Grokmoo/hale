@@ -28,7 +28,12 @@ import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.utils.TintAnimator;
 
-// TODO fix this class to properly layout
+/**
+ * A string of text displaying a recent status change, such as damage taken or healed,
+ * or a skill check, for a short period of time.
+ * @author Jared
+ *
+ */
 
 public class OverHeadFadeAway extends Widget {
 	private final Label textLabel;
@@ -41,23 +46,19 @@ public class OverHeadFadeAway extends Widget {
 	private Point basePosition;
 	private Point offset;
 	
-	public OverHeadFadeAway(String text, Point gridPoint, String color) {
+	/**
+	 * Creates a new fade away with the specified text over the specified grid point
+	 * @param text
+	 * @param gridPoint
+	 * @param color the text color
+	 */
+	
+	public OverHeadFadeAway(String text, Point gridPoint, Color color) {
 		this.setSize(50, 20);
 		
+		this.color = color.toARGB();
+		
 		this.tintAnimator = new TintAnimator(new TintAnimator.GUITimeSource(this));
-		
-		if (color.equals("red")) {
-			this.color = 0xFFFF2200;
-		} else if (color.equals("green")) {
-			this.color = 0xFF00FF00;
-		} else if (color.equals("blue")) {
-			this.color = 0xFF33CCFF;
-		} else if (color.equals("grey")) {
-			this.color = 0xFFAbA9A9;
-		} else {
-			this.color = 0xFFFF00FF;
-		}
-		
 		this.tintAnimator.setColor(new Color(this.color));
 		
 		textLabel = new Label(text);
@@ -70,11 +71,18 @@ public class OverHeadFadeAway extends Widget {
 		this.gridPoint = gridPoint;
 	}
 	
-	public void appendText(String text) {
-		textLabel.setText(textLabel.getText() + text);
-	}
+	/**
+	 * Returns the area grid coordinates that this fade away is over
+	 * @return the grid coordinates of this fade away
+	 */
 	
 	public Point getGridPoint() { return gridPoint; }
+	
+	/**
+	 * This should be called when adding the fade away to the user interface
+	 * causes the fade away to begin counting down the time and slowly fading
+	 * @param startTime the current time or the last frame update time
+	 */
 	
 	public void initialize(long startTime) {
 		this.startTime = startTime;
@@ -89,14 +97,32 @@ public class OverHeadFadeAway extends Widget {
 		if (offset == null) offset = new Point();
 	}
 	
+	/**
+	 * Sets an offset position that affects where this fadeaway is drawn
+	 * @param x
+	 * @param y
+	 */
+	
 	public void setOffset(int x, int y) {
 		offset = new Point(x, y);
 	}
+	
+	/**
+	 * Called whenever the user scrolls the view, so that the fadeaway stays over the correct grid
+	 * tile
+	 * @param x
+	 * @param y
+	 */
 	
 	public void scroll(int x, int y) {
 		basePosition.x -= x;
 		basePosition.y -= y;
 	}
+	
+	/**
+	 * Called every frame, this updates the state of the fade away based on the time
+	 * @param curTime the current frame time
+	 */
 	
 	public void updateTime(long curTime) {
 		if (curTime > startTime + 2000) {
@@ -111,6 +137,11 @@ public class OverHeadFadeAway extends Widget {
 		
 		this.setPosition(basePosition.x + offset.x, yPosition);
 	}
+	
+	/**
+	 * Returns true if this fade away has completed faded from view, false otherwise
+	 * @return whether this fade away has faded
+	 */
 	
 	public boolean isFinished() {
 		return isFinished;

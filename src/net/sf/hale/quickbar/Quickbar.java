@@ -26,11 +26,14 @@ import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilityActivator;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Item;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.PC;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
+import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
@@ -55,7 +58,7 @@ public class Quickbar implements Saveable {
 	
 	private int lastViewSet;
 	private Map<Integer, QuickbarSlot> slots;
-	private Creature parent;
+	private PC parent;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
@@ -77,7 +80,10 @@ public class Quickbar implements Saveable {
 	public void load(SimpleJSONObject data) {
 		this.clear();
 		
-		this.lastViewSet = data.get("lastViewSet", 0);
+		if (data.containsKey("lastViewerSet"))
+			this.lastViewSet = data.get("lastViewSet", 0);
+		else
+			this.lastViewSet = 0;
 		
 		SimpleJSONObject slotsObject = data.getObject("slots");
 		
@@ -91,38 +97,55 @@ public class Quickbar implements Saveable {
 			if (type.equals("ability")) {
 				String abilityID = slotData.get("abilityID", null);
 				QuickbarSlot slot = new AbilityActivateSlot(Game.ruleset.getAbility(abilityID), parent);
-				slots.put(index, slot);
+				putSlot(index, slot);
 				
 			} else if (type.equals("use")) {
 				String itemID = slotData.get("itemID", null);
-				String qualityID = slotData.get("itemQuality", null);
 				
-				Item item = Game.entityManager.getItem(itemID);
-				item.setQuality(qualityID);
+				String qualityID = null;
+				if (slotData.containsKey("itemQuality")) {
+					qualityID = slotData.get("itemQuality", null);
+				}
 				
-				QuickbarSlot slot = new ItemUseSlot(item, parent);
-				slots.put(index, slot);
+				ItemList.Entry entry = parent.inventory.getUnequippedItems().find(itemID, qualityID);
+				if (entry != null) {
+					putSlot(index, new ItemUseSlot(entry, parent));
+				} else {
+					Logger.appendToWarningLog("Warning, unable to find item in quickbar slot " + index +
+							" for " + parent.getTemplate().getID());
+				}
 				
 			} else if (type.equals("equip")) {
 				String itemID = slotData.get("itemID", null);
-				String qualityID = slotData.get("itemQuality", null);
 				
-				Item item = Game.entityManager.getItem(itemID);
-				item.setQuality(qualityID);
-				
-				ItemEquipSlot slot = new ItemEquipSlot(item, parent);
-				
-				if (slotData.containsKey("secondaryItem")) {
-					String secondaryItemID = slotData.get("secondaryItemID", null);
-					String secondaryQualityID = slotData.get("secondaryItemQuality", null);
-					
-					Item secondaryItem = Game.entityManager.getItem(secondaryItemID);
-					item.setQuality(secondaryQualityID);
-					
-					slot.setSecondaryItem(secondaryItem);
+				String qualityID = null;
+				if (slotData.containsKey("itemQuality")) {
+					qualityID = slotData.get("itemQuality", null);
 				}
 				
-				slots.put(index, slot);
+				try {
+					Item item = EntityManager.getItem(itemID, qualityID);
+
+					ItemEquipSlot slot = new ItemEquipSlot((EquippableItem)item, parent);
+
+					if (slotData.containsKey("secondaryItemID")) {
+						String secondaryItemID = slotData.get("secondaryItemID", null);
+						
+						String secondaryQualityID = null;
+						if (slotData.containsKey("secondaryItemQuality")) {
+							secondaryQualityID = slotData.get("secondaryItemQuality", null);
+						}
+
+						Item secondaryItem = EntityManager.getItem(secondaryItemID, secondaryQualityID);
+
+						slot.setSecondaryItem((EquippableItem)secondaryItem);
+					}
+
+					putSlot(index, slot);
+
+				} catch (Exception e) {
+					Logger.appendToWarningLog("Warning, unable to load item(s) in quickbar slot " + index);
+				}
 			}
 		}
 	}
@@ -133,14 +156,14 @@ public class Quickbar implements Saveable {
 	 * @param parent the new parent creature for this quickbar
 	 */
 	
-	public Quickbar(Quickbar other, Creature parent) {
+	public Quickbar(Quickbar other, PC parent) {
 		slots = new HashMap<Integer, QuickbarSlot>();
 		
 		for (Integer index : other.slots.keySet()) {
 			QuickbarSlot slot = other.slots.get(index);
 			
 			if (slot != null) {
-				this.slots.put(index, slot.getCopy(parent));
+				this.putSlot(index, slot.getCopy(parent));
 			}
 		}
 		
@@ -156,7 +179,7 @@ public class Quickbar implements Saveable {
 	 * @param parent the parent owner of this Quickbar
 	 */
 	
-	public Quickbar(Creature parent) {
+	public Quickbar(PC parent) {
 		slots = new HashMap<Integer, QuickbarSlot>();
 		lastViewSet = 0;
 		this.parent = parent;
@@ -190,7 +213,7 @@ public class Quickbar implements Saveable {
 	 * @return the parent creature of this quickbar
 	 */
 	
-	public Creature getParent() {
+	public PC getParent() {
 		return parent;
 	}
 	
@@ -214,7 +237,35 @@ public class Quickbar implements Saveable {
 			}
 		}
 		
-		slots.put(Integer.valueOf(index), slot);
+		putSlot(index, slot);
+	}
+	
+	/**
+	 * Helper function to easily add the specified Item to this Quickbar.  The
+	 * specified Item is added to the QuickbarSlot with the lowest index that
+	 * is currently empty.  If all QuickbarSlots are currently occupied, no
+	 * action is performed.
+	 * 
+	 * @param itemID the ID of the item
+	 * @param quality of the quality of the item
+	 */
+	
+	public void addToFirstEmptySlot(String itemID, String quality) {
+		addToFirstEmptySlot(Quickbar.getQuickbarSlot(EntityManager.getItem(itemID, quality), parent));
+	}
+	
+	/**
+	 * Helper function to easily add the specified Item to this Quickbar.  The
+	 * specified Item is added to the QuickbarSlot with the lowest index that
+	 * is currently empty.  If all QuickbarSlots are currently occupied, no
+	 * action is performed.
+	 * 
+	 * @param itemID the ID of the item.  If the item has quality, the default
+	 * quality version of this item is added
+	 */
+	
+	public void addToFirstEmptySlot(String itemID) {
+		addToFirstEmptySlot(Quickbar.getQuickbarSlot(EntityManager.getItem(itemID), parent));
 	}
 	
 	/**
@@ -290,7 +341,7 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public void addAbilitiesToEmptySlots() {
-		List<Ability> abilities = parent.getAbilities().getActivateableAbilities();
+		List<Ability> abilities = parent.abilities.getActivateableAbilities();
 		Iterator<Ability> abilitiesIter = abilities.iterator();
 		
 		// if there are no abilities to add, we are done
@@ -310,6 +361,15 @@ public class Quickbar implements Saveable {
 		// we ran out of abilities.
 	}
 	
+	private void putSlot(int index, QuickbarSlot slot) {
+		// set the index of the new slot
+		if (slot != null) {
+			slot.setIndex(index);
+		}
+		
+		slots.put(Integer.valueOf(index), slot);
+	}
+	
 	/**
 	 * Returns a QuickbarSlot for the specified Item owned by the parent.  The
 	 * QuickbarSlot can then be added to a Quickbar.  This QuickbarSlot may
@@ -322,15 +382,16 @@ public class Quickbar implements Saveable {
 	 * @return a QuickbarSlot for the specified Item
 	 */
 	
-	public static QuickbarSlot getQuickbarSlot(Item item, Creature parent) {
-		switch (item.getItemType()) {
-		case ITEM:
-			if (item.isUsable()) {
-				return new ItemUseSlot(item, parent);
+	public static QuickbarSlot getQuickbarSlot(Item item, PC parent) {
+		if (item instanceof EquippableItem) {
+			return new ItemEquipSlot((EquippableItem)item, parent);
+		} else if (item.getTemplate().isUsable()) {
+			ItemList.Entry entry = parent.inventory.getUnequippedItems().find(item.getTemplate().getID(),
+					item.getQuality());
+			
+			if (entry != null) {
+				return new ItemUseSlot(entry, parent);
 			}
-			break;
-		default:
-			return new ItemEquipSlot(item, parent);
 		}
 		
 		return null;
@@ -345,7 +406,7 @@ public class Quickbar implements Saveable {
 	 * @return a QuickbarSlot for the Ability
 	 */
 	
-	public static QuickbarSlot getQuickbarSlot(Ability ability, AbilityActivator parent) {
+	public static QuickbarSlot getQuickbarSlot(Ability ability, PC parent) {
 		return new AbilityActivateSlot(ability, parent);
 	}
 }

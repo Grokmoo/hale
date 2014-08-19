@@ -19,9 +19,9 @@
 
 package net.sf.hale.rules;
 
-import net.sf.hale.Encounter;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 
 /**
  * Class for handling the experience point table
@@ -30,7 +30,11 @@ import net.sf.hale.entity.Creature;
  */
 
 public class XP {
-	private static int MAX_LEVEL = 100;
+	/**
+	 * The maximum level supported by the XP table
+	 */
+	
+	public static int MAX_LEVEL = 100;
 	
 	private static int[] pointsForLevel;
 	
@@ -60,7 +64,7 @@ public class XP {
 	
 	/**
 	 * Returns the number of XP required to reach the specified level
-	 * @param level the level, must be less than or equal to {@link Role#MAX_LEVELS}
+	 * @param level the level, must be less than or equal to {@link XP#MAX_LEVEL}
 	 * @return the number of XP to reach the level
 	 */
 	
@@ -74,29 +78,6 @@ public class XP {
 	 * @param encounter the encounter to assign XP from
 	 * @param combatLength the length of the combat in rounds
 	 */
-	
-	public static void assignEncounterXPAndGold(Encounter encounter, int combatLength) {
-		float EC = (float)encounter.getChallenge() / Game.ruleset.getValue("EncounterChallengeFactor");
-		
-		long baseXP = (long) (EC * (float)Game.ruleset.getValue("EncounterXPFactor"));
-		
-		// modify xp based on encounter length
-		int lengthModifier = 10000 + Math.min(Game.ruleset.getValue("CombatLengthXPFactor") * combatLength,
-				Game.ruleset.getValue("CombatLengthXPMax"));
-		
-		baseXP = baseXP * lengthModifier / 10000;
-		
-		Currency reward = new Currency();
-		for (Creature c : encounter.getCreatures()) {
-			reward.addCP(Game.dice.rand(c.getMinCurrencyReward(), c.getMaxCurrencyReward()));
-		}
-		
-		Game.curCampaign.partyCurrency.add(reward);
-		
-		rewardXP((int)baseXP);
-		
-		Game.mainViewer.addMessage("green", "The party earned " + baseXP + " experience points and " + reward.shortString() + ".");
-	}
 	
 	/**
 	 * Adds the specified number of experience points directly to the party
@@ -117,9 +98,9 @@ public class XP {
 		
 		int perCharacterXP = baseXP / partySize;
 		
-		for (Creature c : Game.curCampaign.party) {
-			if (!c.isDead() && !c.isSummoned()) {
-				c.addExperiencePoints(perCharacterXP);
+		for (PC pc : Game.curCampaign.party) {
+			if (!pc.isDead() && !pc.isSummoned()) {
+				pc.addExperiencePoints(perCharacterXP);
 			}
 		}
 	}

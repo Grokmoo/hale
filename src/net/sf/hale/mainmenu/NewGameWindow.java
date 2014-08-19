@@ -20,11 +20,16 @@
 package net.sf.hale.mainmenu;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.rules.SavedParty;
+import net.sf.hale.SavedParty;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.PC;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.rules.XP;
 import net.sf.hale.widgets.TextAreaNoInput;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -70,7 +75,7 @@ public class NewGameWindow extends Widget {
 	
 	private PartySelector selectedParty;
 	
-	private Creature preselected;
+	private PC preselected;
 	
 	private HashSet<String> charactersUsedInParties;
 	
@@ -159,9 +164,8 @@ public class NewGameWindow extends Widget {
 		
 		String preselectedID = Game.curCampaign.getStartingCharacter();
 		if (preselectedID != null) {
-			preselected = Game.entityManager.getCreature(preselectedID);
-			preselected.stats().recomputeAllStats();
-			preselected.resetAll();
+			preselected = EntityManager.getPC(preselectedID);
+			preselected.resetTime();
 		}
 		
 		if (preselected != null) {
@@ -195,7 +199,7 @@ public class NewGameWindow extends Widget {
 		int maxSize = Game.curCampaign.getMaxPartySize();
 		int minSize = Game.curCampaign.getMinPartySize();
 		int maxLevel = Game.curCampaign.getMaxStartingLevel();
-		int minLevel = Game.curCampaign.getMinStartingLevel();
+		int minLevel = Game.curCampaign.allowLevelUp() ? 1 : Game.curCampaign.getMinStartingLevel();
 		
 		if (party.size() > maxSize) {
 			return "The party is too large for this campaign";
@@ -225,32 +229,50 @@ public class NewGameWindow extends Widget {
 		DialogLayout.Group mainV = partyPaneContent.createSequentialGroup();
 		
 		if (preselected == null) {
-			File partyDir = new File("characters/parties/");
-
-			for (String idPath : partyDir.list()) {
-				File partyFile = new File(partyDir.getPath() + "/" + idPath);
-				if (!partyFile.isFile()) continue;
-
-				String partyID = idPath.substring(0, idPath.length() - 5);
-
-				SavedParty party = new SavedParty(partyID);
-
-				String tooltip = validateParty(party);
+			List<SavedParty> savedParties = new ArrayList<SavedParty>();
+			
+			savedParties.addAll(getPartiesInDirectory("characters/parties/"));
+			
+			// parties added from the "characters/parties" directory cannot be deleted, while
+			// parties from the Game.getPartiesBaseDirectory() can
+			int lastNotDeletableIndex = savedParties.size() - 1;
+			
+			savedParties.addAll(getPartiesInDirectory(Game.getPartiesBaseDirectory()));
+			
+			int index = 0;
+			for (SavedParty savedParty : savedParties) {
+				String tooltip = validateParty(savedParty);
 				
-				PartySelector selector = new PartySelector(party);
+				boolean isValid = tooltip == null;
+				
+				if (savedParty.getMinLevel() < Game.curCampaign.getMinStartingLevel() && tooltip == null){
+					tooltip = "One or more party members will be automatically leveled up for this campaign";
+				}
+				
+				PartySelector selector;
+				if (index > lastNotDeletableIndex) {
+					// allow this party to be deleted
+					selector = new PartySelector(savedParty, true);
+				} else {
+					// do not allow this party to be deleted
+					selector = new PartySelector(savedParty, false);
+				}
+				
 				selector.setTooltipContent(tooltip);
-				selector.getAnimationState().setAnimationState(STATE_INVALID, tooltip != null);
+				selector.getAnimationState().setAnimationState(STATE_INVALID, !isValid);
 				
-				if (showInvalidPartiesButton.isActive() || tooltip == null) {
+				if (showInvalidPartiesButton.isActive() || isValid) {
 					mainH.addWidget(selector);
 					mainV.addWidget(selector);
 				}
 
-				if (partyID.equals(idToSelect)) {
+				if (savedParty.getID().equals(idToSelect)) {
 					selector.run();
 				}
 				
-				addToCharactersUsedInParties(party);
+				addToCharactersUsedInParties(savedParty);
+				
+				index++;
 			}
 		}
 		
@@ -258,6 +280,25 @@ public class NewGameWindow extends Widget {
 		partyPaneContent.setVerticalGroup(mainV);
 		
 		setAcceptState();
+	}
+	
+	private List<SavedParty> getPartiesInDirectory(String directory) {
+		List<SavedParty> partyList = new ArrayList<SavedParty>();
+		
+		File directoryFile = new File(directory);
+		
+		for (String idPath : directoryFile.list()) {
+			File partyFile = new File(directory + "/" + idPath);
+			if (!partyFile.isFile()) continue;
+
+			String partyID = idPath.substring(0, idPath.length() - 5);
+
+			SavedParty party = new SavedParty(directory + partyID + ResourceType.JSON.getExtension(), partyID);
+			
+			partyList.add(party);
+		}
+		
+		return partyList;
 	}
 	
 	private void addToCharactersUsedInParties(SavedParty party) {
@@ -279,13 +320,13 @@ public class NewGameWindow extends Widget {
 			
 		} else if (selectedParty != null) {
 			for (String characterID : selectedParty.party.getCharacterIDs()) {
-				Creature creature = Game.entityManager.getCharacter(characterID);
-				if (!Game.entityManager.isCharacterValidForCampaign(creature)) continue;
+				PC pc = EntityManager.getPC(characterID);
 				
-				creature.stats().recomputeAllStats();
-				creature.resetAll();
+				// TODO verify PC is valid for current campaign
 				
-				CharacterSelector selector = new CharacterSelector(creature, NewGameWindow.this.mainMenu);
+				pc.resetTime();
+				
+				CharacterSelector selector = new CharacterSelector(pc, NewGameWindow.this.mainMenu);
 				mainH.addWidget(selector);
 				mainV.addWidget(selector);
 			}
@@ -369,11 +410,24 @@ public class NewGameWindow extends Widget {
 	private void acceptNewGame() {
 		if (preselected != null) {
 			Game.curCampaign.addParty(null, null);
-			Game.curCampaign.party.setSelected(0);
+			Game.curCampaign.party.setFirstMemberSelected();
 		} else {
 			Game.curCampaign.addParty(selectedParty.party.getCharacterIDs(), selectedParty.party.getName());
-			Game.curCampaign.party.setSelected(0);
-			Game.curCampaign.partyCurrency.setValue(selectedParty.party.getCurrencyInCP());
+			Game.curCampaign.party.setFirstMemberSelected();
+			
+			int currency = Math.max(selectedParty.party.getCurrency(), Game.curCampaign.getMinCurrency());
+			
+			Game.curCampaign.partyCurrency.setValue(currency);
+			
+			if (Game.curCampaign.allowLevelUp()) {
+				int xp = XP.getPointsForLevel(Game.curCampaign.getMinStartingLevel());
+				
+				for (PC pc : Game.curCampaign.party) {
+					int pcXP = pc.getExperiencePoints();
+					
+					pc.addExperiencePoints(Math.max((xp - pcXP), 0));
+				}
+			}
 		}
 		
 		Game.ruleset.getDifficultyManager().setCurrentDifficulty(difficultySelector.getSelectedDifficulty());
@@ -388,7 +442,7 @@ public class NewGameWindow extends Widget {
 		
 		private SavedParty party;
 		
-		private PartySelector(SavedParty party) {
+		private PartySelector(SavedParty party, boolean allowDelete) {
 			this.party = party;
 			addCallback(this);
 			
@@ -398,6 +452,7 @@ public class NewGameWindow extends Widget {
 			
 			delete = new Button();
 			delete.setTheme("deletebutton");
+			delete.setEnabled(allowDelete);
 			delete.addCallback(new Runnable() {
 				@Override public void run() {
 					showDeleteConfirmation();
@@ -407,7 +462,7 @@ public class NewGameWindow extends Widget {
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append("<div style=\"font-family: vera;\">");
+			sb.append("<div style=\"font-family: medium;\">");
 			sb.append(party.getName());
 			sb.append("</div>");
 			
@@ -421,6 +476,13 @@ public class NewGameWindow extends Widget {
 				sb.append(" to ");
 				sb.append(party.getMaxLevel());
 			}
+			
+			if (Game.curCampaign.allowLevelUp() && party.getMinLevel() < Game.curCampaign.getMinStartingLevel()) {
+				sb.append(" - <span style=\"font-family: red\">");
+				sb.append("Requires Level Up");
+				sb.append("</span>");
+			}
+			
 			sb.append("</div>");
 			
 			model.setHtml(sb.toString());
@@ -462,6 +524,16 @@ public class NewGameWindow extends Widget {
 			populateCurrentParty();
 			
 			setAcceptState();
+		}
+		
+		@Override protected void applyTheme(ThemeInfo themeInfo) {
+			super.applyTheme(themeInfo);
+			
+			String deleteDisabledTooltip = themeInfo.getParameter("deletedisabledtooltip", (String)null);
+			
+			if (!delete.isEnabled()) {
+				delete.setTooltipContent(deleteDisabledTooltip);
+			}
 		}
 		
 		@Override protected void layout() {

@@ -21,6 +21,8 @@ package net.sf.hale;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,6 +41,7 @@ import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 
+import net.sf.hale.resource.URLResourceStreamHandler;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SimpleJSONArray;
@@ -54,25 +57,10 @@ import net.sf.hale.util.SimpleJSONParser;
  */
 
 public class Config {
-	/**
-	 * The OS type of the user currently running this program
-	 * @author Jared Stephen
-	 *
-	 */
-	
-	public enum OSType {
-		Unix,
-		Windows,
-		Mac;
-	}
-	
-	private final OSType osType;
-	
-	private int editorResolutionX, editorResolutionY;
 	private int resolutionX, resolutionY;
-	
 	private final boolean fullscreen;
 	private final boolean showFPS, capFPS;
+	private final boolean combatAutoScroll;
 	private final int toolTipDelay;
 	private final long randSeed;
 	private final boolean randSeedSet;
@@ -132,6 +120,14 @@ public class Config {
 	public int getResolutionY() { return resolutionY; }
 	
 	/**
+	 * Returns true if the view should automatically scroll to show combat actions such as movement
+	 * and attacks of opportunity, false otherwise
+	 * @return whether to auto scroll in combat
+	 */
+	
+	public boolean autoScrollDuringCombat() { return combatAutoScroll; }
+	
+	/**
 	 * Returns true if the Frames per second (FPS) should be shown in the mainViewer, false otherwise
 	 * @return whether the mainViewer should show FPS
 	 */
@@ -183,27 +179,6 @@ public class Config {
 	public int getTooltipDelay() { return toolTipDelay; }
 	
 	/**
-	 * Returns the horizontal resolution for the campaign editor
-	 * @return the horizontal resolution for the campaign editor
-	 */
-	
-	public int getEditorResolutionX() { return editorResolutionX; }
-	
-	/**
-	 * Returns the vertical resolution for the campaign editor
-	 * @return the vertical resolution for the campaign editor
-	 */
-	
-	public int getEditorResolutionY() { return editorResolutionY; }
-	
-	/**
-	 * Returns the currently running system OS type
-	 * @return the currently running system OS type
-	 */
-	
-	public OSType getOSType() { return osType; }
-	
-	/**
 	 * Returns the unique version ID for the current binary version of hale being run
 	 * @return the unique version ID for the current binary version being run
 	 */
@@ -247,15 +222,7 @@ public class Config {
 	 */
 	
 	public Config(String fileName) {
-		// determine system type
-		String osString = System.getProperty("os.name").toLowerCase();
-		
-		if (osString.contains("win")) osType = OSType.Windows;
-		else if (osString.contains("mac")) osType = OSType.Mac;
-		else osType = OSType.Unix;
-		
 		versionID = FileUtil.getHalfMD5Sum(new File("hale.jar"));
-		
 		
 		File configFile = new File(fileName);
 		
@@ -277,10 +244,8 @@ public class Config {
 		SimpleJSONArray edResArray = parser.getArray("EditorResolution");
 		iter = edResArray.iterator();
 		
-		editorResolutionX = iter.next().getInt(800);
-		editorResolutionY = iter.next().getInt(600);
-		
 		showFPS = parser.get("ShowFPS", false);
+		combatAutoScroll = parser.get("CombatAutoScroll", true);
 		capFPS = parser.get("CapFPS", false);
 		toolTipDelay = parser.get("TooltipDelay", 400);
 		combatDelay = parser.get("CombatDelay", 150);
@@ -329,7 +294,7 @@ public class Config {
 	
 	public static void writeCheckForUpdatesTime(long time) {
 		try {
-			FileUtil.writeStringToFile(new File("docs/lastUpdateTime.txt"), Long.toString(time));
+			FileUtil.writeStringToFile(new File(Game.getConfigBaseDirectory() + "lastUpdateTime.txt"), Long.toString(time));
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Error writing last update time to file", e);
 		}
@@ -342,11 +307,11 @@ public class Config {
 	 */
 	
 	public static long getLastCheckForUpdatesTime() {
-		File file = new File("docs/lastUpdateTime.txt");
+		File file = new File(Game.getConfigBaseDirectory() + "lastUpdateTime.txt");
 		if (file.canRead()) {
 			String time = null;
 			try {
-				time = FileUtil.readFileAsString("docs/lastUpdateTime.txt");
+				time = FileUtil.readFileAsString(Game.getConfigBaseDirectory() + "lastUpdateTime.txt");
 			} catch (IOException e) {
 				Logger.appendToErrorLog("Error reading last update time", e);
 			}
@@ -444,21 +409,6 @@ public class Config {
 	}
 	
 	/**
-	 * Creates a new LWJGL display with the configured x and y editor resolution.  If the
-	 * specified x and y resolution is invalid, falls back to an 800x600 display mode.
-	 * 
-	 * This method then sets up the OpenGL context for 2D drawing, and sets up TWL using
-	 * the theme file at gui/simple.xml.
-	 */
-	
-	public static void createEditorDisplay() {
-		if ( !createDisplay(Game.config.getEditorResolutionX(), Game.config.getEditorResolutionY()) ) {
-			Game.config.editorResolutionX = 800;
-			Game.config.editorResolutionY = 600;
-		}
-	}
-	
-	/**
 	 * Creates a new LWJGL display with the configured x and y game resolution.  If the
 	 * specified x and y resolution is invalid, falls back to an 800x600 display mode.
 	 * 
@@ -533,13 +483,17 @@ public class Config {
 		
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
 		
+		URL theme = null;
 		try {
-			File theme = new File("gui/simple.xml");
-			
-			Game.themeManager = ThemeManager.createThemeManager(theme.toURI().toURL(), Game.renderer);
+			theme = new URL("resource", "localhost", -1, "gui/theme.xml", new URLResourceStreamHandler());
+		} catch (MalformedURLException e) {
+			Logger.appendToErrorLog("Error creating URL for theme file", e);
+		}
+		
+		try {
+			Game.themeManager = ThemeManager.createThemeManager(theme, Game.renderer);
 		} catch (IOException e) {
-			Logger.appendToErrorLog("Error loading theme.", e);
-			System.exit(0);
+			Logger.appendToErrorLog("Error creating theme manager", e);
 		}
 		
 		return returnValue;

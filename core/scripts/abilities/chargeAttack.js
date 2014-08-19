@@ -1,11 +1,15 @@
 function canActivate(game, parent) {
-	var weapon = parent.getInventory().getMainWeapon();
-	if (!weapon.isMeleeWeapon()) return false;
+	var weapon = parent.getMainHandWeapon();
+	if (!weapon.isMelee()) return false;
 	
-	var attackCost = parent.stats().getAttackCost();
-	var moveCost = parent.stats().getMovementCost();
+	if (parent.stats.isImmobilized() || parent.stats.isHelpless()) return false;
 	
-	return parent.getTimer().canPerformAction(attackCost + 2 * moveCost);
+	var attackCost = parent.stats.getAttackCost();
+	//var moveCost = parent.stats.getMovementCost();
+	
+	//return parent.timer.canPerformAction(attackCost + 2 * moveCost);
+	
+	return parent.timer.canPerformAction(attackCost);
 }
 
 function onActivate(game, slot) {
@@ -13,20 +17,21 @@ function onActivate(game, slot) {
 
 	// figure out the shortest and longest distances that can be charged based on available
 	// AP and weapon range
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	var maxDistAway = 1;
-	if (weapon.threatens()) maxDistAway = weapon.getThreatenMax();
+	if (weapon.getTemplate().threatensAoOs()) maxDistAway = weapon.getTemplate().getMaxRange();
 	
 	var minDistAway = 1;
-	if (weapon.threatens()) minDistAway = weapon.getThreatenMin();
+	if (weapon.getTemplate().threatensAoOs()) minDistAway = weapon.getTemplate().getMinRange();
 	
-	var moveAPLeft = (parent.getTimer().getAP() - parent.stats().getAttackCost());
-	var maxDist = maxDistAway + parseInt(moveAPLeft / parent.stats().getMovementCost());
+	//var moveAPLeft = (parent.timer.getAP() - parent.stats.getAttackCost());
+	//var maxDist = maxDistAway + parseInt(moveAPLeft / parent.stats.getMovementCost());
 	
 	var targeter = game.createLineTargeter(slot);
 	
-	targeter.setOrigin(parent.getPosition());
-	targeter.setMaxRange(maxDist);
+	targeter.setOrigin(parent.getLocation());
+	targeter.setMaxRange(8);
+	//targeter.setMaxRange(maxDist);
 	targeter.setMinRange(2 + minDistAway);
 	targeter.setRelationshipCriterion("Hostile");
 	targeter.setAllowAffectedCreaturesEmpty(false);
@@ -42,12 +47,12 @@ function onTargetSelect(game, targeter) {
 	var target = targeter.getAffectedCreatures().get(0);
 	var ability = targeter.getSlot().getAbility();
 	
-	var weapon = parent.getInventory().getMainWeapon();
-	var distance = game.distance(parent, target) / 5;
+	var weapon = parent.getMainHandWeapon();
+	var distance = parent.getLocation().getDistance(target);
 	
 	// normally, charge to the weapon's maximum range and attack
 	var distAway = 1;
-	if (weapon.threatens()) distAway = weapon.getThreatenMax();
+	if (weapon.getTemplate().threatensAoOs()) distAway = weapon.getTemplate().getMaxRange();
 	
 	// if the maximum range doesn't give at least 2 movement tiles,
 	// then charge to a shorter distance instead
@@ -63,18 +68,20 @@ function onTargetSelect(game, targeter) {
 }
 
 function performCharge(game, parent, target, distanceAway) {
-	if (!game.ai.moveTowards(parent, target.getPosition(), distanceAway)) {
-		game.addMessage("red", "Charge attack by " + parent + " was interrupted.");
+	// apply a temporary effect with the bonuses
+	var parentEffect = parent.createEffect();
+	parentEffect.getBonuses().addBonus('Attack', 'Stackable', 40);
+	parentEffect.getBonuses().addBonus('Damage', 'Stackable', 100);
+	parentEffect.getBonuses().addBonus('Movement', 'Stackable', 1000);
+	parent.applyEffect(parentEffect);
+
+	if (!game.ai.moveTowards(parent, target.getLocation(), distanceAway)) {
+		game.addMessage("red", "Charge attack by " + parent.getName() + " was interrupted.");
+		parent.removeEffect(parentEffect);
 		return;
 	}
 	
-	// apply a temporary effect with the bonuses
-	var effect = parent.createEffect();
-	effect.getBonuses().addBonus('Attack', 'Stackable', 40);
-	effect.getBonuses().addBonus('Damage', 'Stackable', 100);
-	parent.applyEffect(effect);
-	
 	game.standardAttack(parent, target);
 	
-	parent.removeEffect(effect);
+	parent.removeEffect(parentEffect);
 }

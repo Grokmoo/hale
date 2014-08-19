@@ -1,7 +1,6 @@
 { "name" : "Medium Animal",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedMediumThreatens",
+  "defaultWeapon" : "unarmedMediumThreatens",
   
   "racialTypes" : [
     "Animal"

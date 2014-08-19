@@ -1,9 +1,9 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return weapon.isMeleeWeapon();
+	return weapon.isMelee();
 }
 
 function onActivate(game, slot) {

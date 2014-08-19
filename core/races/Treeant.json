@@ -1,7 +1,6 @@
 { "name" : "Treeant",
-  "size" : "Medium",
   "baseMovementCost" : 1200,
-  "unarmedWeapon" : "unarmedLargeThreatens",
+  "defaultWeapon" : "unarmedLargeThreatens",
   
   "racialTypes" : [
     "Plant"

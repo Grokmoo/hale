@@ -19,11 +19,13 @@
 
 package net.sf.hale.view;
 
-import net.sf.hale.Area;
 import net.sf.hale.AreaListener;
-import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
+import net.sf.hale.ability.Targeter;
+import net.sf.hale.area.Area;
+import net.sf.hale.area.Transition;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.interfacelock.InterfaceLock;
 import net.sf.hale.util.AreaUtil;
@@ -82,7 +84,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	 */
 	
 	public AreaViewer(Area area) {
-		mouseHoverTile = new Point(false);
+		mouseHoverTile = new Point();
 		mouseHoverValid = true;
 		
 		this.scroll = new Point(0, 0);
@@ -142,24 +144,31 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		this.areaListener = areaListener;
 	}
 	
-	@Override public void drawInterface(Point selected, AnimationState as) {
-		if (selected != null && selected.valid && !Game.interfaceLocker.locked()) {
-			drawBlueHex(selected, as);
+	@Override public void drawInterface(AnimationState as) {
+		if (!Game.interfaceLocker.locked()) {
+			Creature activeCreature = areaListener.getCombatRunner().getActiveCreature();
+			
+			if (Game.isInTurnMode() && !activeCreature.isPlayerFaction()) {
+				// draw a hex around the active hostile
+				drawBlueHex(areaListener.getCombatRunner().getActiveCreature().getLocation().toPoint(), as);
+			} else {
+				// draw a hex around the selected party member
+				drawBlueHex(Game.curCampaign.party.getSelected().getLocation().toPoint(), as);
+			}
 		}
 		
-		if (areaListener.getTargeterManager().isInTargetMode()) {
-			areaListener.getTargeterManager().getCurrentTargeter().draw(as);
+		Targeter currentTargeter = areaListener.getTargeterManager().getCurrentTargeter();
+		if (currentTargeter != null) {
+			currentTargeter.draw(as);
 		}
 		
-		if (mouseHoverTile.valid) {
-			if (mouseHoverValid) drawWhiteHex(mouseHoverTile, as);
-			else drawRedHex(mouseHoverTile, as);
-		}
+		if (mouseHoverValid) drawWhiteHex(mouseHoverTile, as);
+		else drawRedHex(mouseHoverTile, as);
 		
 		if (Game.isInTurnMode() && !areaListener.getTargeterManager().isInTargetMode()) {
 			Creature active = areaListener.getCombatRunner().getActiveCreature();
 			if (active != null && !Game.interfaceLocker.locked()) {
-				drawAnimHex(active.getPosition(), as);
+				drawAnimHex(active.getLocation().toPoint(), as);
 			}
 		}
 		
@@ -191,10 +200,11 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		area.getTileGrid().draw(this, as, topLeft, bottomRight);
 		
 		Entity mouseOverEntity = Game.mainViewer.getMouseOver().getSelectedEntity();
-		if (!Game.isInTurnMode() || mouseOverEntity == null || !mouseOverEntity.isPlayerSelectable()) {
+		
+		if (!Game.isInTurnMode() || !(mouseOverEntity instanceof PC)) {
 			drawVisibility(area.getVisibility(), as, topLeft, bottomRight);
 		} else {
-			drawVisibility(mouseOverEntity.getVisibility(), as, topLeft, bottomRight);
+			drawCreatureVisibility((Creature)mouseOverEntity, as, topLeft, bottomRight);
 		}
 		
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -343,7 +353,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	 */
 	
 	public void addDelayedScrollToCreature(Entity creature) {
-		addDelayedScrollToScreenPoint(creature.getScreenPosition());
+		addDelayedScrollToScreenPoint(creature.getLocation().getCenteredScreenPoint());
 	}
 	
 	/**
@@ -354,7 +364,7 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	 */
 	
 	public void scrollToCreature(Entity creature) {
-		Point pScreen = creature.getScreenPosition();
+		Point pScreen = creature.getLocation().getCenteredScreenPoint();
 		
 		int destx = pScreen.x - this.getInnerWidth() / 2;
 		int desty = pScreen.y - this.getInnerHeight() / 2;
@@ -477,8 +487,24 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 				
 				if (!explored[x][y]) {
 					hexFilledBlack.draw(as, screenPoint.x, screenPoint.y);
+				} else if (!visibility[x][y]) {
+					hexFilledGrey.draw(as, screenPoint.x, screenPoint.y);
 				}
-				else if (!visibility[x][y]) {
+			}
+		}
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+	}
+	
+	private void drawCreatureVisibility(Creature creature, AnimationState as, Point topLeft, Point bottomRight) {
+		boolean[][] explored = area.getExplored();
+		
+		for (int x = topLeft.x; x <= bottomRight.x; x++) {
+			for (int y = topLeft.y; y <= bottomRight.y; y++) {
+				Point screenPoint = AreaUtil.convertGridToScreen(x, y);
+				
+				if (!explored[x][y]) {
+					hexFilledBlack.draw(as, screenPoint.x, screenPoint.y);
+				} else if (!creature.hasVisibilityInCurrentArea(x, y)) {
 					hexFilledGrey.draw(as, screenPoint.x, screenPoint.y);
 				}
 			}
@@ -493,43 +519,15 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 	@Override public void drawTransitions() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		
-		long curTime = System.currentTimeMillis();
-		
 		for (String s : area.getTransitions()) {
-			AreaTransition transition = Game.curCampaign.getAreaTransition(s);
+			Transition transition = Game.curCampaign.getAreaTransition(s);
 			
 			if (!transition.isActivated()) continue;
 			
-			Point grid;
-			
-			if (transition.getAreaFrom().equals(area.getName())) {
-				grid = new Point(transition.getAreaFromX(), transition.getAreaFromY());
-			} else {
-				grid = new Point(transition.getAreaToX(), transition.getAreaToY());
-			}
-			
-			transition.draw(AreaUtil.convertGridToScreen(grid), curTime);
+			Transition.EndPoint endPoint = transition.getEndPointInArea(area);
+			Point screen = AreaUtil.convertGridToScreen(endPoint.getX(), endPoint.getY());
+			transition.getIcon().draw(screen.x, screen.y);
 		}
-	}
-	
-	/**
-	 * Draws a filled tile at the specified grid coordinates
-	 * @param x the x grid coordinate
-	 * @param y the y grid coordinate
-	 */
-	
-	protected final void fillGridTile(int x, int y) {
-		Point screenPoint = AreaUtil.convertGridToScreen(x, y);
-		GL11.glBegin(GL11.GL_POLYGON);
-		
-		GL11.glVertex2i(screenPoint.x, screenPoint.y + Game.TILE_SIZE / 2);
-		GL11.glVertex2i(screenPoint.x + Game.TILE_SIZE / 4, screenPoint.y);
-		GL11.glVertex2i(screenPoint.x + Game.TILE_WIDTH, screenPoint.y);
-		GL11.glVertex2i(screenPoint.x + Game.TILE_SIZE, screenPoint.y + Game.TILE_SIZE / 2);
-		GL11.glVertex2i(screenPoint.x + Game.TILE_WIDTH, screenPoint.y + Game.TILE_SIZE);
-		GL11.glVertex2i(screenPoint.x + Game.TILE_SIZE / 4, screenPoint.y + Game.TILE_SIZE);
-		
-		GL11.glEnd();
 	}
 	
 	public final void drawRedHex(Point gridPoint, AnimationState as) {
@@ -557,9 +555,13 @@ public class AreaViewer extends Widget implements AreaTileGrid.AreaRenderer {
 		hexGrey.draw(as, screen.x, screen.y);
 	}
 	
-	public final void drawAnimHex(Point gridPoint, AnimationState as) {
-		Point screen = AreaUtil.convertGridToScreen(gridPoint);
+	public final void drawAnimHex(int gridX, int gridY, AnimationState as) {
+		Point screen = AreaUtil.convertGridToScreen(gridX, gridY);
 		hexAnim.draw(as, screen.x, screen.y);
+	}
+	
+	public final void drawAnimHex(Point point, AnimationState as) {
+		drawAnimHex(point.x, point.y, as);
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {

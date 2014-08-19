@@ -1,0 +1,13 @@
+{
+  "name" : "Ranger",
+  "subLists" : {
+    "RangerAbilities" : {
+      "x" : 0.5,
+      "y" : 0.5
+    },
+    "Ranged" : {
+      "x" : 0.5,
+      "y" : 5.0
+    }
+  }
+}

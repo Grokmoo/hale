@@ -1,8 +1,0 @@
-name "Merchant"
-usesSpeechSkill true
-confirmOnExit false
-buyValuePercentage 60
-sellValuePercentage 150
-respawnhours 24
-additems "EquipmentMediocre" 80 PER_ITEM
-additems "ScrollsDecent" 80 PER_ITEM

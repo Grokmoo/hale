@@ -19,7 +19,6 @@
 
 package net.sf.hale.view;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,9 +26,7 @@ import java.util.List;
 import net.sf.hale.AreaListener;
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
-import net.sf.hale.QuestEntry;
-import net.sf.hale.ScriptInterface;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.defaultability.MouseActionList;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
@@ -38,10 +35,10 @@ import net.sf.hale.mainmenu.MainMenuAction;
 import net.sf.hale.quickbar.QuickbarViewer;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Merchant;
+import net.sf.hale.rules.QuestEntry;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
-import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.widgets.EntityMouseover;
 import net.sf.hale.widgets.InitiativeTicker;
 import net.sf.hale.widgets.MainPane;
@@ -54,6 +51,7 @@ import net.sf.hale.widgets.TextAreaNoInput;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.DesktopArea;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.FPSCounter;
@@ -63,17 +61,20 @@ import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
+/**
+ * The root widget containing all other widgets and controlling the basic game
+ * flow.  This class includes the main loop of the game with rendering, input handling
+ * and animating
+ * @author Jared
+ *
+ */
+
 public class MainViewer extends DesktopArea {
 	private final GUI gui;
-	private boolean isRunning = false;
-	private boolean exitGame = false;
 	
-	private boolean updateInterface = false;
-	private QuestEntry newQuestEntry;
 	private final List<Entity> entityUpdateList = new ArrayList<Entity>();
 	private final List<PopupWindow> popupsToShow = new ArrayList<PopupWindow>();
 	private final List<PopupWindow> popupsToHide = new ArrayList<PopupWindow>();
-	
 	private final FPSCounter fpsCounter;
 	
 	public final CharacterWindow characterWindow;
@@ -101,14 +102,25 @@ public class MainViewer extends DesktopArea {
 	private final List<OverHeadFadeAway> fadeAways;
 	private final List<OverHeadFadeAway> fadeAwaysToAdd;
 	
-	private Keybindings keyBindings;
+	private final Keybindings keyBindings;
 	
 	private MainMenuAction action;
 	
+	private boolean isRunning = false;
+	private boolean exitGame = false;
+	private boolean updateInterface = false;
+	private QuestEntry newQuestEntry;
+	
 	public int mouseX, mouseY;
+	private long frameTime;
+	
+	/**
+	 * Creates a new MainViewer
+	 */
 	
 	public MainViewer() {
 		Game.mainViewer = this;
+		Game.mouseActions = new MouseActionList();
 		
 		fadeAways = new ArrayList<OverHeadFadeAway>();
 		fadeAwaysToAdd = new ArrayList<OverHeadFadeAway>();
@@ -172,7 +184,10 @@ public class MainViewer extends DesktopArea {
 		this.add(Game.areaViewer);
 		
 		this.add(mainPane);
-		if (Game.config.showFPS()) this.add(fpsCounter);
+		if (Game.config.showFPS()) {
+			this.add(fpsCounter);
+		}
+		
 		this.add(quickbarViewer);
 		this.add(portraitArea);
 		this.add(ticker);
@@ -192,9 +207,20 @@ public class MainViewer extends DesktopArea {
         mainPane.setMovementModeIcon();
 	}
 	
+	/**
+	 * Removes the text at the center top of the screen describing a targeter
+	 */
+	
 	public void clearTargetTitleText() {
 		targeterDescriptionModel.setHtml("");
 	}
+	
+	/**
+	 * Adds text to the center top of the screen for displaying the status of a targeter
+	 * @param line1 the main line, in large font
+	 * @param line2 a secondary line
+	 * @param line3 a tertiary line
+	 */
 	
 	public void setTargetTitleText(String line1, String line2, String line3) {
 		StringBuilder sb = new StringBuilder();
@@ -217,11 +243,31 @@ public class MainViewer extends DesktopArea {
 		targeterDescriptionModel.setHtml(sb.toString());
 	}
 	
+	/**
+	 * Gets the main pane that holds most of UI buttons as well as the message box and quickbar
+	 * @return the main pane
+	 */
+	
 	public MainPane getMainPane() { return mainPane; }
+	
+	/**
+	 * Gets the portrait area which holds all party member portraits
+	 * @return the portrait area
+	 */
 	
 	public PortraitArea getPortraitArea() { return portraitArea; }
 	
+	/**
+	 * Gets the viewer for the currently active player's quickbar
+	 * @return the quickbar viewer
+	 */
+	
 	public QuickbarViewer getQuickbarViewer() { return quickbarViewer; }
+	
+	/**
+	 * Gets the current area coordinate that the mouse is hovering over
+	 * @return the mouse grid point
+	 */
 	
 	public Point getMouseGridPoint() {
 		int x = Game.areaListener.getLastMouseX();
@@ -230,13 +276,32 @@ public class MainViewer extends DesktopArea {
 		return AreaUtil.convertScreenToGrid(x, y);
 	}
 	
+	/**
+	 * Sets the action for this widget to load a saved game file.  The action
+	 * will be initiated on main loop exit
+	 * @param loadGame
+	 */
+	
 	public void setLoadGame(String loadGame) {
 		this.action = new MainMenuAction(loadGame);
 	}
 	
+	/**
+	 * Sets the action to the specified mainMenu action.  The action will
+	 * be initiated on main loop exit
+	 * @param action
+	 */
+	
 	public void setMainMenuAction(MainMenuAction action) {
 		this.action = action;
 	}
+	
+	/**
+	 * Runs a loop for the purposes of loading a saved game file.  This loop
+	 * only shows the progress bar and waits on the loading task
+	 * @param loader
+	 * @param popup
+	 */
 	
 	public void runLoadingLoop(LoadingTaskList loader, LoadingWaitPopup popup) {
 		boolean running = true;
@@ -251,7 +316,11 @@ public class MainViewer extends DesktopArea {
 			
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			
-			gui.update();
+			try {
+				gui.update();
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error in GUI update", e);
+			}
 			
 			Display.update(false);
             GL11.glGetError();
@@ -264,6 +333,13 @@ public class MainViewer extends DesktopArea {
 		}
 	}
 	
+	/**
+	 * The entrance point for the main loop of the game.  Initializes the game
+	 * state and then runs the main loop, performing rendering and handling input
+	 * @param newGame true if this is a new game, false if this is a loaded game
+	 * @return the main menu action that should be performed by the caller
+	 */
+	
 	public MainMenuAction runCampaign(boolean newGame) {
 		addWidgets();
 		
@@ -272,32 +348,25 @@ public class MainViewer extends DesktopArea {
 		
 		isRunning = true;
 		
+		Game.curCampaign.party.validateItems();
+		
 		if (newGame) {
 			// load tileset
 			Game.curCampaign.getTileset(Game.curCampaign.curArea.getTileset()).loadTiles();
 			Game.curCampaign.curArea.getTileGrid().cacheSprites();
 			
-			for (Entity e : Game.curCampaign.curArea.getEntities()) {
-				e.resetAll();
-				if (e.getType() == Entity.Type.CREATURE) {
-					((Creature)e).getTimer().endTurn();
-				}
-			}
-			
 			Game.mainViewer.addMessage("red", "Entered area " + Game.curCampaign.curArea.getName());
 			Game.areaListener.nextTurn();
-			if (Game.curCampaign.getStartingMerchant() != null) {
-				ScriptInterface.showMerchant(Game.curCampaign.getStartingMerchant());
-			}
 			
 			Game.curCampaign.curArea.runOnAreaLoad(null);
 		}
 		
+		// scroll to the selected party member
 		updateContent(System.currentTimeMillis());
 		gui.update();
-		
 		Game.areaViewer.scrollToCreature(Game.curCampaign.party.getSelected());
 		
+		// run the main loop
 		while (isRunning) {
 			// load any async textures
 			Game.textureLoader.update();
@@ -305,20 +374,24 @@ public class MainViewer extends DesktopArea {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 			
-			long curTime = System.currentTimeMillis();
+			frameTime = System.currentTimeMillis();
 			
-			Game.areaViewer.update(curTime);
-			Game.particleManager.update(curTime);
-			Game.interfaceLocker.checkTime(curTime);
-			Game.timer.updateTime(curTime);
+			Game.areaViewer.update(frameTime);
+			Game.particleManager.update(frameTime);
+			Game.interfaceLocker.checkTime(frameTime);
+			Game.timer.updateTime(frameTime);
 			
 			if (menu.shouldPopupToggle()) {
 				menu.togglePopup();
 			}
 			
-			updateContent(curTime);
+			updateContent(frameTime);
 			
-			gui.update();
+			try {
+				gui.update();
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error in GUI update", e);
+			}
 			
             Display.update(false);
             GL11.glGetError();
@@ -339,12 +412,26 @@ public class MainViewer extends DesktopArea {
 		
 		Game.interfaceLocker.clear();
 		
-		if (action != null) return action;
-		else if (exitGame) return new MainMenuAction(MainMenuAction.Action.Exit);
-		else return new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
+		if (action != null) {
+			return action;
+		}
+		else if (exitGame) {
+			return new MainMenuAction(MainMenuAction.Action.Exit);
+		}
+		else {
+			return new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
+		}
 	}
 	
-	public void addFadeAway(String text, int x, int y, String color) {
+	/**
+	 * Adds an OverHeadFadeAway with the specified properties to this viewer
+	 * @param text the fade away text
+	 * @param x the x grid coordinate
+	 * @param y the y grid coordinate
+	 * @param color the text color
+	 */
+	
+	public void addFadeAway(String text, int x, int y, Color color) {
 		Point gridPoint = new Point(x, y);
 		
 		int offsetY = 0;
@@ -362,16 +449,46 @@ public class MainViewer extends DesktopArea {
 		}
 	}
 	
+	/**
+	 * Gets the time in milliseconds as of the last frame draw
+	 * @return the frame draw time in milliseconds
+	 */
+	
+	public long getFrameTime() {
+		return frameTime;
+	}
+	
+	/**
+	 * Returns the current list of overHeadFadeAways.  This list should
+	 * not be directly modified
+	 * @return the current overheadfadeAways
+	 */
+	
 	public List<OverHeadFadeAway> getFadeAways() { return fadeAways; }
+	
+	/**
+	 * Causes the mainViewer to exit the main loop on the next loop update,
+	 * exiting the program entirely
+	 */
 	
 	public void exitGame() {
 		this.isRunning = false;
 		this.exitGame = true;
 	}
 	
+	/**
+	 * Causes the mainViewer to exit the main loop on the next loop update,
+	 * exiting to the main menu
+	 */
+	
 	public void exitToMainMenu() {
 		this.isRunning = false;
 	}
+	
+	/**
+	 * Closes all open sub windows, sending the UI back to the base state
+	 * except for mainPane widgets
+	 */
 	
 	public void closeAllWindows() {
 		craftingWindow.setVisible(false);
@@ -383,11 +500,16 @@ public class MainViewer extends DesktopArea {
 		logWindow.setVisible(false);
 		
 		for (Entity entity : Game.curCampaign.curArea.getEntities()) {
-			entity.closeViewers();
+			entity.removeAllListeners();
 		}
 		
 		portraitArea.closeLevelUpWindows();
 	}
+	
+	/**
+	 * Sets the currently global active merchant
+	 * @param merchant
+	 */
 	
 	public void setMerchant(Merchant merchant) {
 		merchantWindow.setMerchant(merchant);
@@ -395,22 +517,46 @@ public class MainViewer extends DesktopArea {
 		updateInterface();
 	}
 	
+	/**
+	 * Returns the current mouse over, which is displaying some basic information
+	 * about the entity or transition on the hex that the mouse is currently over
+	 * @return the entity or transition mouse over
+	 */
+	
 	public EntityMouseover getMouseOver() { return mouseOver; }
+	
+	/**
+	 * Returns the right click menu that is used to show multiple default actions
+	 * or inventory actions to the player
+	 * @return the right click menu
+	 */
+	
 	public RightClickMenu getMenu() { return menu; }
 	
-	public void updateEntity(Entity e) {
-		if (e == null) return;
+	/**
+	 * Causes the specified entity to be updated on the next viewer refresh
+	 * @param entity
+	 */
+	
+	public void updateEntity(Entity entity) {
+		if (entity == null) return;
 		
 		synchronized(entityUpdateList) {
-			if (!entityUpdateList.contains(e)) {
-				entityUpdateList.add(e);
+			if (!entityUpdateList.contains(entity)) {
+				entityUpdateList.add(entity);
 			}
 		}
 		
-		if (e.isPlayerSelectable() || e == mouseOver.getSelectedEntity()) {
+		if (entity.isPlayerFaction() || entity == mouseOver.getSelectedEntity()) {
 			updateInterface();
 		}
 	}
+	
+	/**
+	 * Causes the specified popupwindow to be hidden on the next viewer
+	 * refresh.  This allows showing popups in a thread safe way.
+	 * @param popup
+	 */
 	
 	public void hidePopup(PopupWindow popup) {
 		synchronized(popupsToHide) {
@@ -418,15 +564,31 @@ public class MainViewer extends DesktopArea {
 		}
 	}
 	
+	/**
+	 * Causes the specified popup to be shown on the next viewer refresh.
+	 * This allows showing popups in a thread safe way.
+	 * @param popup
+	 */
+	
 	public void showPopup(PopupWindow popup) {
 		synchronized(popupsToShow) {
 			popupsToShow.add(popup);
 		}
 	}
 	
+	/**
+	 * Returns true if the player character should not be allowed to move due to open windows (such
+	 * as the merchant window), false otherwise
+	 * @return whether movement is blocked due to open windows
+	 */
+	
 	public boolean isMoveDisabledDueToOpenWindows() {
 		return (merchantWindow.isVisible() || containerWindow.isVisible() || craftingWindow.isVisible());
 	}
+	
+	/**
+	 * Causes the entire interface to be refreshed on the next mainviewer update
+	 */
 	
 	public void updateInterface() {
 		this.updateInterface = true;
@@ -476,12 +638,14 @@ public class MainViewer extends DesktopArea {
 				Entity e = entityUpdateList.get(i);
 				
 				Game.areaListener.checkKillEntity(e);
-				e.updateViewers();
+				e.updateListeners();
 			}
 			entityUpdateList.clear();
 		}
 		
 		if (updateInterface) {
+			//long startTime = System.nanoTime();
+			
 			this.updateInterface = false;
 			
 			characterWindow.updateContent(Game.curCampaign.party.getSelected());
@@ -507,6 +671,8 @@ public class MainViewer extends DesktopArea {
 			messageBox.update();
 			
 			Game.areaListener.getTargeterManager().checkCurrentTargeter();
+			
+			//System.out.println("Interface update in " + (System.nanoTime() - startTime) / 1e9);
 		}
 		
 		synchronized(this) {
@@ -514,13 +680,33 @@ public class MainViewer extends DesktopArea {
 		}
 	}
 	
+	/**
+	 * Sets the new quest entry.  This provides a flashing notification to the player
+	 * on the mainPane
+	 * @param entry
+	 */
+	
 	public void setNewQuestEntry(QuestEntry entry) {
 		this.newQuestEntry = entry;
 	}
 	
+	/**
+	 * Adds the specified message to the MessageBox
+	 * @param text
+	 */
+	
 	public void addMessage(String text) {
 		messageBox.addMessage("black", text);
+		
+		updateInterface();
 	}
+	
+	/**
+	 * Adds the specified message, formatted in the specified font to
+	 * the MessageBox
+	 * @param font
+	 * @param text
+	 */
 	
 	public void addMessage(String font, String text) {
 		messageBox.addMessage(font, text);
@@ -528,32 +714,23 @@ public class MainViewer extends DesktopArea {
 		updateInterface();
 	}
 	
+	/**
+	 * Gets the complete contents of the message box as a string.  Occasionally useful
+	 * for debugging purposes
+	 * @return the message box contents
+	 */
+	
 	public String getMessageBoxContents() {
 		return messageBox.getContents();
 	}
 	
+	/**
+	 * Returns the active set of key bindings, which provide shortcuts to some functions
+	 * @return the active set of key bindings
+	 */
+	
 	public Keybindings getKeyBindings() {
 		return keyBindings;
-	}
-	
-	public void quickSave() {
-		Game.mainViewer.updateInterface();
-		
-		if (Game.isInTurnMode() || Game.curCampaign.party.isDefeated()) {
-			Game.mainViewer.addMessage("red", "You cannot save the game while in combat mode.");
-			return;
-		}
-		
-		File fout = SaveGameUtil.getNextQuickSaveFile();
-		
-		try {
-			SaveGameUtil.saveGame(fout);
-			Game.mainViewer.addMessage("link", "Quicksave successful.");
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Error when quicksaving to " + fout.getPath(), e);
-			Game.mainViewer.addMessage("red", "Error saving game!");
-			fout.delete();
-		}
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
@@ -575,7 +752,6 @@ public class MainViewer extends DesktopArea {
 		
 		mainPane.setSize(getInnerWidth(), mainPane.getPreferredHeight());
 		mainPane.setPosition(getInnerX(), getInnerBottom() - mainPane.getHeight());
-		//mainPane.update(); // update end turn button
 		
 		int centerX = getInnerX() + getInnerWidth() / 2;
 		
@@ -665,6 +841,12 @@ public class MainViewer extends DesktopArea {
     		}
     	}
     }
+    
+    /**
+     * Gets the total amount of video texture memory, in bytes, that has been
+     * allocated by the SpriteManager
+     * @return the total amount of texture memory
+     */
     
     public long getTextureMemoryUsage() {
     	return SpriteManager.getTextureMemoryUsage();

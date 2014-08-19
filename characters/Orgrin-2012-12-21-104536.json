@@ -1,0 +1,65 @@
+{
+  "name" : "Orgrin",
+  "isPregenerated" : true,
+  "gender" : "Male",
+  "race" : "Dwarf",
+  "portrait" : "Dwarf\/aiglondur",
+  "icon" : {
+    "skinColor" : "#fff6d39b",
+    "clothingColor" : "#ffffff00",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair002",
+        "color" : "#ff8b5a00"
+      }, {
+        "type" : "Beard",
+        "sprite" : "subIcons\/beard002",
+        "color" : "#ffffa500"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 13,
+    "dexterity" : 9,
+    "constitution" : 15,
+    "intelligence" : 10,
+    "wisdom" : 17,
+    "charisma" : 11
+  },
+  "skills" : {
+    "CraftArmor" : 5,
+    "Speech" : 5
+  },
+  "abilities" : [
+    {
+      "id" : "DivineLuck",
+      "levelObtained" : 1
+    }, {
+      "id" : "Cure",
+      "levelObtained" : 1
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Priest",
+    "Priest" : 1
+  },
+  "inventory" : {
+    "equipped" : {
+      "Armor" : {
+        "id" : "armor_clothes"
+      }
+    },
+    "unequipped" : [
+      
+    ]
+  },
+  "unspentSkillPoints" : 0,
+  "experiencePoints" : 0,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+
+    }
+  }
+}

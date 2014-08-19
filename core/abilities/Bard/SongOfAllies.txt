@@ -1,9 +1,0 @@
-name "Song of Allies"
-type "Bard Abilities"
-description "The Song of Allies upgrades all of your Bardsongs.  All allies within 40 feet of the Bard gain a bonus to Constitution of one point per two points of Charisma above 10 when you sing any bardsong."
-activateable false
-
-icon "icons/songOfAllies"
-
-addPrereq Ability SongOfLuck
-addPrereq Role Bard 5

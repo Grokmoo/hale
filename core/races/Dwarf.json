@@ -1,8 +1,7 @@
 { "name" : "Dwarf",
   "icon" : "icons/dwarf",
-  "size" : "Medium",
   "baseMovementCost" : 1250,
-  "unarmedWeapon" : "unarmedMedium",
+  "defaultWeapon" : "unarmedMedium",
   "playerSelectable" : true,
   
   "baseAttributes" : [ 10, 9, 12, 10, 10, 9 ],

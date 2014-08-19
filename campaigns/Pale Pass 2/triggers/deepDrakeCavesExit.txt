@@ -1,3 +1,0 @@
-area "Deep Drake Caves"
-script "triggers/deepDrakeCavesExit"
-addPoints   48 9   47 9   47 10   48 11   48 10

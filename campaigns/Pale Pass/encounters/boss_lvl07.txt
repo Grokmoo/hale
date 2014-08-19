@@ -1,8 +1,0 @@
-size 2
-faction "Neutral"
-challenge 65
-creature "boss_lvl07" 0 1
-creature "boss_lvl07_priest" -1 -1
-creature "boss_lvl07_mage" 1 -1
-creature "boss_lvl07_warrior" -1 0
-creature "boss_lvl07_warrior" 1 0

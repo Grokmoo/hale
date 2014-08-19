@@ -40,6 +40,7 @@ import de.matthiasmann.twl.Widget;
  */
 
 public class InitiativeTicker extends Widget {
+	private int minViewerGap;
 	private int viewerGap;
 	private String enabledTooltip, disabledTooltip;
 	
@@ -67,36 +68,52 @@ public class InitiativeTicker extends Widget {
 		
 		if (!Game.isInTurnMode()) return;
 		
-		// add the first creature and determine the number of creatures that will fit in
-		// this ticker
-		List<Creature> creatures = Game.areaListener.getCombatRunner().getNextCreatures(1);
-		CreatureViewer viewer = new CreatureViewer(creatures.get(0), 0);
+		// get the list of upcoming creatures - we will not use the whole list as the size of
+		// a viewer is greater than TILE_SIZE, but we don't know exactly how many we need yet
+		int numCreatures = getInnerHeight() / Game.TILE_SIZE;
+		List<Creature> creatures = Game.areaListener.getCombatRunner().getNextCreatures(numCreatures);
+		
+		int heightSoFar = 0;
+		
+		// add the first (active) creature
+		int index = 0;
+		CreatureViewer viewer = new CreatureViewer(creatures.get(index), index);
 		viewers.add(viewer);
-		add(viewer);
+		this.add(viewer);
+		heightSoFar += viewer.getPreferredHeight() + minViewerGap;
 		
 		// set tooltip and active state
-		if (viewer.creature.isPlayerSelectable()) {
+		if (viewer.creature.isPlayerFaction()) {
 			viewer.setActive(true);
 			
-			if (!viewer.creature.getTimer().hasTakenAnAction()) {
+			if (!viewer.creature.timer.hasTakenAnAction()) {
 				viewer.setTooltipContent(enabledTooltip);
 			} else {
 				viewer.setTooltipContent(disabledTooltip);
 			}
 		}
 		
-		int numCreatures = getInnerHeight() / (viewer.getPreferredHeight() + viewerGap);
-		
-		// get the list of creatures and create the viewers
-		creatures = Game.areaListener.getCombatRunner().getNextCreatures(numCreatures);
-		
-		// already read the first creature
-		for (int index = 1; index < creatures.size(); index++) {
+		for (index = 1; index < creatures.size(); index++) {
 			viewer = new CreatureViewer(creatures.get(index), index);
+			
+			heightSoFar += viewer.getPreferredHeight();
+			if (heightSoFar > getInnerHeight()) {
+				// we didn't actually use this height
+				heightSoFar -= viewer.getPreferredHeight();
+				break;
+			}
 			
 			viewers.add(viewer);
 			add(viewer);
+			
+			heightSoFar += minViewerGap;
 		}
+		
+		// now determine what the viewer gap should be to evenly fill out any extra space
+		// at the bottom of the ticker
+		int extraSpace = getInnerHeight() - heightSoFar;
+		
+		viewerGap = minViewerGap + extraSpace / (viewers.size() - 1);
 	}
 	
 	@Override public int getPreferredWidth() {
@@ -131,7 +148,7 @@ public class InitiativeTicker extends Widget {
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
 		
-		viewerGap = themeInfo.getParameter("viewerGap", 0);
+		minViewerGap = themeInfo.getParameter("minViewerGap", 0);
 		
 		enabledTooltip = themeInfo.getParameter("enabledTooltip", (String)null);
 		disabledTooltip = themeInfo.getParameter("disabledTooltip", (String)null);
@@ -156,7 +173,7 @@ public class InitiativeTicker extends Widget {
 		}
 		
 		@Override public int getPreferredHeight() {
-			return Game.TILE_SIZE + getBorderVertical();
+			return creature.getTemplate().getInitiativeTickerHeight() + getBorderVertical();
 		}
 		
 		@Override public boolean handleEvent(Event evt) {
@@ -170,6 +187,8 @@ public class InitiativeTicker extends Widget {
 			case MOUSE_BTNUP:
 				checkMouseDragRelease();
 				break;
+			default:
+				// do nothing
 			}
 			
 			return super.handleEvent(evt);
@@ -184,7 +203,7 @@ public class InitiativeTicker extends Widget {
 		
 		private void checkMouseDrag(Event evt) {
 			// don't allow repositioning for creatures without full AP
-			if (creature.getTimer().hasTakenAnAction()) return;
+			if (creature.timer.hasTakenAnAction()) return;
 			
 			// check for movement up the list
 			for (int i = 0; i < currentIndex; i++) {
@@ -208,7 +227,13 @@ public class InitiativeTicker extends Widget {
 				// don't allow moving this creature's place next turn
 				if (viewers.get(i).creature == this.creature) break;
 				
-				if (viewers.get(i).isMouseInside(evt)) {
+				// to prevent an issue where the mouse is within the target but on layout the
+				// target changes, adjust by the height difference
+				// this prevents problems where the dragged widget can appear to rapidly go
+				// back and forth between positions
+				int yCheck = evt.getMouseY() + this.getHeight() - viewers.get(i).getHeight();
+				
+				if (yCheck >= viewers.get(i).getY() && yCheck <= viewers.get(i).getBottom()) {
 					placesForwardDrag += i - currentIndex;
 					
 					// add the viewer at the current position
@@ -230,7 +255,7 @@ public class InitiativeTicker extends Widget {
 		@Override public void paintWidget(GUI gui) {
 			super.paintWidget(gui);
 			
-			creature.draw(getInnerX(), getInnerY());
+			creature.uiDraw(getInnerX(), getInnerY());
 		}
 	}
 }

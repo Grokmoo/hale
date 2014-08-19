@@ -1,3 +1,0 @@
-area "Mushroom Forest"
-script "triggers/mushroomForestSlaversEnter"
-addPoints   62 4   60 4   59 3   61 3   58 4

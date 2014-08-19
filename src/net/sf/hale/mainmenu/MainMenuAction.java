@@ -55,9 +55,6 @@ public class MainMenuAction {
 		/** Shows the main menu without recreating the display mode */
 		ShowMainMenu,
 		
-		/** Launch the game editor and transfer control to the main loop of that Object. */
-		LaunchEditor,
-		
 		/** Starts a new game from scratch using the currently selected game and party */
 		NewGame,
 		

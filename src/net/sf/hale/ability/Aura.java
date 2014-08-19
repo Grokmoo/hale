@@ -135,7 +135,7 @@ public class Aura extends Effect {
 		
 		int height = Game.curCampaign.curArea.getHeight();
 		int width = Game.curCampaign.curArea.getWidth();
-		Point center = ((Entity)getTarget()).getPosition();
+		Point center = ((Entity)getTarget()).getLocation().toPoint();
 		
 		ArrayList<Point> points = new ArrayList<Point>();
 		

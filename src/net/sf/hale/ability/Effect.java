@@ -20,11 +20,16 @@
 package net.sf.hale.ability;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
+import net.sf.hale.HasScriptState;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.bonus.BonusList;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
@@ -50,7 +55,7 @@ import net.sf.hale.util.SimpleJSONObject;
  *
  */
 
-public class Effect extends Scriptable implements Saveable {
+public class Effect extends Scriptable implements Saveable, HasScriptState {
 	private String title;
 	private int duration;
 	private boolean removeOnDeactivate;
@@ -59,6 +64,7 @@ public class Effect extends Scriptable implements Saveable {
 	private EffectTarget target;
 	private AbilitySlot slot;
 	private BonusList bonuses;
+	private List<Icon> icons;
 	
 	private List<Animated> animations;
 
@@ -70,6 +76,14 @@ public class Effect extends Scriptable implements Saveable {
 		data.put("ref", SaveGameUtil.getRef(this));
 		
 		if (title != null) data.put("title", title);
+		
+		if (icons.size() > 0) {
+			Object[] iconsData = new Object[icons.size()];
+			for (int i = 0; i < iconsData.length; i++) {
+				iconsData[i] = icons.get(i).save();
+			}
+			data.put("icons", iconsData);
+		}
 		
 		data.put("duration", duration);
 		data.put("removeOnDeactivate", removeOnDeactivate);
@@ -144,6 +158,13 @@ public class Effect extends Scriptable implements Saveable {
 		if (data.containsKey("title"))
 			effect.title = data.get("title", null);
 		
+		if (data.containsKey("icons")) {
+			SimpleJSONArray iconsData = data.getArray("icons");
+			for (SimpleJSONArrayEntry entry : iconsData) {
+				effect.icons.add(IconFactory.createIcon(entry.getObject()));
+			}
+		}
+		
 		effect.duration = data.get("duration", 0);
 		effect.removeOnDeactivate = data.get("removeOnDeactivate", false);
 		effect.hasDescription = data.get("hasDescription", false);
@@ -180,7 +201,7 @@ public class Effect extends Scriptable implements Saveable {
 		}
 		
 		if (data.containsKey("scriptState"))
-			effect.scriptState = ScriptState.load(data.getObject("scriptState"));
+			effect.scriptState.load(data.getObject("scriptState"));
 		
 		// don't start animations on any effects yet
 		
@@ -198,6 +219,7 @@ public class Effect extends Scriptable implements Saveable {
 		this.bonuses = new BonusList();
 		this.title = "Effect";
 		this.hasDescription = true;
+		this.icons = new ArrayList<Icon>();
 		
 		this.animations = new ArrayList<Animated>(1);
 		this.childEffects = new ArrayList<Effect>(1);
@@ -221,7 +243,7 @@ public class Effect extends Scriptable implements Saveable {
 		super(ResourceManager.getScriptResourceAsString(scriptID), scriptID, false);
 		this.bonuses = new BonusList();
 		this.hasDescription = true;
-		
+		this.icons = new ArrayList<Icon>();
 		this.animations = new ArrayList<Animated>(1);
 		this.childEffects = new ArrayList<Effect>(1);
 		
@@ -241,7 +263,7 @@ public class Effect extends Scriptable implements Saveable {
 		this.bonuses = new BonusList(other.bonuses);
 		this.duration = other.duration;
 		this.title = other.title;
-		
+		this.icons = new ArrayList<Icon>(other.icons);
 		this.scriptState = new ScriptState(other.scriptState);
 		
 		this.animations = new ArrayList<Animated>(1);
@@ -256,6 +278,45 @@ public class Effect extends Scriptable implements Saveable {
 	
 	public void setHasDescription(boolean hasDescription) {
 		this.hasDescription = hasDescription;
+	}
+	
+	/**
+	 * Adds a simple icon with the specified sprite ID and a red tint
+	 * denoting a negative effect to this effect
+	 * @param imageID
+	 */
+	
+	public void addNegativeIcon(String imageID) {
+		this.icons.add(IconFactory.createIcon(imageID, Color.RED));
+	}
+	
+	/**
+	 * Adds a simple icon with the specified sprite ID and a blue / green tint
+	 * denoting a positive effect to this effect
+	 * @param imageID
+	 */
+	
+	public void addPositiveIcon(String imageID) {
+		this.icons.add(IconFactory.createIcon(imageID, Color.AQUA));
+	}
+	
+	/**
+	 * Adds the simple icon with the specified sprite ID to the list of
+	 * icons for this effect
+	 * @param imageID
+	 */
+	
+	public void addIcon(String imageID) {
+		this.icons.add(IconFactory.createIcon(imageID));
+	}
+	
+	/**
+	 * Adds all the icons for this effect to the specified collection of icons
+	 * @param icons 
+	 */
+	
+	public void getIcons(Collection<Icon> icons) {
+		icons.addAll(this.icons);
 	}
 	
 	/**
@@ -387,6 +448,21 @@ public class Effect extends Scriptable implements Saveable {
 	}
 	
 	/**
+	 * Returns all child effects of this effect
+	 * @return all child effects
+	 */
+	
+	public List<Effect> getChildEffects() {
+		List<Effect> effects = new ArrayList<Effect>();
+		
+		for (Effect effect : childEffects) {
+			effects.add(effect);
+		}
+		
+		return effects;
+	}
+	
+	/**
 	 * Returns the child effect from this Effect's list of children added via {@link #addChildEffect(Effect)} with
 	 * the specified target, or null if no matching Effect is found
 	 * @param target the EffectTarget for the returned Effect
@@ -456,6 +532,7 @@ public class Effect extends Scriptable implements Saveable {
 	
 	public void startAnimations() {
 		for (Animated animation : this.animations) {
+			
 			Game.particleManager.add(animation);
 		}
 	}
@@ -498,7 +575,7 @@ public class Effect extends Scriptable implements Saveable {
 		if (!hasDescription) return;
 		
 		sb.append("<div style=\"margin-top: 1em;\">");
-		sb.append("<span style=\"font-family: vera;\">");
+		sb.append("<span style=\"font-family: medium;\">");
 		sb.append(this.title).append("</span>");
 		
 		if (this.duration != 0) {

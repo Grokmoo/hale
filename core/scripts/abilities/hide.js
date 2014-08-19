@@ -1,13 +1,14 @@
 function onActivate(game, slot) {
 	var effect = slot.createEffect();
 	effect.setTitle(slot.getAbility().getName());
+	effect.addPositiveIcon("items/enchant_invisibility_small");
 	effect.setRemoveOnDeactivate(true);
 	effect.getBonuses().add('Hidden');
 	
 	var g1 = game.getBaseParticleGenerator("sparkle");
 	g1.setDurationInfinite();
 	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(slot.getParent().getPosition());
+	g1.setPosition(slot.getParent().getLocation());
 	g1.setBlueDistribution(game.getFixedDistribution(0.0));
 	g1.setRedDistribution(game.getFixedDistribution(0.0));
 	g1.setGreenDistribution(game.getFixedDistribution(0.0));
@@ -17,7 +18,7 @@ function onActivate(game, slot) {
 	slot.getParent().applyEffect(effect);
 	slot.activate();
 	
-	if (slot.getParent().getAbilities().has("HideInPlainSight"))
+	if (slot.getParent().abilities.has("HideInPlainSight"))
 		game.performSearchChecksForCreature(slot.getParent(), 0);
 	else
 		game.performSearchChecksForCreature(slot.getParent(), game.ruleset().getValue("HideInPlainSightPenalty"));

@@ -1,4 +1,6 @@
 function onUse(game, item, target) {
+	game.put("playerMustDrinkPotion", false);
+
     var quality = item.getQuality().getModifier() + 100;
 
     var hp = game.dice().d((10 * quality) / 100, 3);
@@ -7,11 +9,11 @@ function onUse(game, item, target) {
     
     target.healDamage(hp);
     
-    target.getInventory().removeItem(item);
+    target.inventory.remove(item);
     
     game.ai.provokeAttacksOfOpportunity(target);
 
-	var cb = item.getScript().createDelayedCallback("showTutorial");
+	var cb = item.getTemplate().getScript().createDelayedCallback("showTutorial");
 	cb.setDelay(0.7);
 	cb.start();
 }
@@ -28,4 +30,6 @@ function showTutorial(game) {
     var subEntry = tutQuest.createSubEntry("Abilities");
     subEntry.setShowTitle(false);
     subEntry.addExternalText("tutorial/tutorial_15.html");
+	
+	game.put("playerMustUseAbility", true);
 }

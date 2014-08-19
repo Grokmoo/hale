@@ -20,5 +20,5 @@ function askLeave(game, parent, talker, conversation) {
 
 function onExit(game, parent, talker, conversation) {
     conversation.exit();
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
 }

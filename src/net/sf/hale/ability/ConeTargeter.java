@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 import de.matthiasmann.twl.AnimationState;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -46,7 +48,7 @@ public class ConeTargeter extends AreaTargeter {
 	 * @param slot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public ConeTargeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot slot) {
+	public ConeTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 		
 		hasVisibilityCriterion = true;
@@ -64,6 +66,15 @@ public class ConeTargeter extends AreaTargeter {
 
 	/**
 	 * Sets the origin point for the cone drawn by this ConeTargeter
+	 * @param location the origin point
+	 */
+	
+	public void setOrigin(Location location) {
+		setOrigin(location.toPoint());
+	}
+	
+	/**
+	 * Sets the origin point for the cone drawn by this ConeTargeter
 	 * to the specified grid point
 	 * @param origin the origin point for the Cone
 	 */
@@ -73,7 +84,7 @@ public class ConeTargeter extends AreaTargeter {
 		this.screenOrigin = AreaUtil.convertGridToScreenAndCenter(origin);
 		
 		visible = Game.curCampaign.curArea.getMatrixOfSize();
-		Game.areaListener.getAreaUtil().setVisibilityWithRespectToPosition(visible, gridOrigin);
+		Game.curCampaign.curArea.getUtil().setVisibilityWithRespectToPosition(visible, gridOrigin);
 	}
 	
 	/**
@@ -139,13 +150,13 @@ public class ConeTargeter extends AreaTargeter {
 		
 		// compute the end point of the first edge of the cone
 		double curAngle = lineAngle + (coneAngle / 2.0) * (Math.PI / 180.0);
-		Point lineStart = new Point(screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(curAngle),
-				screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(curAngle));
+		double lineStartX = screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(curAngle);
+		double lineStartY = screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(curAngle);
 
 		// compute the end point of the second edge of the cone
 		curAngle = lineAngle - (coneAngle / 2.0) * (Math.PI / 180.0);
-		Point lineEnd = new Point(screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(curAngle),
-				screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(curAngle));
+		double lineEndX = screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(curAngle);
+		double lineEndY = screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(curAngle);
 		
 		// now iterate around the edge of the circle centered on the origin
 		// when we pass through one of the edge points specified by lineStart and lineEnd,
@@ -159,7 +170,7 @@ public class ConeTargeter extends AreaTargeter {
 				Point screen = AreaUtil.convertGridToScreen(grid);
 
 				if (AreaUtil.lineSegmentIntersectsHex(screen.x, screen.y,
-						screenOrigin.x, screenOrigin.y, lineStart.x, lineStart.y))
+						screenOrigin.x, screenOrigin.y, (int)lineStartX, (int)lineStartY))
 					foundStart = true;
 
 				if (foundStart) {
@@ -168,7 +179,7 @@ public class ConeTargeter extends AreaTargeter {
 					}
 
 					if (AreaUtil.lineSegmentIntersectsHex(screen.x, screen.y,
-							screenOrigin.x, screenOrigin.y, lineEnd.x, lineEnd.y))
+							screenOrigin.x, screenOrigin.y, (int)lineEndX, (int)lineEndY))
 						foundEnd = true;
 				}
 
@@ -181,8 +192,10 @@ public class ConeTargeter extends AreaTargeter {
 		}
 
 		// compute the ending point
-		screenEnd = new Point(screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(lineAngle),
-				screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(lineAngle));
+		double screenEndX = screenOrigin.x + lineLength * Game.TILE_SIZE * Math.sin(lineAngle);
+		double screenEndY = screenOrigin.y + lineLength * Game.TILE_SIZE * Game.TILE_RATIO * Math.cos(lineAngle);
+		
+		screenEnd = new Point((int)screenEndX, (int)screenEndY);
 
 		gridEnd = AreaUtil.convertScreenToGrid(screenEnd);
 	}
@@ -202,8 +215,10 @@ public class ConeTargeter extends AreaTargeter {
 		return false;
 	}
 	
-	@Override public void draw(AnimationState as) {
-		super.draw(as);
+	@Override public boolean draw(AnimationState as) {
+		if (!super.draw(as)) {
+			return false;
+		}
 		
 		double coneAngleOver2 = (coneAngle / 2.0) * (Math.PI / 180.0);
 		
@@ -219,5 +234,7 @@ public class ConeTargeter extends AreaTargeter {
 		GL11.glEnd();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		return true;
 	}
 }

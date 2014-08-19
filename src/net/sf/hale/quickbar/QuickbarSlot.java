@@ -19,11 +19,9 @@
 
 package net.sf.hale.quickbar;
 
-import de.matthiasmann.twl.Color;
-
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.Saveable;
 
 /**
@@ -36,41 +34,54 @@ import net.sf.hale.loading.Saveable;
  */
 
 public abstract class QuickbarSlot implements Saveable {
+	
+	private int index; // the quickbar slot index
+	
 	/**
-	 * Returns the Sprite that should be displayed by the viewer for this
+	 * Creates a new quickbar slot
+	 */
+	
+	protected QuickbarSlot() {
+		this.index = -1;
+	}
+	
+	/**
+	 * Sets the index of this slot to the specified quickbar slot index.  This method
+	 * must only be called by the parent quickbar when this slot is added
+	 * @param index
+	 */
+	
+	protected void setIndex(int index) {
+		this.index = index;
+	}
+	
+	/**
+	 * Returns the slot index of this quickbar slot inside of it's parent quickbar,
+	 * or -1 if the index has not been set
+	 * @return the slot index of this quickbar slot
+	 */
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	/**
+	 * Returns the Icon that should be displayed by the viewer for this
 	 * QuickbarSlot.
 	 * 
-	 * @return the Sprite associated with this QuickbarSlot
+	 * @return the Icon associated with this QuickbarSlot
 	 */
 	
-	public abstract Sprite getSprite();
+	public abstract Icon getIcon();
 	
 	/**
-	 * Returns the Color that the specified Sprite should be drawn by the
-	 * viewer for this QuickbarSlot.
-	 * 
-	 * @return the Color for the associated Sprite
-	 */
-	
-	public abstract Color getSpriteColor();
-	
-	/**
-	 * Returns the secondary Sprite that should be displayed by the viewer for this
+	 * Returns the secondary Icon that should be displayed by the viewer for this
 	 * QuickbarSlot, if one exists.
 	 * 
-	 * @return the secondary Sprite
+	 * @return the secondary Icon
 	 */
 	
-	public abstract Sprite getSecondarySprite();
-	
-	/**
-	 * Returns the color that the secondary sprite should be drawn by the viewer for
-	 * this QuickbarSlot
-	 * 
-	 * @return the Color for the secondary Sprite.
-	 */
-	
-	public abstract Color getSecondarySpriteColor();
+	public abstract Icon getSecondaryIcon();
 	
 	/**
 	 * Returns the text that will be displayed on the left side of the
@@ -115,20 +126,23 @@ public abstract class QuickbarSlot implements Saveable {
 	 * Activates this QuickbarSlot and performs some action, such as equipping an
 	 * item, using an item, or activating an ability.  If the slot is not currently
 	 * activateable, performs no action
+	 * @param button the button associated with this slot
 	 */
 	
-	public final void activate() {
+	public final void activate(QuickbarSlotButton button) {
 		if (Game.areaListener.getTargeterManager().isInTargetMode()) return;
 		
-		childActivate();
+		childActivate(button);
 	}
 	
 	/**
-	 * Called by {@link #activate()} if the slot meets general activateability
+	 * Called by {@link #activate(QuickbarSlotButton)} if the slot meets general activateability
 	 * criterion.  This method must be overridden by child slots.
+	 * 
+	 * @param parent the button that was used to activate this slot
 	 */
 	
-	protected abstract void childActivate();
+	protected abstract void childActivate(QuickbarSlotButton parent);
 	
 	/**
 	 * Creates the right click menu for this QuickbarSlot and adds the set of
@@ -151,5 +165,5 @@ public abstract class QuickbarSlot implements Saveable {
 	 * @return a new QuickbarSlot
 	 */
 	
-	public abstract QuickbarSlot getCopy(Creature parent);
+	public abstract QuickbarSlot getCopy(PC parent);
 }

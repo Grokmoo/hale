@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,15 +30,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
-import net.sf.hale.util.LineParser;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -64,7 +64,7 @@ public class SpriteManager {
 	public static void loadSpriteSheets() {
 		Set<String> resources = ResourceManager.getResourcesInDirectory("images");
 		for (String resource : resources) {
-			if (resource.endsWith(ResourceType.SpriteSheet.getExtension())) {
+			if (resource.endsWith(ResourceType.JSON.getExtension())) {
 				SpriteManager.readSpriteSheet(resource);
 			}
 		}
@@ -94,102 +94,79 @@ public class SpriteManager {
 	 */
 	
 	public static List<String> readSpriteSheet(String resource) {
-		List<String> images = new ArrayList<String>();
-		
-		int defaultWidth = 0;
-		int defaultHeight = 0;
-		int multiplyValuesBy = 1;
-		String sheetName = null;
-		Sprite spriteSheet = null;
-		
 		List<Sprite> spritesToLoad = new ArrayList<Sprite>();
 		ByteBufferSized pixelData = null;
-		
 		String parent = new File(resource).getParent().replace('\\', '/');
+		List<String> images = new ArrayList<String>();
 		
-		int lineNumber = 0;
+		SimpleJSONParser parser = new SimpleJSONParser(resource);
 		
-		try {
-			Scanner sFile = ResourceManager.getScanner(resource);
+		int gridSize = parser.get("gridSize", 0);
+		
+		String source = parser.get("source", null);
+		// category is a mapping between source, and reference.
+		String category = parser.get("category", null);
+		String mapping = category != null ? category : source;
+		pixelData = SpriteManager.loadPixels(parent + "/" + source + ".png");
+		Sprite spriteSheet = new Sprite(0, pixelData.width, pixelData.height);
+		spritesToLoad.add(spriteSheet);
+		
+		SimpleJSONObject imagesIn = parser.getObject("images");
+		
+		for (String imageID : imagesIn.keySet()) {
+			SimpleJSONArray imageIn = imagesIn.getArray(imageID);
 			
-			LineParser sLine;
-			String line;
+			Iterator<SimpleJSONArrayEntry> iter = imageIn.iterator();
 			
-			while (sFile.hasNextLine()) {
-				line = sFile.nextLine();
-				sLine = new LineParser(line);
-				lineNumber++;
-
-				if (!sLine.hasNext()) continue;
-
-				String name = sLine.next().toLowerCase();
-
-				if (name.equals("spritesheet")) {
-					sheetName = sLine.next();
-
-					pixelData = SpriteManager.loadPixels(parent + "/" + sheetName + ".png");
-					spriteSheet = new Sprite(0, pixelData.width, pixelData.height);
-					spritesToLoad.add(spriteSheet);
-				} else if (name.equals("defaultwidth")) {
-					defaultWidth = sLine.nextInt();
-				} else if (name.equals("defaultheight")) {
-					defaultHeight = sLine.nextInt();
-				} else if (name.equals("multiplyvaluesby")) {
-					multiplyValuesBy = sLine.nextInt();
-				} else if (name.equals("image")) {
-					if (spriteSheet == null)
-						throw new ParseException("Found an image tag but spritesheet has not been set",
-								lineNumber);
-
-					String imageName = sLine.next();
-
-					int posX = sLine.nextInt() * multiplyValuesBy;
-					int posY = sLine.nextInt() * multiplyValuesBy;
-					int width = defaultWidth;
-					int height = defaultHeight;
-
-					if (sLine.hasNext()) {
-						width = sLine.nextInt() * multiplyValuesBy;
-						height = sLine.nextInt() * multiplyValuesBy;
-					}
-
-					String ref = parent + "/" + sheetName + "/" + imageName + ".png";
-
-					double texCoordStartX = (double)posX / (double)spriteSheet.getWidth();
-					double texCoordStartY = (double)posY / (double)spriteSheet.getHeight();
-					double texCoordEndX = (double)(posX + width) / (double)spriteSheet.getWidth();
-					double texCoordEndY = (double)(posY + height) / (double)spriteSheet.getHeight();
-
-					Sprite sprite = new Sprite(spriteSheet.getTextureImage(), width, height,
-							texCoordStartX, texCoordStartY, texCoordEndX, texCoordEndY);
-					images.add(sheetName + "/" + imageName);
-
-					if (sprites.containsKey(ref)) {
-						Logger.appendToWarningLog("Warning, overwriting sprite " + ref);
-					}
-					sprites.put(ref, sprite);
-
-					spritesToLoad.add(sprite);
-				}
+			int x = iter.next().getInt(0);
+			int y = iter.next().getInt(0);
+			
+			int w;
+			int h;
+			// either classic definition x,y,w,h, or grid position row, column
+			if (iter.hasNext()) {
+				w = iter.next().getInt(0);
+				h = iter.next().getInt(0);
+			} else {
+				w = gridSize;
+				h = gridSize;
+				x *= gridSize;
+				y *= gridSize;
 			}
+			
+			String reference = parent + "/" + mapping + "/" + imageID + ".png";
 
-			String ref = parent + "/" + sheetName;
-			
-			// load the sprite texture for this spritesheet asynchronously
-			Game.textureLoader.loadTexture(pixelData.pixels, pixelData.width,
-					pixelData.height, spritesToLoad);
-			
-			if (spriteSheets.containsKey(ref)) {
-				Logger.appendToWarningLog("Warning, SpriteSheet " + ref +
-						" is being overwritten.  This is a texture memory leak.");
+			// compute the texture coordinates
+			double texCoordStartX = (double)x / (double)spriteSheet.getWidth();
+			double texCoordStartY = (double)y / (double)spriteSheet.getHeight();
+			double texCoordEndX = (double)(x + w) / (double)spriteSheet.getWidth();
+			double texCoordEndY = (double)(y + h) / (double)spriteSheet.getHeight();
+
+			// add the sprite
+			Sprite sprite = new Sprite(spriteSheet.getTextureReference(), w, h,
+					texCoordStartX, texCoordStartY, texCoordEndX, texCoordEndY);
+			images.add(mapping + "/" + imageID);
+
+			if (sprites.containsKey(reference)) {
+				Logger.appendToWarningLog("Warning, overwriting sprite " + reference);				
 			}
-			spriteSheets.put(ref, spriteSheet);
-			
-			sFile.close();
-			
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Unable to read spritesheet " + resource + " on line " + lineNumber, e);
+			sprites.put(reference, sprite);
+
+			spritesToLoad.add(sprite);
 		}
+		
+		// now save the spritesheet as its own sprite
+		String reference = parent + "/" + source;
+		
+		// load the sprite texture for this spritesheet asynchronously
+		Game.textureLoader.loadTexture(pixelData.pixels, pixelData.width,
+				pixelData.height, spritesToLoad);
+		
+		if (spriteSheets.containsKey(reference)) {
+			Logger.appendToWarningLog("Warning, SpriteSheet " + reference +
+					" is being overwritten.  This is a texture memory leak.");
+		}
+		spriteSheets.put(reference, spriteSheet);
 		
 		return images;
 	}
@@ -360,7 +337,7 @@ public class SpriteManager {
 		for (String id : spriteSheets.keySet()) {
 			Sprite spriteSheet = spriteSheets.get(id);
 			
-			Integer texture = spriteSheet.getTextureImage();
+			Integer texture = spriteSheet.getTextureReference();
 			if (!deletedTextures.contains(texture)) {
 				GL11.glDeleteTextures(texture);
 				deletedTextures.add(texture);
@@ -370,7 +347,7 @@ public class SpriteManager {
 		for (String id : sprites.keySet()) {
 			Sprite sprite = sprites.get(id);
 			
-			Integer texture = sprite.getTextureImage();
+			Integer texture = sprite.getTextureReference();
 			if (!deletedTextures.contains(texture)) {
 				GL11.glDeleteTextures(texture);
 				deletedTextures.add(texture);
@@ -388,14 +365,14 @@ public class SpriteManager {
 	 */
 	
 	public static void freeTexture(Sprite spriteToDelete) {
-		int texture = spriteToDelete.getTextureImage();
+		int texture = spriteToDelete.getTextureReference();
 		GL11.glDeleteTextures(texture);
 		
 		Iterator<String> iter = spriteSheets.keySet().iterator();
 		while (iter.hasNext()) {
 			Sprite spriteSheet = spriteSheets.get(iter.next());
 			
-			if (spriteSheet.getTextureImage() == texture) {
+			if (spriteSheet.getTextureReference() == texture) {
 				iter.remove();
 			}
 		}
@@ -404,7 +381,7 @@ public class SpriteManager {
 		while (iter.hasNext()) {
 			Sprite sprite = sprites.get(iter.next());
 			
-			if (sprite.getTextureImage() == texture) {
+			if (sprite.getTextureReference() == texture) {
 				iter.remove();
 			}
 		}
@@ -424,7 +401,7 @@ public class SpriteManager {
 		for (String id : spriteSheets.keySet()) {
 			Sprite spriteSheet = spriteSheets.get(id);
 			
-			Integer textureID = spriteSheet.getTextureImage();
+			Integer textureID = spriteSheet.getTextureReference();
 			
 			if (texturesAlreadyCounted.contains(textureID)) continue;
 			
@@ -437,7 +414,7 @@ public class SpriteManager {
 		for (String id : sprites.keySet()) {
 			Sprite sprite = sprites.get(id);
 			
-			Integer textureID = sprite.getTextureImage();
+			Integer textureID = sprite.getTextureReference();
 			
 			if (texturesAlreadyCounted.contains(textureID)) continue;
 			

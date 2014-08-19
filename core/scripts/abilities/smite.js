@@ -15,15 +15,15 @@ function onTargetSelect(game, targeter) {
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	var chaBonus = (parent.stats().getCha() - 10) * 2;
-	if (parent.getAbilities().has("PersonalMagnetism"))
+	var chaBonus = (parent.stats.getCha() - 10) * 2;
+	if (parent.abilities.has("PersonalMagnetism"))
 		chaBonus = chaBonus * 2;
 	
-	var lvlBonus = parent.getRoles().getLevel("Paladin");
+	var lvlBonus = parent.roles.getLevel("Paladin");
 	
 	var amount = chaBonus + lvlBonus;
 	
-	var weapon = target.getInventory().getMainWeapon();
+	var weapon = target.getMainHandWeapon();
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
@@ -31,18 +31,17 @@ function onTargetSelect(game, targeter) {
 	effect.getBonuses().addStandaloneDamageBonus('Divine', amount, amount);
 	weapon.applyEffect(effect);
 	
-	if (target.drawWithSubIcons()) {
+	if (target.drawsWithSubIcons()) {
 		var anim = game.getBaseAnimation("subIconFlash");
-		anim.addFrame(target.getSubIcon("MainHandWeapon"));
-		anim.setColor(target.getSubIconColor("MainHandWeapon"));
+		anim.addFrame(target.getIconRenderer().getIcon("MainHandWeapon"));
+		anim.setColor(target.getIconRenderer().getColor("MainHandWeapon"));
 		
 		var pos = target.getSubIconScreenPosition("MainHandWeapon");
 		anim.setPosition(pos.x, pos.y);
 	} else {
 		var anim = game.getBaseAnimation("iconFlash");
-		anim.addFrame(target.getIcon());
-		anim.setColor(target.getIconColor());
-		var pos = target.getScreenPosition();
+		anim.addFrameAndSetColor(target.getTemplate().getIcon());
+		var pos = target.getLocation().getCenteredScreenPoint();
 		anim.setPosition(pos.x, pos.y);
 	}
 		

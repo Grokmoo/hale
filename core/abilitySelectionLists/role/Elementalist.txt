@@ -1,4 +1,0 @@
-name "Elementalist"
-
-subList ElementalistAbilities 0.5 0.5
-subList Evocation 0.5 4.0

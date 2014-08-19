@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.hale.Area;
-import net.sf.hale.AreaEntityList;
+import net.sf.hale.area.Area;
+import net.sf.hale.area.AreaEntityList;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.bonus.BonusStackTypeList;
 import net.sf.hale.entity.Creature;
@@ -44,7 +44,7 @@ import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
- * Contains the set of all effects that have been applied to a given {@link net.sf.hale.Area}.
+ * Contains the set of all effects that have been applied to a given {@link net.sf.hale.area.Area}.
  * When applied in this manner, each effect will be active in a collection of points.  This class
  * keeps track of which points each effect is applied to.
  * 
@@ -105,6 +105,11 @@ public class AreaEffectList implements Saveable {
 
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error loading effect ", e);
+				continue;
+			}
+			
+			if (effect == null) {
+				Logger.appendToWarningLog("Warning: unable to load area effect " + entryObject.get("ref", null));
 				continue;
 			}
 			
@@ -277,7 +282,8 @@ public class AreaEffectList implements Saveable {
 	
 	public void remove(Effect effect) {
 		if (!effects.containsKey(effect)) {
-			throw new IllegalArgumentException("Effect " + effect + " is not in the area effect list");
+			Logger.appendToWarningLog("Effect " + effect + " is not in the area effect list");
+			return;
 		}
 		
 		for (Point p : effects.get(effect)) {
@@ -322,6 +328,8 @@ public class AreaEffectList implements Saveable {
 	
 	public List<Creature> getAffectedCreatures(Effect effect, AreaEntityList entities) {
 		List<Creature> creatures = new ArrayList<Creature>();
+		
+		if (effects.get(effect) == null) return creatures;
 		
 		for (Point p : effects.get(effect)) {
 			Creature creature = entities.getCreature(p.x, p.y);

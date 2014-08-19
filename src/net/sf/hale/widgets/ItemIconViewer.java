@@ -19,21 +19,19 @@
 
 package net.sf.hale.widgets;
 
-import net.sf.hale.Sprite;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilityActivator;
 import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.InventoryCallbackFactory;
+import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.view.DragAndDropHandler;
 import net.sf.hale.view.DragTarget;
 import net.sf.hale.view.DropTarget;
 import net.sf.hale.view.ItemListViewer;
 
-import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.Widget;
@@ -50,13 +48,10 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 	public static final StateKey STATE_PROF_NOT_MET = StateKey.get("profNotMet");
 	public static final StateKey STATE_UNAFFORDABLE = StateKey.get("unaffordable");
 	
-	// stored by this viewer for use in the right click callback
-	private int itemIndex;
-	
 	private ItemListViewer listViewer;
 	private Merchant merchant;
 	private Container container;
-	private Creature parent;
+	private PC parent;
 	
 	private Item item;
 	private int quantity;
@@ -94,26 +89,6 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 	}
 	
 	/**
-	 * Sets the item index that is used by RightClickCallbacks as the index
-	 * of this Item within the ItemList being viewed
-	 * @param itemIndex the item index for the Item being viewed
-	 */
-	
-	public void setItemIndex(int itemIndex) {
-		this.itemIndex = itemIndex;
-	}
-	
-	/**
-	 * Returns the index that was set by {@link #setItemIndex(int)} or 0 if
-	 * no index was set
-	 * @return the item index for this item
-	 */
-	
-	public int getItemIndex() {
-		return itemIndex;
-	}
-	
-	/**
 	 * Returns the Item being viewed by this IconViewer or null if no item has
 	 * been set
 	 * @return the Item being viewed by this IconViewer
@@ -144,7 +119,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 	 * @param merchant the owning merchant for this item or null if it is not owned by a merchant
 	 */
 	
-	public void setItem(Item item, int quantity, Creature parent, Container container, Merchant merchant) {
+	public void setItem(Item item, int quantity, PC parent, Container container, Merchant merchant) {
 		if (item == this.item && quantity == this.quantity)
 			return;
 		
@@ -155,13 +130,10 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		this.quantity = quantity;
 		
 		if (item != null) {
-			this.setColor(item.getIconColor());
-			this.setSprite(SpriteManager.getSprite(item.getIcon()));
+			super.setIcon(item.getTemplate().getIcon());
 			
 		} else {
-			this.setColor(Color.WHITE);
-			this.setSprite(null);
-			
+			super.setIcon(IconFactory.emptyIcon);
 			setTooltipContent(null);
 		}
 		
@@ -180,22 +152,6 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		
 		Widget qtyLabel = getChild(0);
 		qtyLabel.setPosition(getInnerX(), getInnerBottom() - qtyLabel.getPreferredHeight() / 2);
-	}
-	
-	@Override public int getPreferredWidth() {
-		int width = getBorderHorizontal();
-		Sprite sprite = this.getSprite();
-		if (sprite != null) width += sprite.getWidth();
-		
-		return width;
-	}
-	
-	@Override public int getPreferredHeight() {
-		int height = getBorderVertical();
-		Sprite sprite = this.getSprite();
-		if (sprite != null) height += sprite.getHeight();
-		
-		return height;
 	}
 	
 	/**
@@ -250,9 +206,7 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 			switch (evt.getMouseButton()) {
 			case Event.MOUSE_LBUTTON:
 				if (item != null) {
-					InventoryCallbackFactory.ExamineDetailsCallback cb =
-						new InventoryCallbackFactory.ExamineDetailsCallback(item, evt.getMouseX(), evt.getMouseY());
-					cb.run();
+					item.getExamineDetailsCallback(evt.getMouseX(), evt.getMouseY()).run();
 				}
 				break;
 			case Event.MOUSE_RBUTTON:
@@ -266,6 +220,8 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 				if (callback != null) callback.hoverEnded(this);
 				isHovering = false;
 			}
+		default:
+			// do nothing
 		}
 		
 		if (dragAndDropHandler != null) {
@@ -307,19 +263,14 @@ public class ItemIconViewer extends IconViewer implements DragTarget, DropTarget
 		public void hoverEnded(ItemIconViewer viewer);
 	}
 
-	@Override public Sprite getDragSprite() {
-		return SpriteManager.getSprite(item.getIcon());
-	}
-
-	@Override public Color getDragSpriteColor() {
-		return item.getIconColor();
+	@Override public Icon getDragIcon() {
+		return item.getTemplate().getIcon();
 	}
 
 	@Override public Ability getAbility() { return null; }
-	@Override public AbilityActivator getAbilityParent() { return null; }
-	@Override public int getItemEquipSlot() { return -1; }
+	@Override public Inventory.Slot getItemEquipSlot() { return null; }
 	
-	@Override public Creature getItemParent() {
+	@Override public PC getParentPC() {
 		return parent;
 	}
 

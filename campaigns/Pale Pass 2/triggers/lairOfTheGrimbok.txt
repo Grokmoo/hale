@@ -1,3 +1,0 @@
-area "Lair of the Grimbok"
-script "triggers/lairOfTheGrimbok"
-addPoints

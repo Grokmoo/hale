@@ -25,14 +25,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.sf.hale.Campaign;
 import net.sf.hale.Config;
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.loading.CampaignLoadingTaskList;
 import net.sf.hale.loading.LoadingTaskList;
 import net.sf.hale.loading.LoadingWaitPopup;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Campaign;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
@@ -52,9 +52,8 @@ import de.matthiasmann.twl.ThemeInfo;
 /**
  * The main menu widget.  This is what is displayed when the player first starts the game.
  * 
- * It handles choosing a campaign and selecting a party.  From this menu, the player
- * will either start the Campaign Editor (see {@link net.sf.hale.editor.CampaignEditor}),
- * start the game proper (see {@link net.sf.hale.view.MainViewer}) or exit the game.
+ * It handles choosing a campaign and selecting a party.  From this menu, the player can
+ * access options, release notes, credits, or start the game proper.
  * 
  * @author Jared Stephen
  *
@@ -74,7 +73,6 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	private boolean menuRunning = true;
 	private boolean exit = false;
 	private boolean restart = false;
-	private boolean launchEditor = false;
 	private boolean exitOnLoad = false;
 	
 	private String loadGame = null;
@@ -86,7 +84,6 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	private final Button campaignButton;
 	private final Button newGameButton;
 	private final Button loadGameButton;
-	private final Button editorButton;
 	private final Button updateButton;
 	private final Button optionsButton;
 	private final Button creditsButton;
@@ -155,16 +152,6 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         });
         this.add(loadGameButton);
         
-        editorButton = new Button();
-        editorButton.setTheme("editorbutton");
-        editorButton.addCallback(new Runnable() {
-        	@Override public void run() {
-        		launchEditor = true;
-        		menuRunning = false;
-        	}
-        });
-        this.add(editorButton);
-        
         creditsButton = new Button();
         creditsButton.setTheme("creditsbutton");
         creditsButton.addCallback(new Runnable() {
@@ -229,11 +216,14 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         } else {
         	versionLabel = new Label("Version: " + version);
         	
-        	File updateAvailable = new File("docs/updateAvailable.txt");
+        	File updateAvailable = new File(Game.getConfigBaseDirectory() + "updateAvailable.txt");
         	if (updateAvailable.isFile()) {
         		updateButton.setVisible(true);
-        	} else {
-
+        	} else if (Game.osType == Game.OSType.Windows) {
+        		// only attempt auto updates under windows
+        		// in linux, updates are downloaded via the unified package manager
+        		// for each distro
+        		
         		long curTime = System.currentTimeMillis();
         		long interval = Game.config.getCheckForUpdatesInterval();
         		long lastTime = Config.getLastCheckForUpdatesTime();
@@ -327,10 +317,10 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		campaignButton.setVisible(visible);
 		newGameButton.setVisible(visible);
 		loadGameButton.setVisible(visible);
-		editorButton.setVisible(visible);
 		//updateButton.setVisible(visible);
 		optionsButton.setVisible(visible);
 		exitButton.setVisible(visible);
+		creditsButton.setVisible(visible);
 		
 		releaseNotesButton.setEnabled(visible);
 	}
@@ -338,7 +328,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	@Override protected void paintWidget(GUI gui) {
 		if (backgroundSprite != null) {
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			backgroundSprite.draw(backgroundSpriteOffset.x, backgroundSpriteOffset.y);
+			//backgroundSprite.draw(backgroundSpriteOffset.x, backgroundSpriteOffset.y);
+			backgroundSprite.draw(0, 0, getWidth(), getHeight());
 		}
 	}
 	
@@ -357,13 +348,12 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		campaignButton.setSize(campaignButton.getPreferredWidth(), campaignButton.getPreferredHeight());
 		newGameButton.setSize(newGameButton.getPreferredWidth(), newGameButton.getPreferredHeight());
 		loadGameButton.setSize(loadGameButton.getPreferredWidth(), loadGameButton.getPreferredHeight());
-		editorButton.setSize(editorButton.getPreferredWidth(), editorButton.getPreferredHeight());
 		creditsButton.setSize(creditsButton.getPreferredWidth(), creditsButton.getPreferredHeight());
 		optionsButton.setSize(optionsButton.getPreferredWidth(), optionsButton.getPreferredHeight());
 		exitButton.setSize(exitButton.getPreferredWidth(), exitButton.getPreferredHeight());
 		
 		int buttonHeight = campaignButton.getHeight() + newGameButton.getHeight() +
-			loadGameButton.getHeight() + editorButton.getHeight() + updateButton.getHeight() +
+			loadGameButton.getHeight() + updateButton.getHeight() +
 			optionsButton.getHeight() + exitButton.getHeight() + 6 * buttonGap;
 		
 		int buttonY = (Game.config.getResolutionY() - buttonHeight) / 2;
@@ -371,8 +361,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		campaignButton.setPosition((resX - campaignButton.getWidth()) / 2, buttonY);
 		newGameButton.setPosition((resX - newGameButton.getWidth()) / 2, campaignButton.getBottom() + buttonGap);
 		loadGameButton.setPosition((resX - loadGameButton.getWidth()) / 2, newGameButton.getBottom() + buttonGap);
-		editorButton.setPosition((resX - editorButton.getWidth()) / 2, loadGameButton.getBottom() + buttonGap);
-		creditsButton.setPosition((resX - creditsButton.getWidth()) / 2, editorButton.getBottom() + buttonGap);
+		creditsButton.setPosition((resX - creditsButton.getWidth()) / 2, loadGameButton.getBottom() + buttonGap);
 		optionsButton.setPosition((resX - optionsButton.getWidth()) / 2, creditsButton.getBottom() + buttonGap);
 		exitButton.setPosition((resX - exitButton.getWidth()) / 2, optionsButton.getBottom() + buttonGap);
 		
@@ -380,16 +369,15 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		campaignLabel.setPosition((resX - campaignLabel.getWidth()) / 2, buttonY - campaignLabel.getHeight() - titleOffset);
 		
 		releaseNotesButton.setSize(releaseNotesButton.getPreferredWidth(), releaseNotesButton.getPreferredHeight());
-		releaseNotesButton.setPosition(getInnerRight() - releaseNotesButton.getWidth() - backgroundSpriteOffset.x,
-				getInnerBottom() - releaseNotesButton.getHeight() - backgroundSpriteOffset.y);
+		releaseNotesButton.setPosition(getInnerRight() - releaseNotesButton.getWidth(),
+				getInnerBottom() - releaseNotesButton.getHeight());
 		
 		versionLabel.setSize(versionLabel.getPreferredWidth(), versionLabel.getPreferredHeight());
-		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth() - backgroundSpriteOffset.x,
+		versionLabel.setPosition(getInnerRight() - versionLabel.getWidth(),
 				releaseNotesButton.getY() - versionLabel.getHeight());
 		
 		updateButton.setSize(updateButton.getPreferredWidth(), updateButton.getPreferredHeight());
-		updateButton.setPosition(getInnerRight() - updateButton.getWidth() - backgroundSpriteOffset.x,
-				backgroundSpriteOffset.y);
+		updateButton.setPosition(getInnerRight() - updateButton.getWidth(), 0);
 	}
 	
 	private void handlePopups() {
@@ -438,7 +426,11 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 			
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			
-			gui.update();
+			try {
+				gui.update();
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error in GUI update", e);
+			}
 			
 			Display.update(false);
             GL11.glGetError();
@@ -458,7 +450,6 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 		
 		if (exit) return new MainMenuAction(MainMenuAction.Action.Exit);
 		else if (restart) return new MainMenuAction(MainMenuAction.Action.Restart);
-		else if (launchEditor) return new MainMenuAction(MainMenuAction.Action.LaunchEditor);
 		else if (loadGame != null) return new MainMenuAction(loadGame);
 		else return new MainMenuAction(MainMenuAction.Action.NewGame);
 	}
@@ -500,7 +491,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	 */
 	
 	public static void writeLastOpenCampaign(String id) {
-		File f = new File("campaigns/lastOpenCampaign.txt");
+		File f = new File(Game.getConfigBaseDirectory() + "lastOpenCampaign.txt");
 		
 		try {
 			FileWriter writer = new FileWriter(f, false);
@@ -556,7 +547,7 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
 	
 	private String getLastOpenCampaign() {
 		try {
-			return FileUtil.readFileAsString("campaigns/lastOpenCampaign.txt");
+			return FileUtil.readFileAsString(Game.getConfigBaseDirectory() + "lastOpenCampaign.txt");
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error loading last open campaign file.", e);
 			return null;

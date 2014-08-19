@@ -44,7 +44,7 @@ function askDiplo(game, parent, target, conversation) {
 }
 
 function onExit(game, parent, target, conversation) {
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
     
     conversation.exit();
 }

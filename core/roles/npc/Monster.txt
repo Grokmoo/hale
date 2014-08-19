@@ -1,8 +1,0 @@
-playerSelectable false
-baseRole true
-
-damageBonusPerLevel 4
-attackBonusPerLevel 4
-skillPointsPerLevel 0
-HPPerLevel 4
-level1HP 8

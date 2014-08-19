@@ -1,9 +1,9 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("MassCure")) {
+	if (slot.getParent().abilities.has("MassCure")) {
 		var targeter = game.createCircleTargeter(slot);
 		targeter.setRadius(4);
 		targeter.setRelationshipCriterion("Friendly");
-		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.addAllowedPoint(slot.getParent().getLocation());
 		targeter.activate();
 	} else {
 		var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
@@ -18,7 +18,7 @@ function onTargetSelect(game, targeter) {
 	// cast the spell
 	targeter.getSlot().activate();
 	
-	if (targeter.getSlot().getParent().getAbilities().has("MassCure")) {
+	if (targeter.getSlot().getParent().abilities.has("MassCure")) {
 	    massCure(game, targeter);
     } else {
 	    cure(game, targeter);
@@ -29,7 +29,7 @@ function cure(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	// check for spell failure
 	if (!spell.checkSpellFailure(parent, target)) return;
@@ -44,7 +44,7 @@ function cure(game, targeter) {
 function massCure(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
 	if (!spell.checkSpellFailure(parent)) return;
 	
@@ -63,7 +63,7 @@ function showHealAnimation(game, target) {
 	anim.setGreen(0.0);
 	anim.setBlue(1.0);
 	
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10);
 	
 	game.runAnimationNoWait(anim);

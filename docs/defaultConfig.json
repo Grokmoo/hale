@@ -1,9 +1,11 @@
 {
-  "Resolution" : [ 1280, 800 ],
+  "Resolution" : [
+    1280, 800
+  ],
   "Fullscreen" : false,
-  "EditorResolution" : [ 1280, 800 ],
   "ShowFPS" : false,
   "CapFPS" : true,
+  "CombatAutoScroll" : true,
   "TooltipDelay" : 400,
   "CombatDelay" : 150,
   "ScriptConsoleEnabled" : true,
@@ -19,7 +21,7 @@
     "ToggleInventoryWindow" : "I",
     "ToggleLogWindow" : "L",
     "ToggleMiniMap" : "M",
-	"ToggleMovementMode" : "O",
+    "ToggleMovementMode" : "O",
     "ToggleQuickbarPopup" : "Q",
     "ToggleScriptConsole" : "GRAVE",
     "UseQuickbarSlot0" : "1",
@@ -31,6 +33,6 @@
     "UseQuickbarSlot6" : "7",
     "UseQuickbarSlot7" : "8",
     "UseQuickbarSlot8" : "9",
-    "UseQuickbarSlot9" : "0",
+    "UseQuickbarSlot9" : "0"
   }
 }

@@ -1,9 +1,0 @@
-name "Proficiency, Simple Weapons"
-description "You are able to use the simplest of weapons in combat.  This includes slings, clubs, quarterstaffs, and crossbows."
-activateable false
-
-type "Weapon Proficiencies"
-
-icon "icons/proficiencySimpleWeapons"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Sling'); effect.getBonuses().addWeaponProficiency('Club'); effect.getBonuses().addWeaponProficiency('Quarterstaff'); effect.getBonuses().addWeaponProficiency('Crossbow'); parent.applyEffect(effect); }"

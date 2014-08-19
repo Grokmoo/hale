@@ -1,6 +1,0 @@
-size 4
-faction "Neutral"
-challenge 0
-creature "peasant10" 0 -3
-creature "peasant10" -2 3
-creature "fareach_woman" 3 2

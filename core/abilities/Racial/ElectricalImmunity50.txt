@@ -1,8 +1,0 @@
-name "Electrical Immunity 50%"
-type "Racial Abilities"
-description "Some creatures are naturally highly resistant to electricity."
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Electrical', 50); parent.applyEffect(effect); }"

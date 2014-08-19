@@ -1,8 +1,0 @@
-name "Cold Immunity 100%"
-type "Racial Abilities"
-description "Some creatures are naturally highly resistant to cold."
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageImmunity('Cold', 100); parent.applyEffect(effect); }"

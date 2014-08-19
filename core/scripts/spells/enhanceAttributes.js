@@ -10,7 +10,7 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = game.dice().randInt(5, 10);
 	
@@ -23,12 +23,14 @@ function onTargetSelect(game, targeter) {
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
+	effect.addPositiveIcon("items/enchant_intelligence_small");
 	effect.setTitle(spell.getName());
 	effect.getBonuses().addBonus('Int', 1 + parseInt(casterLevel / 4));
 	effect.getBonuses().addBonus('Wis', 1 + parseInt(casterLevel / 4));
 	effect.getBonuses().addBonus('Cha', 1 + parseInt(casterLevel / 4));
 	
-	if (parent.getAbilities().has("AnimalPower")) {
+	if (parent.abilities.has("AnimalPower")) {
+		effect.addPositiveIcon("items/enchant_strength_small");
 		effect.getBonuses().addBonus('Str', 1 + parseInt(casterLevel / 4));
 		effect.getBonuses().addBonus('Con', 1 + parseInt(casterLevel / 4));
 		effect.getBonuses().addBonus('Dex', 1 + parseInt(casterLevel / 4));
@@ -41,7 +43,7 @@ function onTargetSelect(game, targeter) {
 	anim.setGreen(1.0);
 	anim.setBlue(0.3);
 	
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10);
 	
 	game.runAnimationNoWait(anim);

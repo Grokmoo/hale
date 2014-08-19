@@ -19,14 +19,19 @@
 
 package net.sf.hale.widgets;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.sf.hale.Game;
+import net.sf.hale.ability.Effect;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.characterbuilder.Buildable;
 import net.sf.hale.characterbuilder.CharacterBuilder;
 import net.sf.hale.defaultability.Select;
 import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.XP;
 import net.sf.hale.view.DragAndDropHandler;
@@ -38,9 +43,7 @@ import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.Label;
-import de.matthiasmann.twl.TextWidget;
 import de.matthiasmann.twl.ThemeInfo;
-import de.matthiasmann.twl.renderer.Image;
 
 /**
  * A Widget for displaying the portrait of a party member, name, and their most important
@@ -52,35 +55,45 @@ import de.matthiasmann.twl.renderer.Image;
 public class PortraitViewer extends BasePortraitViewer implements Runnable, DropTarget {
 	private PortraitArea portraitArea;
 	
-	private int nameOverlap;
+	private int nameOverlap, hpBarOverlap, effectIconColumns, effectIconStartY;
 	
 	private final Label name;
 	
 	private final LevelUpButton levelUp;
 	
-	private StatBar apBar, hpBar;
+	private StatFillBar apBar, hpBar;
 	
 	// the currently open level up window if it exists
 	private CharacterBuilder builder;
 	
+	private final PC pc;
+	
+	// using a hash set prevents the same icon from appearing twice
+	private final Set<Icon> effectIcons;
+	
 	/**
 	 * Creates a new PortraitViewer showing the portrait of the specified Creature
 	 * @param creature the Creature to show the portrait of
+	 * @param portraitArea
 	 */
 	
-	public PortraitViewer(Creature creature, PortraitArea portraitArea) {
+	public PortraitViewer(PC creature, PortraitArea portraitArea) {
 		super(creature);
+		
+		this.pc = creature;
 		this.portraitArea = portraitArea;
 		
-		name = new Label(creature.getName());
+		this.effectIcons = new HashSet<Icon>();
+		
+		name = new Label(creature.getTemplate().getName());
 		name.setTheme("namelabel");
 		add(name);
 		
-		hpBar = new StatBar();
+		hpBar = new StatFillBar();
 		hpBar.setTheme("hpbar");
 		add(hpBar);
 		
-		apBar = new StatBar();
+		apBar = new StatFillBar();
 		apBar.setTheme("apbar");
 		add(apBar);
 		
@@ -88,7 +101,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 		levelUp.setTheme("levelupbutton");
 		levelUp.addCallback(new Runnable() {
 			@Override public void run() {
-				builder = new CharacterBuilder(new Buildable(getCreature()));
+				builder = new CharacterBuilder(new Buildable(pc));
 		        Game.mainViewer.add(builder);
 		        builder.addFinishCallback(new CharacterBuilder.FinishCallback() {
 		        	@Override public void creatureModified(String id) {
@@ -104,12 +117,25 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 		setEnableEventHandling(true);
 	}
 	
+	/**
+	 * Gets the PC being viewed by this PortraitViewer
+	 * @return the PC
+	 */
+	
+	public PC getPC() {
+		return pc;
+	}
+	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
 		
 		nameOverlap = themeInfo.getParameter("nameOverlap", 0);
+		hpBarOverlap = themeInfo.getParameter("hpBarOverlap", 0);
 		
 		levelUp.getAnimationState().setAnimationState(MainPane.STATE_NOTIFICATION, true);
+		
+		effectIconColumns = themeInfo.getParameter("effectIconColumns", 0);
+		effectIconStartY = themeInfo.getParameter("effectIconStartY", 0);
 	}
 	
 	@Override public int getPreferredHeight() {
@@ -117,7 +143,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 
 		height += name.getPreferredHeight() - nameOverlap;
 		height += apBar.getPreferredHeight();
-		height += hpBar.getPreferredHeight();
+		height += hpBar.getPreferredHeight() - hpBarOverlap;
 		
 		return height;
 	}
@@ -127,16 +153,17 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 		
 		int centerX = getInnerX() + getInnerWidth() / 2;
 		
-		name.setSize(name.getPreferredWidth(), name.getPreferredHeight());
-		name.setPosition(centerX - name.getWidth() / 2, getInnerY());
+		//name.setSize(name.getPreferredWidth(), name.getPreferredHeight());
+		name.setPosition(centerX - name.getPreferredWidth() / 2, getInnerY() + name.getPreferredHeight() / 2);
 		
-		this.setPortraitY(name.getHeight() - nameOverlap);
+		this.setPortraitY(name.getPreferredHeight() - nameOverlap);
 		int spriteHeight = this.getPortraitSpriteHeight();
 		
 		apBar.setSize(apBar.getPreferredWidth(), apBar.getPreferredHeight());
 		hpBar.setSize(hpBar.getPreferredWidth(), hpBar.getPreferredHeight());
 		
-		hpBar.setPosition(centerX - hpBar.getWidth() / 2, name.getBottom() + spriteHeight - nameOverlap);
+		hpBar.setPosition(centerX - hpBar.getWidth() / 2,
+				getInnerY() + name.getPreferredHeight() + spriteHeight - nameOverlap - hpBarOverlap);
 		apBar.setPosition(centerX - apBar.getWidth() / 2, hpBar.getBottom());
 		
 		levelUp.setSize(levelUp.getPreferredWidth(), levelUp.getPreferredHeight());
@@ -170,40 +197,67 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 	 */
 	
 	public void updateContent() {
-		Creature creature = getCreature();
+		setActive(pc == Game.curCampaign.party.getSelected());
 		
-		setActive(creature.isSelected());
+		hpBar.setText("HP: " + pc.getCurrentHitPoints() + "/" + pc.stats.get(Stat.MaxHP));
 		
-		hpBar.setText("HP: " + creature.getCurrentHP() + "/" + creature.stats().get(Stat.MaxHP));
-		
-		if (creature.isDead()) {
+		if (pc.isDead()) {
 			apBar.setText("Dead");
 			hpBar.setText("");
-		} else if (creature.isDying()) {
+		} else if (pc.isDying()) {
 			apBar.setText("Dying");
 		} else {
-			apBar.setText("AP: " + (creature.getTimer().getAP() / 100));
+			apBar.setText("AP: " + (pc.timer.getAP() / 100));
 		}
 		
-		int charLevel = creature.stats().get(Stat.CreatureLevel);
+		int charLevel = pc.stats.get(Stat.CreatureLevel);
 		int xpForNext = XP.getPointsForLevel(charLevel + 1);
-		if (creature.getExperiencePoints() >= xpForNext) {
+		if (pc.getExperiencePoints() >= xpForNext) {
 			levelUp.setVisible(true);
 		} else {
 			levelUp.setVisible(false);
 		}
 		
-		float healthWidth = Math.min( ((float)creature.getCurrentHP()) / ((float)creature.stats().get(Stat.MaxHP)), 1.0f );
-		float apWidth = Math.min(((float)creature.getTimer().getAP()) / (10000.0f), 1.0f);
+		float healthWidth = Math.min( ((float)pc.getCurrentHitPoints()) / ((float)pc.stats.get(Stat.MaxHP)), 1.0f );
+		float apWidth = Math.min( ( (float)pc.timer.getAP()) / (Math.max(10000, pc.timer.getMaxAP()) ), 1.0f);
 		
 		hpBar.setValue(healthWidth);
 		apBar.setValue(apWidth);
+		
+		effectIcons.clear();
+		for (Effect effect : pc.getEffects()) {
+			effect.getIcons(effectIcons);
+		}
+	}
+	
+	@Override protected void paintWidget(GUI gui) {
+		super.paintWidget(gui);
+		
+		int x = getInnerRight();
+		int y = getInnerY() + effectIconStartY;
+		
+		int colCount = 0;
+		
+		for (Icon icon : effectIcons) {
+			x -= icon.getWidth();
+			
+			icon.draw(x, y);
+			
+			colCount++;
+			
+			if (colCount == effectIconColumns) {
+				colCount = 0;
+				y += icon.getHeight();
+				x = getInnerRight();
+			}
+		}
 	}
 	
 	// button clicked callback
 	@Override public void run() {
 		setActive(true);
 		Select.selectCreature(getCreature());
+		Game.areaViewer.addDelayedScrollToCreature(getCreature());
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
@@ -216,7 +270,14 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 			break;
 		case MOUSE_BTNUP:
 			portraitArea.checkMouseDragRelease(this);
+			
+			if (evt.getMouseButton() == Event.MOUSE_RBUTTON) {
+				Select.selectCreature(getCreature());
+				Game.mainViewer.inventoryWindow.setVisible(true);
+			}
 			break;
+		default:
+			// do nothing
 		}
 		
 		return super.handleEvent(evt);
@@ -239,66 +300,18 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 			super.setEnabled(enabled);
 			
 			if (enabled) {
-				setTooltipContent("Level up " + getCreature().getName());
+				setTooltipContent("Level up " + getCreature().getTemplate().getName());
 			} else {
 				setTooltipContent(disabledTooltip);
 			}
 		}
 	}
 	
-	private class StatBar extends TextWidget {
-		private Image fullImage;
-		private Image emptyImage;
-		private float value;
-		
-		private void setText(String text) {
-			setCharSequence(text);
-		}
-		
-		@Override protected void applyTheme(ThemeInfo themeInfo) {
-			super.applyTheme(themeInfo);
-			
-			this.fullImage = themeInfo.getImage("fullImage");
-			this.emptyImage = themeInfo.getImage("emptyImage");
-		}
-		
-		private void setValue(float value) {
-			this.value = value;
-		}
-		
-		@Override public int getPreferredWidth() {
-			Image bg = getBackground();
-			
-			return bg != null ? bg.getWidth() : 0;
-		}
-		
-		@Override public int getPreferredHeight() {
-			Image bg = getBackground();
-			
-			return bg != null ? bg.getHeight() : 0;
-		}
-		
-		@Override protected void paint(GUI gui) {
-			if (fullImage != null && emptyImage != null) {
-				int cutOff = (int)(fullImage.getWidth() * value);
-				
-				fullImage.draw(getAnimationState(), getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
-				emptyImage.draw(getAnimationState(), getInnerX() + cutOff, getInnerY(),
-						getInnerWidth() - cutOff, getInnerHeight());
-			}
-			
-			paintBackground(gui);
-			paintWidget(gui);
-			paintChildren(gui);
-			paintOverlay(gui);
-		}
-	}
-
 	@Override public void dragAndDropStartHover(DragTarget target) {
-		if (target.getItemParent() == getCreature()) return;
+		if (target.getParentPC() == pc) return;
 		
 		if (target.getItem() != null) {
-			if (target.getItemParent() != null) {
+			if (target.getParentPC() != null) {
 				// an attempt at a give drag & drop
 				getAnimationState().setAnimationState(DragAndDropHandler.STATE_DRAG_HOVER, true);
 			} else if (target.getItemContainer() != null && Game.mainViewer.containerWindow.getOpener() == getCreature()) {
@@ -316,39 +329,38 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 	}
 
 	@Override public void dropDragTarget(DragTarget target) {
-		if (target.getItemParent() == getCreature()) return;
+		if (target.getParentPC() == pc) return;
 		
 		
 		if (target.getItem() != null) {
-			Creature parent = getCreature();
-			
-			if (target.getItemParent() != null) {
+			if (target.getParentPC() != null) {
 				// attempt give drag & drop
-				Inventory givingInventory = target.getItemParent().getInventory();
+				Inventory givingInventory = target.getParentPC().inventory;
 				
-				if (target.getItemEquipSlot() != -1) {
-					givingInventory.getCallbackFactory().getGiveEquippedCallback(target.getItemEquipSlot(), parent).run();
+				if (target.getItemEquipSlot() != null) {
+					givingInventory.getGiveEquippedCallback(target.getItemEquipSlot(), pc).run();
 				} else {
 					int quantity = givingInventory.getUnequippedItems().getQuantity(target.getItem());
-					givingInventory.getCallbackFactory().getGiveCallback(target.getItem(), quantity, parent).run();
+					givingInventory.getGiveCallback(target.getItem(), quantity, pc).run();
 				}
 				
 			} else if (target.getItemContainer() != null && Game.mainViewer.containerWindow.getOpener() == getCreature()) {
 				// attempt pick up drag & drop, only for the container opener
 				Container container = target.getItemContainer();
 				
-				int containerIndex = container.getItems().findItem(target.getItem());
-				int quantity = container.getItems().getQuantity(containerIndex);
+				int quantity = container.getCurrentItems().getQuantity(target.getItem());
+				pc.inventory.getTakeCallback(target.getItem(), quantity, container).run();
 				
-				parent.getInventory().getCallbackFactory().getTakeCallback(target.getItem(), containerIndex, quantity).run();
 			} else if (target.getItemMerchant() != null) {
 				// attempt buy drag & drop
-				
 				Merchant merchant = target.getItemMerchant();
 				int merchantQuantity = target.getItemMerchant().getCurrentItems().getQuantity(target.getItem());
 				int maxQuantity = ItemListViewer.getMerchantBuyMaxQuantity(merchant, target.getItem(), merchantQuantity);
-					
-				parent.getInventory().getCallbackFactory().getBuyCallback(target.getItem(), target.getItemMerchant(), maxQuantity).run();
+				
+				if (maxQuantity > 0) {
+					// don't allow buy attempts when the item can't be afforded
+					pc.inventory.getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
+				}
 			}
 		}
 		

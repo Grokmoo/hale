@@ -138,12 +138,12 @@ public class Logger {
 	
 	private static PrintWriter getPrintWriter(String name) {
 		try {
-			File dir = new File("log");
+			File dir = new File(Game.getLogBaseDirectory());
 			if (!dir.exists() || !dir.isDirectory()) {
 				dir.mkdir();
 			}
 			
-			File fout = new File("log/" + name + ".log");
+			File fout = new File(Game.getLogBaseDirectory() + name + ".log");
 			
 			BufferedWriter out = new BufferedWriter(new FileWriter(fout, true));
 			PrintWriter pout = new PrintWriter(out);

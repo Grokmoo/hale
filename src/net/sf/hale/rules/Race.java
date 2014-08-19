@@ -32,7 +32,10 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.Weapon;
+import net.sf.hale.entity.WeaponTemplate;
+import net.sf.hale.icon.SubIcon;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.Logger;
@@ -47,9 +50,9 @@ public class Race {
 	private final String name;
 	
 	private final String icon;
-	private final Size size;
+	
 	private final int movementCost;
-	private final Item defaultWeapon;
+	private final WeaponTemplate defaultWeapon;
 	private final boolean playerSelectable;
 	private final List<RacialType> racialTypes;
 	private final String descriptionFile;
@@ -82,11 +85,12 @@ public class Race {
 		
 		this.id = id;
 		this.name = parser.get("name", id);
-		this.defaultWeapon = Game.entityManager.getItem(parser.get("unarmedWeapon", null));
+		
+		String defaultWeaponID = parser.get("defaultWeapon", null);
+		this.defaultWeapon = (WeaponTemplate)EntityManager.getItemTemplate(defaultWeaponID);
 		
 		parser.setWarnOnMissingKeys(false);
 		
-		this.size = Size.valueOf(parser.get("size", "Medium"));
 		this.movementCost = parser.get("baseMovementCost", 1000);
 		this.descriptionFile = parser.get("descriptionFile", "descriptions/races/" + name + ResourceType.HTML.getExtension());
 		this.icon = parser.get("icon", null);
@@ -216,6 +220,19 @@ public class Race {
 		listsAtLevel.add(listID);
 	}
 	
+	/**
+	 * Returns true if members of this race should draw this sub icon type, false
+	 * otherwise.  Races will only draw sub icon types that have an explicitly
+	 * definied icon offset.  Note that this method is only applicable for sub icons
+	 * associated with inventory items, base racial sub icons can always be drawn.
+	 * @param type
+	 * @return whether members of this race should draw sub icons of this type
+	 */
+	
+	public boolean drawsSubIconType(SubIcon.Type type) {
+		return iconOffsets.containsKey(type);
+	}
+	
 	public Point getIconOffset(SubIcon.Type type) {
 		if (!iconOffsets.containsKey(type)) {
 			iconOffsets.put(type, new Point(0, 0));
@@ -262,7 +279,6 @@ public class Race {
 	public String getID() { return id; }
 	public String getName() { return name; }
 	public String getIcon() { return icon; }
-	public Size getSize() { return size; }
 	public int getMovementCost() { return movementCost; }
 	public boolean isPlayerSelectable() { return playerSelectable; }
 
@@ -324,7 +340,7 @@ public class Race {
 				continue;
 			}
 			
-			creature.getAbilities().addRacialAbility(ability);
+			creature.abilities.addRacialAbility(ability);
 		}
 	}
 	
@@ -347,7 +363,11 @@ public class Race {
 		return lists;
 	}
 	
-	public Item getDefaultWeapon() {
-		return new Item(defaultWeapon);
+	public Weapon getDefaultWeapon() throws IllegalStateException {
+		try {
+			return (Weapon)EntityManager.getItem(defaultWeapon.getID(), defaultWeapon.getDefaultQuality());
+		} catch (Exception e) {
+			throw new IllegalStateException("Error creating default weapon for race " + id, e);
+		}
 	}
 }

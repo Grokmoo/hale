@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
@@ -38,8 +38,8 @@ import net.sf.hale.rules.Ruleset;
  *
  */
 
-public class UniqueCharacter implements Iterable<Creature> {
-	private final List<Creature> creatures;
+public class UniqueCharacter implements Iterable<PC> {
+	private final List<PC> pcs;
 	
 	private final String portraitID;
 	private final String name;
@@ -53,18 +53,18 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 * Creates a new new UniqueCharacter with the specified creature as the base.
 	 * Only creatures with matching portrait, name, gender, and race will be able to
 	 * be added to this UniqueCharacter
-	 * @param creature the base creature
+	 * @param pc the base creature
 	 */
 	
-	public UniqueCharacter(Creature creature) {
-		this.creatures = new ArrayList<Creature>();
+	public UniqueCharacter(PC pc) {
+		this.pcs = new ArrayList<PC>();
 		
-		creatures.add(creature);
+		pcs.add(pc);
 		
-		this.portraitID = creature.getPortrait();
-		this.name = creature.getName();
-		this.gender = creature.getGender();
-		this.race = creature.getRace();
+		this.portraitID = pc.getTemplate().getPortrait();
+		this.name = pc.getTemplate().getName();
+		this.gender = pc.getTemplate().getGender();
+		this.race = pc.getTemplate().getRace();
 		
 		setMinMaxLevel();
 	}
@@ -75,7 +75,7 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 */
 	
 	public int size() {
-		return creatures.size();
+		return pcs.size();
 	}
 	
 	/**
@@ -85,19 +85,24 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 */
 	
 	public void setMinMaxLevel() {
-		this.minLevel = Game.curCampaign.getMinStartingLevel();
+		if (Game.curCampaign.allowLevelUp()) {
+			this.minLevel = 1;
+		} else {
+			this.minLevel = Game.curCampaign.getMinStartingLevel();
+		}
+		
 		this.maxLevel = Game.curCampaign.getMaxStartingLevel();
 	}
 	
 	/**
 	 * Returns true if and only if the specified creature meets the minimum and maximum level
 	 * constraints for this unique character
-	 * @param creature the creature to check
+	 * @param pc the creature to check
 	 * @return true if the level constraints are met, false otherwise
 	 */
 	
-	public boolean meetsLevelConstraints(Creature creature) {
-		int level = creature.getRoles().getTotalLevel();
+	public boolean meetsLevelConstraints(PC pc) {
+		int level = pc.roles.getTotalLevel();
 		
 		return level >= this.minLevel && level <= this.maxLevel;
 	}
@@ -107,8 +112,8 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 * @return the first creature in this uniqueCharacter
 	 */
 	
-	public Creature getFirstCreature() {
-		return creatures.get(0);
+	public PC getFirstCreature() {
+		return pcs.get(0);
 	}
 	
 	/**
@@ -116,42 +121,42 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 * maximum level criterion from the list of creatures contained in this UniqueCharacter
 	 * If no creature meets the criterion, returns null
 	 * 
-	 * @return the highest level creature
+	 * @return the highest level PC
 	 */
 	
-	public Creature getBestCreature() {
+	public PC getBestCreature() {
 		int highestLevel = -1;
-		Creature maxCreature = null;
+		PC maxPC = null;
 		
-		for (Creature creature : creatures) {
-			int level = creature.getRoles().getTotalLevel();
+		for (PC pc : pcs) {
+			int level = pc.roles.getTotalLevel();
 			
 			if (level > highestLevel && level >= this.minLevel && level <= this.maxLevel) {
 				highestLevel = level;
-				maxCreature = creature;
+				maxPC = pc;
 			}
 		}
 		
-		return maxCreature;
+		return maxPC;
 	}
 	
 	/**
 	 * Checks if the specified creature matches and can be added to this unique character.  If
 	 * the creature matches, it is added to this UniqueCharacter
-	 * @param creature the creature to check
+	 * @param pc the creature to check
 	 * @return true if the creature matches, false otherwise
 	 */
 	
-	public boolean addIfMatches(Creature creature) {
-		if (!this.portraitID.equals(creature.getPortrait())) return false;
+	public boolean addIfMatches(PC pc) {
+		if (!this.portraitID.equals(pc.getTemplate().getPortrait())) return false;
 		
-		if (!this.name.equals(creature.getName())) return false;
+		if (!this.name.equals(pc.getTemplate().getName())) return false;
 		
-		if (this.gender != creature.getGender()) return false;
+		if (this.gender != pc.getTemplate().getGender()) return false;
 		
-		if (this.race != creature.getRace()) return false;
+		if (this.race != pc.getTemplate().getRace()) return false;
 		
-		this.creatures.add(creature);
+		this.pcs.add(pc);
 		
 		return true;
 	}
@@ -160,24 +165,23 @@ public class UniqueCharacter implements Iterable<Creature> {
 	 * Deletes the file corresponding to the specified creature on disk and removes
 	 * the creature from this UniqueCharacter.  If the creature is not contained in this
 	 * unique character, no action is performed
-	 * @param creature the creature to delete
+	 * @param pc the creature to delete
 	 */
 	
-	public void deleteCreature(Creature creature) {
-		int index = this.creatures.indexOf(creature);
+	public void deleteCreature(PC pc) {
+		int index = this.pcs.indexOf(pc);
 		
 		if (index == -1) return;
 		
-		String fileName = "characters/" + creature.getID() + ResourceType.Text.getExtension();
+		String fileName = Game.getCharactersBaseDirectory() + pc.getTemplate().getID() +
+				ResourceType.JSON.getExtension();
 		
 		new File(fileName).delete();
 		
-		this.creatures.remove(index);
-		
-		
+		this.pcs.remove(index);
 	}
 
-	@Override public Iterator<Creature> iterator() {
-		return creatures.iterator();
+	@Override public Iterator<PC> iterator() {
+		return pcs.iterator();
 	}
 }

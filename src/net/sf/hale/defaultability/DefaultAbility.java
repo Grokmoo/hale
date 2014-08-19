@@ -19,8 +19,8 @@
 
 package net.sf.hale.defaultability;
 
-import net.sf.hale.entity.Creature;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * An interface for DefaultAbilities.  These are abilities that can be activated
@@ -53,14 +53,14 @@ public interface DefaultAbility {
 	 * parameters, false otherwise
 	 */
 	
-	public boolean canActivate(Creature parent, Point targetPosition);
+	public boolean canActivate(PC parent, Location targetPosition);
 	
 	/**
 	 * Activates this DefaultAbility for the given Creature at the
 	 * specified position.  Some action will be taken based on the ability,
 	 * for example moving to a position or opening a container.
 	 * 
-	 * Note that the {@link #canActivate(Creature, Point)} method must
+	 * Note that the {@link #canActivate(PC, Location)} method must
 	 * be called prior to calling this method.
 	 * 
 	 * @param parent the Creature that is activating this DefaultAbility
@@ -68,7 +68,7 @@ public interface DefaultAbility {
 	 * being activated
 	 */
 	
-	public void activate(Creature parent, Point targetPosition);
+	public void activate(PC parent, Location targetPosition);
 	
 	/**
 	 * Returns a copy of this DefaultAbility with an empty internal state.

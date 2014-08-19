@@ -63,7 +63,7 @@ public class StandaloneDamageBonus extends IntBonus {
 	}
 	
 	@Override public void appendDescription(StringBuilder sb) {
-		sb.append("Damage Bonus ");
+		sb.append("Extra Damage: ");
 		sb.append("<span style=\"font-family: red\">");
 		sb.append(minDamage);
 		

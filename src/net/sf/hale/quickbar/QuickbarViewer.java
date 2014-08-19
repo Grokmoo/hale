@@ -24,7 +24,7 @@ import java.util.List;
 
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.widgets.HotKeyButton;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -246,9 +246,9 @@ public class QuickbarViewer extends DialogLayout {
 	 * be displayed
 	 */
 	
-	public void updateContent(Creature selected) {
+	public void updateContent(PC selected) {
 		if (selected != null) {
-			Quickbar quickbar = selected.getQuickbar();
+			Quickbar quickbar = selected.quickbar;
 			
 			if (quickbar != null) {
 				int index = quickbar.getLastViewSetIndex();

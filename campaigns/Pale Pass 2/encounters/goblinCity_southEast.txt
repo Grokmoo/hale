@@ -1,9 +1,0 @@
-size 4
-faction "Neutral"
-challenge 0
-creature "goblin_peasant01" 0 2
-creature "goblin_peasant01" 1 2
-creature "goblin_peasant02" 4 1
-creature "goblin_peasant02" -4 -2
-creature "goblin_guard" 2 -2
-creature "goblin_guard" 1 -2

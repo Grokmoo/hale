@@ -26,7 +26,9 @@ import de.matthiasmann.twl.AnimationState;
 
 import net.sf.hale.Game;
 import net.sf.hale.defaultability.MouseActionList;
+import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.Location;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.Logger;
@@ -54,7 +56,7 @@ public abstract class Targeter {
 	private boolean mouseHoverValid;
 	private MouseActionList.Condition mouseActionCondition;
 	
-	private AbilityActivator parent;
+	private Creature parent;
 	private Scriptable scriptable;
 	private boolean cancelable;
 	private String menuTitle;
@@ -90,7 +92,7 @@ public abstract class Targeter {
 	 * @param abilitySlot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public Targeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot abilitySlot) {
+	public Targeter(Creature parent, Scriptable scriptable, AbilitySlot abilitySlot) {
 		this.parent = parent;
 		this.scriptable = scriptable;
 		this.cancelable = true;
@@ -116,7 +118,7 @@ public abstract class Targeter {
 	 * @return the parent for this Targeter
 	 */
 	
-	public AbilityActivator getParent() {
+	public Creature getParent() {
 		return parent;
 	}
 	
@@ -209,11 +211,11 @@ public abstract class Targeter {
 	
 	/**
 	 * Adds the specified Point to the list of allowed, selectable Points
-	 * @param point the Point to add
+	 * @param location the Point to add
 	 */
 	
-	public void addAllowedPoint(Point point) {
-		allowedPoints.add(new Point(point));
+	public void addAllowedPoint(Location location) {
+		allowedPoints.add(location.toPoint());
 	}
 	
 	/**
@@ -238,8 +240,8 @@ public abstract class Targeter {
 	 * @param creature the Creature or AbilityActivator
 	 */
 	
-	public void addAllowedCreature(AbilityActivator creature) {
-		allowedPoints.add(creature.getPosition());
+	public void addAllowedCreature(Creature creature) {
+		allowedPoints.add(creature.getLocation().toPoint());
 	}
 	
 	/**
@@ -253,7 +255,7 @@ public abstract class Targeter {
 	
 	public void addAllowedCreatures(List<Entity> entities) {
 		for (Entity entity : entities) {
-			allowedPoints.add(entity.getPosition());
+			allowedPoints.add(entity.getLocation().toPoint());
 		}
 		
 		treatAllowedPointsAsNonEmpty = true;
@@ -351,6 +353,32 @@ public abstract class Targeter {
 	public Point getMouseGridPosition() { return mouseGridPoint; }
 	
 	/**
+	 * Returns the screen point corresponding to the center of the grid
+	 * coordinates of the current mouse location.  Note that this will not
+	 * usually equal the exact mouse coordinates
+	 * @return the mouse screen point
+	 */
+	
+	public Point getMouseScreenPosition() {
+		return AreaUtil.convertGridToScreenAndCenter(mouseGridPoint);
+	}
+	
+	/**
+	 * Sets the current mouse position to the specified location with
+	 * the exact screen coordinates as the center of the specified location.
+	 * See {@link #setMousePosition(int, int, Point)}
+	 * 
+	 * @param location the location to set the mouse
+	 * @return whether the gridPoint has changed since the last time the
+	 * mouse position was set
+	 */
+	
+	public boolean setMousePosition(Location location) {
+		Point screenPoint = location.getCenteredScreenPoint();
+		return setMousePosition(screenPoint.x, screenPoint.y, location.toPoint());
+	}
+	
+	/**
 	 * Sets the current mouse position to the specified gridPoint with
 	 * the exact screen coordinates as the center of the specified gridPoint.
 	 * See {@link #setMousePosition(int, int, Point)}
@@ -392,15 +420,15 @@ public abstract class Targeter {
 		boolean targetOK = Game.curCampaign.curArea.isPassable(gridPoint.x, gridPoint.y);
 		
 		// can only target visible tiles
-		targetOK = targetOK && parent.getVisibility()[gridPoint.x][gridPoint.y];
+		targetOK = targetOK && parent.hasVisibilityInCurrentArea(gridPoint.x, gridPoint.y);
 		
 		// player characters can only target explored tiles
-		if (parent.isPlayerSelectable()) {
+		if ( parent.getFaction() == Game.ruleset.getFaction(Game.ruleset.getString("PlayerFaction")) ) {
 			targetOK = targetOK && Game.curCampaign.curArea.getExplored()[gridPoint.x][gridPoint.y];
 		}
 		
 		// check range conditions
-		int range = AreaUtil.distance(mouseGridPoint, this.parent.getPosition());
+		int range = AreaUtil.distance(mouseGridPoint, this.parent.getLocation().toPoint());
 		if (maxRange != 0) {
 			targetOK = targetOK && range <= maxRange;
 		}
@@ -420,10 +448,15 @@ public abstract class Targeter {
 	 * Called during the screen drawing process.  Performs any special
 	 * drawing for this Targeter.
 	 * @param as the current GUI animation state
+	 * @return false if this targeter is not to be drawn at all
 	 */
 	
-	public void draw(AnimationState as) {
-		Game.areaViewer.drawAnimHex(parent.getPosition(), as);
+	public boolean draw(AnimationState as) {
+		if (!parent.isPlayerFaction()) return false;
+		
+		Game.areaViewer.drawAnimHex(parent.getLocation().getX(), parent.getLocation().getY(), as);
+		
+		return true;
 	}
 	
 	/**
@@ -598,6 +631,37 @@ public abstract class Targeter {
 		}
 
 		Game.mainViewer.setTargetTitleText(line1, line2, line3);
+	}
+	
+	/**
+	 * Returns the number of desirable targets currently affected by this targeter.
+	 * For abilities with a negative effect, this will be the number of hostile targets,
+	 * while for abilities with a positive effect, this will be the number of friendly
+	 * targets.  For targeters that don't have enough information to determine whether
+	 * targets are desirable, returns 0
+	 * @return the number of desirable targets
+	 */
+	
+	public int getDesirableTargetCount() {
+		if (abilitySlot == null) return 0;
+		
+		if (mouseHoverValid)
+			return 1;
+		else
+			return 0;
+	}
+	
+	/**
+	 * Returns the number of undesirable targets currently affected by this targeter.
+	 * For abilities with a negative effect, this will be the number of friendly targets,
+	 * while for the abilities with a positive effect, this will be the number of hostile
+	 * targets.  For targeters that don't have enough information to determine whether
+	 * targets are desirable, returns 0
+	 * @return the number of undesirable targets
+	 */
+	
+	public int getUndesirableTargetCount() {
+		return 0;
 	}
 	
 	/**

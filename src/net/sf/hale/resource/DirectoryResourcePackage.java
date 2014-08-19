@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import net.sf.hale.util.DirectoryListing;
 import net.sf.hale.util.FileUtil;
 import net.sf.hale.util.Logger;
 
@@ -33,7 +32,7 @@ public class DirectoryResourcePackage extends ResourcePackage {
 		super(type);
 		this.root = root;
 		
-		for (File file : DirectoryListing.getFiles(root)) {
+		for (File file : FileUtil.getFiles(root)) {
 			if (file.isDirectory()) continue;
 			
 			if (file.getPath().contains(".svn")) continue;

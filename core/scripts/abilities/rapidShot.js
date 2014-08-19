@@ -1,5 +1,6 @@
 function onActivate(game, slot) {
 	var effect = slot.createEffect();
+	effect.addPositiveIcon("items/enchant_actionPoints_small");
 	effect.setTitle(slot.getAbility().getName());
 	
 	effect.getBonuses().addBaseWeaponBonus("Longbow", "Speed", +15);

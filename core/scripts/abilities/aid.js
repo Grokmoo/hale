@@ -26,17 +26,19 @@ function onTargetSelect(game, targeter) {
 	
 	var target = targeter.getSelectedCreature();
 
-	var chaBonus = (parent.stats().getCha() - 10) * 4;
-	if (parent.getAbilities().has("PersonalMagnetism"))
+	var chaBonus = (parent.stats.getCha() - 10) * 4;
+	if (parent.abilities.has("PersonalMagnetism"))
 		chaBonus = chaBonus * 2;
 	
-	var lvlBonus = parent.getRoles().getLevel("Paladin") * 4;
+	var lvlBonus = parent.roles.getLevel("Paladin") * 4;
 	
 	var amount = chaBonus + lvlBonus;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
 	effect.setTitle(ability.getName());
+	effect.addPositiveIconddPositiveIcon("items/enchant_attack_small");
+	effect.addPositiveIcon("items/enchant_armor_small");
 	effect.getBonuses().add('UndispellableImmobilized');
 	effect.getBonuses().addBonus('ArmorClass', 'Deflection', amount);
 	effect.getBonuses().addBonus('MeleeSpellFailure', 'Morale', amount);

@@ -19,11 +19,10 @@
 
 package net.sf.hale.quickbar;
 
-import org.lwjgl.opengl.GL11;
-
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
-import net.sf.hale.Sprite;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.view.DragTarget;
 import net.sf.hale.view.DropTarget;
 import de.matthiasmann.twl.Button;
@@ -49,14 +48,11 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	private Quickbar quickbar;
 	private int quickbarIndex;
 	
-	private Sprite overrideSprite;
-	private Color overrideColor;
+	private Icon overrideIcon;
 	
-	private Sprite sprite;
-	private Color color;
+	private Icon icon;
 	
-	private Sprite secondarySprite;
-	private Color secondaryColor;
+	private Icon secondaryIcon;
 	
 	private int index;
 	
@@ -98,7 +94,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		primaryLabel.setTheme("primarylabel");
 		this.add(primaryLabel);
 		
-		this.color = Color.WHITE;
+		this.icon = IconFactory.emptyIcon;
 	}
 	
 	/**
@@ -128,24 +124,21 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	}
 	
 	/**
-	 * Sets the override Sprite for this Button.  This causes the Button to display
-	 * the specified Sprite while the override is in effect.  Once the override is
-	 * cleared with {@link #clearOverrideSprite()}, the Button goes back to displaying
-	 * the usual Sprite.  This is used by the QuickbarDragHandler as a cue for drag
+	 * Sets the override Icon for this Button.  This causes the Button to display
+	 * the specified Icon while the override is in effect.  Once the override is
+	 * cleared with {@link #clearOverrideIcon()}, the Button goes back to displaying
+	 * the usual Icon(s).  This is used by the QuickbarDragHandler as a cue for drag
 	 * and drop.
 	 * 
-	 * @param sprite the Sprite to display as an override
-	 * @param color the color to display the override sprite
+	 * @param icon
 	 */
 	
-	public void setOverrideSprite(Sprite sprite, Color color) {
-		this.overrideSprite = sprite;
-		this.overrideColor = color;
+	public void setOverrideIcon(Icon icon) {
+		this.overrideIcon = icon;
 	}
 	
-	public void clearOverrideSprite() {
-		this.overrideSprite = null;
-		this.overrideColor = null;
+	public void clearOverrideIcon() {
+		this.overrideIcon = null;
 	}
 	
 	/**
@@ -167,25 +160,22 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 			if (this.getTooltipContent() != emptyTooltip)
 				this.setTooltipContent(emptyTooltip);
 			
-			this.sprite = null;
-			primaryLabel.setText("");
-			
-			this.secondarySprite = null;
+			this.icon = IconFactory.emptyIcon;
+			this.primaryLabel.setText("");
+			this.secondaryIcon = null;
 		} else {
-			this.sprite = slot.getSprite();
-			this.secondarySprite = slot.getSecondarySprite();
-			Color c = slot.getSpriteColor();
-			Color c2 = slot.getSecondarySpriteColor();
+			
+			if (slot.isActivateable()) {
+				this.icon = slot.getIcon();
+				this.secondaryIcon = slot.getSecondaryIcon();
+			} else {
+				this.icon = slot.getIcon().multiplyByColor(new Color(0xFF7F7F7F));
+				
+				if (slot.getSecondaryIcon() != null)
+					this.secondaryIcon = slot.getSecondaryIcon().multiplyByColor(new Color(0xFF7F7F7F));
+			}
 			
 			primaryLabel.setText(slot.getLabelText());
-			
-			if (!slot.isActivateable()) {
-				this.color = c.multiply(new Color(0xFF7F7F7F));
-				this.secondaryColor = c2.multiply(new Color(0xFF7F7F7F));
-			} else {
-				this.color = c;
-				this.secondaryColor = c2;
-			}
 			
 			String tooltip = slot.getTooltipText();
 			if (!tooltip.equals(getTooltipContent())) {
@@ -233,29 +223,13 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	@Override public void paintWidget(GUI gui) {
 		super.paintWidget(gui);
 		
-		if (overrideSprite != null) {
-			GL11.glColor4ub(overrideColor.getR(), overrideColor.getG(),
-					overrideColor.getB(), overrideColor.getA());
-			
-			overrideSprite.drawWithIconOffset(getInnerX(), getInnerY());
-			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		if (overrideIcon != null) {
+			overrideIcon.drawCentered(getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
+		} else if (secondaryIcon != null) {
+			secondaryIcon.drawCentered(getInnerX() + 5, getInnerY(), getInnerWidth(), getInnerHeight());
+			icon.drawCentered(getInnerX() - 5, getInnerY(), getInnerWidth(), getInnerHeight());
 		} else {
-			int offset;
-			if (secondarySprite != null) offset = 5;
-			else offset = 0;
-			
-			if (secondarySprite != null) {
-				GL11.glColor4ub(secondaryColor.getR(), secondaryColor.getG(),
-						secondaryColor.getB(), secondaryColor.getA());
-				
-				secondarySprite.drawWithIconOffset(getInnerX() + offset, getInnerY());
-			}
-			
-			if (sprite != null) {
-				GL11.glColor4ub(color.getR(), color.getG(), color.getB(), color.getA());
-				sprite.drawWithIconOffset(getInnerX() - offset, getInnerY());
-				GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			}
+			icon.drawCentered(getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
 		}
 	}
 	
@@ -273,7 +247,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		Game.mainViewer.getMenu().clear();
 		Game.mainViewer.getMenu().setPosition(menuPositionX, menuPositionY);
 		
-		slot.activate();
+		slot.activate(this);
 	}
 	
 	/**
@@ -294,12 +268,31 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	}
 	
 	/**
+	 * Returns an activate callback for this button
+	 * @param slot
+	 * @return the activate callback
+	 */
+	
+	public Runnable getActivateSlotCallback(QuickbarSlot slot) {
+		return new ActivateSlotCallback(slot);
+	}
+	
+	/**
+	 * Returns a callback which will clear this button
+	 * @return the clear callback
+	 */
+	
+	public Runnable getClearSlotCallback() {
+		return new ClearSlotCallback(this);
+	}
+	
+	/**
 	 * A callback for use in clearing this QuickbarSlotButton
 	 * @author Jared Stephen
 	 *
 	 */
 	
-	public static class ClearSlotCallback implements Runnable {
+	private static class ClearSlotCallback implements Runnable {
 		private QuickbarSlotButton button;
 		
 		/**
@@ -325,7 +318,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	 *
 	 */
 	
-	public static class ActivateSlotCallback implements Runnable {
+	private class ActivateSlotCallback implements Runnable {
 		private QuickbarSlot slot;
 		
 		/**
@@ -339,31 +332,30 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		
 		@Override public void run() {
 			Game.mainViewer.getMenu().hide();
-			slot.activate();
+			slot.activate(QuickbarSlotButton.this);
 		}
 	}
 
 	@Override public void dragAndDropStartHover(DragTarget target) {
-		if (target.getItem() != null && target.getItemParent() == this.quickbar.getParent()) {
-			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getItem(), target.getItemParent());
-		} else if (target.getAbility() != null && target.getAbilityParent() == this.quickbar.getParent()) {
-			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getAbility(), target.getAbilityParent());
+		if (target.getItem() != null && target.getParentPC() == this.quickbar.getParent()) {
+			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getItem(), target.getParentPC());
+		} else if (target.getAbility() != null && target.getParentPC() == this.quickbar.getParent()) {
+			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getAbility(), target.getParentPC());
 		} else {
 			dragSlotToAdd = null;
 		}
 		
 		if (dragSlotToAdd != null) {
-			this.setOverrideSprite(target.getDragSprite(),
-					target.getDragSpriteColor().multiply(new Color(0xFF555555)));
+			this.setOverrideIcon(target.getDragIcon().multiplyByColor(new Color(0xFF555555)));
 		}
 	}
 
 	@Override public void dragAndDropStopHover(DragTarget target) {
-		this.clearOverrideSprite();
+		this.clearOverrideIcon();
 	}
 
 	@Override public void dropDragTarget(DragTarget target) {
-		this.clearOverrideSprite();
+		this.clearOverrideIcon();
 		
 		int slotIndex = viewer.getSlotIndex(this);
 		

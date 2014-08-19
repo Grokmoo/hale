@@ -1,8 +1,0 @@
-name "Regeneration 10"
-description "This creature regenerates 10 hit points per round."
-type "Racial Abilities"
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect('effects/healingOverTime'); effect.put('healingPerRound', 10); parent.applyEffect(effect); }"

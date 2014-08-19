@@ -92,7 +92,6 @@ public abstract class SubEditorPanel extends JPanel {
 	/**
 	 * Adds a single row of elements to this Panel with no label
 	 * @param component the main component to add
-	 * @param parentFrame the parent component to add the component to
 	 */
 	
 	protected void addRow(JComponent component) {
@@ -103,7 +102,6 @@ public abstract class SubEditorPanel extends JPanel {
 	 * Adds a single row of elements to this Panel
 	 * @param name the text of the label which will be the first component in the row, or null for no label
 	 * @param component the main component to add
-	 * @param parentFrame the parent component to add the component to
 	 */
 	
 	protected void addRow(String name, JComponent component) {
@@ -114,7 +112,6 @@ public abstract class SubEditorPanel extends JPanel {
 	 * Adds a single row of elements to this Panel with no label
 	 * @param component the main component to add.  This component will be sized to fill
 	 * all available space horizontally
-	 * @param parentFrame the parent component to add the component to
 	 */
 	
 	protected void addRowFilled(JComponent component) {
@@ -126,7 +123,6 @@ public abstract class SubEditorPanel extends JPanel {
 	 * @param name the text of the label which will be the first component in the row, or null for no label
 	 * @param component the main component to add.  This component will be sized to fill
 	 * all available space horizontally
-	 * @param parentFrame the parent component to add the component to
 	 */
 	
 	protected void addRowFilled(String name, JComponent component) {
@@ -136,8 +132,7 @@ public abstract class SubEditorPanel extends JPanel {
 	/**
 	 * Adds a row of multiple elements to this panel
 	 * @param name the text of the label which will be the first component in the row, or null for no label
-	 * @param component the list of components to add
-	 * @param parentFrame the parent component to add the component to
+	 * @param components the list of components to add
 	 */
 	
 	protected void addRow(String name, JComponent... components) {
@@ -151,8 +146,7 @@ public abstract class SubEditorPanel extends JPanel {
 	
 	/**
 	 * Adds a row of multiple elements to this panel with no label
-	 * @param component the list of components to add
-	 * @param parentFrame the parent component to add the component to
+	 * @param components the list of components to add
 	 */
 	
 	protected void addRow(JComponent... components) {

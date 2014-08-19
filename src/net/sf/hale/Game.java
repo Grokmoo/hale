@@ -19,17 +19,22 @@
 
 package net.sf.hale;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
+import java.nio.ByteBuffer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 import net.sf.hale.defaultability.MouseActionList;
-import net.sf.hale.editor.CampaignEditor;
-import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.interfacelock.InterfaceLocker;
 import net.sf.hale.loading.AsyncTextureLoader;
 import net.sf.hale.loading.LoadGameLoadingTaskList;
@@ -41,8 +46,8 @@ import net.sf.hale.mainmenu.MainMenuAction;
 import net.sf.hale.particle.ParticleManager;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Campaign;
 import net.sf.hale.rules.Dice;
-import net.sf.hale.rules.GameTimer;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.util.JSEngineManager;
 import net.sf.hale.util.Logger;
@@ -90,8 +95,6 @@ public class Game {
 	
 	private static NumberFormat numberFormat;
 	
-	public static final String configFile = "config.json";
-	
 	/**
 	 * The global config, containing video mode etc
 	 */
@@ -106,12 +109,6 @@ public class Game {
 	public static Campaign curCampaign;
 	
 	/**
-	 * This remains null when running the game unless you launch the editor
-	 */
-	
-	public static CampaignEditor campaignEditor;
-	
-	/**
 	 * The globally selected entity.  This is the entity that is highlighted as active, and that the area
 	 * will center on
 	 */
@@ -123,12 +120,6 @@ public class Game {
 	 */
 	
 	public static Ruleset ruleset;
-	
-	/**
-	 * stores and handles creatures and items.
-	 */
-	
-	public static EntityManager entityManager;
 	
 	/**
 	 * keeps track of all particle effects and animations
@@ -260,6 +251,69 @@ public class Game {
 	}
 	
 	/**
+	 * The OS type of the user currently running this program
+	 * @author Jared Stephen
+	 *
+	 */
+	
+	public enum OSType {
+		Unix,
+		Windows,
+		Mac;
+	}
+	
+	/**
+	 * The current running operating system
+	 */
+	
+	public static OSType osType;
+	
+	private static String configBaseDirectory;
+	private static String charactersBaseDirectory;
+	private static String partiesBaseDirectory;
+	private static String saveBaseDirectory;
+	private static String logBaseDirectory;
+	
+	/**
+	 * Returns the directory containing config and similar files
+	 * @return the config directory
+	 */
+	
+	public static String getConfigBaseDirectory() { return configBaseDirectory; }
+	
+	/**
+	 * Returns the directory used to read and write character data.  Default
+	 * characters and parties are also stored in a separate directory "characters/" (relative
+	 * to the hale executable)
+	 * @return the characters directory
+	 */
+	
+	public static String getCharactersBaseDirectory() { return charactersBaseDirectory; }
+	
+	/**
+	 * Returns the directory used to read and write party data. Default
+	 * characters and parties are also stored in a separate directory "characters/" (relative
+	 * to the hale executable)
+	 * @return the parties directory
+	 */
+	
+	public static String getPartiesBaseDirectory() { return partiesBaseDirectory; }
+	
+	/**
+	 * Returns the directory used to read and write save games
+	 * @return the save directory
+	 */
+	
+	public static String getSaveBaseDirectory() { return saveBaseDirectory; }
+	
+	/**
+	 * Returns the directory used to write log files
+	 * @return the log directory
+	 */
+	
+	public static String getLogBaseDirectory() { return logBaseDirectory; }
+	
+	/**
 	 * The global main method.  Handles initializing the global variables,
 	 * determining available display modes, creating the display, and parsing any arguments
 	 * 
@@ -270,25 +324,36 @@ public class Game {
 	 */
 	
 	public static void main(String[] args) {
-		Game.numberFormat = NumberFormat.getInstance();
-		Game.config = new Config(Game.configFile);
-		Game.dice = new Dice();
+		// determine system type
+		String osString = System.getProperty("os.name").toLowerCase();
+
+		if (osString.contains("win")) osType = OSType.Windows;
+		else if (osString.contains("mac")) osType = OSType.Mac;
+		else osType = OSType.Unix;
 		
-		Game.mouseActions = new MouseActionList("gui/mouseActions.txt");
+		initializeOSSpecific(osType);
+		
+		// initialize inventory slots - equippable item types
+		EquippableItemTemplate.initializeTypesMap();
+		
+		// determines the resource IDs of all available core resources, but does not read them in yet
+		ResourceManager.registerCorePackage();
+		
+		Game.numberFormat = NumberFormat.getInstance();
+		Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
+		Game.dice = new Dice();
 		
 		Game.scriptEngineManager = new JSEngineManager();
 		Game.scriptInterface = new ScriptInterface();
 		
 		Game.particleManager = new ParticleManager();
-		Game.entityManager = new EntityManager();
 		
 		Game.timer = new GameTimer();
 		Game.interfaceLocker = new InterfaceLocker();
 		ScriptInterface.ai = new AIScriptInterface();
 		
 		Display.setTitle("Hale");
-		
-		createTimerAccuracyThread();
+		setDisplayIcon();
 		
 		textureLoader = new AsyncTextureLoader();
 		
@@ -299,9 +364,6 @@ public class Game {
 		}
 		
 		Config.createGameDisplay();
-		
-		// determines the resource IDs of all available core resources, but does not read them in yet
-		ResourceManager.registerCorePackage();
 		
 		try {
 			// run the game in a loop until the specified action is Exit
@@ -350,22 +412,112 @@ public class Game {
 		return threadsList;
 	}
 	
+	private static ByteBuffer loadIcon(InputStream is) {
+		BufferedImage image;
+		try {
+			image = ImageIO.read(is);
+		} catch (IOException e) {
+			Logger.appendToErrorLog("Error loading display icon", e);
+			return null;
+		}
+		
+		byte[] imageBytes = new byte[image.getWidth() * image.getHeight() * 4];
+	    for (int i = 0; i < image.getHeight(); i++) {
+	        for (int j = 0; j < image.getWidth(); j++) {
+	            int pixel = image.getRGB(j, i);
+	            for (int k = 0; k < 3; k++) // red, green, blue
+	                imageBytes[(i*image.getWidth()+j)*4 + k] = (byte)(((pixel>>(2-k)*8))&255);
+	            imageBytes[(i*image.getWidth()+j)*4 + 3] = (byte)(((pixel>>(3)*8))&255); // alpha
+	        }
+	    }
+	    
+	    return ByteBuffer.wrap(imageBytes);
+	}
+	
+	private static void setDisplayIcon() {
+		InputStream is128 = ResourceManager.getStream("gui/hale128.png");
+		InputStream is64 = ResourceManager.getStream("gui/hale64.png");
+		InputStream is32 = ResourceManager.getStream("gui/hale32.png");
+		InputStream is16 = ResourceManager.getStream("gui/hale16.png");
+		
+		ByteBuffer[] list = new ByteBuffer[4];
+		
+		list[0] = loadIcon(is128);
+		list[1] = loadIcon(is64);
+		list[2] = loadIcon(is32);
+		list[3] = loadIcon(is16);
+		
+		Display.setIcon(list);
+	}
+	
+	/**
+	 * Initializes Operating System specific state
+	 * @param osType
+	 */
+	
+	public static void initializeOSSpecific(OSType osType) {
+		switch (osType) {
+		case Windows:
+			String baseDir = System.getProperty("user.home") + "\\My Documents\\My Games\\hale\\";
+
+			Game.configBaseDirectory = baseDir + "\\config\\";
+			Game.charactersBaseDirectory = baseDir + "\\characters\\";
+			Game.partiesBaseDirectory = baseDir + "\\parties\\";
+			Game.saveBaseDirectory = baseDir + "\\saves\\";
+			Game.logBaseDirectory = baseDir + "\\log\\";
+			
+			createTimerAccuracyThread();
+			break;
+		default:
+			// Linux and MacOS
+			
+			// use XDG compliant data and configuration directories
+			String xdgDataHome = System.getenv("XDG_DATA_HOME");
+			String xdgConfigHome = System.getenv("XDG_CONFIG_HOME");
+			
+			if (xdgDataHome == null || xdgDataHome.length() == 0) {
+				// fallback to XDG default
+				xdgDataHome = System.getProperty("user.home") + "/.local/share";
+			}
+			
+			if (xdgConfigHome == null || xdgConfigHome.length() == 0) {
+				// fallback to XDG default
+				xdgConfigHome = System.getProperty("user.home") + "/.config";
+			}
+			
+			xdgDataHome = xdgDataHome + "/hale/";
+			xdgConfigHome = xdgConfigHome + "/hale/";
+			
+			Game.configBaseDirectory = xdgConfigHome;
+			Game.charactersBaseDirectory = xdgDataHome + "characters/";
+			Game.partiesBaseDirectory = xdgDataHome + "parties/";
+			Game.saveBaseDirectory = xdgDataHome + "saves/";
+			Game.logBaseDirectory = xdgDataHome + "log/";
+			
+			break;
+		}
+		
+		new File(Game.configBaseDirectory).mkdirs();
+		new File(Game.charactersBaseDirectory).mkdirs();
+		new File(Game.partiesBaseDirectory).mkdirs();
+		new File(Game.saveBaseDirectory).mkdirs();
+		new File(Game.logBaseDirectory).mkdirs();
+	}
+	
 	private static void createTimerAccuracyThread() {
 		// if we are in Windows OS, start a thread and make it sleep
 		// this will ensure reasonable timer accuracy from the OS
-		if (Game.config.getOSType() == Config.OSType.Windows) {
-			Thread timerAccuracyThread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(Long.MAX_VALUE);
-					} catch (Exception e) {
-						Logger.appendToErrorLog("Timer accuracy thread error.", e);
-					}
+		Thread timerAccuracyThread = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(Long.MAX_VALUE);
+				} catch (Exception e) {
+					Logger.appendToErrorLog("Timer accuracy thread error", e);
 				}
-			});
-			timerAccuracyThread.setDaemon(true);
-			timerAccuracyThread.start();
-		}
+			}
+		});
+		timerAccuracyThread.setDaemon(true);
+		timerAccuracyThread.start();
 	}
 	
 	private static void destroyDisplay() {
@@ -406,25 +558,8 @@ public class Game {
 				MainMenu.writeLastOpenCampaign(Game.curCampaign.getID());
 			
 			return action;
-		case LaunchEditor:
-			destroyDisplay();
-			Config.createEditorDisplay();
-
-			// run the campaign editor to automatically open the current campaign if it has been selected
-			if (Game.curCampaign != null) runGameEditor(Game.curCampaign.getID());
-			else runGameEditor(null);
-
-			// exit after running the game editor
-			return new MainMenuAction(MainMenuAction.Action.Exit);
 		case NewGame:
-			Game.entityManager.clearEntities();
-			
-			if (Game.curCampaign.stripStartingCharacters()) {
-				for (Creature c : Game.curCampaign.party) {
-					c.getInventory().clear();
-				}
-			}
-
+			EntityManager.clear();
 			Game.curCampaign.curArea.addPlayerCharacters();
 			Game.mainViewer = new MainViewer();
 			Game.curCampaign.curArea.setEntityVisibility();
@@ -468,21 +603,6 @@ public class Game {
 		
 		// reshow the main menu if no other action was specified above
 		return new MainMenuAction(MainMenuAction.Action.ShowMainMenu);
-	}
-
-	private static void runGameEditor(String path) {
-		// if the currently selected campaign has not been extracted to a folder (so it is a zip resource),
-		// the campaign editor cannot load it.
-		if (path != null && ! new File("campaigns/" + path).exists()) {
-			path = null;
-			Game.curCampaign = null;
-		}
-
-		SpriteManager.loadSpriteSheets();
-		SpriteManager.loadAllPortraits();
-
-		Game.campaignEditor = new CampaignEditor(path);
-		Game.campaignEditor.mainLoop();
 	}
 	
 	/** 

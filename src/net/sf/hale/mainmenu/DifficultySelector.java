@@ -22,8 +22,8 @@ package net.sf.hale.mainmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sf.hale.DifficultyManager;
 import net.sf.hale.Game;
-import net.sf.hale.rules.DifficultyManager;
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ToggleButton;

@@ -57,7 +57,5 @@ function keyObtained(game) {
 }
 
 function spawnTrap(game) {
-    var encounter = game.campaign().getEncounter("ancientTombTrap_lvl10");
-    
-    game.addEncounterToArea(encounter, 22, 26);
+    game.addEncounterToArea("ancientTombTrap_lvl10", 22, 26);
 }

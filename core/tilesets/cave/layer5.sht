@@ -1,9 +1,0 @@
-Spritesheet "layer5"
-defaultWidth 108
-defaultHeight 144
-multiplyValuesBy 108
-
-image "wall-rough-concave-bl" 0 0
-image "wall-rough-concave-br" 1 0
-image "wall-rough-convex-tl"  2 0
-image "wall-rough-convex-tr"  3 0

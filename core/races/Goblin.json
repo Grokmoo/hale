@@ -1,7 +1,6 @@
 { "name" : "Goblin",
-  "size" : "Medium",
   "baseMovementCost" : 1200,
-  "unarmedWeapon" : "unarmedMedium",
+  "defaultWeapon" : "unarmedMedium",
   
   "racialTypes" : [
     "Humanoid", "Beast"

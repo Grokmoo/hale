@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.AnimationState;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Event;
@@ -39,17 +38,17 @@ import de.matthiasmann.twl.GUI;
 public class IconButton extends Button {
 	private List<Callback> callbacks;
 	
-	private Sprite sprite;
+	private Icon icon;
 	
 	/**
 	 * Creates an icon button displaying the specified icon
 	 * @param icon the icon to display
 	 */
 	
-	public IconButton(String icon) {
+	public IconButton(Icon icon) {
 		if (icon != null) {
-			this.sprite = SpriteManager.getSprite(icon);
-			this.setSize(sprite.getWidth(), sprite.getHeight());
+			this.icon = icon;
+			this.setSize(icon.getWidth(), icon.getHeight());
 		} else {
 			this.setSize(Game.ICON_SIZE, Game.ICON_SIZE);
 		}
@@ -71,9 +70,8 @@ public class IconButton extends Button {
 	 * @param icon the icon to display
 	 */
 	
-	public void setIcon(String icon) {
-		if (icon == null) this.sprite = null;
-		else this.sprite = SpriteManager.getSprite(icon);
+	public void setIcon(Icon icon) {
+		this.icon = icon;
 	}
 	
 	@Override public void addCallback(Runnable runnable) {
@@ -103,11 +101,11 @@ public class IconButton extends Button {
 	}
 	
 	@Override public int getMinWidth() {
-		return sprite != null ? sprite.getWidth() + getBorderHorizontal() : Game.ICON_SIZE + getBorderHorizontal();
+		return icon != null ? icon.getWidth() + getBorderHorizontal() : Game.ICON_SIZE + getBorderHorizontal();
 	}
 	
 	@Override public int getMinHeight() {
-		return sprite != null ? sprite.getHeight() + getBorderVertical(): Game.ICON_SIZE + getBorderVertical();
+		return icon != null ? icon.getHeight() + getBorderVertical(): Game.ICON_SIZE + getBorderVertical();
 	}
 	
 	@Override protected boolean handleEvent(Event evt) {
@@ -142,8 +140,8 @@ public class IconButton extends Button {
 	@Override protected void paintWidget(GUI gui) {
 		super.paintWidget(gui);
 		
-		if (sprite != null)
-			sprite.drawWithIconOffset(getInnerX(), getInnerY());
+		if (icon != null)
+			icon.draw(getInnerX(), getInnerY());
 	}
 	
 	/**

@@ -66,7 +66,6 @@ public class AIAbilitySlotSet {
 		for (String type : slots.keySet()) {
 			for (AbilitySlot slot : slots.get(type)) {
 				if (!slot.canActivate() && !slot.canDeactivate()) continue;
-				
 				sortedSlots.add(slot);
 			}
 		}
@@ -113,10 +112,11 @@ public class AIAbilitySlotSet {
 		
 		// now look through the list of sorted slots for slots with the right action type
 		List<AbilitySlot> slots = new ArrayList<AbilitySlot>();
-		
+
 		for (AbilitySlot slot : this.sortedSlots) {
-			if (types.contains(slot.getAbility().getActionType()))
+			if (types.contains(slot.getAbility().getActionType())) {
 				slots.add(slot);
+			}
 		}
 		
 		return slots;

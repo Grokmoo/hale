@@ -1,0 +1,826 @@
+/*
+ * Hale is highly moddable tactical RPG.
+ * Copyright (C) 2011 Jared Stephen
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+package net.sf.hale.area;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.hale.AIScriptInterface;
+import net.sf.hale.Game;
+import net.sf.hale.ability.AreaEffectList;
+import net.sf.hale.ability.Aura;
+import net.sf.hale.ability.Effect;
+import net.sf.hale.ability.EffectTarget;
+import net.sf.hale.bonus.Bonus;
+import net.sf.hale.entity.Container;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Door;
+import net.sf.hale.entity.Encounter;
+import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.Item;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.Openable;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Trap;
+import net.sf.hale.loading.JSONOrderedObject;
+import net.sf.hale.loading.LoadGameException;
+import net.sf.hale.loading.ReferenceHandler;
+import net.sf.hale.loading.Saveable;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.tileset.AreaElevationGrid;
+import net.sf.hale.tileset.AreaTileGrid;
+import net.sf.hale.util.AreaUtil;
+import net.sf.hale.util.Logger;
+import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
+import net.sf.hale.util.SaveGameUtil;
+import net.sf.hale.util.SimpleJSONArray;
+import net.sf.hale.util.SimpleJSONArrayEntry;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
+
+public class Area implements EffectTarget, Saveable {
+	private final List<String> transitions;
+	private final int width, height;
+	private final int visibilityRadius;
+	private final String tileset;
+	private final boolean[][] passable;
+	private final boolean[][] transparency;
+	private final boolean[][] visibility;
+	private final AreaElevationGrid elevation;
+	private final AreaTileGrid tileGrid;
+	private final List<PointImmutable> startLocations;
+	
+	private final AreaEntityList entityList;
+	private final AreaEffectList effects;
+	private final List<Encounter> encounters;
+	private final Map<String, Trigger> triggers;
+	private final String id;
+	private final boolean[][] explored;
+	
+	private AreaUtil areaUtil;
+	
+	@Override public Object save() {
+		JSONOrderedObject data = new JSONOrderedObject();
+		
+		data.put("ref", SaveGameUtil.getRef(this));
+		data.put("name", id);
+		
+		// write out the explored matrix
+		List<Object> exp = new ArrayList<Object>();
+		for (int x = 0; x < explored.length; x++) {
+			for (int y = 0; y < explored[0].length; y++) {
+				if (explored[x][y]) {
+					// write this as a JSON formated object, but with multiple
+					// entries per line
+					exp.add(Integer.toString(x) + ',' + Integer.toString(y));
+				}
+			}
+		}
+		data.put("explored", exp.toArray());
+		
+		Object[] encounterData = new Object[encounters.size()];
+		for (int i = 0; i < encounterData.length; i++) {
+			encounterData[i] = encounters.get(i).save();
+		}
+		data.put("encounters", encounterData);
+		
+		List<Object> triggerData = new ArrayList<Object>();
+		for (String triggerID : triggers.keySet()) {
+			Object trigger = triggers.get(triggerID).save();
+			
+			if (trigger != null)
+				triggerData.add(trigger);
+		}
+		data.put("triggers", triggerData.toArray());
+		
+		if (effects.size() > 0)
+			data.put("effects", effects.save());
+		
+		data.put("entities", entityList.save());
+		
+		return data;
+	}
+	
+	/**
+	 * Loads an area from the specified saved JSON data
+	 * @param data
+	 * @param refHandler
+	 * @return the newly loaded area
+	 * @throws LoadGameException
+	 */
+	
+	public static Area load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
+		return new Area(data.get("name", null), data, refHandler);
+	}
+	
+	/**
+	 * Creates a new area with the specified ID.  The area is parsed from the appropriate resource file
+	 * ("areas/" + id + ".json")
+	 * @param id the Area id and name
+	 * @throws LoadGameException 
+	 */
+	
+	public Area(String id) throws LoadGameException {
+		this(id, null, null);
+	}
+	
+	/*
+	 * Creates a new Area.  If the loadedData is non-null, then the area will be partially parsed
+	 * from the base resource, and then the remainder will be loaded from the save game data
+	 */
+	
+	private Area(String id, SimpleJSONObject loadedData, ReferenceHandler refHandler) throws LoadGameException {
+		this.id = id;
+		
+		SimpleJSONParser parser = new SimpleJSONParser("areas/" + id + ResourceType.JSON.getExtension());
+		
+		this.width = parser.get("width", 0);
+		this.height = parser.get("height", 0);
+		this.tileset = parser.get("tileset", null);
+		this.visibilityRadius = parser.get("visibilityRadius", 0);
+		
+		// initialize matrices
+		explored = new boolean[width][height];
+		transparency = new boolean[width][height];
+		elevation = new AreaElevationGrid(width, height);
+		entityList = new AreaEntityList(width, height);
+		effects = new AreaEffectList(this);
+		tileGrid = new AreaTileGrid(Game.curCampaign.getTileset(tileset), width, height);
+		passable = new boolean[width][height];
+		visibility = new boolean[width][height];
+		
+		if (parser.get("explored", false)) {
+			AreaUtil.setMatrix(explored, true);
+		}
+		
+		// parse start locations
+		if (parser.containsKey("startLocations")) {
+			startLocations = new ArrayList<PointImmutable>();
+			
+			SimpleJSONArray startLocationsIn = parser.getArray("startLocations");
+			
+			for (SimpleJSONArrayEntry entry : startLocationsIn) {
+				SimpleJSONArray locationIn = entry.getArray();
+				Iterator<SimpleJSONArrayEntry> iter = locationIn.iterator();
+				
+				int x = iter.next().getInt(0);
+				int y = iter.next().getInt(0);
+				
+				startLocations.add(new PointImmutable(x, y));
+			}
+		} else {
+			startLocations = Collections.emptyList();
+		}
+		
+		// parse triggers
+		if (parser.containsKey("triggers")) {
+			triggers = new HashMap<String, Trigger>();
+			
+			SimpleJSONObject triggersIn = parser.getObject("triggers");
+			for (String triggerID : triggersIn.keySet()) {
+				triggers.put( triggerID, new Trigger(triggerID, triggersIn.getObject(triggerID)) );
+			}
+		} else {
+			triggers = Collections.emptyMap();
+		}
+		
+		int x, y;
+		
+		// parse transparency
+		SimpleJSONArray transparencyIn = parser.getArray("transparencyGrid");
+		y = 0;
+		for (SimpleJSONArrayEntry entry : transparencyIn) {
+			SimpleJSONArray rowIn = entry.getArray();
+			
+			x = 0;
+			for (SimpleJSONArrayEntry rowEntry : rowIn) {
+				int value = rowEntry.getInt(0);
+				this.transparency[x][y] = (value == 0 ? true : false);
+				x++;
+			}
+			
+			y++;
+		}
+		
+		// parse passability
+		SimpleJSONArray passabilityIn = parser.getArray("passabilityGrid");
+		y = 0;
+		for (SimpleJSONArrayEntry entry : passabilityIn) {
+			SimpleJSONArray rowIn = entry.getArray();
+			
+			x = 0;
+			for (SimpleJSONArrayEntry rowEntry : rowIn) {
+				int value = rowEntry.getInt(0);
+				this.passable[x][y] = (value == 1 ? true : false);
+				x++;
+			}
+			
+			y++;
+		}
+		
+		// parse elevation
+		SimpleJSONArray elevationIn = parser.getArray("elevationGrid");
+		y = 0;
+		for (SimpleJSONArrayEntry entry : elevationIn) {
+			SimpleJSONArray rowIn = entry.getArray();
+			
+			x = 0;
+			for (SimpleJSONArrayEntry rowEntry : rowIn) {
+				int value = rowEntry.getInt(0);
+				this.elevation.setElevation(x, y, (byte)value);
+				x++;
+			}
+			
+			y++;
+		}
+		
+		// parse tiles
+		SimpleJSONObject layersIn = parser.getObject("layers");
+		for (String layerID : layersIn.keySet()) {
+			SimpleJSONObject layerIn = layersIn.getObject(layerID);
+			
+			for (String tileID : layerIn.keySet()) {
+				SimpleJSONArray tilePositionsIn = layerIn.getArray(tileID);
+				for (SimpleJSONArrayEntry entry : tilePositionsIn) {
+					SimpleJSONArray positionIn = entry.getArray();
+					Iterator<SimpleJSONArrayEntry> iter = positionIn.iterator();
+					
+					int xPosition = iter.next().getInt(0);
+					int yPosition = iter.next().getInt(0);
+					
+					this.tileGrid.addTile(tileID, layerID, xPosition, yPosition);
+				}
+			}
+		}
+		
+		encounters = new ArrayList<Encounter>();
+		
+		if (loadedData != null) {
+			// we are loading from a saved game file
+			loadFromSavedFile(loadedData, refHandler);
+			// don't warn on unused keys as some are not read
+		} else {
+			loadFromBaseFile(parser);
+			parser.warnOnUnusedKeys();
+		}
+		
+		// update door transparency
+		for (Entity entity : entityList) {
+			if (entity instanceof Door) {
+				Door door = (Door)entity;
+				
+				if (!door.isTransparent())
+					transparency[door.getLocation().getX()][door.getLocation().getY()] = false;
+				else
+					transparency[door.getLocation().getX()][door.getLocation().getY()] = true;
+			}
+		}
+		
+		// get the list of transitions associated with this area
+		transitions = new ArrayList<String>();
+		for (Transition transition : Game.curCampaign.getAreaTransitions()) {
+			if (transition.isFromArea(this) || 
+					(transition.isTwoWay() && transition.isToArea(this)) ) {
+				this.transitions.add(transition.getID());
+			}
+		}
+		
+		if (loadedData == null) {
+			// if this is not loaded from a saved game, spawn encounters
+			for (Encounter encounter : encounters) {
+				encounter.checkSpawnCreatures();
+			}
+		}
+	}
+	
+	// loads the data in the JSON as saved file data
+	
+	private void loadFromSavedFile(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
+		refHandler.add(data.get("ref", null), this);
+		
+		// parse explored data
+		SimpleJSONArray exploredArray = data.getArray("explored");
+		for (SimpleJSONArrayEntry entry : exploredArray) {
+			String exploredString = entry.getString();
+			
+			String[] coords = exploredString.split(",");
+			
+			if (coords.length != 2) {
+				Logger.appendToErrorLog("Error parsing explored entry " + exploredString);
+			} else {
+				int x = Integer.parseInt(coords[0]);
+				int y = Integer.parseInt(coords[1]);
+				
+				explored[x][y] = true;
+			}
+		}
+		
+		// parse entities
+		entityList.load(data.getObject("entities"), this, refHandler);
+		
+		if (data.containsKey("effects"))
+			effects.load(data.getArray("effects"), refHandler);
+		
+		for (SimpleJSONArrayEntry entry : data.getArray("encounters")) {
+			SimpleJSONObject entryObject = entry.getObject();
+			
+			Encounter encounter = Encounter.load(entryObject, refHandler, this);
+			
+			encounters.add(encounter);
+		}
+		
+		for (SimpleJSONArrayEntry entry : data.getArray("triggers")) {
+			SimpleJSONObject entryData = entry.getObject();
+			
+			String id = entryData.get("id", null);
+			
+			triggers.get(id).load(entryData);
+		}
+	}
+	
+	// loads the parts of the area that are instead loaded from the save game file
+	// when saving / loading
+	
+	private void loadFromBaseFile(SimpleJSONParser parser) {
+		// parse encounters
+		if (parser.containsKey("encounters")) {
+			SimpleJSONObject encountersIn = parser.getObject("encounters");
+			for (String encounterID : encountersIn.keySet()) {
+				SimpleJSONArray encounterIn = encountersIn.getArray(encounterID);
+
+				for (SimpleJSONArrayEntry entry : encounterIn) {
+					SimpleJSONArray coordsIn = entry.getArray();
+					Iterator<SimpleJSONArrayEntry> iter = coordsIn.iterator();
+
+					int positionX = iter.next().getInt(0);
+					int positionY = iter.next().getInt(0);
+
+					// add one encounter for each set of coordinates
+					encounters.add(Game.curCampaign.getEncounter(encounterID, new Location(this, positionX, positionY)));
+				}
+			}
+		}
+
+		// parse containers
+		if (parser.containsKey("containers")) {
+			SimpleJSONArray containersIn = parser.getArray("containers");
+
+			for (SimpleJSONArrayEntry entry : containersIn) {
+				SimpleJSONObject containerIn = entry.getObject();
+
+				Container container = EntityManager.getContainer(containerIn.get("id", null));
+				container.setLocation(this, containerIn.get("x", 0), containerIn.get("y", 0));
+				this.entityList.addContainer(container);
+			}
+		}
+
+		// parse doors
+		if (parser.containsKey("doors")) {
+			SimpleJSONArray doorsIn = parser.getArray("doors");
+
+			for (SimpleJSONArrayEntry entry : doorsIn) {
+				SimpleJSONObject doorIn = entry.getObject();
+
+				Door door = EntityManager.getDoor(doorIn.get("id", null));
+				door.setLocation(this, doorIn.get("x", 0), doorIn.get("y", 0));
+				this.entityList.addEntity(door);
+			}
+		}
+
+		// parse items - note that this must be done after containers to add the items
+		// correctly
+		if (parser.containsKey("items")) {
+			SimpleJSONArray itemsIn = parser.getArray("items");
+
+			for (SimpleJSONArrayEntry entry : itemsIn) {
+				SimpleJSONObject itemIn = entry.getObject();
+
+				int quantity = itemIn.get("quantity", 1);
+
+				Item item;
+				if (itemIn.containsKey("quality")) {
+					item = EntityManager.getItem(itemIn.get("id", null), itemIn.get("quality", null));
+				} else {
+					item = EntityManager.getItem(itemIn.get("id", null));
+				}
+
+				item.setLocation(this, itemIn.get("x", 0), itemIn.get("y", 0));
+
+				if (item instanceof Trap) {
+					// arm traps added directly to the area
+					((Trap)item).setFaction(Game.ruleset.getFaction("Hostile"));
+					this.placeTrap((Trap)item);
+				} else {
+					this.addItem(item, quantity);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Gets the AreaUtil for this area.  If the AreaUtil does not exist, it is created
+	 * @return the AreaUtil for this area
+	 */
+	
+	public AreaUtil getUtil() {
+		if (areaUtil == null) {
+			areaUtil = new AreaUtil(this);
+		}
+		
+		return areaUtil;
+	}
+	
+	public void runOnAreaLoad(Transition transition) {
+		for (Trigger trigger : triggers.values()) {
+			trigger.checkOnAreaLoad(transition);
+		}
+	}
+	
+	public void runOnAreaExit(Transition transition) {
+		for (Trigger trigger : triggers.values()) {
+			trigger.checkOnAreaExit(transition);
+		}
+	}
+	
+	public void checkPlayerMoved(Entity entity) {
+		for (Trigger trigger : triggers.values()) {
+			trigger.checkPlayerMoved(entity);
+		}
+	}
+	
+	public void checkEncounterRespawns() {
+		for (Encounter encounter : encounters) {
+			encounter.checkSpawnCreatures();
+		}
+	}
+	
+	public String getTileset() { return tileset; }
+	public String getName() { return id; }
+	
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
+	
+	public List<String> getTransitions() { return transitions; }
+	public AreaEntityList getEntities() { return entityList; }
+	public AreaTileGrid getTileGrid() { return tileGrid; }
+	public AreaElevationGrid getElevationGrid() { return elevation; }
+	
+	public List<Encounter> getEncounters() { return encounters; }
+	
+	public int getVisibilityRadius() { return visibilityRadius; }
+	
+	public boolean[][] getExplored() { return explored; }
+	public boolean[][] getTransparency() { return transparency; }
+	public boolean[][] getPassability() { return passable; }
+	public boolean[][] getVisibility() { return visibility; }
+	
+	public void applyEffect(Effect effect, List<Point> points) {
+		if (! (effect instanceof Aura))
+			effect.setTarget(this);
+			
+		effects.add(effect, points);
+	}
+	
+	@Override public int getSpellResistance() { return 0; }
+	
+	@Override public void removeEffect(Effect effect) {
+		effects.remove(effect);
+	}
+	
+	@Override public boolean isValidEffectTarget() {
+		return true;
+	}
+	
+	public List<Creature> getAffectedCreatures(Effect effect) {
+		return effects.getAffectedCreatures(effect, this.entityList);
+	}
+	
+	/**
+	 * Starts any animations on all effects in this area's effect list,
+	 * and also animations on all contained creatures' effects lists
+	 */
+	
+	public void startEffectAnimations() {
+		effects.startAnimations();
+		
+		entityList.startEffectAnimations();
+	}
+	
+	public List<Effect> getEffectsAt(int x, int y) {
+		return effects.getEffectsAt(x, y);
+	}
+	
+	public void moveAura(Aura aura, List<Point> points) {
+		effects.move(aura, points);
+	}
+	
+	public int getMovementBonus(Point p) { return getMovementBonus(p.x, p.y); }
+	
+	public int getMovementBonus(int x, int y) { return effects.getBonusAt(Bonus.Type.Movement, x, y); }
+	
+	public boolean isSilenced(int x, int y) { return effects.hasBonusAt(Bonus.Type.Silence, x, y); }
+	
+	public boolean isSilenced(Point p) { return isSilenced(p.x, p.y); }
+	
+	private int getConcealment(Creature attacker, Creature defender, int x, int y) {
+		int concealment = 0;
+		int obstructionsInPathConcealment = 0;
+		
+		Point from = attacker.getLocation().getCenteredScreenPoint();
+		Point to = AreaUtil.convertGridToScreenAndCenter(x, y);
+		
+		if (from.x == to.x && from.y == to.y) return 0;
+		
+		// note that this list will include the defender's position but will not include the attacker's position.
+		// So, concealment on the attacker's tile doesn't affect this calculation
+		List<Point> minPath = AreaUtil.findIntersectingHexes(from.x, from.y, to.x, to.y);
+		
+		// we compute the average concealment of all the tiles in the path.  However, the straight line
+		// path might cross more tiles than are neccessary, adding too much concealment.
+		// To smooth over this sort of difference, we take the average and multiply it by the distance
+		// between the points rather than the path length.
+		
+		int areaPathConcealment = 0;
+		for (Point p : minPath) {
+			areaPathConcealment += effects.getBonusAt(Bonus.Type.Concealment, p.x, p.y);
+			areaPathConcealment -= effects.getBonusAt(Bonus.Type.ConcealmentNegation, p.x, p.y);
+			
+			if (!this.transparency[p.x][p.y]) obstructionsInPathConcealment += 15;
+			else {
+				Creature c = this.getCreatureAtGridPoint(p);
+				if (c != null && c != defender) obstructionsInPathConcealment += 15;
+			}
+		}
+		
+		obstructionsInPathConcealment = Math.min(obstructionsInPathConcealment, 30);
+
+		float areaPathConcealmentAverage = ((float)areaPathConcealment) / ((float)minPath.size());
+		
+		concealment += (areaPathConcealmentAverage * attacker.getLocation().getDistance(x, y));
+		
+		// now compute the amount of concealment based on defender and attacker stats
+		
+		int defenderConcealment = 0;
+		
+		if (defender != null)
+			defenderConcealment += defender.stats.get(Bonus.Type.Concealment) -
+				defender.stats.get(Bonus.Type.ConcealmentNegation);
+		
+		if (attacker.stats.has(Bonus.Type.Blind)) defenderConcealment += 100;
+		defenderConcealment = Math.min(100, defenderConcealment);
+		
+		int attackerIgnoring = attacker.stats.get(Bonus.Type.ConcealmentIgnoring);
+		
+		int defenderBonus = Math.min(100, Math.max(0, defenderConcealment - attackerIgnoring));
+		
+		concealment = Math.min(100, concealment);
+		
+		return concealment + defenderBonus + obstructionsInPathConcealment;
+	}
+	
+	public int getConcealment(Creature attacker, Point position) {
+		Creature target = this.entityList.getCreature(position.x, position.y);
+		
+		return getConcealment(attacker, target, position.x, position.y);
+	}
+	
+	public int getConcealment(Creature attacker, Creature defender) {
+		return getConcealment(attacker, defender, defender.getLocation().getX(), defender.getLocation().getY());
+	}
+	
+	public boolean[][] getMatrixOfSize() {
+		boolean[][] matrix = new boolean[width][height];
+		
+		return matrix;
+	}
+	
+	public void removeEntity(Entity entity) {
+		entityList.removeEntity(entity);
+	}
+	
+	public void placeTrap(Trap trap) {
+		entityList.addTrap(trap);
+	}
+	
+	public void addItem(Item item) {
+		addItem(item, 1);
+	}
+
+	public void addItem(Item item, int quantity) {
+		// add the item to a container
+		Container container = item.getLocation().getContainer();
+		if (container == null) {
+			// create a new temporary container
+			container = EntityManager.getTemporaryContainer();
+			container.setLocation(item.getLocation());
+			entityList.addContainer(container);
+		}
+
+		container.getCurrentItems().add(item, quantity);
+	}
+	
+	public Transition getTransitionAtGridPoint(Point p) {
+		return getTransitionAtGridPoint(p.x, p.y);
+	}
+	
+	public Transition getTransitionAtGridPoint(int x, int y) {
+		for (String s : transitions) {
+			Transition transition = Game.curCampaign.getAreaTransition(s);
+			
+			Transition.EndPoint endPoint = transition.getEndPointInArea(this);
+			
+			if (endPoint.getX() == x && endPoint.getY() == y) return transition;
+		}
+		
+		return null;
+	}
+	
+	public Openable getOpenableAtGridPoint(Point p) {
+		return getOpenableAtGridPoint(p.x, p.y);
+	}
+	
+	public Openable getOpenableAtGridPoint(int x, int y) {
+		Openable openable = getDoorAtGridPoint(x, y);
+		if (openable == null) return getContainerAtGridPoint(x, y);
+		else return openable;
+	}
+	
+	public Door getDoorAtGridPoint(int x, int y) {
+		return entityList.getDoor(x, y);
+	}
+	
+	public Door getDoorAtGridPoint(Point p) {
+		return entityList.getDoor(p.x, p.y);
+	}
+	
+	public Container getContainerAtGridPoint(int x, int y) {
+		return entityList.getContainer(x, y);
+	}
+	
+	public Container getContainerAtGridPoint(Point p) {
+		return entityList.getContainer(p.x, p.y);
+	}
+	
+	public Trap getTrapAtGridPoint(int x, int y) {
+		return entityList.getTrap(x, y);
+	}
+	
+	public Trap getTrapAtGridPoint(Point p) {
+		return entityList.getTrap(p.x, p.y);
+	}
+	
+	public List<Entity> getEntitiesWithID(String id) {
+		return entityList.getEntitiesWithID(id);
+	}
+	
+	public Entity getEntityWithID(String id) {
+		return entityList.getEntityWithID(id);
+	}
+	
+	public Creature getCreatureAtGridPoint(Point p) {
+		return entityList.getCreature(p.x, p.y);
+	}
+	
+	public Creature getCreatureAtGridPoint(int x, int y) {
+		return entityList.getCreature(x, y);
+	}
+	
+	public boolean[][] getEntityPassabilities(Creature mover) {
+		return entityList.getEntityPassabilities(mover);
+	}
+	
+	public List<Entity> getEntitiesAtGridPoint(Point p) {
+		return getEntitiesAtGridPoint(p.x, p.y);
+	}
+	
+	public List<Entity> getEntitiesAtGridPoint(int x, int y) {
+		return entityList.getEntities(x, y);
+	}
+	
+	public final boolean isVisible(Point p) {
+		return isVisible(p.x, p.y);
+	}
+	
+	public final boolean isVisible(int x, int y) {
+		if (x < 0 || x >= width || y < 0 || y >= height) return false;
+		
+		return this.visibility[x][y];
+	}
+	
+	public final boolean isTransparent(Point p) {
+		return isTransparent(p.x, p.y);
+	}
+	
+	public final boolean isTransparent(int x, int y) {
+		if (x < 0 || x >= width || y < 0 || y >= height) return false;
+		
+		return this.transparency[x][y];
+	}
+	
+	public boolean[][] getCurrentPassable() {
+		boolean[][] pass = new boolean[width][height];
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (entityList.getCreature(x, y) != null) pass[x][y] = false;
+				else {
+					Door d = entityList.getDoor(x, y);
+					if (d != null && !d.isOpen()) pass[x][y] = false;
+					else pass[x][y] = this.passable[x][y];
+				}
+			}
+		}
+		
+		return pass;
+	}
+	
+	public final boolean isCurrentPassable(int x, int y) {
+		if (x < 0 || x >= width || y < 0 || y >= height) return false;
+		
+		if (entityList.getCreature(x, y) != null) return false;
+		
+		Door door = entityList.getDoor(x, y);
+		if (door != null && !door.isOpen()) return false;
+		
+		return passable[x][y];
+	}
+	
+	public final boolean isFreeForCreature(int x, int y) {
+		if (!isPassable(x, y)) return false;
+		
+		if (getCreatureAtGridPoint(x, y) != null) return false;
+		
+		if (getDoorAtGridPoint(x, y) != null) return false;
+		
+		return true;
+	}
+	
+	public final boolean isPassable(int x, int y) {
+		if (x < 0 || x >= width || y < 0 || y >= height) return false;
+		
+		return passable[x][y];
+	}
+	
+	public void setEntityVisibility() {
+		for (Entity entity : entityList) {
+			if (entity instanceof Creature)
+				((Creature)entity).computeVisibility();
+		}
+	}
+	
+	public void addPlayerCharacters() {
+		Creature lastCreature = null;
+		
+		Iterator<PC> iter = Game.curCampaign.party.iterator();
+		Iterator<PointImmutable> posIter = startLocations.iterator();
+		while (iter.hasNext()) {
+			Creature creature = iter.next();
+			
+			if (posIter.hasNext()) {
+				PointImmutable point = posIter.next();
+				
+				creature.setLocation(new Location(this, point.x, point.y));
+			} else {
+				// if there are no more explicit transition locations, just add the creature
+				// wherever there is a nearby space
+				Point point = AIScriptInterface.findClosestEmptyTile(lastCreature.getLocation().toPoint(), 3);
+				
+				if (point != null)
+					creature.setLocation(new Location(this, point.x, point.y));
+				else
+					Logger.appendToErrorLog("Warning: Unable to find enough starting positions for area " + id);
+			}
+			
+			entityList.addEntity(creature);
+			
+			lastCreature = creature;
+		}
+	}
+	
+	public String getID() {
+		return id;
+	}
+}

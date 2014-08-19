@@ -19,17 +19,17 @@
 
 package net.sf.hale.rules;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.sf.hale.Cutscene;
+import net.sf.hale.DifficultyManager;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
+import net.sf.hale.entity.SavedItemList;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.Logger;
@@ -60,10 +60,11 @@ public class Ruleset {
 	private final Map<String, DamageType> damageTypes;
 	private final Map<String, BaseWeapon> baseWeapons;
 	private final Map<String, ArmorType> armorTypes;
-	private final Map<String, ItemList> itemLists;
+	private final Map<String, SavedItemList> itemLists;
 	private final Map<String, AbilitySelectionList> abilitySelectionLists;
 	private final Map<String, RacialType> racialTypes;
-	private final List<ItemQuality> itemQualities;
+
+	private final Map<String, Quality> itemQualities;
 	
 	private final Map<String, Integer> ruleValues;
 	private final Map<String, String> ruleStrings;
@@ -91,14 +92,14 @@ public class Ruleset {
 		baseWeapons = new HashMap<String, BaseWeapon>();
 		armorTypes = new HashMap<String, ArmorType>();
 		
-		itemLists = new LinkedHashMap<String, ItemList>();
+		itemLists = new LinkedHashMap<String, SavedItemList>();
 		
 		racialTypes = new HashMap<String, RacialType>();
 		
 		ruleValues = new HashMap<String, Integer>();
 		ruleStrings = new HashMap<String, String>();
 		
-		itemQualities = new ArrayList<ItemQuality>();
+		itemQualities = new HashMap<String, Quality>();
 		
 		cutscenes = new HashMap<String, Cutscene>();
 	}
@@ -145,17 +146,20 @@ public class Ruleset {
 	}
 	
 	/**
-	 * Loads all itemLists from the "itemLists" resource directory
+	 * Loads all itemSets from the "itemLists" resource directory
 	 */
 	
-	public void readItemLists() {
+	private void readItemLists() {
 		itemLists.clear();
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("itemLists");
 		for (String resource : resources) {
-			String id = ResourceManager.getResourceID(resource, "itemLists", ResourceType.Text);
+			String id = ResourceManager.getResourceID(resource, "itemLists", ResourceType.JSON);
 			if (id == null) continue;
-			itemLists.put(id, ItemList.readItemList(id, resource));
+			
+			SimpleJSONParser parser = new SimpleJSONParser("itemLists/" + id, ResourceType.JSON);
+			
+			itemLists.put(id, new SavedItemList(parser.getObject()));
 		}
 	}
 	
@@ -163,7 +167,7 @@ public class Ruleset {
 	 * Loads all cutscenes from the "cutscenes" resource directory
 	 */
 	
-	public void readCutscenes() {
+	private void readCutscenes() {
 		cutscenes.clear();
 		
 		for (String resource : ResourceManager.getResourcesInDirectory("cutscenes")) {
@@ -178,7 +182,7 @@ public class Ruleset {
 	 * Loads all races from the "races" resource directory
 	 */
 	
-	public void readRaces() {
+	private void readRaces() {
 		races.clear();
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("races");
@@ -198,14 +202,19 @@ public class Ruleset {
 	 * Loads all roles from the "roles" resource directory
 	 */
 	
-	public void readRoles() {
+	private void readRoles() {
 		roles.clear();
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("roles");
 		for (String resource : resources) {
-			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.Text);
+			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.JSON);
 			if (id == null) continue;
-			roles.put(id, new Role(id, resource));
+			
+			try {
+				roles.put( id, new Role(id, new SimpleJSONParser(resource).getObject()) );
+			} catch (Exception e) {
+				Logger.appendToErrorLog("Error loading role " + id, e);
+			}
 		}
 	}
 	
@@ -213,12 +222,12 @@ public class Ruleset {
 	 * Loads all skills from the "skills" directory
 	 */
 	
-	public void readSkills() {
+	private void readSkills() {
 		skills.clear();
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("skills");
 		for (String resource : resources) {
-			String id = ResourceManager.getResourceID(resource, "skills", ResourceType.Text);
+			String id = ResourceManager.getResourceID(resource, "skills", ResourceType.JSON);
 			if (id == null) continue;
 			skills.put(id, new Skill(id));
 		}
@@ -228,11 +237,11 @@ public class Ruleset {
 	 * Loads all abilities from the "abilities" directory
 	 */
 	
-	public void readAbilities() {
+	private void readAbilities() {
 		abilities.clear();
 		
 		for (String resource : ResourceManager.getResourcesInDirectory("abilities")) {
-			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.Text);
+			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.JSON);
 			if (id == null) continue;
 			
 			abilities.put(id, Ability.createAbilityFromResource(id, resource));
@@ -249,18 +258,9 @@ public class Ruleset {
 		for (SimpleJSONArrayEntry entry : array) {
 			SimpleJSONObject object = entry.getObject();
 			
-			String id = object.get("id", null);
-			int armorPenaltyBonus = object.get("armorPenaltyBonus", 0);
-			int armorClassBonus = object.get("armorClassBonus", 0);
-			int movementPenaltyBonus = object.get("movementPenaltyBonus", 0);
-			int attackBonus = object.get("attackBonus", 0);
-			int damageBonus = object.get("damageBonus", 0);
-			int modifier = object.get("modifier", 0);
-			int valueAdjustment = object.get("valueAdjustment", 0);
-			
-			ItemQuality itemQuality = new ItemQuality(id, armorPenaltyBonus, armorClassBonus, movementPenaltyBonus,
-					  attackBonus, damageBonus, modifier, valueAdjustment);
-			itemQualities.add(itemQuality);
+			// create an ItemQuality by parsing the JSON
+			Quality quality = new Quality(object);
+			itemQualities.put(quality.getName(), quality);
 		}
 		
 		parser.warnOnUnusedKeys();
@@ -270,11 +270,11 @@ public class Ruleset {
 	 * Loads all ability lists from the "abilitySelectionLists" resource directory
 	 */
 	
-	public void readAbilitySelectionLists() {
+	private void readAbilitySelectionLists() {
 		abilitySelectionLists.clear();
 		
 		for (String resource : ResourceManager.getResourcesInDirectory("abilitySelectionLists")) {
-			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.Text);
+			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.JSON);
 			if (id == null) continue;
 			
 			try {
@@ -322,7 +322,7 @@ public class Ruleset {
 	 * Loads all damage types from the "damageTypes.txt" resource
 	 */
 	
-	public void readDamageTypes() {
+	private void readDamageTypes() {
 		damageTypes.clear();
 		
 		SimpleJSONParser parser = new SimpleJSONParser("damageTypes", ResourceType.JSON);
@@ -342,7 +342,7 @@ public class Ruleset {
 	 * Loads all racial types from the "racialTypes.txt" resource
 	 */
 	
-	public void readRacialTypes() {
+	private void readRacialTypes() {
 		racialTypes.clear();
 		
 		SimpleJSONParser parser = new SimpleJSONParser("racialTypes", ResourceType.JSON);
@@ -356,10 +356,10 @@ public class Ruleset {
 	}
 	
 	/**
-	 * Loads all factions and relationships from the "factions.txt" resource
+	 * Loads all factions and relationships from the "factions.json" resource
 	 */
 	
-	public void readFactions() {
+	private void readFactions() {
 		factions.clear();
 		
 		Map<Faction, SimpleJSONArray> relationshipArrays = new HashMap<Faction, SimpleJSONArray>();
@@ -403,7 +403,7 @@ public class Ruleset {
 	 * loads all armor types from the "armorTypes" resource file
 	 */
 	
-	public void readArmorTypes() {
+	private void readArmorTypes() {
 		armorTypes.clear();
 		
 		SimpleJSONParser parser = new SimpleJSONParser("armorTypes", ResourceType.JSON);
@@ -418,7 +418,7 @@ public class Ruleset {
 	 * Loads all base weapons from the "baseWeapons" resource file
 	 */
 	
-	public void readBaseWeapons() {
+	private void readBaseWeapons() {
 		baseWeapons.clear();
 		
 		SimpleJSONParser parser = new SimpleJSONParser("baseWeapons", ResourceType.JSON);
@@ -448,46 +448,27 @@ public class Ruleset {
 	public String getString(String rule) {
 		return ruleStrings.get(rule);
 	}
-
-	public int getNumItemQualities() { return itemQualities.size(); }
-	public ItemQuality getItemQuality(int index) { return itemQualities.get(index); }
-	public List<ItemQuality> getAllItemQualities() { return itemQualities; }
 	
-	public int getItemQualityIndex(String id) {
-		int i = 0;
-		
-		for (ItemQuality quality : itemQualities) {
-			if (quality.getName().equals(id)) return i;
-			
-			i++;
-		}
-		
-		return -1;
-	}
-	
-	public ItemQuality getItemQuality(String id) {
-		for (ItemQuality quality : itemQualities) {
-			if (quality.getName().equals(id)) return quality;
-		}
-		
-		return null;
-	}
-	
-	public Set<String> getAllAbilityIDs() { return abilities.keySet(); }
-
-	public Collection<ItemList> getAllItemLists() { return itemLists.values(); }
-	public Collection<ArmorType> getAllArmorTypes() { return armorTypes.values(); }
-	public Collection<BaseWeapon> getAllBaseWeaponTypes() { return baseWeapons.values(); }
-	public Collection<Faction> getAllFactions() { return factions.values(); }
+	public Collection<DamageType> getAllDamageTypes() { return damageTypes.values(); }
 	public Collection<Race> getAllRaces() { return races.values(); }
 	public Collection<Role> getAllRoles() { return roles.values(); }
-	public Collection<DamageType> getAllDamageTypes() { return damageTypes.values(); }
-	public Collection<Cutscene> getAllCutscenes() { return cutscenes.values(); }
 	public Collection<Skill> getAllSkills() { return skills.values(); }
 	
+	public Quality getItemQuality(String id) { return itemQualities.get(id); }
 	public Cutscene getCutscene(String id) { return cutscenes.get(id); }
 	public RacialType getRacialType(String ref) { return racialTypes.get(ref); }
-	public ItemList getItemList(String ref) { return new ItemList(itemLists.get(ref)); }
+	
+	/**
+	 * Return the saved item list with the specified ID.  The returned item list must not
+	 * be modified
+	 * @param ref
+	 * @return the saved item list
+	 */
+	
+	public SavedItemList getItemList(String ref) {
+		return itemLists.get(ref);
+	}
+	
 	public BaseWeapon getBaseWeapon(String ref) { return baseWeapons.get(ref); }
 	public ArmorType getArmorType(String ref) { return armorTypes.get(ref); }
 	public DamageType getDamageType(String ref) { return damageTypes.get(ref); }

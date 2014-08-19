@@ -1,8 +1,0 @@
-name "Natural Armor +20"
-type "Racial Abilities"
-description "Many creatures have naturally tough skin or are otherwise more difficult to hit and damage. +20 to Natural Armor"
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('ArmorClass', 'NaturalArmor', 20); parent.applyEffect(effect); }"

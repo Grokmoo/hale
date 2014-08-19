@@ -6,8 +6,12 @@ function onRoundElapsed(game, effect) {
 	effect.put("currentRound", parseInt(effect.get("currentRound")) + 1);
 	effect.put("healingLeft", healingLeft - healThisRound);
 	
-	var spell = effect.getSlot().getAbility();
-	var parent = effect.getSlot().getParent();
+	if (effect.getSlot() != null) {
+	    var spell = effect.getSlot().getAbility();
+	    var parent = effect.getSlot().getParent();
 	
-	spell.applyHealing(parent, effect.getTarget(), healThisRound);
+	    spell.applyHealing(parent, effect.getTarget(), healThisRound);
+	} else {
+	    effect.getTarget().healDamage(healThisRound);
+	}
 }

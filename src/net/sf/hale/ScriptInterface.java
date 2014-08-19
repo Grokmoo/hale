@@ -30,11 +30,18 @@ import net.sf.hale.ability.DelayedScriptCallback;
 import net.sf.hale.ability.LineTargeter;
 import net.sf.hale.ability.ListTargeter;
 import net.sf.hale.ability.Scriptable;
-import net.sf.hale.ability.SpellScrollCaster;
+import net.sf.hale.area.Area;
+import net.sf.hale.area.Transition;
+import net.sf.hale.entity.CreatedItemModel;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Encounter;
 import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.NPC;
 import net.sf.hale.interfacelock.InterfaceLock;
 import net.sf.hale.particle.AngleDistributionBase;
 import net.sf.hale.particle.Animation;
@@ -59,13 +66,16 @@ import net.sf.hale.particle.UniformDistributionWithBase;
 import net.sf.hale.particle.VelocityTowardsPointDistribution;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.Attack;
+import net.sf.hale.rules.Campaign;
 import net.sf.hale.rules.Currency;
 import net.sf.hale.rules.Date;
-import net.sf.hale.rules.DelayedAttackCallback;
 import net.sf.hale.rules.Dice;
 import net.sf.hale.rules.Faction;
 import net.sf.hale.rules.Merchant;
+import net.sf.hale.rules.Quality;
+import net.sf.hale.rules.QuestEntry;
 import net.sf.hale.rules.Ruleset;
+import net.sf.hale.rules.WorldMapLocation;
 import net.sf.hale.rules.XP;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.FileUtil;
@@ -77,8 +87,9 @@ import net.sf.hale.view.CutscenePopup;
 import net.sf.hale.widgets.HTMLPopup;
 
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Color;
 
-public class ScriptInterface {
+public class ScriptInterface implements HasScriptState {
 	/**
 	 * This is a debugging tool.  When false, random encounters will not
 	 * spawn, which makes traveling through areas much quicker
@@ -112,25 +123,18 @@ public class ScriptInterface {
 		Game.mainViewer.addMessage(font, text);
 	}
 	
-	public static void addEncounterToArea(Encounter encounter, int x, int y) {
-		encounter.addToArea(Game.curCampaign.curArea, x, y);
+	public static void addEncounterToArea(String encounterID, int x, int y) {
+		Encounter encounter = Game.curCampaign.getEncounter(encounterID, new Location(Game.curCampaign.curArea, x, y));
+		encounter.checkSpawnCreatures();
 		
 		Game.curCampaign.curArea.setEntityVisibility();
 		
 		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 	
-	public static void addItemToArea(Item item, Point position) {
-		item.setPosition(position.x, position.y);
+	public static void addItemToArea(Item item, Location location) {
+		item.setLocation(location);
 		Game.curCampaign.curArea.addItem(item);
-	}
-	
-	public static boolean rangedTouchAttack(SpellScrollCaster attacker, Creature defender) {
-		return rangedTouchAttack(attacker.getParent(), defender);
-	}
-	
-	public static boolean meleeTouchAttack(SpellScrollCaster attacker, Creature defender) {
-		return meleeTouchAttack(attacker.getParent(), defender);
 	}
 	
 	public static boolean rangedTouchAttack(Creature attacker, Creature defender) {
@@ -179,15 +183,21 @@ public class ScriptInterface {
 		return result;
 	}
 	
+	/**
+	 * Causes the attacker to perform an animated attack against the target.  No AP is deducted,
+	 * but the attack is otherwise as normal.  This function will block until the attack completes,
+	 * and thus it cannot be run from the main thread
+	 * @param attacker
+	 * @param target
+	 * @return true if the attack was completed, false if it did not complete for any reason
+	 */
+	
 	public static boolean singleAttackAnimate(Creature attacker, Creature target) {
 		boolean result = false;
 
 		try {
-			DelayedAttackCallback cb = null;
-
-			if (attacker.getTimer().canAttack()) {
-				cb = Game.areaListener.getCombatRunner().creatureSingleAttackAnimate(attacker, target, Inventory.EQUIPPED_MAIN_HAND);
-			}
+			DelayedAttackCallback cb = Game.areaListener.getCombatRunner().creatureSingleAttackAnimate(
+					attacker, target, Inventory.Slot.MainHand);
 
 			if (cb != null) {
 				// wait for cb to finish
@@ -207,8 +217,8 @@ public class ScriptInterface {
 		return result;
 	}
 	
-	public static Attack getAttack(Creature attacker, Creature defender, int itemSlot) {
-		Attack attack = attacker.attack(defender, itemSlot);
+	public static Attack getAttack(Creature attacker, Creature defender, String slot) {
+		Attack attack = attacker.performSingleAttack(defender, Inventory.Slot.valueOf(slot));
 		attack.computeFlankingBonus(Game.curCampaign.curArea.getEntities());
 		attack.computeIsHit();
 		
@@ -224,7 +234,7 @@ public class ScriptInterface {
 	 */
 	
 	public static Attack getMainHandAttack(Creature attacker, Creature defender) {
-		return getAttack(attacker, defender, Inventory.EQUIPPED_MAIN_HAND);
+		return getAttack(attacker, defender, Inventory.Slot.MainHand.toString());
 	}
 	
 	/**
@@ -236,7 +246,7 @@ public class ScriptInterface {
 	 */
 	
 	public static Attack getOffHandAttack(Creature attacker, Creature defender) {
-		return getAttack(attacker, defender, Inventory.EQUIPPED_OFF_HAND);
+		return getAttack(attacker, defender, Inventory.Slot.OffHand.toString());
 	}
 	
 	public static void singleAttack(Creature attacker, Point position) {
@@ -244,11 +254,11 @@ public class ScriptInterface {
 	}
 	
 	public static void singleAttack(Creature attacker, Creature defender) {
-		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.EQUIPPED_MAIN_HAND);
+		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.MainHand);
 	}
 	
-	public static void singleAttack(Creature attacker, Creature defender, int itemSlot) {
-		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, itemSlot);
+	public static void singleAttack(Creature attacker, Creature defender, String slot) {
+		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.valueOf(slot));
 	}
 	
 	/**
@@ -267,7 +277,7 @@ public class ScriptInterface {
 		try {
 			DelayedAttackCallback cb = null;
 			
-			if (attacker.getTimer().canAttack()) {
+			if (attacker.timer.canAttack()) {
 				cb = Game.areaListener.getCombatRunner().creatureStandardAttack(attacker, defender);
 			}
 			
@@ -283,7 +293,7 @@ public class ScriptInterface {
 				result = cb.isAttackHit();
 			}
 			
-			if (!attacker.isPlayerSelectable()) {
+			if (!(attacker instanceof PC)) {
 				// wait on any targeters caused by attacks of opportunity
 				synchronized(Game.areaListener.getTargeterManager()) {
 					while (Game.areaListener.getTargeterManager().isInTargetMode()) {
@@ -309,69 +319,66 @@ public class ScriptInterface {
 		
 		if (creature == target) return true;
 		
-		Point[] tiles = AreaUtil.getAdjacentTiles(creature.getX(), creature.getY());
-		for (int i = 0; i < tiles.length; i++) {
-			if (target.getX() == tiles[i].x && target.getY() == tiles[i].y) return true;
-		}
-		
-		return false;
+		return creature.getLocation().getDistance(target) <= 1;
 	}
 	
-	public static Creature summonCreature(String creatureID, Point position, Creature parent, int duration) {
-		Creature creature = Game.entityManager.getCreature(creatureID);
+	public static Creature createSummon(String creatureID, Creature parent, int duration) {
+		NPC creature = EntityManager.getNPC(creatureID);
+		creature.setFaction(parent.getFaction());
 		
-		if (Game.curCampaign.party.contains(parent)) {
-			creature.setFaction(Game.ruleset.getString("PlayerFaction"));
-			
-			creature.setEncounter(Game.curCampaign.partyEncounter);
-			Game.curCampaign.partyEncounter.addAreaCreature(creature);
-			
-			Game.curCampaign.party.add(creature);
+		if (parent.isPlayerFaction()) {
+			Game.curCampaign.party.addSummon(creature);
 		} else {
-			creature.setFaction(parent.getFaction());
+			// hostile summon
 			creature.setEncounter(parent.getEncounter());
-			parent.getEncounter().addAreaCreature(creature);
+			parent.getEncounter().getCreaturesInArea().add(creature);
 		}
 		
-		creature.resetAll();
+		creature.setSummoned(duration);
 		
-		Area area = Game.curCampaign.curArea;
+		return creature;
+	}
+	
+	public static void finishSummon(NPC creature, Location location) {
+		creature.resetTime();
 		
-		if (area.isPassable(position.x, position.y) && area.getCreatureAtGridPoint(position) == null) {
-			creature.setPosition(position.x, position.y);
-			area.getEntities().addEntity(creature);
+		if (location.isPassable() && location.getCreature() == null) {
+			creature.setLocation(location);
+			location.getArea().getEntities().addEntity(creature);
 		}
-		
-		creature.setAIActive(true);
-		
-		creature.setVisibility(true);
 		
 		if (Game.isInTurnMode()) {
 			Game.areaListener.getCombatRunner().insertCreature(creature);
 		}
 		
-		creature.setSummoned(duration);
-		
 		Game.mainViewer.updateInterface();
 		Game.areaListener.getCombatRunner().checkAIActivation();
-		
-		return creature;
 	}
 	
-	public static void performSearchChecksForCreature(Creature parent, int hidePenalty) {
+	public static void finishSummon(NPC creature, Point position) {
+		finishSummon(creature, new Location(Game.curCampaign.curArea, position));
+	}
+	
+	/**
+	 * Causes all nearby creatures to attempt to search for the specified creature
+	 * @param target
+	 * @param hidePenalty
+	 */
+	
+	public static void performSearchChecksForCreature(Creature target, int hidePenalty) {
 		// only search if this creature is hidden
-		if (!parent.stats().isHidden()) return;
+		if (!target.stats.isHidden()) return;
 		
-		for (Creature c : Game.curCampaign.curArea.getEntities().getCreaturesWithinRadius(parent.getX(),
-				parent.getY(), Game.curCampaign.curArea.getVisibilityRadius())) {
+		for (Creature creature : target.getLocation().getArea().getEntities().getCreaturesWithinRadius(target.getLocation().getX(),
+				target.getLocation().getY(), Game.curCampaign.curArea.getVisibilityRadius())) {
 			
-			if (c.getFaction().getRelationship(parent.getFaction()) != Faction.Relationship.Hostile) continue;
+			if (creature.getFaction().getRelationship(target.getFaction()) != Faction.Relationship.Hostile) continue;
 			
-			c.setVisibility(false);
+			if ( !creature.hasVisibility(target.getLocation()) ) continue;			
 			
-			if (!c.getVisibility(parent.getX(), parent.getY())) continue;
-			
-			if (c.doSearchCheck(parent, hidePenalty)) {
+			if (creature.performSearchCheck(target, hidePenalty)) {
+				Game.mainViewer.addFadeAway("Spotted", target.getLocation().getX(),
+						target.getLocation().getY(), new Color(0xFFAbA9A9));
 				break;
 			}
 		}
@@ -382,9 +389,9 @@ public class ScriptInterface {
 		
 		if (creature == target) return false;
 		
-		if (!creature.getTimer().canAttack()) return false;
+		if (!creature.timer.canAttack()) return false;
 		
-		return creature.canAttackPosition(target.getX(), target.getY());
+		return creature.canAttack(target.getLocation());
 	}
 	
 	public static Currency getPartyCurrency() {
@@ -396,14 +403,11 @@ public class ScriptInterface {
 	}
 	
 	public static void moveCreature(Creature c, int x, int y) {
-		c.setPosition(x, y);
-		c.setVisibility(false);
+		c.setLocation(new Location(c.getLocation().getArea(), x, y));
 		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 	
 	public static void showMerchant(String merchantName) {
-		if (merchantName == null) return;
-		
 		Merchant merchant = Game.curCampaign.getMerchant(merchantName);
 		if (merchant == null) {
 			Logger.appendToErrorLog("Error locating merchant: " + merchantName);
@@ -483,6 +487,20 @@ public class ScriptInterface {
 		cb.start();
 	}
 	
+	/**
+	 * Reveals all world map locations in the current campaign to the player
+	 */
+	
+	public static void revealAllWorldMapLocations() {
+		for (WorldMapLocation location : Game.curCampaign.worldMapLocations) {
+			if (!location.isRevealed()) {
+				location.setRevealed(true);
+			}
+		}
+		
+		Game.mainViewer.addMessage("link", "A new location has been added to your world map.");
+	}
+	
 	public static void revealWorldMapLocation(String ref) {
 		WorldMapLocation location = Game.curCampaign.getWorldMapLocation(ref);
 		
@@ -497,7 +515,7 @@ public class ScriptInterface {
 	}
 	
 	public static void activateTransition(String ref) {
-		AreaTransition transition = Game.curCampaign.getAreaTransition(ref);
+		Transition transition = Game.curCampaign.getAreaTransition(ref);
 		
 		if (transition == null) {
 			Logger.appendToErrorLog("Error activating area transition.  " + ref + " not found.");
@@ -554,8 +572,8 @@ public class ScriptInterface {
 		Game.mainViewer.getMenu().show();
 	}
 	
-	public static void addMenuLevel(String title) {
-		Game.mainViewer.getMenu().addMenuLevel(title);
+	public static boolean addMenuLevel(String title) {
+		return Game.mainViewer.getMenu().addMenuLevel(title);
 	}
 	
 	public static void hideOpenWindows() {
@@ -563,7 +581,10 @@ public class ScriptInterface {
 	}
 	
 	public static void startConversation(Entity parent, Entity target, String convoScriptID) {
-		ConversationPopup popup = new ConversationPopup(parent, target, convoScriptID);
+		String scriptContents = ResourceManager.getScriptResourceAsString(convoScriptID);
+		Scriptable script = new Scriptable(scriptContents, convoScriptID, false);
+		
+		ConversationPopup popup = new ConversationPopup(parent, target, script);
 		popup.startConversation();
 	}
 	
@@ -590,19 +611,7 @@ public class ScriptInterface {
 		return null;
 	}
 	
-	public static int distance(Point a, Point b) {
-		if (a == null || b == null) return 0;
-		
-		return 5 * AreaUtil.distance(a, b);
-	}
-	
-	public static int distance(Creature a, Creature b) {
-		if (a == null || b == null) return 0;
-		
-		return 5 * AreaUtil.distance(a.getX(), a.getY(), b.getX(), b.getY());
-	}
-	
-	public static EntityManager entities() { return Game.entityManager; }
+	public static CombatRunner combatRunner() { return Game.areaListener.getCombatRunner(); }
 	
 	public static Campaign campaign() { return Game.curCampaign; }
 	
@@ -757,10 +766,6 @@ public class ScriptInterface {
 		return new FixedDistributionWithBase(base, mult, offset);
 	}
 	
-	public static SpellScrollCaster createScrollCaster(String abilityID) {
-		return new SpellScrollCaster(abilityID);
-	}
-	
 	public void put(String ref, Object data) {
 		Game.curCampaign.scriptState.put(ref, data);
 	}
@@ -799,7 +804,9 @@ public class ScriptInterface {
 	}
 	
 	public void scrollToPosition(int x, int y) {
-		Game.areaViewer.addDelayedScrollToScreenPoint(new Point(x, y).toScreen());
+		Point screenPoint = AreaUtil.convertGridToScreenAndCenter(x, y);
+		
+		Game.areaViewer.addDelayedScrollToScreenPoint(screenPoint);
 	}
 	
 	public void scrollToCreature(String entityID) {
@@ -822,5 +829,21 @@ public class ScriptInterface {
 		CampaignConclusionPopup popup = new CampaignConclusionPopup(Game.mainViewer);
 		
 		return popup;
+	}
+	
+	public NPC getNPC(String entityID) {
+		return EntityManager.getNPC(entityID);
+	}
+	
+	public Item getItem(String itemID, Quality quality) {
+		return EntityManager.getItem(itemID, quality);
+	}
+	
+	public Item getItem(String itemID, String quality) {
+		return EntityManager.getItem(itemID, quality);
+	}
+	
+	public CreatedItemModel getCreatedItemModel(String baseItemID, String createdItemID) {
+		return new CreatedItemModel(baseItemID, createdItemID);
 	}
 }

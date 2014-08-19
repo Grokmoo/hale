@@ -23,9 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.SavedParty;
+import net.sf.hale.characterbuilder.CharacterBuilder;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.rules.SavedParty;
-import net.sf.hale.util.CreatureWriter;
+import net.sf.hale.entity.PC;
 import net.sf.hale.widgets.BasePortraitViewer;
 
 import de.matthiasmann.twl.Button;
@@ -34,8 +35,19 @@ import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 
+/**
+ * The widget used for exporting party members as well as the party itself to a file
+ * @author Jared
+ *
+ */
+
 public class ExportPopup extends PopupWindow {
 	private Content content;
+	
+	/**
+	 * Creates a new Popup with the specified parent widget
+	 * @param parent
+	 */
 	
 	public ExportPopup(Widget parent) {
 		super(parent);
@@ -73,11 +85,12 @@ public class ExportPopup extends PopupWindow {
 		private List<Button> portraitExports;
 		
 		private int sectionGap;
+		private int minWidth;
 		
 		private void export(int index) {
 			Creature creature = portraits.get(index).getCreature();
 			
-			String id = CreatureWriter.saveCharacter(creature);
+			String id = CharacterBuilder.savePC((PC)creature);
 			
 			Button button = portraitExports.get(index);
 			
@@ -127,17 +140,14 @@ public class ExportPopup extends PopupWindow {
 			
 			int index = 0;
 			for (Creature creature : Game.curCampaign.party) {
-				if (!creature.isPlayerSelectable() || creature.isSummoned())
-					continue;
-				
-				minLevel = Math.min(minLevel, creature.getRoles().getTotalLevel());
-				maxLevel = Math.max(maxLevel, creature.getRoles().getTotalLevel());
+				minLevel = Math.min(minLevel, creature.roles.getTotalLevel());
+				maxLevel = Math.max(maxLevel, creature.roles.getTotalLevel());
 				
 				BasePortraitViewer viewer = new BasePortraitViewer(creature);
 				add(viewer);
 				portraits.add(viewer);
 				
-				Label nameLabel = new Label(creature.getName());
+				Label nameLabel = new Label(creature.getTemplate().getName());
 				nameLabel.setTheme("portraitnamelabel");
 				add(nameLabel);
 				portraitNames.add(nameLabel);
@@ -167,6 +177,7 @@ public class ExportPopup extends PopupWindow {
 			super.applyTheme(themeInfo);
 			
 			sectionGap = themeInfo.getParameter("sectiongap", 0);
+			minWidth = themeInfo.getParameter("minwidth", 0);
 		}
 		
 		@Override public int getPreferredWidth() {
@@ -179,7 +190,7 @@ public class ExportPopup extends PopupWindow {
 			int width = Math.max(title.getPreferredWidth(), portraitWidth);
 			width = Math.max(exportAll.getPreferredWidth() + close.getPreferredWidth() + sectionGap, width);
 			
-			return width + getBorderHorizontal();
+			return Math.max(minWidth, width) + getBorderHorizontal();
 		}
 		
 		@Override public int getPreferredHeight() {

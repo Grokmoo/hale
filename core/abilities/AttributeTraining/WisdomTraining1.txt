@@ -1,9 +1,0 @@
-name "Wisdom Training I"
-type "General"
-description "You gain a permanent +1 bonus to Wisdom.
-activateable false
-
-icon "icons/trainWisdom1"
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('BaseWis', 'Stackable', 1); parent.applyEffect(effect); }"
-
-addPrereq Stat CreatureLevel 2

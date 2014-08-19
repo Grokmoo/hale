@@ -1,0 +1,65 @@
+{
+  "name" : "Pedrek",
+  "isPregenerated" : true,
+  "gender" : "Male",
+  "race" : "Human",
+  "portrait" : "Human\/mage-arch",
+  "icon" : {
+    "skinColor" : "#fff8e088",
+    "clothingColor" : "#ff0000ff",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair016",
+        "color" : "#ffd98719"
+      }, {
+        "type" : "Beard",
+        "sprite" : "subIcons\/beard006",
+        "color" : "#ffeeb86f"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 10,
+    "dexterity" : 13,
+    "constitution" : 13,
+    "intelligence" : 18,
+    "wisdom" : 10,
+    "charisma" : 10
+  },
+  "skills" : {
+    "Enchanting" : 5,
+    "Search" : 5
+  },
+  "abilities" : [
+    {
+      "id" : "Firebolt",
+      "levelObtained" : 1
+    }, {
+      "id" : "ImproveWeapon",
+      "levelObtained" : 1
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Mage",
+    "Mage" : 1
+  },
+  "inventory" : {
+    "equipped" : {
+      "Armor" : {
+        "id" : "armor_clothes"
+      }
+    },
+    "unequipped" : [
+      
+    ]
+  },
+  "unspentSkillPoints" : 3,
+  "experiencePoints" : 0,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+
+    }
+  }
+}

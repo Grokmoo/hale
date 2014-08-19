@@ -18,6 +18,7 @@ function convo01(game, parent, target, conversation) {
 }
 
 function onExit(game, parent, talker, conversation) {
+	parent.getEncounter().setFaction("Hostile");
     conversation.exit();
     game.clearRevealedAreas();
     

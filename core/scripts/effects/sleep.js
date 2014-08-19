@@ -5,7 +5,7 @@ function onApply(game, effect) {
 	var generator = game.createParticleGenerator("Point", "Continuous", "particles/sleepZ", 1.5);
 	generator.setDurationInfinite();
 	
-	var position = effect.getTarget().getScreenPosition();
+	var position = effect.getTarget().getLocation().getCenteredScreenPoint();
 	generator.setPosition(position.x, position.y - 10.0);
 	generator.setStopParticlesAtOpaque(false);
 	generator.setDrawParticlesInOpaque(true);

@@ -20,7 +20,7 @@
 package net.sf.hale.view;
 
 import net.sf.hale.Game;
-import net.sf.hale.QuestEntry;
+import net.sf.hale.rules.QuestEntry;
 
 import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TabbedPane;

@@ -4,7 +4,7 @@
  * This script assumes all the subIcons will be the same size and that subIcons/hair001 exists
  * 
  * After creating this, you need to add a frame with the appropriate sub icon and set the color and position
- * This can be done most easily with Entity.getSubIcons().getIcon() and Entity.getSubIconScreenPosition()
+ * This can be done most easily with Creature.getIconRenderer().getIcon() and Entity.getSubIconScreenPosition()
  */
 
 var anim = game.createAnimation("subIcons/hair001", 2.0);

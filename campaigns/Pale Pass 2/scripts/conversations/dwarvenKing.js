@@ -104,7 +104,7 @@ function giveAxe(game, parent, target, conversation) {
 }
 
 function giveAxe2(game, parent, target, conversation) {
-	target.getInventory().addItem("dwarvenKeyFragment", 1, "Good");
+	target.inventory.getUnequippedItems().add("dwarvenKeyFragment");
     game.addMessage(target.getName() + " was given the Key Fragment.");
 
 	conversation.addText("Go now, with our blessing.");

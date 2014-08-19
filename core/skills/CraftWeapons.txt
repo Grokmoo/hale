@@ -1,8 +1,0 @@
-name "Craft Weapons"
-verb Craft
-verbPast Crafted
-untrained false
-keyAttribute Int
-hasArmorPenalty false
-craft true
-icon "icons/craftWeapons"

@@ -21,7 +21,8 @@ package net.sf.hale.defaultability;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 import net.sf.hale.view.CreatureDetailsWindow;
 
 /**
@@ -34,16 +35,16 @@ public class ExamineCreature implements DefaultAbility {
 	private Creature target;
 
 	@Override public String getActionName() {
-		return "Examine " + target.getName();
+		return "Examine " + target.getTemplate().getName();
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		target = Game.curCampaign.curArea.getCreatureAtGridPoint(targetPosition);
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		target = targetPosition.getCreature();
 		
-		return (target != null && parent.getVisibility(targetPosition));
+		return (target != null && parent.hasVisibility(targetPosition));
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
+	@Override public void activate(PC parent, Location targetPosition) {
 		CreatureDetailsWindow window = new CreatureDetailsWindow(target);
 		window.setPosition(Game.areaListener.getMouseGUIX() - window.getWidth() / 2,
 				Game.areaListener.getMouseGUIY() - window.getHeight() / 2);

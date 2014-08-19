@@ -1,7 +1,6 @@
 { "name" : "Small Animal",
-  "size" : "Small",
   "baseMovementCost" : 1200,
-  "unarmedWeapon" : "unarmedSmall",
+  "defaultWeapon" : "unarmedSmall",
   
   "racialTypes" : [
     "Animal"

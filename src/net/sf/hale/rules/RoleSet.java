@@ -27,7 +27,8 @@ import java.util.Set;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.ability.AbilitySlot;
+import net.sf.hale.bonus.Bonus;
+import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.Saveable;
@@ -56,8 +57,8 @@ public class RoleSet implements Saveable {
 			data.put("baseRoleID", baseRoleID);
 			
 			Role baseRole = Game.ruleset.getRole(baseRoleID);
-			if (!baseRole.isBaseRole())
-				throw new IllegalArgumentException("Error saving: base role for " + parent.getID() + " is invalid.");
+			if (!baseRole.isBase())
+				throw new IllegalArgumentException("Error saving: base role for " + parent.getTemplate().getID() + " is invalid.");
 		}
 		
 		for (String key : roles.keySet()) {
@@ -71,15 +72,22 @@ public class RoleSet implements Saveable {
 		return data;
 	}
 	
-	public static RoleSet load(SimpleJSONObject data, Creature parent) {
-		RoleSet roleSet = new RoleSet(parent);
+	/**
+	 * Loads this roleset from the specified data
+	 * @param data
+	 * @param addRoleSlots true to add ability slots to the parent for each activateable
+	 * role ability, false to not add any slots
+	 */
+	
+	public void load(SimpleJSONObject data, boolean addRoleSlots) {
+		totalLevel = 0;
+		casterLevel = 0;
+		baseRoleID = data.get("baseRoleID", null);
 		
-		roleSet.baseRoleID = data.get("baseRoleID", null);
-		
-		if (roleSet.baseRoleID != null) {
-			Role baseRole = Game.ruleset.getRole(roleSet.baseRoleID);
-			if (!baseRole.isBaseRole())
-				throw new IllegalArgumentException("Error loading: base role for " + parent.getID() + " is invalid.");
+		if (baseRoleID != null) {
+			Role baseRole = Game.ruleset.getRole(baseRoleID);
+			if (!baseRole.isBase())
+				throw new IllegalArgumentException("Error loading: base role for " + parent.getTemplate().getID() + " is invalid.");
 		}
 		
 		for (String roleID : data.keySet()) {
@@ -87,29 +95,36 @@ public class RoleSet implements Saveable {
 			// note that the base role levels will still be read in a separate entry
 			if (roleID.equals("baseRoleID")) continue;
 			
+			// assume that if the baseRoleID hasn't been set above, it will be the first role
+			// listed
+			if (baseRoleID == null)
+				baseRoleID = roleID;
+			
 			Role role = Game.ruleset.getRole(roleID);
 			int value = data.get(roleID, 0);
 			
 			// set the new level
-			roleSet.roles.put(roleID, value);
+			roles.put(roleID, value);
 			
 			// compute new total level
-			roleSet.totalLevel += value;
+			totalLevel += value;
 
 			// check each added level for new caster levels and new abilities
 			for (int level = 1; level <= value; level++) {
-				roleSet.casterLevel += role.getCasterLevelAddedAtLevel(level);
+				casterLevel += role.getCasterLevelAddedAtLevel(level);
 
 				List<Ability> abilities = role.getAbilitiesAddedAtLevel(level);
 				for (Ability ability : abilities) {
-					parent.getAbilities().loadAbility(ability, level, true, false);
+					
+					if (addRoleSlots) {
+						parent.abilities.addRoleAbility(ability, level);
+					} else {
+						parent.abilities.loadAbility(ability, level, true, false);
+					}
+					
 				}
-
-				// do not load any slots as those are loaded separately
 			}
 		}
-		
-		return roleSet;
 	}
 	
 	/**
@@ -152,7 +167,12 @@ public class RoleSet implements Saveable {
 	 */
 	
 	public void addLevels(RoleSet other) {
+		// add base role first
+		this.addLevels(other.getBaseRole(), other.roles.get(other.baseRoleID));
+		
 		for (String roleID : other.roles.keySet()) {
+			if (roleID.equals(other.baseRoleID)) continue; 
+			
 			Role role = Game.ruleset.getRole(roleID);
 			
 			this.addLevels(role, other.roles.get(roleID));
@@ -188,7 +208,7 @@ public class RoleSet implements Saveable {
 		if (baseRoleID == null) {
 			baseRoleID = role.getID();
 			
-			if (!role.isBaseRole())
+			if (!role.isBase())
 				throw new IllegalArgumentException("The first role added to a role set must be a base role.");
 		}
 		
@@ -212,21 +232,19 @@ public class RoleSet implements Saveable {
 			casterLevel += role.getCasterLevelAddedAtLevel(level);
 			
 			if (parent != null) {
-				// add abilities first in case any of the slots are adding an ability that
-				// is added at the same level
+				// add abilities given at this level
 				List<Ability> abilities = role.getAbilitiesAddedAtLevel(level);
 				for (Ability ability : abilities) {
-					parent.getAbilities().addRoleAbility(ability, level);
-				}
-				
-				List<AbilitySlot> slots = role.getAbilitySlotsAddedAtLevel(level, parent);
-				for (AbilitySlot slot : slots) {
-					parent.getAbilities().add(slot);
+					parent.abilities.addRoleAbility(ability, level);
 				}
 			}
 		}
 		
-		if (parent != null) parent.stats().recomputeAllStats();
+		if (parent != null) {
+			parent.stats.recomputeAllStats();
+			
+			parent.updateListeners();
+		}
 	}
 	
 	/**
@@ -327,5 +345,68 @@ public class RoleSet implements Saveable {
 	
 	public Set<String> getRoleIDs() {
 		return Collections.unmodifiableSet(roles.keySet());
+	}
+	
+	/**
+	 * Returns the percentage chance of spell failure for the parent creature due to
+	 * verbal conditions, i.e. conditions that only affect spell failure for spells
+	 * with a verbal component.  If the caster is silenced (unable to cast verbal spells
+	 * at all, will return Integer.MAX_VALUE / 10).  Will never return less than 0.
+	 * @return the verbal component of spell failure
+	 */
+	
+	public int getVerbalSpellFailure() {
+		// if area is silenced or parent creature is silenced
+		if (parent.stats.has(Bonus.Type.Silence))
+			return Integer.MAX_VALUE / 10;
+		
+		if (parent.getLocation().getArea() != null) {
+			if ( parent.getLocation().getArea().isSilenced(parent.getLocation().getX(), parent.getLocation().getY()) )
+				return Integer.MAX_VALUE / 10;
+		}
+		
+		int deafnessPenalty = 0;
+		if (parent.stats.has(Bonus.Type.Deaf)) {
+			deafnessPenalty = 30;
+		}
+		
+		// verbal spell failure penalty will be negative, so subtract
+		return Math.max(0, deafnessPenalty - parent.stats.get(Bonus.Type.VerbalSpellFailure));
+	}
+	
+	/**
+	 * Returns the percentage chance of spell failure for the parent creature due to a
+	 * somatic condition, i.e. conditions that only affect spell failure for spells
+	 * with a somatic component.  Will never return less than 0.
+	 * @return the somatic component of spell failure
+	 */
+	
+	public int getSomaticSpellFailure() {
+		return Math.max(0, parent.stats.get(Stat.ArmorPenalty) - parent.stats.get(Bonus.Type.ArmorSpellFailure));
+	}
+	
+	/**
+	 * Returns the percentage chance of spell failure for the parent creature due to
+	 * threatening hostiles creatures.  Will never return less than zero.
+	 * @return the threatening creatures component of spell failure
+	 */
+	
+	public int getThreatenedSpellFailure() {
+		List<Creature> threatens = Game.areaListener.getCombatRunner().getThreateningCreatures(parent);
+		if (threatens.size() != 0) {
+			int meleeCombatFailure = 0;
+			for (Creature attacker : threatens) {
+				int curFailure = 30;
+				
+				// concealment for the caster against attackers decreases spell failure
+				int concealment = Game.curCampaign.curArea.getConcealment(attacker, parent);
+				curFailure = curFailure * (100 - concealment) / 100;
+				meleeCombatFailure += Math.max(0, curFailure);
+			}
+			
+			return Math.max(0, meleeCombatFailure - parent.stats.get(Bonus.Type.MeleeSpellFailure));
+		} else {
+			return 0;
+		}
 	}
 }

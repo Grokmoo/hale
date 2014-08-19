@@ -1,10 +1,10 @@
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
-	if (!weapon.isMeleeWeapon()) return false;
+	var weapon = parent.getMainHandWeapon();
+	if (!weapon.isMelee()) return false;
 	
-	var offHand = parent.getInventory().getOffHandWeapon();
+	var offHand = parent.getOffHandWeapon();
 	if (offHand == null) return false;
 	
 	return true
@@ -40,22 +40,22 @@ function performAttack(game, targeter) {
 	effect.getBonuses().addBonus('Damage', 'Stackable', 40);
 	parent.applyEffect(effect);
 
-	if (parent.getAbilities().has("DualCritical")) {
-		var weapon = parent.getInventory().getMainWeapon();
+	if (parent.abilities.has("DualCritical")) {
+		var weapon = parent.getMainHandWeapon();
 		var weaponEffect = parent.createEffect();
 		weaponEffect.getBonuses().addBonus('WeaponCriticalChance', 90);
 		weaponEffect.getBonuses().addBonus('WeaponCriticalMultiplier', 1);
 		weapon.applyEffect(weaponEffect);
 	}
 	
-	parent.getTimer().performAttack();
+	parent.timer.performAttack();
 	
 	// animate the attack
 	game.singleAttackAnimate(parent, target);
 
 	parent.removeEffect(effect);
 	
-	if (parent.getAbilities().has("DualCritical")) {
+	if (parent.abilities.has("DualCritical")) {
 		weapon.removeEffect(weaponEffect);
 	}
 }

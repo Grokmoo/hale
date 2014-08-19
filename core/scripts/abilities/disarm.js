@@ -1,18 +1,18 @@
 function isTargetValid(game, target, slot) {
-	var weapon = target.getInventory().getEquippedMainHand();
+	var weapon = target.inventory.getEquippedMainHand();
 	
-	if (weapon == null || weapon.getBaseWeapon().getName().equals("Unarmed"))
+	if (weapon == null || weapon.getTemplate().getBaseWeapon().getName().equals("Unarmed"))
 		return false;
 	
 	return true;
 }
 
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return weapon.isMeleeWeapon();
+	return weapon.isMelee();
 }
 
 function onActivate(game, slot) {
@@ -51,11 +51,11 @@ function performAttack(game, targeter) {
 	if (!isTargetValid(game, target))
 		return;
 	
-	var parentWeapon = parent.getInventory().getMainWeapon();
-	var targetWeapon = target.getInventory().getEquippedMainHand();
+	var parentWeapon = parent.getMainHandWeapon();
+	var targetWeapon = target.inventory.getEquippedMainHand();
 	
 	var bonus = 0;
-	if (!targetWeapon.isMeleeWeapon()) {
+	if (!targetWeapon.isMelee()) {
 		bonus = 30;
 	}
 	
@@ -64,21 +64,22 @@ function performAttack(game, targeter) {
 	effect.getBonuses().addBonus('Attack', 'Stackable', bonus);
 	parent.applyEffect(effect);
 	
-	parent.getTimer().performAttack();
+	parent.timer.performAttack();
 	
 	if (game.meleeTouchAttack(parent, target)) {
 		// touch attack succeeded
 		
-		var checkDC = 50 + 2 * (parent.stats().getStr() - 10) +
-			parent.stats().getLevelAttackBonus() / 2;
+		var checkDC = 50 + 2 * (parent.stats.getStr() - 10) +
+			parent.stats.getLevelAttackBonus() / 2;
 		
-		if (!target.reflexCheck(checkDC)) {
+		if (!target.stats.getReflexResistanceCheck(checkDC)) {
 			// target failed reflex check
 			
-			target.getInventory().removeEquippedItem(targetWeapon);
-			game.addItemToArea(targetWeapon, target.getPosition());
+			target.inventory.removeEquippedItem("MainHand");
+			game.addItemToArea(targetWeapon, target.getLocation());
 			
 			game.addMessage("red", parent.getName() + " disarms " + target.getName() + ".");
+			
 		} else {
 			game.addMessage("red", parent.getName() + " fails to disarm " + target.getName() + ".");
 		}

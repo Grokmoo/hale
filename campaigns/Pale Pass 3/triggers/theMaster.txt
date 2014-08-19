@@ -1,3 +1,0 @@
-area "Lair of the Master"
-script "triggers/theMaster"
-addPoints   26 12   27 13   26 13

@@ -19,11 +19,11 @@
 
 package net.sf.hale.defaultability;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 
 /**
  * A default ability for opening a container.  Can also move towards a container
@@ -41,15 +41,16 @@ public class OpenContainer implements DefaultAbility {
 		return "Open Container";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canPerformAction("OpenContainerCost")) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canPerformAction("OpenContainerCost")) return false;
 		
-		container = Game.curCampaign.curArea.getContainerAtGridPoint(targetPosition);
+		container = targetPosition.getContainer();
 		
 		if (container != null) {
 			move = new Move();
+			move.setAllowPartyMove(false);
 			
-			if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+			if (targetPosition.getDistance(parent) > 1) {
 				// need to move towards the container before opening
 				return move.canMove(parent, targetPosition, 1);
 			}
@@ -60,13 +61,13 @@ public class OpenContainer implements DefaultAbility {
 		return false;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 1) {
 			// move towards the container then open
 			move.addCallback(new OpenContainerCallback(parent));
 			move.moveTowards(parent, targetPosition, 1);
 		} else {
-			openContainer(parent, Game.curCampaign.curArea.getContainerAtGridPoint(targetPosition));
+			openContainer(parent, targetPosition.getContainer());
 		}
 		
 		Game.areaListener.computeMouseState();
@@ -84,31 +85,34 @@ public class OpenContainer implements DefaultAbility {
 	 * There are many reasons why a creature might fail to open the object, including
 	 * not having enough AP, a lock on the object, or not being adjacent or on top of the container.
 	 * 
-	 * @param parent the Creature that will attempt to open the container
+	 * @param parent the PC that will attempt to open the container
 	 * @param container the container to be opened
 	 * @return true if the Container was successfully opened, false otherwise
 	 */
 	
-	public boolean openContainer(Creature parent, Container container) {
-		if (AreaUtil.distance(parent.getX(), parent.getY(),
-				container.getX(), container.getY()) > 1) return false;
+	public boolean openContainer(PC parent, Container container) {
+		if (parent.getLocation().getDistance(container) > 1) return false;
 
-		if (container != null && parent.getTimer().canPerformAction("OpenContainerCost")) {
-			parent.getTimer().performAction("OpenContainerCost");
+		if (container != null && parent.timer.canPerformAction("OpenContainerCost")) {
+			parent.timer.performAction("OpenContainerCost");
 			
-			container.open(parent);
+			container.attemptOpen(parent);
 
 			// if the container was locked, it may not have actually opened
 			// so check before showing the contents
 			if (container.isOpen()) {
-				if (container.isWorkbench()) {
+				if (container.getTemplate().isWorkbench()) {
 					Game.mainViewer.craftingWindow.setVisible(true);
 				} else {
 					Game.mainViewer.containerWindow.setOpenerContainer(parent, container);
 					Game.mainViewer.containerWindow.setVisible(true);
+					Game.mainViewer.updateInterface();
 				}
 				
 				return true;
+			} else {
+				Game.mainViewer.addFadeAway("Locked", container.getLocation().getX(), container.getLocation().getY(),
+						new Color(0xFFAbA9A9));
 			}
 			
 		}
@@ -123,9 +127,9 @@ public class OpenContainer implements DefaultAbility {
 	 */
 	
 	private class OpenContainerCallback implements Runnable {
-		private Creature parent;
+		private PC parent;
 		
-		private OpenContainerCallback(Creature parent) {
+		private OpenContainerCallback(PC parent) {
 			this.parent = parent;
 		}
 		

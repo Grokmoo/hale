@@ -28,6 +28,7 @@ import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.ability.AbilitySelectionList.Connector;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 import net.sf.hale.util.Pointf;
 import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Label;
@@ -42,6 +43,7 @@ import de.matthiasmann.twl.Widget;
  */
 
 public class AbilitySelectionListPane extends Widget {
+	private final boolean showSelectable;
 	private AbilitySelectionList list;
 	private int gridSize;
 	
@@ -51,19 +53,22 @@ public class AbilitySelectionListPane extends Widget {
 	
 	private List<ConnectorViewer> connectorViewers;
 	
-	private Creature workingCopy;
+	private Creature parentPC;
 	
 	/**
 	 * Create a new AbilitySelectionListPane viewing the specified list for the specified Creature.
 	 * SubListPanes will be created recursively.
 	 * @param list the AbilitySelectionList to view
-	 * @param workingCopy the Creature viewing the list
+	 * @param parentPC the Creature viewing the list
 	 * @param parent the parent widget that mouse hoverovers will be added to
+	 * @param showSelectable true if abilities where prereqs are met should be highlighted, false if not
 	 */
 	
-	public AbilitySelectionListPane(AbilitySelectionList list, Creature workingCopy, AbilitySelectorButton.HoverHolder parent) {
-		this.workingCopy = workingCopy;
+	public AbilitySelectionListPane(AbilitySelectionList list, PC parentPC,
+			AbilitySelectorButton.HoverHolder parent, boolean showSelectable) {
+		this.parentPC = parentPC;
 		this.list = list;
+		this.showSelectable = showSelectable;
 		
 		Set<Ability> abilities = list.getAbilities();
 		Set<String> subLists = list.getSubListIDs();
@@ -84,9 +89,9 @@ public class AbilitySelectionListPane extends Widget {
 		
 		// create the top level ability selector buttons
 		for (Ability ability : list.getAbilities()) {
-			AbilitySelectorButton button = new AbilitySelectorButton(ability, parent);
+			AbilitySelectorButton button = new AbilitySelectorButton(ability, parentPC, parent, showSelectable);
 			button.setWidgetToAddWindowsTo(parent.getGUI().getRootPane());
-			button.setState(workingCopy);
+			button.setState(parentPC);
 			
 			add(button);
 			buttons.add(button);
@@ -96,7 +101,7 @@ public class AbilitySelectionListPane extends Widget {
 		for (String listID : subLists) {
 			AbilitySelectionList subList = Game.ruleset.getAbilitySelectionList(listID);
 			
-			AbilitySelectionListPane pane = new AbilitySelectionListPane(subList, workingCopy, parent);
+			AbilitySelectionListPane pane = new AbilitySelectionListPane(subList, parentPC, parent, showSelectable);
 			add(pane);
 			subListPanes.add(pane);
 			
@@ -131,14 +136,19 @@ public class AbilitySelectionListPane extends Widget {
 		String alreadyOwnedText = themeInfo.getParameter("alreadyOwnedText", "");
 		String prereqsNotMetText = themeInfo.getParameter("prereqsNotMetText", "");
 		String selectableText = themeInfo.getParameter("selectableText", "");
+		String notOwnedText = themeInfo.getParameter("notOwnedText", "");
 		
 		for (AbilitySelectorButton button : buttons) {
-			if (workingCopy.getAbilities().has(button.getAbility())) {
+			if (parentPC.abilities.has(button.getAbility())) {
 				button.setHoverText(alreadyOwnedText, Color.PURPLE);
-			} else if (!button.getAbility().meetsPrereqs(workingCopy)) {
-				button.setHoverText(prereqsNotMetText, Color.RED);
+			} else if (showSelectable) {
+				if (!button.getAbility().meetsPrereqs(parentPC)) {
+					button.setHoverText(prereqsNotMetText, Color.RED);
+				} else {
+					button.setHoverText(selectableText, Color.GREEN);
+				}
 			} else {
-				button.setHoverText(selectableText, Color.GREEN);
+				button.setHoverText(notOwnedText, Color.RED);
 			}
 		}
 	}
@@ -208,6 +218,8 @@ public class AbilitySelectionListPane extends Widget {
 			case OneDown: case TwoDown: case ThreeDown: case FourDown:
 				posY += buttonHeight;
 				break;
+			default:
+				// do nothing
 			}
 			
 			viewer.setPosition(getInnerX() + (int)posX, getInnerY() + (int)posY);

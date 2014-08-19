@@ -26,9 +26,9 @@ import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.widgets.ExpandableWidget;
-
-import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.ScrollPane;
+import de.matthiasmann.twl.ThemeInfo;
+import de.matthiasmann.twl.Widget;
 
 /**
  * A widget for viewing the set of skills possessed by a given Creature
@@ -40,17 +40,28 @@ public class SkillSetViewer extends ScrollPane {
 	private Creature parent;
 	
 	private final List<SkillViewer> viewers;
-	private final DialogLayout content;
+	
+	private int gap;
+	private final Content content;
+	
+	/**
+	 * Creates a new SkillSetViewer
+	 */
 	
 	public SkillSetViewer() {
 		setFixed(ScrollPane.Fixed.HORIZONTAL);
 		
 		viewers = new ArrayList<SkillViewer>();
 		
-		content = new DialogLayout();
+		content = new Content();
 		content.setTheme("content");
 		setContent(content);
 	}
+	
+	/**
+	 * Sets the character being viewed by this SkillSetViewer
+	 * @param parent
+	 */
 	
 	public void updateContent(Creature parent) {
 		if (parent != this.parent) {
@@ -58,25 +69,54 @@ public class SkillSetViewer extends ScrollPane {
 			this.viewers.clear();
 
 			content.removeAllChildren();
-
-			DialogLayout.Group mainH = content.createParallelGroup();
-			DialogLayout.Group mainV = content.createSequentialGroup();
-
+			
 			for (Skill skill : Game.ruleset.getAllSkills()) {
 				if (!skill.canUse(parent)) continue;
 
 				SkillViewer viewer = new SkillViewer(skill);
 				viewers.add(viewer);
-				mainH.addWidget(viewer);
-				mainV.addWidget(viewer);
+				content.add(viewer);
 			}
-
-			content.setHorizontalGroup(mainH);
-			content.setVerticalGroup(mainV);
 		}
 		
 		for (SkillViewer viewer : viewers) {
 			viewer.update();
+		}
+	}
+	
+	private class Content extends Widget {
+		@Override protected void applyTheme(ThemeInfo themeInfo) {
+			super.applyTheme(themeInfo);
+			
+			gap = themeInfo.getParameter("gap", 0);
+		}
+		
+		@Override protected void layout() {
+			int viewerWidth = Math.max(0, (getInnerWidth() - gap) / 2);
+			
+			int curX = getInnerX();
+			int curY = getInnerY();
+			
+			// layout first column
+			int i = 0;
+			
+			for (; i < (viewers.size() + 1) / 2; i++) {
+				viewers.get(i).setSize(viewerWidth, viewers.get(i).getPreferredHeight());
+				viewers.get(i).setPosition(curX, curY);
+				
+				curY += viewers.get(i).getHeight() + gap;
+			}
+			
+			curX = getInnerX() + (getInnerWidth() - gap) / 2 + gap;
+			curY = getInnerY();
+			
+			// layout second column
+			for (; i < viewers.size(); i++) {
+				viewers.get(i).setSize(viewerWidth, viewers.get(i).getPreferredHeight());
+				viewers.get(i).setPosition(curX, curY);
+				
+				curY += viewers.get(i).getHeight() + gap;
+			}
 		}
 	}
 	
@@ -89,21 +129,21 @@ public class SkillSetViewer extends ScrollPane {
 		}
 		
 		@Override protected void appendDescriptionMain(StringBuilder sb) {
-			sb.append("<div style=\"font-family: vera-bold;\">");
-			sb.append(skill.getName()).append("</div>");
+			sb.append("<div style=\"font-family: medium-bold;\">");
+			sb.append(skill.getNoun()).append("</div>");
 			
-			int total = parent.getSkillModifier(skill);
-			int ranks = parent.getSkillSet().getRanks(skill);
+			int total = parent.skills.getTotalModifier(skill);
+			int ranks = parent.skills.getRanks(skill);
 			int modifier = total - ranks;
 			
-			sb.append("<div style=\"font-family: vera\"><span style=\"font-family: vera-blue;\">").append(ranks);
-			sb.append("</span> + <span style=\"font-family: vera-green;\">").append(modifier);
-			sb.append("</span> = <span style=\"font-family: vera-bold;\">").append(total).append("</span>");
+			sb.append("<div style=\"font-family: medium\"><span style=\"font-family: medium-blue;\">").append(ranks);
+			sb.append("</span> + <span style=\"font-family: medium-green;\">").append(modifier);
+			sb.append("</span> = <span style=\"font-family: medium-bold;\">").append(total).append("</span>");
 			sb.append("</div>");
 		}
 		
 		@Override protected void appendDescriptionDetails(StringBuilder sb) {
-			if (skill.isRestricted()) {
+			if (skill.isRestrictedToARole()) {
 				sb.append("<p>Restricted to <span style=\"font-family: red;\">");
 				sb.append(skill.getRestrictToRole()).append("</span></p>");
 			}
@@ -112,11 +152,11 @@ public class SkillSetViewer extends ScrollPane {
 			sb.append( skill.getKeyAttribute().name );
 			sb.append("</span></p>");
 			
-			if (!skill.usableUntrained()) {
+			if (!skill.isUsableUntrained()) {
 				sb.append("<div style=\"font-family: green;\">Requires training</div>");
 			}
 			
-			if (skill.hasArmorPenalty()) {
+			if (skill.suffersArmorPenalty()) {
 				sb.append("<div style=\"font-family: green;\">Armor Penalty applies</div>");
 			}
 			

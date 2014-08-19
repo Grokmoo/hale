@@ -272,6 +272,25 @@ public class BonusList implements Iterable<Bonus>, Saveable {
 		return null;
 	}
 	
+	/**
+	 * Returns a list of all bonuses in this list of any of the specified types
+	 * @param types
+	 * @return a list of bonuses, or an empty list if no such bonuses exist
+	 */
+	
+	public List<Bonus> getBonusesOfType(Bonus.Type... types) {
+		List<Bonus> bonuses = new ArrayList<Bonus>();
+		
+		for (Bonus bonus : this.bonuses) {
+			for (Bonus.Type type : types) {
+				if (bonus.getType() == type)
+					bonuses.add(bonus);
+			}
+		}
+		
+		return bonuses;
+	}
+	
 	public String getDescription() {
 		StringBuilder str = new StringBuilder();
 		

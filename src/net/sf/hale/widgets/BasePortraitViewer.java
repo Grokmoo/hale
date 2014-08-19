@@ -21,8 +21,8 @@ package net.sf.hale.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import net.sf.hale.Sprite;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
@@ -59,8 +59,8 @@ public class BasePortraitViewer extends ToggleButton {
 		this.creature = creature;
 		this.enableEventHandling = false;
 		
-		if (creature != null && creature.getPortrait() != null)
-			portraitSprite = SpriteManager.getPortrait(creature.getPortrait());
+		if (creature != null && creature.getTemplate().getPortrait() != null)
+			portraitSprite = SpriteManager.getPortrait(creature.getTemplate().getPortrait());
 		else
 			portraitSprite = null;
 	}
@@ -73,8 +73,8 @@ public class BasePortraitViewer extends ToggleButton {
 	public void setCreature(Creature creature) {
 		this.creature = creature;
 		
-		if (creature.getPortrait() != null)
-			portraitSprite = SpriteManager.getPortrait(creature.getPortrait());
+		if (creature.getTemplate().getPortrait() != null)
+			portraitSprite = SpriteManager.getPortrait(creature.getTemplate().getPortrait());
 		else
 			portraitSprite = null;
 	}

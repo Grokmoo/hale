@@ -1,9 +1,9 @@
 function canUse(game, trap, parent) {
-    return trap.canPlace(parent);
+    return trap.canAttemptPlace(parent);
 }
 
 function onUse(game, trap, parent) {
-    trap.tryPlace(parent);
+    trap.attemptPlace(parent);
 }
 
 function onSpringTrap(game, trap, target) {

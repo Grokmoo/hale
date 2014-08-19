@@ -22,42 +22,90 @@ package net.sf.hale.rules;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.util.FileKeyMap;
+import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.util.SimpleJSONParser;
+
+/**
+ * A skill represents a specific type of action that creatures can take, generally
+ * not directly related to combat.  This includes things like picking a lock, setting
+ * a trap, or crafting an item
+ * @author Jared
+ *
+ */
 
 public class Skill implements Comparable<Skill> {
-	private final String descriptionFile;
 	private final String id;
-	private final String name;
-	private final String verb, verbPast;
-	private final String icon;
+	
+	private final String noun;
+	private final String presentTenseVerb, pastTenseVerb;
+	
+	private final Icon icon;
+	
 	private final String restrictToRole;
-	private final boolean untrained;
+	private final boolean isUsableUntrained;
 	private final Stat keyAttribute;
-	private final boolean hasArmorPenalty;
-	private final boolean isCraftSkill;
+	private final boolean suffersArmorPenalty;
+	private final boolean isCraft;
+	private final boolean alwaysRolls100OutsideOfCombat;
 	
 	public Skill(String id) {
 		this.id = id;
 		
-		FileKeyMap map = new FileKeyMap("skills/" + id + ResourceType.Text.getExtension());
+		SimpleJSONParser parser = new SimpleJSONParser("skills/" + id + ResourceType.JSON.getExtension());
 		
-		name = map.getValue("name", id);
-		verb = map.getValue("verb", id);
-		verbPast = map.getValue("verbpast", id);
-		icon = map.getValue("icon", null);
-		descriptionFile = map.getValue("descriptionfile", "descriptions/skills/" + name + ResourceType.HTML.getExtension());
-		untrained = map.getValue("untrained", true);
-		hasArmorPenalty = map.getValue("hasarmorpenalty", false);
-		isCraftSkill = map.getValue("craft", false);
-		restrictToRole = map.getValue("restricttorole", null);
+		SimpleJSONObject nameIn = parser.getObject("name");
 		
-		String keyAttributeString = map.getValue("keyattribute", null);
-		keyAttribute = keyAttributeString == null ? Stat.Int : Stat.valueOf(keyAttributeString);
+		noun = nameIn.get("noun", null);
+		presentTenseVerb = nameIn.get("presentTenseVerb", null);
+		pastTenseVerb = nameIn.get("pastTenseVerb", null);
 		
-		map.checkUnusedKeys();
+		if (parser.containsKey("icon")) {
+			icon = IconFactory.createIcon(parser.getObject("icon"));
+		} else {
+			icon = IconFactory.emptyIcon;
+		}
+		
+		isUsableUntrained = parser.get("isUsableUntrained", false);
+		suffersArmorPenalty = parser.get("suffersArmorPenalty", false);
+		keyAttribute = Stat.valueOf(parser.get("keyAttribute", null));
+		isCraft = parser.get("isCraft", false);
+		
+		if (parser.containsKey("restrictToRole")) {
+			restrictToRole = parser.get("restrictToRole", null);
+		} else {
+			restrictToRole = null;
+		}
+		
+		if (parser.containsKey("alwaysRolls100OutsideOfCombat")) {
+			alwaysRolls100OutsideOfCombat = parser.get("alwaysRolls100OutsideOfCombat", false);
+		} else {
+			alwaysRolls100OutsideOfCombat = false;
+		}
+		
+		parser.warnOnUnusedKeys();
 	}
+	
+	/**
+	 * Returns true if this skill will automatically roll the highest possible value (100)
+	 * while outside of combat on all checks
+	 * @return whether this skill will automatically roll 100 while outside combat
+	 */
+	
+	public boolean alwaysRolls100OutsideOfCombat() {
+		return alwaysRolls100OutsideOfCombat;
+	}
+	
+	/**
+	 * Returns true if the specified role can use this skill, false otherwise.  All roles
+	 * can use all skills, except for skills that are restricted to a specific role.  This
+	 * method assumes the creature owning the role has training in this skill, as needed.
+	 * @param role
+	 * @return whether the specified role can use this skill
+	 */
 	
 	public boolean canUse(Role role) {
 		if (restrictToRole == null) return true;
@@ -65,32 +113,117 @@ public class Skill implements Comparable<Skill> {
 		return role.getID().equals(restrictToRole);
 	}
 	
+	/**
+	 * Returns true if the specified creature can use this skill, false otherwise.  All creatures
+	 * can use all skills, except for skills that are restricted to a specific role.  Note that this
+	 * method assumes the creature has training in this skill, as needed.
+	 * @param creature
+	 * @return whether the creature can use this skill
+	 */
+	
 	public boolean canUse(Creature creature) {
 		if (restrictToRole == null) return true;
 		
 		Role role = Game.ruleset.getRole(restrictToRole);
 		
-		return (creature.getRoles().contains(role));
+		return (creature.roles.contains(role));
 	}
 	
-	@Override public int compareTo(Skill other) {
-		return this.getName().compareTo(other.getName());
-	}
+	/**
+	 * Returns true if this skill is restricted to only being usable by a specific role,
+	 * false otherwise
+	 * @return whether this skill is restricted to a specific role
+	 */
 	
-	public boolean isRestricted() { return restrictToRole != null; }
+	public boolean isRestrictedToARole() { return restrictToRole != null; }
+	
+	/**
+	 * Returns the ID of the role that this skill is restricted to, or null if this
+	 * skill is usable by all roles
+	 * @return the ID of the restricted role
+	 */
+	
 	public String getRestrictToRole() { return restrictToRole; }
 	
+	/**
+	 * Returns the HTML description for this skill, defined in its description file
+	 * @return the HTML description
+	 */
+	
 	public String getDescription() {
-		return ResourceManager.getResourceAsString(descriptionFile);
+		return ResourceManager.getResourceAsString("descriptions/skills/" + noun +
+				ResourceType.HTML.getExtension());
 	}
 	
-	public String getVerbPastTense() { return verbPast; }
-	public String getVerb() { return verb; }
-	public String getIcon() { return icon; }
+	/**
+	 * Returns the id of this skill
+	 * @return the ID
+	 */
+	
 	public String getID() { return id; }
-	public String getName() { return name; }
-	public boolean usableUntrained() { return untrained; }
+	
+	
+	/**
+	 * Returns the icon for this skill.  This may be the empty icon
+	 * if this skill does not define an icon
+	 * @return the icon for this skill
+	 */
+	
+	public Icon getIcon() { return icon; }
+	
+	/**
+	 * Returns the past tense verb for using this skill
+	 * @return the past tense verb
+	 */
+	
+	public String getPastTenseVerb() { return pastTenseVerb; }
+	
+	/**
+	 * Returns the present tense verb for using this skill
+	 * @return the present tense verb
+	 */
+	
+	public String getPresentTenseVerb() { return presentTenseVerb; }
+	
+	/**
+	 * Returns the noun for describing this skill
+	 * @return the noun
+	 */
+	
+	public String getNoun() { return noun; }
+	
+	/**
+	 * Returns true if this skill is usable by a creature with zero ranks in this skill,
+	 * false if creatures must have at least one rank
+	 * @return whether this skill is usable untrained
+	 */
+	
+	public boolean isUsableUntrained() { return isUsableUntrained; }
+	
+	/**
+	 * Returns the key attribute for this skill, used in computing the skill check bonus
+	 * @return the key attribute
+	 */
+	
 	public Stat getKeyAttribute() { return keyAttribute; }
-	public boolean hasArmorPenalty() { return hasArmorPenalty; }
-	public boolean isCraftSkill() { return isCraftSkill; }
+	
+	/**
+	 * Returns true if checks made for this skill suffer from the armor penalty of the parent
+	 * creature, false otherwise
+	 * @return whether checks for this skill suffer an armor penalty
+	 */
+	
+	public boolean suffersArmorPenalty() { return suffersArmorPenalty; }
+	
+	/**
+	 * Returns true if this is a craft skill, meaning one that can be used with recipes to create items,
+	 * false otherwise
+	 * @return whether this is a craft skill
+	 */
+	
+	public boolean isCraft() { return isCraft; }
+	
+	@Override public int compareTo(Skill other) {
+		return this.id.compareTo(other.id);
+	}
 }

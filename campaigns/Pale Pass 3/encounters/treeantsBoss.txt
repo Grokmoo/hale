@@ -1,7 +1,0 @@
-size 1
-faction "Hostile"
-challenge 130
-creature "treeAntHuge" 1 -1
-creature "treeAntLarge" -1 -1
-creature "treeAntLarge" 0 1
-creature "treeAntLarge" -1 0

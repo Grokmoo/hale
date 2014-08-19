@@ -1,9 +1,0 @@
-playerCharacter false
-
-name "Chasm"
-gender "Male"
-race "Object"
-unspentSkillPoints 0
-attributes 10 10 10 10 10 10
-conversation "conversations/greenrangeChasm"
-

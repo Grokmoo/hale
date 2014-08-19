@@ -1,3 +1,0 @@
-area "Tomb Entrance"
-script "triggers/tombNarkellEntrance"
-addPoints

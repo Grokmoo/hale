@@ -1,8 +1,0 @@
-name "Dual Wielding"
-type "Dual Wielding"
-description "You are able to use two one handed or light weapons at once, albeit at a substantial penalty to attack and damage."
-activateable false
-
-icon "icons/dualWielding"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().add('DualWieldTraining'); parent.applyEffect(effect); }"

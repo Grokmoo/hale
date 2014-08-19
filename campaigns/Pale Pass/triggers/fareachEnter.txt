@@ -1,3 +1,0 @@
-area "Fareach"
-script "triggers/onFareachEnter"
-addPoints

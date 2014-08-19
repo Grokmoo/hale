@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.util.zip.GZIPInputStream;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.EntityManager;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SaveFileHeader;
 import net.sf.hale.util.SimpleJSONParser;
@@ -95,7 +96,7 @@ public class LoadGameLoadingTaskList extends LoadingTaskList {
 			@Override public void run() {
 				// read the game file
 				try {
-					Game.entityManager.clearEntities();
+					EntityManager.clear();
 					Game.curCampaign.load(parser);
 					
 				} catch (Exception e) {
@@ -117,7 +118,7 @@ public class LoadGameLoadingTaskList extends LoadingTaskList {
 		Runnable finishing = new Runnable() {
 			@Override public void run() {
 				Game.curCampaign.curArea.setEntityVisibility();
-				Game.areaListener.getAreaUtil().updateVisibility(Game.curCampaign.curArea);
+				Game.curCampaign.curArea.getUtil().updateVisibility();
 				
 				Game.mainViewer.getPortraitArea().updateParty();
 				Game.selectedEntity = Game.curCampaign.party.getSelected();

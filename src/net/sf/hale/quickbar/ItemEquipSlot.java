@@ -20,14 +20,17 @@
 package net.sf.hale.quickbar;
 
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.bonus.Bonus;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.Armor;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItem;
+import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.PC;
+import net.sf.hale.entity.Weapon;
+import net.sf.hale.entity.WeaponTemplate;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
-import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.widgets.RightClickMenu;
 
 /**
@@ -40,24 +43,26 @@ import net.sf.hale.widgets.RightClickMenu;
  */
 
 public class ItemEquipSlot extends QuickbarSlot {
-	private Item item;
-	private Item secondaryItem;
-	private Creature parent;
-	
-	private Color spriteColor;
-	
-	private Color secondaryColor;
+	private EquippableItem item;
+	private EquippableItem secondaryItem;
+	private PC parent;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
 		data.put("type", "equip");
-		data.put("itemID", item.getID());
-		data.put("itemQuality", item.getQuality().getName());
+		data.put("itemID", item.getTemplate().getID());
+		
+		if (item.getTemplate().hasQuality()) {
+			data.put("itemQuality", item.getQuality().getName());
+		}
 		
 		if (secondaryItem != null) {
-			data.put("secondaryItemID", secondaryItem.getID());
-			data.put("secondaryItemQuality", secondaryItem.getQuality().getName());
+			data.put("secondaryItemID", secondaryItem.getTemplate().getID());
+			
+			if (secondaryItem.getTemplate().hasQuality()) {
+				data.put("secondaryItemQuality", secondaryItem.getQuality().getName());
+			}
 		}
 		
 		return data;
@@ -69,13 +74,9 @@ public class ItemEquipSlot extends QuickbarSlot {
 	 * @param parent the parent that will be equipping or unequipping the item
 	 */
 	
-	public ItemEquipSlot(Item item, Creature parent) {
+	public ItemEquipSlot(EquippableItem item, PC parent) {
 		this.item = item;
 		this.parent = parent;
-		this.spriteColor = item.getIconColor();
-		if (spriteColor == null) spriteColor = Color.WHITE;
-		
-		secondaryColor = Color.WHITE;
 	}
 	
 	/**
@@ -84,7 +85,7 @@ public class ItemEquipSlot extends QuickbarSlot {
 	 * @return the Item that this ItemEquipSlot is holding.
 	 */
 	
-	public Item getItem() {
+	public EquippableItem getItem() {
 		return item;
 	}
 	
@@ -97,141 +98,142 @@ public class ItemEquipSlot extends QuickbarSlot {
 	 * @return true if the secondary item is added successfully, false otherwise
 	 */
 	
-	public boolean setSecondaryItem(Item secondaryItem) {
+	public boolean setSecondaryItem(EquippableItem secondaryItem) {
 		if (secondaryItem == null) return false;
 		
 		// if a secondary item is already set, this causes trying to add another
 		// item to reset the slot
 		if (this.secondaryItem != null) return false;
 		
-		if (!parent.getInventory().hasPrereqsToEquip(item)) return false;
-		if (!parent.getInventory().hasPrereqsToEquip(secondaryItem)) return false;
+		if (!item.getTemplate().hasPrereqsToEquip(parent)) return false;
+		if (!secondaryItem.getTemplate().hasPrereqsToEquip(parent)) return false;
 		
 		// make sure the player didn't drop the same item on the slot twice
-		if (!parent.getInventory().hasBothItems(item, secondaryItem)) return false;
+		if (!parent.inventory.hasBoth(item, secondaryItem)) return false;
 		
-		switch (item.getItemType()) {
-		case WEAPON:
-			switch (secondaryItem.getItemType()) {
-			case WEAPON:
-				return checkWeaponWeapon(item, secondaryItem);
-			case SHIELD:
-				return checkWeaponShield(item, secondaryItem);
+		switch (item.getTemplate().getType()) {
+		case Weapon:
+			switch (secondaryItem.getTemplate().getType()) {
+			case Weapon:
+				return checkWeaponWeapon((Weapon)item, (Weapon)secondaryItem);
+			case Shield:
+				return checkWeaponShield((Weapon)item, (Armor)secondaryItem);
 			}
-		case SHIELD:
-			switch (secondaryItem.getItemType()) {
-			case WEAPON:
-				return checkWeaponShield(secondaryItem, item);
+		case Shield:
+			switch (secondaryItem.getTemplate().getType()) {
+			case Weapon:
+				return checkWeaponShield((Weapon)secondaryItem, (Armor)item);
 			}
 		}
 		
 		return false;
 	}
 	
-	private boolean checkWeaponWeapon(Item main, Item offHand) {
-		if (!main.isMeleeWeapon() || !offHand.isMeleeWeapon()) return false;
+	private boolean checkWeaponWeapon(Weapon main, Weapon offHand) {
+		if (!main.isMelee() || !offHand.isMelee()) return false;
 		
-		if (!parent.stats().has(Bonus.Type.DualWieldTraining)) return false;
+		if (!parent.stats.has(Bonus.Type.DualWieldTraining)) return false;
 		
-		switch (main.getWeaponHandedForCreature(parent)) {
-		case TWO_HANDED: case NONE: return false;
-		}
+		if (main.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+			return false;
 		
-		switch (offHand.getWeaponHandedForCreature(parent)) {
-		case TWO_HANDED: case NONE: return false;
-		}
+		if (offHand.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+			return false;
 		
-		// checks are ok, so set the main and secondary items and sprites
+		// checks are ok, so set the main and secondary items
 		item = main;
-		spriteColor = item.getIconColor();
-		if (spriteColor == null) spriteColor = Color.WHITE;
-		
 		secondaryItem = offHand;
-		secondaryColor = secondaryItem.getIconColor();
-		if (secondaryColor == null) secondaryColor = Color.WHITE;
 		
 		return true;
 	}
 	
-	private boolean checkWeaponShield(Item weapon, Item shield) {
-		switch (weapon.getWeaponHandedForCreature(parent)) {
-		case TWO_HANDED: case NONE: return false;
-		}
+	private boolean checkWeaponShield(Weapon weapon, Armor shield) {
+		if (weapon.getTemplate().getHanded() == WeaponTemplate.Handed.TwoHanded)
+			return false;
 		
-		// checks are ok, so set the main and secondary items and sprites
+		// checks are ok, so set the main and secondary items
 		item = weapon;
-		spriteColor = item.getIconColor();
-		if (spriteColor == null) spriteColor = Color.WHITE;
-		
 		secondaryItem = shield;
-		secondaryColor = secondaryItem.getIconColor();
-		if (secondaryColor == null) secondaryColor = Color.WHITE;
 		
 		return true;
 	}
 	
-	@Override public Sprite getSprite() {
-		return SpriteManager.getSprite(item.getIcon());
-	}
-
-	@Override public Color getSpriteColor() {
-		return spriteColor;
+	@Override public Icon getIcon() {
+		return item.getTemplate().getIcon();
 	}
 	
 	@Override public String getLabelText() {
-		switch (item.getItemType()) {
-		case AMMO: return Integer.toString(parent.getInventory().getQuantity(item));
-		default: return "";
+		switch (item.getTemplate().getType()) {
+		case Ammo:
+			return Integer.toString(parent.inventory.getTotalQuantity(item));
+		default:
+			return "";
 		}
 	}
 
 	@Override public boolean isChildActivateable() {
-		if (parent.getInventory().hasEquippedItem(item) && item.isCursed())
+		if (parent.inventory.isEquipped(item) && !item.getTemplate().isUnequippable())
 			return false;
 		
-		if (!parent.getInventory().canUnequipCurrentItemInSlot(item, 0)) return false;
-		
-		if (secondaryItem != null && parent.getInventory().hasEquippedItem(secondaryItem) &&
-				secondaryItem.isCursed())
+		if (secondaryItem != null && parent.inventory.isEquipped(secondaryItem) &&
+				!secondaryItem.getTemplate().isUnequippable())
 			return false;
 		
-		return parent.getInventory().canEquip(item);
+		return parent.inventory.canEquip(item, null);
 	}
 
-	@Override public void childActivate() {
-		if (!parent.getInventory().canEquip(item)) return;
-		
-		if (!parent.getInventory().canUnequipCurrentItemInSlot(item, 0)) return;
+	@Override public void childActivate(QuickbarSlotButton button) {
+		if (!parent.inventory.canEquip(item, null)) return;
 		
 		if (secondaryItem != null) {
-			if (!parent.getInventory().hasBothItems(item, secondaryItem)) return;
+			if (!parent.inventory.hasBoth(item, secondaryItem)) return;
 			
-			parent.getInventory().doubleEquipmentAction(item, secondaryItem);
+			if (parent.inventory.isEquipped(item)) {
+				// unequip both items
+				parent.inventory.getUnequipCallback(parent.inventory.getSlot(item)).run();
+				
+				if (parent.inventory.isEquipped(secondaryItem)) {
+					// don't charge AP for the second equip action
+					parent.timer.setFreeMode(true);
+					parent.inventory.getUnequipCallback(parent.inventory.getSlot(secondaryItem)).run();
+					parent.timer.setFreeMode(false);
+				}
+				
+			} else {
+				// equip both items
+				parent.inventory.equipItem(item, null);
+				
+				if (!parent.inventory.isEquipped(secondaryItem)) {
+					// don't charge AP for the second equip action
+					parent.timer.setFreeMode(true);
+					parent.inventory.equipItem(secondaryItem, null);
+					parent.timer.setFreeMode(false);
+				}
+			}
 		} else {
 			
-			if (!parent.getInventory().hasItem(item)) return;
-			
-			if (parent.getInventory().hasEquippedItem(item)) {
-				parent.getInventory().getCallbackFactory().getUnequipCallback(item).run();
-			} else {
-				parent.getInventory().getCallbackFactory().getEquipCallback(item).run();
+			Inventory.Slot slot = parent.inventory.getSlot(item);
+			if (slot != null) {
+				parent.inventory.getUnequipCallback(slot).run();
+			} else if (parent.inventory.getUnequippedItems().contains(item)) {
+				parent.inventory.getEquipCallback(item, null).run();
 			}
 		}
 	}
 	
-	@Override public void createRightClickMenu(QuickbarSlotButton widget) {
+	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		
-		String menuTitle = item.getName();
-		if (secondaryItem != null) menuTitle = menuTitle + " and " + secondaryItem.getName();
+		String menuTitle = item.getTemplate().getName();
+		if (secondaryItem != null) menuTitle = menuTitle + " and " + secondaryItem.getTemplate().getName();
 		
 		menu.addMenuLevel(menuTitle);
 		
 		String disabledTooltip = null;
 		String activateText = null;
-		if (parent.getInventory().hasEquippedItem(item)) {
+		if (parent.inventory.isEquipped(item)) {
 			activateText = "Unequip";
-			if (item.isCursed()) disabledTooltip = "Item is cursed and cannot be removed.";
+			if (!item.getTemplate().isUnequippable()) disabledTooltip = "Item is conjured and cannot be removed.";
 			else disabledTooltip = "Not enough AP to unequip";
 			
 		}
@@ -243,26 +245,22 @@ public class ItemEquipSlot extends QuickbarSlot {
 		Button activate = new Button(activateText);
 		activate.setEnabled(isActivateable());
 		if (!activate.isEnabled()) activate.setTooltipContent(disabledTooltip);
-		activate.addCallback(new QuickbarSlotButton.ActivateSlotCallback(this));
+		activate.addCallback(button.getActivateSlotCallback(this));
 		menu.addButton(activate);
 		
 		
-		Button examine = new Button(item.getName() + " Details");
-		Runnable cb = parent.getInventory().getCallbackFactory().getDetailsCallback(item,
-				menu.getX(), menu.getY());
-		examine.addCallback(cb);
+		Button examine = new Button(item.getTemplate().getName() + " Details");
+		examine.addCallback(item.getExamineDetailsCallback(menu.getX(), menu.getY()));
 		menu.addButton(examine);
 		
 		if (secondaryItem != null) {
-			Button examineS = new Button(secondaryItem.getName() + " Details");
-			Runnable cbS = parent.getInventory().getCallbackFactory().getDetailsCallback(secondaryItem,
-					menu.getX(), menu.getY());
-			examineS.addCallback(cbS);
+			Button examineS = new Button(secondaryItem.getTemplate().getName() + " Details");
+			examineS.addCallback(secondaryItem.getExamineDetailsCallback(menu.getX(), menu.getY()));
 			menu.addButton(examineS);
 		}
 		
 		Button clearSlot = new Button("Clear Slot");
-		clearSlot.addCallback(new QuickbarSlotButton.ClearSlotCallback(widget));
+		clearSlot.addCallback(button.getClearSlotCallback());
 		menu.addButton(clearSlot);
 		
 		menu.show();
@@ -276,22 +274,18 @@ public class ItemEquipSlot extends QuickbarSlot {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("Equip ");
-		sb.append(item.getFullName());
+		sb.append(item.getLongName());
 		if (secondaryItem != null) {
 			sb.append(" and ");
-			sb.append(secondaryItem.getFullName());
+			sb.append(secondaryItem.getLongName());
 		}
 		
 		return sb.toString();
 	}
 
-	@Override public Sprite getSecondarySprite() {
-		if (secondaryItem != null) return SpriteManager.getSprite(secondaryItem.getIcon());
+	@Override public Icon getSecondaryIcon() {
+		if (secondaryItem != null) return secondaryItem.getTemplate().getIcon();
 		else return null;
-	}
-
-	@Override public Color getSecondarySpriteColor() {
-		return secondaryColor;
 	}
 
 	@Override public String getSaveDescription() {
@@ -300,14 +294,14 @@ public class ItemEquipSlot extends QuickbarSlot {
 		sb.append("Equip ");
 		
 		sb.append("\"");
-		sb.append(item.getID());
+		sb.append(item.getTemplate().getID());
 		sb.append("\" \"");
 		sb.append(item.getQuality().getName());
 		sb.append("\"");
 		
 		if (secondaryItem != null) {
 			sb.append(" \"");
-			sb.append(secondaryItem.getID());
+			sb.append(secondaryItem.getTemplate().getID());
 			sb.append("\" \"");
 			sb.append(secondaryItem.getQuality().getName());
 			sb.append("\"");
@@ -316,12 +310,13 @@ public class ItemEquipSlot extends QuickbarSlot {
 		return sb.toString();
 	}
 
-	@Override
-	public QuickbarSlot getCopy(Creature parent) {
-		ItemEquipSlot slot = new ItemEquipSlot(new Item(this.item), parent);
+	@Override public QuickbarSlot getCopy(PC parent) {
+		ItemEquipSlot slot = new ItemEquipSlot((EquippableItem)EntityManager.getItem(item.getTemplate().getID(),
+				item.getQuality()), parent);
 		
 		if (this.secondaryItem != null)
-			slot.setSecondaryItem(new Item(this.secondaryItem));
+			slot.setSecondaryItem((EquippableItem)EntityManager.getItem(secondaryItem.getTemplate().getID(),
+					secondaryItem.getQuality()));
 		
 		return slot;
 	}

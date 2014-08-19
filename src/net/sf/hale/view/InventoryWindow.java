@@ -19,14 +19,14 @@
 
 package net.sf.hale.view;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Inventory;
-import net.sf.hale.entity.InventoryCallbackFactory;
-import net.sf.hale.entity.Item;
+import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.Weight;
 import net.sf.hale.widgets.ItemIconViewer;
@@ -47,13 +47,10 @@ import de.matthiasmann.twl.renderer.Image;
  */
 
 public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Listener {
-	private static final String[] viewerThemes = { "mainhand", "offhand", "armor", "gloves",
-		"helmet", "cloak", "boots", "belt", "amulet", "rightring", "leftring", "quiver" };
-	
 	private int gridSize;
 	private int labelGap;
 	
-	private final List<EquippedItemIconViewer> equipped;
+	private final Map<Inventory.Slot, EquippedItemIconViewer> equipped;
 	private final CreatureViewer creatureViewer;
 	private final ItemListViewer viewer;
 	
@@ -83,7 +80,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		organize.setTheme("organizebutton");
 		organize.addCallback(new Runnable() {
 			@Override public void run() {
-				creature.getInventory().getUnequippedItems().sort();
+				creature.inventory.getUnequippedItems().sort();
 				Game.mainViewer.updateInterface();
 			}
 		});
@@ -92,12 +89,12 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		creatureViewer = new CreatureViewer();
 		add(creatureViewer);
 		
-		equipped = new ArrayList<EquippedItemIconViewer>();
-		for (int i = 0; i < Inventory.EQUIPPED_SIZE; i++) {
-			EquippedItemIconViewer viewer = new EquippedItemIconViewer(i);
+		equipped = new HashMap<Inventory.Slot, EquippedItemIconViewer>();
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippedItemIconViewer viewer = new EquippedItemIconViewer(slot);
 			viewer.setListener(this);
-			viewer.setTheme(viewerThemes[i] + "viewer");
-			equipped.add(viewer);
+			viewer.setTheme(slot.toString().toLowerCase() + "viewer");
+			equipped.put(slot, viewer);
 			add(viewer);
 		}
 		
@@ -111,8 +108,8 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		viewer.clearAllItemHovers();
 	}
 	
-	public EquippedItemIconViewer getEquippedViewer(int index) {
-		return equipped.get(index);
+	public EquippedItemIconViewer getEquippedViewer(Inventory.Slot slot) {
+		return equipped.get(slot);
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
@@ -147,7 +144,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		int y = creatureViewerY;
 		int bottom = creatureViewerY + creatureViewer.getHeight();
 		
-		for (EquippedItemIconViewer viewer : equipped) {
+		for (EquippedItemIconViewer viewer : equipped.values()) {
 			viewer.setSize(viewer.getMinWidth(), viewer.getMinHeight());
 			
 			int viewerX = getInnerX() + viewer.gridX * gridSize;
@@ -166,7 +163,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		// set the equipped area positions
 		creatureViewer.setPosition(creatureViewerX + offsetX, creatureViewerY);
 		
-		for (EquippedItemIconViewer viewer : equipped) {
+		for (EquippedItemIconViewer viewer : equipped.values()) {
 			viewer.setPosition(getInnerX() + viewer.gridX * gridSize + offsetX,
 					baseY + viewer.gridY * gridSize);
 		}
@@ -194,24 +191,23 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	 * @param creature the creature whose inventory is being viewed
 	 */
 	
-	public void updateContent(Creature creature) {
+	public void updateContent(PC creature) {
 		this.creature = creature;
-		setTitle("Inventory for " + creature.getName());
+		setTitle("Inventory for " + creature.getTemplate().getName());
 		
 		currency.setText(Game.curCampaign.getPartyCurrency().toString());
 		
-		String curWeight = creature.getInventory().getTotalWeight().toStringKilograms();
-		String maxWeight = new Weight(creature.stats().getWeightLimit()).toStringKilograms();
+		String curWeight = creature.inventory.getTotalWeight().toStringKilograms();
+		String maxWeight = new Weight(creature.stats.getWeightLimit()).toStringKilograms();
 		
 		weight.setText(curWeight + " / " + maxWeight + " kg");
 		
-		for (int i = 0; i < Inventory.EQUIPPED_SIZE; i++) {
-			EquippedItemIconViewer viewer = equipped.get(i);
-			viewer.setItem(creature.getInventory().getEquippedItem(i), 1, creature, null, null);
+		for (EquippedItemIconViewer viewer : equipped.values()) {
+			viewer.setItem(creature.inventory.getEquippedItem(viewer.slot), 1, creature, null, null);
 		}
 		
 		viewer.updateContent(ItemListViewer.Mode.INVENTORY, creature, merchant,
-				creature.getInventory().getUnequippedItems());
+				creature.inventory.getUnequippedItems());
 	}
 	
 	/*
@@ -229,21 +225,22 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	}
 	
 	@Override public void rightClicked(ItemIconViewer viewer, int x, int y) {
-		Item item = viewer.getItem();
+		EquippedItemIconViewer equippedViewer = (EquippedItemIconViewer)viewer;
+		
+		EquippableItem item = (EquippableItem)viewer.getItem();
 		if (item == null) return;
 		
-		InventoryCallbackFactory callbackFactory = creature.getInventory().getCallbackFactory();
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		
 		menu.clear();
-		menu.addMenuLevel(item.getFullName());
+		menu.addMenuLevel(item.getLongName());
 		menu.setPosition(x - 2, y - 25);
 		
 		Button button = new Button("Unequip");
-		button.addCallback(callbackFactory.getUnequipCallback(item));
-		button.setEnabled(creature.getTimer().canPerformEquipAction(item) && !item.isCursed());
-		if (item.isCursed()) {
-			button.setTooltipContent("Item is cursed and cannot be removed");
+		button.addCallback(creature.inventory.getUnequipCallback(equippedViewer.slot));
+		button.setEnabled(creature.timer.canPerformEquipAction(item) && item.getTemplate().isUnequippable());
+		if (!item.getTemplate().isUnequippable()) {
+			button.setTooltipContent("Item may not be removed");
 		} else if (!button.isEnabled()) {
 			button.setTooltipContent("Not enough AP to unequip");
 		}
@@ -254,7 +251,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 			menu.disableAllButtons();
 
 		Button details = new Button("View Details");
-		details.addCallback(callbackFactory.getDetailsCallback(item, x, y));
+		details.addCallback(item.getExamineDetailsCallback(x, y));
 		menu.addButton(details);
 		
 		menu.show();
@@ -266,14 +263,14 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 	}
 	
 	private class EquippedItemIconViewer extends ItemIconViewer {
-		private int slot;
+		private Inventory.Slot slot;
 		
 		private int gridX, gridY;
 		private String emptyTooltip;
 		private Image emptyImage;
 		private int emptyImageX, emptyImageY;
 		
-		private EquippedItemIconViewer(int slot) {
+		private EquippedItemIconViewer(Inventory.Slot slot) {
 			super(null);
 			
 			this.slot = slot;
@@ -303,20 +300,20 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		}
 		
 		private boolean validateTarget(DragTarget target) {
-			Item item = creature.getInventory().getEquippedItem(slot);
+			EquippableItem item = creature.inventory.getEquippedItem(slot);
 			
-			if (item != null && item.isCursed()) return false;
+			if (item != null && !item.getTemplate().isUnequippable()) return false;
 			
 			if (target.getItem() == null) return false;
 			
-			if (target.getItemEquipSlot() != -1) return false;
+			if (target.getItemEquipSlot() != null) return false;
 			
 			if (target.getItemMerchant() != null) return false;
 			
 			return true;
 		}
 		
-		@Override public int getItemEquipSlot() { return slot; }
+		@Override public Inventory.Slot getItemEquipSlot() { return slot; }
 		
 		@Override public void dragAndDropStartHover(DragTarget target) {
 			if (validateTarget(target))
@@ -331,13 +328,12 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 			getAnimationState().setAnimationState(DragAndDropHandler.STATE_DRAG_HOVER, false);
 			
 			if (validateTarget(target)) {
-				if (target.getItemParent() != null) {
+				if (target.getParentPC() != null && target.getItem() instanceof EquippableItem) {
 					// equip an item from the inventory
-					creature.getInventory().getCallbackFactory().getEquipSlotCallback(target.getItem(), slot, -1).run();
-				} else if (target.getItemContainer() != null) {
+					creature.inventory.equipItem((EquippableItem)target.getItem(), slot);
+				} else if (target.getItemContainer() != null && target.getItem() instanceof EquippableItem) {
 					// equip an item from a container
-					int index = target.getItemContainer().getItems().findItem(target.getItem());
-					creature.getInventory().getCallbackFactory().getEquipSlotCallback(target.getItem(), slot, index).run();
+					creature.inventory.getTakeAndWieldCallback((EquippableItem)target.getItem(), target.getItemContainer()).run();
 				}
 			}
 			
@@ -361,7 +357,7 @@ public class InventoryWindow extends GameSubWindow implements ItemIconViewer.Lis
 		@Override protected void paintWidget(GUI gui) {
 			super.paintWidget(gui);
 			
-			if (creature != null) creature.draw(getInnerX(), getInnerY());
+			if (creature != null) creature.uiDraw(getInnerX(), getInnerY());
 		}
 	}
 }

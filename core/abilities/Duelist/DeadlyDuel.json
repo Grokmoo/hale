@@ -1,0 +1,19 @@
+{
+  "name" : "Deadly Duel",
+  "type" : "Duelist Abilities",
+  "icon" : {
+    "sprite" : "icons/deadlyDuel"
+  },
+  "description" : {
+    "base" : "You gain a damage bonus equal to your Duelist level against your Duel target."
+  },
+  "isActivateable" : false,
+  "ai" : {
+    "power" : 30
+  },
+  "prereqs" : {
+    "abilities" : [
+      "Duel"
+    ]
+  }
+}

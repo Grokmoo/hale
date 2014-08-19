@@ -1,7 +1,6 @@
 { "name" : "Large Animal",
-  "size" : "Medium",
   "baseMovementCost" : 800,
-  "unarmedWeapon" : "unarmedLargeThreatens",
+  "defaultWeapon" : "unarmedLargeThreatens",
   
   "racialTypes" : [
     "Animal"

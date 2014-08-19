@@ -1,0 +1,34 @@
+{
+  "externalScript" : "abilities/totalDefense",
+  "name" : "Total Defense",
+  "type" : "Defensive",
+  "icon" : {
+    "sprite" : "icons/totalDefense"
+  },
+  "description" : {
+    "base" : "You dedicate your entire turn to defending yourself with your shield.  You gain a +40 bonus to Defense until your next turn.  You must be wielding a shield to use this ability."
+  },
+  "canActivateOutsideCombat" : true,
+  "isActivateable" : true,
+  "isFixed" : true,
+  "cooldown" : 3,
+  "actionPointCost" : 8400,
+  "ai" : {
+    "power" : 30,
+    "priority" : 4,
+    "actionType" : "Tactical",
+    "groupType" : "Single",
+    "rangeType" : "Personal"
+  },
+  "prereqs" : {
+    "abilities" : [
+      "DefensiveFighting"
+    ],
+    "stats" : [
+      {
+        "type" : "LevelAttackBonus",
+        "value" : 40
+      }
+    ]
+  }
+}

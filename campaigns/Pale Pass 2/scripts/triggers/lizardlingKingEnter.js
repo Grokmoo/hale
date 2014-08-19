@@ -15,7 +15,7 @@ function startConvo(game, player) {
     var target = game.currentArea().getEntityWithID("lizardlingKing");
     
     game.setFactionRelationship("Player", "Lizardlings", "Friendly");
-    target.getEncounter().setCreatureFaction("Lizardlings");
+    target.getEncounter().setFaction("Lizardlings");
     
     target.startConversation(player);
 }

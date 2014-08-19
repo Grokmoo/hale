@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import net.sf.hale.Game;
 import net.sf.hale.util.Logger;
 
 /**
@@ -58,7 +59,7 @@ public class CheckForUpdatesTask extends Thread {
 			if (!serverVersion.equals(mainMenu.getVersion())) {
 				mainMenu.enableUpdate();
 				
-				new File("docs/updateAvailable.txt").createNewFile();
+				new File(Game.getConfigBaseDirectory() + "updateAvailable.txt").createNewFile();
 			}
 			
 		} catch (Exception e) {

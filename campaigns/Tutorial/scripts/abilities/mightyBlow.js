@@ -1,11 +1,11 @@
 // overridden tutorial mighty blow with callbacks for showing tutorial messages
 
 function canActivate(game, parent) {
-	if (!parent.getTimer().canAttack()) return false;
+	if (!parent.timer.canAttack()) return false;
 	
-	var weapon = parent.getInventory().getMainWeapon();
+	var weapon = parent.getMainHandWeapon();
 	
-	return weapon.isMeleeWeapon();
+	return weapon.isMelee();
 }
 
 function onActivate(game, slot) {
@@ -14,6 +14,8 @@ function onActivate(game, slot) {
    var targeter = game.createListTargeter(slot);
    targeter.addAllowedCreatures(creatures);
    targeter.activate();
+   
+   game.put("playerMustUseAbility", false);
 }
 
 function onTargetSelect(game, targeter) {
@@ -44,6 +46,7 @@ function performAttack(game, targeter) {
 	parent.removeEffect(effect);
 	
 	if (!parent.get("alreadyUsed")) {
+		game.lockInterface(1.0);
 		var cb = targeter.getSlot().getAbility().createDelayedCallback("tutorial16");
 		cb.setDelay(1.0);
 		cb.start();

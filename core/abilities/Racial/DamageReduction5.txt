@@ -1,8 +1,0 @@
-name "Damage Reduction 5"
-type "Racial Abilities"
-description "This creature's thick skin is like armor, absorbing 5 points of all physical damage."
-activateable false
-
-icon "icons/naturalArmor"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addDamageReduction('Physical', 5); parent.applyEffect(effect); }"

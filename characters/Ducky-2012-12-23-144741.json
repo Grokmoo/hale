@@ -1,0 +1,183 @@
+{
+  "name" : "Ducky",
+  "isPregenerated" : true,
+  "gender" : "Female",
+  "race" : "Elf",
+  "portrait" : "Elf\/chantal-druid",
+  "icon" : {
+    "skinColor" : "#fff6d39b",
+    "clothingColor" : "#ff00ff00",
+    "subIcons" : [
+      {
+        "type" : "Hair",
+        "sprite" : "subIcons\/hair004",
+        "color" : "#ffeee685"
+      }
+    ]
+  },
+  "attributes" : {
+    "strength" : 12,
+    "dexterity" : 19,
+    "constitution" : 12,
+    "intelligence" : 11,
+    "wisdom" : 10,
+    "charisma" : 11
+  },
+  "skills" : {
+    "Locks" : 35,
+    "Search" : 35,
+    "Hide" : 35,
+    "Traps" : 35,
+    "Speech" : 5
+  },
+  "abilities" : [
+    {
+      "id" : "CombatReady",
+      "levelObtained" : 2
+    }, {
+      "id" : "BlindFighting",
+      "levelObtained" : 5
+    }, {
+      "id" : "DualWieldingDefense",
+      "levelObtained" : 5
+    }, {
+      "id" : "ExpertDualWielding",
+      "levelObtained" : 7
+    }, {
+      "id" : "DualWielding",
+      "levelObtained" : 1
+    }, {
+      "id" : "Tumble",
+      "levelObtained" : 6
+    }, {
+      "id" : "ImprovedBackstab",
+      "levelObtained" : 4
+    }, {
+      "id" : "Backstab",
+      "levelObtained" : 1
+    }, {
+      "id" : "TrainingPiercing",
+      "levelObtained" : 3
+    }
+  ],
+  "roles" : {
+    "baseRoleID" : "Rogue",
+    "Rogue" : 7
+  },
+  "inventory" : {
+    "equipped" : {
+      "MainHand" : {
+        "id" : "shortSword",
+        "quality" : "Mediocre"
+      },
+      "OffHand" : {
+        "id" : "shortSword",
+        "quality" : "Mediocre"
+      },
+      "Armor" : {
+        "id" : "armor_leatherhard_base-0x92f4ead9",
+        "quality" : "Decent"
+      },
+      "Gloves" : {
+        "id" : "gloves_leather_base-0x6816efac",
+        "quality" : "Decent"
+      },
+      "Helmet" : {
+        "id" : "helmet_leather_base-0x9ceb1ad5",
+        "quality" : "Decent"
+      },
+      "Cloak" : {
+        "id" : "cloak"
+      },
+      "Boots" : {
+        "id" : "boots_leather_base",
+        "quality" : "Mediocre"
+      },
+      "RightRing" : {
+        "id" : "silverRing-0xe38ddd5d"
+      }
+    },
+    "unequipped" : [
+      {
+        "id" : "potionHealing",
+        "quality" : "Mediocre",
+        "quantity" : 1
+      }
+    ],
+    "createdItems" : [
+      {
+        "baseItemID" : "armor_leatherhard_base",
+        "createdItemID" : "armor_leatherhard_base-0x92f4ead9",
+        "scripts" : [
+          "entity.addBonus('ArmorClass', 'Deflection',  2);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Defense",
+        "valueModifier" : 150,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_armor",
+          "color" : "#ffffffff"
+        }
+      }, {
+        "baseItemID" : "gloves_leather_base",
+        "createdItemID" : "gloves_leather_base-0x6816efac",
+        "scripts" : [
+          "entity.addDamageReduction('Piercing',  1);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Piercing Resistance",
+        "valueModifier" : 160,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_piercing",
+          "color" : "#ffffffff"
+        }
+      }, {
+        "baseItemID" : "helmet_leather_base",
+        "createdItemID" : "helmet_leather_base-0x9ceb1ad5",
+        "scripts" : [
+          "entity.addBonus('MentalResistance', 4);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Mental Resistance",
+        "valueModifier" : 150,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_mental",
+          "color" : "#ffffffff"
+        }
+      }, {
+        "baseItemID" : "silverRing",
+        "createdItemID" : "silverRing-0xe38ddd5d",
+        "scripts" : [
+          "entity.addSkillBonus('Locks',  5);"
+        ],
+        "namePrefix" : "",
+        "namePostfix" : " of Locks",
+        "valueModifier" : 135,
+        "overlayIcon" : {
+          "sprite" : "items\/enchant_locks",
+          "color" : "#ffffffff"
+        }
+      }
+    ]
+  },
+  "unspentSkillPoints" : 2,
+  "experiencePoints" : 3246,
+  "quickbar" : {
+    "lastViewSet" : 0,
+    "slots" : {
+      "slot0" : {
+        "type" : "ability",
+        "abilityID" : "Hide"
+      },
+      "slot1" : {
+        "type" : "use",
+        "itemID" : "potionHealing",
+        "itemQuality" : "Mediocre"
+      },
+      "slot2" : {
+        "type" : "ability",
+        "abilityID" : "Tumble"
+      }
+    }
+  }
+}

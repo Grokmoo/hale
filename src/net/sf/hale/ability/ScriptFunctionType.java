@@ -154,5 +154,8 @@ public enum ScriptFunctionType {
 	
 	/** Called on all effects whenever a new effect is applied to a creature */
 	onEffectApplied,
+	
+	/** AI helper used to determine if it is valid / useful to use an ability on a given target */
+	aiCheckTargetValid
 	;
 }

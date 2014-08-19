@@ -33,5 +33,6 @@ function askForget(game, parent, target, conversation) {
 
 function onExit(game, parent, talker, conversation) {
     conversation.exit();
-    parent.getEncounter().setCreatureFaction("Hostile");
+    parent.getEncounter().setFaction("Hostile");
+	game.clearRevealedAreas();
 }

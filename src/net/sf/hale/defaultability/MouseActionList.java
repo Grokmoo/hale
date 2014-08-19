@@ -19,19 +19,18 @@
 
 package net.sf.hale.defaultability;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import de.matthiasmann.twl.Button;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.util.LineParser;
-import net.sf.hale.util.Logger;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.util.SimpleJSONParser;
 import net.sf.hale.widgets.RightClickMenu;
 
 /**
@@ -66,9 +65,6 @@ public class MouseActionList {
 		/** a valid target to add in targeting mode, but not to complete the selection */
 		TargetSelectAdd(null),
 		
-		/** select the Entity being hovered */
-		Select(new net.sf.hale.defaultability.Select()),
-		
 		/** attack the hovered Entity */
 		Attack(new net.sf.hale.defaultability.Attack()),
 		
@@ -92,6 +88,9 @@ public class MouseActionList {
 		
 		/** activate the hovered AreaTransition */
 		Travel(new net.sf.hale.defaultability.Travel()),
+		
+		/** select the Entity being hovered */
+		Select(new net.sf.hale.defaultability.Select()),
 		
 		/** move the selected Entity to the hovered position */
 		Move(new net.sf.hale.defaultability.Move()),
@@ -132,50 +131,44 @@ public class MouseActionList {
 	// and when finding the default mouse condition.  Using this,
 	// there is no needlessly checking Conditions that have no
 	// associated ability
-	private final ArrayList<Condition> conditionsWithAbility;
+	private final List<Condition> conditionsWithAbility;
+	
+	// the list of all conditions with non-null ability for use during combat
+	private final List<Condition> conditionsWithAbilityCombat;
 	
 	/**
-	 * Create a new MouseActionList from the data in the file at the specified
-	 * location.  The list of conditions and associated cursors and actions
-	 * will be read in from this file.
-	 * 
-	 * @param fileName the location of the mouseActions.txt file
+	 * Create a new MouseActionList from the data in the "gui/mouseActions.json"
+	 * resource
 	 */
 	
-	public MouseActionList(String fileName) {
+	public MouseActionList() {
+		SimpleJSONParser parser = new SimpleJSONParser("gui/mouseActions" + ResourceType.JSON.getExtension());
+		
 		mouseCursors = new HashMap<Condition, String>();
-		
-		int lineNumber = 0;
-		
-		try {
-			Scanner sFile = new Scanner(new File(fileName));
-			LineParser sLine;
-			String line;
+		for (String conditionString : parser.keySet()) {
+			Condition condition = Condition.valueOf(conditionString);
 			
-			while (sFile.hasNextLine()) {
-				line = sFile.nextLine();
-		    	sLine = new LineParser(line);
-		    	lineNumber++;
-		    	
-		    	if (sLine.hasNext()) {
-		    		Condition condition = Condition.valueOf(sLine.next());
-		    		String cursor = sLine.next();
-		    		
-		    		mouseCursors.put(condition, cursor);
-		    	}
-			}
+			String cursor = parser.get(conditionString, null);
 			
-			sFile.close();
-			
-		} catch (Exception e) {
-			Logger.appendToErrorLog("Error parsing mouseAction file " + fileName + " on line " + lineNumber, e);
+			mouseCursors.put(condition, cursor);
 		}
+		
+		parser.warnOnUnusedKeys();
 		
 		conditionsWithAbility = new ArrayList<Condition>();
 		for (Condition condition : Condition.values()) {
 			if (condition.ability != null) conditionsWithAbility.add(condition);
 		}
-		conditionsWithAbility.trimToSize();
+		((ArrayList<Condition>)conditionsWithAbility).trimToSize();
+		
+		conditionsWithAbilityCombat = new ArrayList<Condition>(conditionsWithAbility);
+
+		// push open container to the end
+		conditionsWithAbilityCombat.remove(Condition.Container);
+		conditionsWithAbilityCombat.add(Condition.Container);
+		conditionsWithAbilityCombat.remove(Condition.Door);
+		conditionsWithAbilityCombat.add(Condition.Door);
+		((ArrayList<Condition>)conditionsWithAbilityCombat).trimToSize();
 	}
 	
 	/**
@@ -194,12 +187,12 @@ public class MouseActionList {
 	 * 
 	 * @param parent the currently selected Creature that will be performing one of
 	 * the DefaultAbilities referenced in the menu.
-	 * @param targetPosition the grid point position that the mouse has been clicked on
+	 * @param targetLocation the grid point position that the mouse has been clicked on
 	 * @param x the screen point x position that the menu should be opened at
 	 * @param y the screen point y position that the menu should be opened at
 	 */
 	
-	public void showDefaultAbilitiesMenu(Creature parent, Point targetPosition, int x, int y) {
+	public void showDefaultAbilitiesMenu(PC parent, Location targetLocation, int x, int y) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		
 		menu.clear();
@@ -213,10 +206,10 @@ public class MouseActionList {
 		
 		for (Condition condition : conditionsWithAbility) {
 			DefaultAbility ability = condition.getAbility();
-			if (!ability.canActivate(parent, targetPosition)) continue;
+			if (!ability.canActivate(parent, targetLocation)) continue;
 			
 			DefaultAbilityCallback callback = new DefaultAbilityCallback(ability);
-			callback.setActivateParameters(parent, targetPosition);
+			callback.setActivateParameters(parent, targetLocation);
 			
 			Button button = new Button(ability.getActionName());
 			button.addCallback(callback);
@@ -242,22 +235,26 @@ public class MouseActionList {
 	 * 
 	 * @param parent the parent Creature that will be performing the DefaultAbility
 	 * associated with the Condition
-	 * @param targetPosition the grid coordinates position
+	 * @param targetLocation the grid coordinates position
 	 * @return the default Condition for the specified parameters in the current Area
 	 */
 	
-	public Condition getDefaultMouseCondition(Creature parent, Point targetPosition) {
-		for (Condition condition : conditionsWithAbility) {
+	public Condition getDefaultMouseCondition(PC parent, Location targetLocation) {
+		List<Condition> conditions = Game.isInTurnMode() ? conditionsWithAbilityCombat : conditionsWithAbility;
+		
+		for (Condition condition : conditions) {
 			switch (condition) {
 			// ExamineCreature and ExamineItem are never default left click actions
 			case ExamineCreature: case ExamineItem:
 				continue;
+			default:
+				// do nothing
 			}
 			
 			// no need to generate a new instance of the DefaultAbility with
 			// getAbility() here, as we don't need to save the instance data
 			// from canActivate
-			if (condition.ability.canActivate(parent, targetPosition)) {
+			if (condition.ability.canActivate(parent, targetLocation)) {
 				return condition;
 			}
 		}

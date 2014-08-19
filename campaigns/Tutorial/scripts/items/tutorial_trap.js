@@ -1,7 +1,7 @@
 function onSpringTrap(game, trap, target) {
-	target.getInventory().addItem("tutorial_potion", "Good");
+	target.inventory.getUnequippedItems().add("tutorial_potion");
 	
-	var cb = trap.getScript().createDelayedCallback("tutorialTrap");
+	var cb = trap.getTemplate().getScript().createDelayedCallback("tutorialTrap");
 	cb.setDelay(0.7);
 	cb.start();
 }
@@ -18,4 +18,6 @@ function tutorialTrap(game) {
     var subEntry = tutQuest.createSubEntry("Potions");
     subEntry.setShowTitle(false);
     subEntry.addExternalText("tutorial/tutorial_14.html");
+	
+	game.put("playerMustDrinkPotion", true);
 }

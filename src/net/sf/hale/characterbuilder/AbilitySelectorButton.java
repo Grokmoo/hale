@@ -22,13 +22,16 @@ package net.sf.hale.characterbuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
-import net.sf.hale.Sprite;
 import net.sf.hale.ability.Ability;
-import net.sf.hale.entity.Creature;
-import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.entity.Container;
+import net.sf.hale.entity.Inventory;
+import net.sf.hale.entity.Item;
+import net.sf.hale.entity.PC;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.rules.Merchant;
 import net.sf.hale.view.AbilityDetailsWindow;
+import net.sf.hale.view.DragAndDropHandler;
+import net.sf.hale.view.DragTarget;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Event;
@@ -44,7 +47,7 @@ import de.matthiasmann.twl.utils.TintAnimator;
  *
  */
 
-public class AbilitySelectorButton extends Button implements Runnable {
+public class AbilitySelectorButton extends Button implements Runnable, DragTarget {
 	private static StateKey STATE_ALREADY_OWNED = StateKey.get("alreadyOwned");
 	private static StateKey STATE_PREREQS_NOT_MET = StateKey.get("prereqsNotMet");
 	
@@ -52,9 +55,11 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	
 	private Widget widgetToAddWindowsTo;
 	private HoverHolder widgetToAddHoverTo;
+	private final boolean showSelectable;
 	
-	private Sprite sprite;
 	private Ability ability;
+	private DragAndDropHandler dragAndDropHandler;
+	private PC parent;
 	
 	private AbilityHover abilityHover;
 	private AbilityHoverDetails abilityHoverDetails;
@@ -63,24 +68,26 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	
 	private String hoverText;
 	private Color hoverTextColor;
-	
-	private boolean removeTint;
+
+	private Icon icon;
 	
 	/**
 	 * Creates a new AbilitySelectorButton for the specified Ability.  The onMouseOver
 	 * hover widgets are added to the specified parent widget.
 	 * @param ability the ability that this selector will view and select
 	 * @param widgetToAddHoverTo the widget to add hover widgets to
+	 * @param showSelectable true if abilities where prereqs are met should be highlighted, false if not
 	 */
 	
-	public AbilitySelectorButton(Ability ability, HoverHolder widgetToAddHoverTo) {
+	public AbilitySelectorButton(Ability ability, PC parent, HoverHolder widgetToAddHoverTo, boolean showSelectable) {
 		this.ability = ability;
-		
-		this.sprite = SpriteManager.getSprite(ability.getIcon());
+		this.parent = parent;
+		this.icon = ability.getIcon();
+		this.showSelectable = showSelectable;
 		
 		this.widgetToAddHoverTo = widgetToAddHoverTo;
 		this.addCallback(this);
-		this.setSize(sprite.getWidth(), sprite.getHeight());
+		this.setSize(ability.getIcon().getWidth(), ability.getIcon().getHeight());
 		
 		callbacks = new ArrayList<Callback>();
 	}
@@ -92,27 +99,18 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	 * @param workingCopy the creature to use
 	 */
 	
-	public void setState(Creature workingCopy) {
-		if (workingCopy.getAbilities().has(ability)) {
-			setEnabled(false);
+	public void setState(PC workingCopy) {
+		parent = workingCopy;
+		
+		if (workingCopy.abilities.has(ability)) {
 			getAnimationState().setAnimationState(STATE_ALREADY_OWNED, true);
-			removeTint = true;
-		} else if (!ability.meetsPrereqs(workingCopy)) {
-			setEnabled(false);
-			getAnimationState().setAnimationState(STATE_PREREQS_NOT_MET, true);
-			removeTint = false;
+			icon = ability.getIcon();
+		} else if (ability.meetsPrereqs(workingCopy) && showSelectable) {
+			icon = ability.getIcon();
 		} else {
-			removeTint = true;
+			getAnimationState().setAnimationState(STATE_PREREQS_NOT_MET, true);
+			icon = ability.getIcon().multiplyByColor(new Color(0xFF444444));
 		}
-	}
-	
-	/**
-	 * Returns the Ability that this button references and selects when clicked
-	 * @return the Ability that this button references
-	 */
-	
-	public Ability getAbility() {
-		return ability;
 	}
 	
 	/**
@@ -147,16 +145,15 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	}
 	
 	@Override protected void paintWidget(GUI gui) {
-		if (sprite != null) {
-			if (removeTint) GL11.glColor3f(1.0f, 1.0f, 1.0f);
-			sprite.drawWithIconOffset(getInnerX(), getInnerY());
-		}
+		icon.draw(getInnerX(), getInnerY());
 	}
 	
 	// left click callback
 	@Override public void run() {
-		for (Callback callback : callbacks) {
-			callback.selectionMade(ability);
+		if (ability.meetsPrereqs(parent) && showSelectable) {
+			for (Callback callback : callbacks) {
+				callback.selectionMade(ability);
+			}
 		}
 	}
 	
@@ -175,8 +172,26 @@ public class AbilitySelectorButton extends Button implements Runnable {
 	
 	@Override protected boolean handleEvent(Event evt) {
 		handleHover(evt);
+
+		switch (evt.getType()) {
+		case MOUSE_ENTERED: case MOUSE_MOVED:
+			return true;
+		case MOUSE_DRAGGED:
+			// only drag active abilities
+			if (!showSelectable && dragAndDropHandler == null &&
+				ability.isActivateable() && parent.abilities.has(ability)) {
+				dragAndDropHandler = new DragAndDropHandler(this);
+			}
+			break;
+		default:
+			// do nothing
+		}
 		
-		if (evt.getType() == Event.Type.MOUSE_ENTERED) return true;
+		if (dragAndDropHandler != null) {
+			if (!dragAndDropHandler.handleEvent(evt)) {
+				dragAndDropHandler = null;
+			}
+		}
 		
 		return super.handleEvent(evt);
 	}
@@ -304,7 +319,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		
 		@Override protected boolean handleEvent(Event evt) {
 			handleHover(evt);
-			
+
 			return super.handleEvent(evt);
 		}
 		
@@ -320,7 +335,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		
 		// left click callback
 		@Override public void run() {
-			Widget window = new AbilityDetailsWindow(ability, null);
+			Widget window = new AbilityDetailsWindow(ability, parent);
 			
 			int x = getX() + getWidth() / 2 - window.getWidth() / 2;
 			int y = getY() + getHeight() / 2 - window.getHeight() / 2;
@@ -332,4 +347,26 @@ public class AbilitySelectorButton extends Button implements Runnable {
 			endHover();
 		}
 	}
+
+	@Override public Icon getDragIcon() {
+		return ability.getIcon();
+	}
+
+	@Override public PC getParentPC() {
+		return parent;
+	}
+	
+	/**
+	 * Returns the Ability that this button references and selects when clicked
+	 * @return the Ability that this button references
+	 */
+	
+	@Override public Ability getAbility() {
+		return ability;
+	}
+
+	@Override public Item getItem() { return null; }
+	@Override public Container getItemContainer() { return null; }
+	@Override public Merchant getItemMerchant() { return null; }
+	@Override public Inventory.Slot getItemEquipSlot() { return null; }
 }

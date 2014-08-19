@@ -26,6 +26,8 @@ import org.lwjgl.opengl.GL11;
 import de.matthiasmann.twl.AnimationState;
 
 import net.sf.hale.Game;
+import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -62,7 +64,7 @@ public class LineTargeter extends AreaTargeter {
 	 * @param slot optional AbilitySlot that can be stored along with this Targeter
 	 */
 	
-	public LineTargeter(AbilityActivator parent, Scriptable scriptable, AbilitySlot slot) {
+	public LineTargeter(Creature parent, Scriptable scriptable, AbilitySlot slot) {
 		super(parent, scriptable, slot);
 		
 		this.lineGridLength = 0;
@@ -89,6 +91,17 @@ public class LineTargeter extends AreaTargeter {
 	
 	public void setStopLineAtCreature(boolean stopLine) {
 		this.stopLineAtCreature = stopLine;
+	}
+	
+	/**
+	 * Sets the grid origin for the line drawn by this LineTargeter.
+	 * The user then selects the other end of the line or the
+	 * direction of the line.
+	 * @param location the origin of the line drawn by this LineTargeter
+	 */
+	
+	public void setOrigin(Location location) {
+		setOrigin(location.toPoint());
 	}
 	
 	/**
@@ -135,8 +148,10 @@ public class LineTargeter extends AreaTargeter {
 		this.lineGridLength = gridLength;
 	}
 	
-	@Override public void draw(AnimationState as) {
-		super.draw(as);
+	@Override public boolean draw(AnimationState as) {
+		if (!super.draw(as)) {
+			return false;
+		}
 		
 		double offsetX = Game.TILE_SIZE * Math.cos(lineAngle) / 20.0;
 		double offsetY = -Game.TILE_SIZE * Math.sin(lineAngle) / 20.0;
@@ -154,6 +169,8 @@ public class LineTargeter extends AreaTargeter {
 		GL11.glEnd();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		return true;
 	}
 
 	@Override protected boolean updateMouseStateOnlyWhenGridPointChanges() {

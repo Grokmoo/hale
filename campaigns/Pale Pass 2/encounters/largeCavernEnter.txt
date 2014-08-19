@@ -1,4 +1,0 @@
-size 0
-faction "Neutral"
-challenge 0
-creature "goblin_cavernEnter" 0 0

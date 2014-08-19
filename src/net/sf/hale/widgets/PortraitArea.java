@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.PC;
 
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.ScrollPane;
@@ -110,10 +110,10 @@ public class PortraitArea extends ScrollPane {
 		content.removeAllChildren();
 		portraits.clear();
 		
-		for (Creature c : Game.curCampaign.party) {
-			if (c.isSummoned()) continue; // don't add portraits for summoned creatures
+		for (PC pc : Game.curCampaign.party) {
+			if (pc.isSummoned()) continue; // don't add portraits for summoned creatures
 			
-			PortraitViewer p = new PortraitViewer(c, this);
+			PortraitViewer p = new PortraitViewer(pc, this);
 			p.setLevelUpEnabled(levelUpEnabled);
 			portraits.add(p);
 			content.add(p);
@@ -157,7 +157,7 @@ public class PortraitArea extends ScrollPane {
 	 */
 	
 	protected void checkMouseDragRelease(PortraitViewer viewer) {
-		Creature baseCreature = viewer.getCreature();
+		PC baseCreature = viewer.getPC();
 		
 		if (dragPlacesForward != 0) {
 			Game.curCampaign.party.movePartyMember(baseCreature, dragPlacesForward);

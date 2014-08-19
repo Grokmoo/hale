@@ -1,9 +1,0 @@
-name "Proficiency, Spears"
-description "You are able to use javelins, short spears and long spears in combat."
-activateable false
-
-type "Weapon Proficiencies"
-
-icon "icons/proficiencySpears"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addWeaponProficiency('Javelin'); effect.getBonuses().addWeaponProficiency('Short Spear'); effect.getBonuses().addWeaponProficiency('Long Spear'); parent.applyEffect(effect); }"

@@ -169,7 +169,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	
 	/**
 	 * Returns the name of the campaign group that this selector is representing
-	 * @return
+	 * @return the name of the campaign group
 	 */
 	
 	public String getCampaignName() {

@@ -20,13 +20,19 @@
 package net.sf.hale.view;
 
 import net.sf.hale.Game;
-import net.sf.hale.Recipe;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.entity.Armor;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.EquippableItem;
+import net.sf.hale.entity.EquippableItemTemplate;
 import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Item;
-import net.sf.hale.resource.SpriteManager;
-import net.sf.hale.rules.ItemList;
+import net.sf.hale.entity.ItemList;
+import net.sf.hale.entity.ItemTemplate;
+import net.sf.hale.entity.Weapon;
+import net.sf.hale.rules.Currency;
+import net.sf.hale.rules.Recipe;
 import net.sf.hale.widgets.IconViewer;
 import net.sf.hale.widgets.TextAreaNoInput;
 import de.matthiasmann.twl.Button;
@@ -75,7 +81,7 @@ public class SelectCraftItemPopup extends PopupWindow {
 		content = new Content();
 		add(content);
 		
-		String skill = Game.ruleset.getSkill(recipe.getSkill()).getVerb();
+		String skill = recipe.getSkill().getPresentTenseVerb();
 		String titleText = "Select an Item to " + skill;
 
 		title = new Label(titleText);
@@ -101,7 +107,7 @@ public class SelectCraftItemPopup extends PopupWindow {
 			@Override public void run() {
 				closePopup();
 				SelectCraftItemPopup.this.recipe.craft(selectedItemViewer.item,
-						selectedItemViewer.parent, selectedItemViewer.equipped);
+						selectedItemViewer.parent, selectedItemViewer.slot);
 			}
 		});
 		accept.setTheme("acceptbutton");
@@ -130,35 +136,37 @@ public class SelectCraftItemPopup extends PopupWindow {
 	
 	private void populateItemsList(DialogLayout.Group mainH, DialogLayout.Group mainV) {
 		for (Creature creature : Game.curCampaign.party) {
-			Inventory inventory = creature.getInventory();
-			
 			// check equipped items
-			for (int i = 0; i < Inventory.EQUIPPED_SIZE; i++) {
-				Item item = inventory.getEquippedItem(i);
+			for (Inventory.Slot slot : Inventory.Slot.values()) {
+				EquippableItem item = creature.inventory.getEquippedItem(slot);
 				
 				if (item == null) continue;
 				
-				// don't allow enchanting already enchanted items
-				if (item.getEnchantments().size() > 0) continue;
+				if (item.getTemplate().getEnchantments().size() > 0) continue;
 				
-				if (item.getItemType() == recipe.getAnyItemOfTypeIngredient()) {
-					ItemViewer viewer = new ItemViewer(item, creature, true);
+				if (recipe.getIngredientItemTypes().contains(item.getTemplate().getType())) {
+					ItemViewer viewer = new ItemViewer(item, creature, slot);
 					
 					mainH.addWidget(viewer);
 					mainV.addWidget(viewer);
 				}
 			}
 			
-			ItemList unequipped = inventory.getUnequippedItems();
 			// check unequipped items
-			for (int i = 0; i < unequipped.size(); i++) {
-				Item item = unequipped.getItem(i);
+			for (ItemList.Entry entry : creature.inventory.getUnequippedItems()) {
+				ItemTemplate template = EntityManager.getItemTemplate(entry.getID());
 				
-				if (item.getItemType() == recipe.getAnyItemOfTypeIngredient()) {
-					ItemViewer viewer = new ItemViewer(item, creature, false);
+				if (template instanceof EquippableItemTemplate) {
+					EquippableItemTemplate itemTemplate = (EquippableItemTemplate)template;
 					
-					mainH.addWidget(viewer);
-					mainV.addWidget(viewer);
+					if (itemTemplate.getEnchantments().size() > 0) continue;
+					
+					if (recipe.getIngredientItemTypes().contains(itemTemplate.getType())) {
+						ItemViewer viewer = new ItemViewer(entry.createItem(), creature, null);
+						
+						mainH.addWidget(viewer);
+						mainV.addWidget(viewer);
+					}
 				}
 			}
 		}
@@ -213,20 +221,19 @@ public class SelectCraftItemPopup extends PopupWindow {
 		private IconViewer viewer;
 		private TextArea textArea;
 		
-		private boolean equipped;
+		private Inventory.Slot slot;
 		private Creature parent;
 		private Item item;
 		
-		private ItemViewer(Item item, Creature parent, boolean equipped) {
+		private ItemViewer(Item item, Creature parent, Inventory.Slot slot) {
 			this.item = item;
 			this.parent = parent;
-			this.equipped = equipped;
+			this.slot = slot;
 			
 			addCallback(this);
 			
-			viewer = new IconViewer(SpriteManager.getSprite(item.getIcon()));
+			viewer = new IconViewer(item.getTemplate().getIcon());
 			viewer.setEventHandlingEnabled(false);
-			viewer.setColor(item.getIconColor());
 			add(viewer);
 			
 			HTMLTextAreaModel model = new HTMLTextAreaModel();
@@ -251,23 +258,23 @@ public class SelectCraftItemPopup extends PopupWindow {
 		}
 		
 		private void appendItemText(StringBuilder sb) {
-			sb.append("<div style=\"font-family: vera-bold;\">");
+			sb.append("<div style=\"font-family: medium-bold;\">");
 			
-			sb.append(item.getFullName());
+			sb.append(item.getLongName());
 			sb.append("</div>");
 			
 			sb.append("Value: <span style=\"font-family: blue;\">");
-			sb.append(item.getQualityValue().shortString(100));
+			sb.append(new Currency(item.getQualityValue()).shortString(100));
 			sb.append("</span>");
 			
-			switch (item.getItemType()) {
-			case WEAPON:
+			if (item instanceof Weapon) {
+				Weapon weapon = (Weapon)item;
+				
 				sb.append("<div>Base Damage: ");
 				
-				float damageMult = 1.0f + (float)( item.getQuality().getDamageBonus() +
-						item.bonuses().get(Bonus.Type.WeaponDamage)) / 100.0f;
-				float damageMin = ((float)item.getDamageMin() * damageMult);
-				float damageMax = ((float)item.getDamageMax() * damageMult);
+				float damageMult = 1.0f + ( weapon.getQualityDamageBonus() + weapon.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
+				float damageMin = ((float)weapon.getTemplate().getMinDamage() * damageMult);
+				float damageMax = ((float)weapon.getTemplate().getMaxDamage() * damageMult);
 				
 				sb.append("<span style=\"font-family: red;\">");
 				sb.append(Game.numberFormat(1).format(damageMin));
@@ -278,23 +285,22 @@ public class SelectCraftItemPopup extends PopupWindow {
 				sb.append("</span>");
 				
 				sb.append("</div>");
-				break;
-			case ARMOR: case BOOTS: case GLOVES: case HELMET: case SHIELD:
-				sb.append("<div>Armor Class <span style=\"font-family: green;\">");
-				sb.append(Game.numberFormat(1).format(item.getQualityArmorClass()));
-				sb.append("</span></div>");
+			} else if (item instanceof Armor) {
+				Armor armor = (Armor)item;
 				
-				break;
+				sb.append("<div>Defense <span style=\"font-family: green;\">");
+				sb.append(Game.numberFormat(1).format(armor.getQualityModifiedArmorClass()));
+				sb.append("</span></div>");
 			}
 			
 			sb.append("<div>");
-			if (equipped) {
+			if (slot != null) {
 				sb.append("<span style=\"font-family: blue\">Equipped</span> by ");
 			} else
 				sb.append("Owned by ");
 				
 			sb.append("<span style=\"font-family: green\">");
-			sb.append(parent.getName());
+			sb.append(parent.getTemplate().getName());
 			sb.append("</span></div>");
 		}
 		

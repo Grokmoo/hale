@@ -110,6 +110,12 @@ public class LoadingTaskList extends Thread {
 		return success;
 	}
 	
+	/**
+	 * Called when an error occurs in the process of executing the task list
+	 */
+	
+	protected void onError() { }
+	
 	@Override public void run() {
 		try {
 			int completedWeight = 0;
@@ -129,7 +135,8 @@ public class LoadingTaskList extends Thread {
 			success = true;
 			
 		} catch (Exception e) {
-			Logger.appendToErrorLog("Uncaught exception while loading data", e);
+			onError();
+			Logger.appendToErrorLog("Exception while loading data", e);
 		}
 	}
 }

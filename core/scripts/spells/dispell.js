@@ -22,7 +22,7 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	// cast the spell
 	targeter.getSlot().activate();
@@ -34,7 +34,7 @@ function onTargetSelect(game, targeter) {
 	
 	var maxDispellAttempts = 2;
 	var modifierBonus = 0;
-	if (parent.getAbilities().has("GreaterDispell")) {
+	if (parent.abilities.has("GreaterDispell")) {
 		maxDispellAttempts = 5;
 		modifierBonus = 1;
 	}
@@ -46,14 +46,14 @@ function onTargetSelect(game, targeter) {
 		
 		// compute the dispell difficulty of the effect
 		var effectCaster = effect.getSlot().getParent();
-		var effectCasterStat = effectCaster.getRoles().getBaseRole().getSpellCastingAttribute();
-		var effectCasterAttr = effectCaster.stats().get(effectCasterStat);
+		var effectCasterStat = effectCaster.roles.getBaseRole().getSpellCastingAttribute();
+		var effectCasterAttr = effectCaster.stats.get(effectCasterStat);
 		
 		var dc = effect.getSlot().getAbility().getSpellLevel(effectCaster) * 2 + effectCasterAttr;
 		
 		// compute the strength of the dispell
-		var parentStat = parent.getRoles().getBaseRole().getSpellCastingAttribute();
-		var parentAttr = parent.stats().get(parentStat);
+		var parentStat = parent.roles.getBaseRole().getSpellCastingAttribute();
+		var parentAttr = parent.stats.get(parentStat);
 		
 		var modifier = spell.getSpellLevel(parent) * 2 + parentAttr + modifierBonus;
 		
@@ -75,7 +75,7 @@ function onTargetSelect(game, targeter) {
 	anim.setGreen(0.8);
 	anim.setBlue(1.0);
 	
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10);
 	
 	game.runAnimationNoWait(anim);

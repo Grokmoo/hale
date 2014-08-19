@@ -8,33 +8,40 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
-	var lvls = parent.getRoles().getLevel("War Wizard");
+	var lvls = parent.roles.getLevel("War Wizard");
 	
 	var duration = parseInt(2 + lvls / 3);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
-	if (!spell.checkSpellFailure(parent)) return;
+	if (!spell.checkSpellFailure(parent, target)) return;
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
+	effect.addPositiveIcon("items/enchant_attack_small");
+	effect.addPositiveIcon("items/enchant_damage_small");
+	effect.addPositiveIcon("items/enchant_strength_small");
 	effect.setTitle(spell.getName());
-	effect.getBonuses().addBonus('Str', 3 + parseInt(lvls / 3));
-	effect.getBonuses().addBonus('Attack', lvls * 3);
-	effect.getBonuses().addBonus('Damage', lvls * 6);
+	effect.getBonuses().addBonus('Str', 5 + parseInt(lvls / 2));
+	effect.getBonuses().addBonus('Attack', lvls * 4);
+	effect.getBonuses().addBonus('Damage', lvls * 8);
 	effect.getBonuses().add("ImmobilizationImmunity");
 	
 	effect.getBonuses().addPenalty("SpellFailure", -30);
+	
+	if (parent.abilities.has("Destroyer")) {
+		effect.getBonuses().addStandaloneDamageBonus("Force", lvls, 2 * lvls);
+	}
 	
 	var generator = game.createParticleGenerator("Line", "Continuous", "particles/plus", 2.0);
 	generator.setLineStart(-10.0, 0.0);
 	generator.setLineEnd(10.0, 0.0);
 	generator.setDurationInfinite();
 	
-	var position = parent.getScreenPosition();
+	var position = parent.getLocation().getCenteredScreenPoint();
 	generator.setPosition(position.x, position.y - 20.0);
 	generator.setStopParticlesAtOpaque(false);
 	generator.setDrawParticlesInOpaque(true);

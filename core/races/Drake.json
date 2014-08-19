@@ -1,7 +1,6 @@
 { "name" : "Drake",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedClaw",
+  "defaultWeapon" : "unarmedClaw",
   
   "racialTypes" : [
     "Beast"

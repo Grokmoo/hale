@@ -10,19 +10,21 @@ function onTargetSelect(game, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var duration = game.dice().randInt(5, 10);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
+	// don't use the targeted version of checkSpellFailure since
+	// breach ignores concealment
 	if (!spell.checkSpellFailure(parent)) return;
 	
 	var targetCenter = targeter.getMouseGridPosition();
 	
 	var g1 = game.getBaseParticleGenerator("ray");
-	g1.setVelocityDurationBasedOnSpeed(parent.getPosition(), targetCenter, 600.0);
+	g1.setVelocityDurationBasedOnSpeed(parent.getLocation().toPoint(), targetCenter, 600.0);
 	
 	var g2 = game.getBaseParticleGenerator("sparkle");
 	g2.setDuration(1.0);
@@ -47,9 +49,9 @@ function applySpellResistanceEffect(game, targeter, duration) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
 	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 
-	var lvls = parent.getRoles().getLevel("Avenger");
+	var lvls = parent.roles.getLevel("Avenger");
 	
 	var effect = targeter.getSlot().createEffect();
 	effect.setDuration(duration);
@@ -63,13 +65,13 @@ function applySpellResistanceEffect(game, targeter, duration) {
 function breachDefense(game, targeter) {
 	var target = targeter.getSelectedCreature();
 	
-	var lvls = targeter.getParent().getRoles().getLevel("Avenger");
+	var lvls = targeter.getParent().roles.getLevel("Avenger");
 	
 	// go through the spells in a random order until we find one that is in effect
 	var spellsToRemove = shuffle( [ "HardenArmor", "AbsorbEnergy", "DeflectProjectiles", "Shield", "Chameleon", "Ward", "FortifyHealth", "LayerOfBark", "EnergyImmunity", "Invulnerability" ] );
 	
 	var spellsRemoved = 0;
-	var totalToRemove = 1;
+	var totalToRemove = 2;
 	
 	if (lvls > 0) totalToRemove++;
 	if (lvls > 4) totalToRemove++;
@@ -80,10 +82,10 @@ function breachDefense(game, targeter) {
 		
 		// check for harden armor on the armor, all others on the target itself
 		if (spellID.equals("HardenArmor")) {
-			var effectTarget = target.getInventory().getEquippedArmor();
+			var effectTarget = target.inventory.getEquippedArmor();
 	
 			// if target is not wearing armor, then harden armor cannot be in effect
-			if (effectTarget == null || !effectTarget.isArmor()) continue;
+			if (effectTarget == null) continue;
 		} else {
 			var effectTarget = target;
 		}

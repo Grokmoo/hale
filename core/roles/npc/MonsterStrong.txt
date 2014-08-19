@@ -1,9 +1,0 @@
-name "Monster"
-playerSelectable false
-baseRole true
-
-damageBonusPerLevel 5
-attackBonusPerLevel 5
-skillPointsPerLevel 0
-HPPerLevel 6
-level1HP 18

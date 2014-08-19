@@ -1,6 +1,6 @@
 /*
  * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
+ * Copyright (C) 2012 Jared Stephen
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,952 +19,1642 @@
 
 package net.sf.hale.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import de.matthiasmann.twl.Button;
 import net.sf.hale.Game;
+import net.sf.hale.ability.Effect;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.bonus.Bonus;
+import net.sf.hale.icon.SubIcon;
+import net.sf.hale.icon.SubIcon.Type;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
 import net.sf.hale.loading.Saveable;
-import net.sf.hale.rules.ItemList;
-import net.sf.hale.rules.SubIcon;
+import net.sf.hale.rules.ArmorType;
+import net.sf.hale.rules.BaseWeapon;
+import net.sf.hale.rules.Currency;
+import net.sf.hale.rules.Quality;
+import net.sf.hale.rules.Merchant;
 import net.sf.hale.rules.Weight;
+import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
+import net.sf.hale.widgets.MultipleItemPopup;
+import net.sf.hale.widgets.RightClickMenu;
 
-public class Inventory implements Saveable {
-	private final InventoryCallbackFactory callbackFactory;
-	
-	private Creature parent;
-	
-	private final Item[] equipped;
-	private ItemList items;
-	
-	public static final int EQUIPPED_SIZE = 12;
-	
-	public static final int EQUIPPED_MAIN_HAND = 0;
-	public static final int EQUIPPED_OFF_HAND = 1;
-	public static final int EQUIPPED_ARMOR = 2;
-	public static final int EQUIPPED_GLOVES = 3;
-	public static final int EQUIPPED_HELMET = 4;
-	public static final int EQUIPPED_CLOAK = 5;
-	public static final int EQUIPPED_BOOTS = 6;
-	public static final int EQUIPPED_BELT = 7;
-	public static final int EQUIPPED_AMULET = 8;
-	public static final int EQUIPPED_RING_RIGHT = 9;
-	public static final int EQUIPPED_RING_LEFT = 10;
-	public static final int EQUIPPED_QUIVER = 11;
-	
-	@Override public JSONOrderedObject save() {
-		JSONOrderedObject data = new JSONOrderedObject();
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			Item item = equipped[i];
-			if (item == null) continue;
-			
-			data.put("equippedSlot" + i, item.save());
-		}
-		
-		if (items.size() > 0)
-			data.put("items", items.save());
-		
-		return data;
-	}
-	
-	public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
-		this.clear();
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			String key = "equippedSlot" + i;
-			
-			if (!data.containsKey(key)) continue;
-			
-			SimpleJSONObject equippedSlotData = data.getObject(key);
-			
-			Item item = Game.entityManager.getItem(equippedSlotData.get("id", null));
-			item.load(equippedSlotData, refHandler);
-			
-			equipped[i] = item;
-		}
-		
-		if (data.containsKey("items"))
-			this.items.load(data.getArray("items"));
-		else
-			this.items.clear();
-	}
-	
-	public Inventory(Creature parent) {
-		this.items = new ItemList(parent.getName());
-		this.equipped = new Item[EQUIPPED_SIZE];
-		this.parent = parent;
-		this.callbackFactory = new InventoryCallbackFactory(this);
-	}
-	
-	public Inventory(Inventory other, Creature parent) {
-		this(parent);
+/**
+ * A class for storing the list of items currently held by a given creature
+ * @author Jared
+ *
+ */
 
-		this.items = new ItemList(other.items, parent.getName());
+public class Inventory implements ItemList.Listener, Saveable {
+	private final Creature parent;
+	
+	private final ItemList unequippedItems;
+	
+	private final Map<Slot, EquippableItem> equippedItems;
+	
+	/**
+	 * An equipped item slot.  Each slot represents a specific physical location on
+	 * a creature and can only take a narrow range of items
+	 * @author Jared
+	 *
+	 */
+	
+	public static enum Slot {
+		MainHand(new MainHandSlotValidator(), new NormalSubIconGetter(SubIcon.Type.MainHandWeapon)),
+		OffHand(new OffHandSlotValidator(), new OffHandSubIconGetter()),
+		Armor(EquippableItemTemplate.Type.Armor, new NormalSubIconGetter(SubIcon.Type.Torso)),
+		Gloves(EquippableItemTemplate.Type.Gloves, new NormalSubIconGetter(SubIcon.Type.Gloves)),
+		Helmet(EquippableItemTemplate.Type.Helmet, new NormalSubIconGetter(SubIcon.Type.Head)),
+		Cloak(EquippableItemTemplate.Type.Cloak, new NormalSubIconGetter(SubIcon.Type.Cloak)),
+		Boots(EquippableItemTemplate.Type.Boots, new NormalSubIconGetter(SubIcon.Type.Boots)),
+		Belt(EquippableItemTemplate.Type.Belt, new NormalSubIconGetter()),
+		Amulet(EquippableItemTemplate.Type.Amulet, new NormalSubIconGetter()),
+		RightRing(EquippableItemTemplate.Type.Ring, new NormalSubIconGetter()),
+		LeftRing(EquippableItemTemplate.Type.Ring, new NormalSubIconGetter()),
+		Quiver(EquippableItemTemplate.Type.Ammo, new NormalSubIconGetter(SubIcon.Type.Quiver));
 		
-		for (int i = 0; i < this.equipped.length; i++) {
-			if (other.equipped[i] != null) {
-				this.equipped[i] = new Item(other.equipped[i]);
-				this.equipped[i].setOwner(parent);
-			}
+		private final SlotValidator slotValidator;
+		private final SubIconGetter subIconGetter;
+		
+		private Slot(EquippableItemTemplate.Type type, SubIconGetter subIconGetter) {
+			this.slotValidator = new GenericSlotValidator(type);
+			this.subIconGetter = subIconGetter;
 		}
-	}
-	
-	public void endAllEffectAnimations() {
-		for (int i = 0; i < equipped.length; i++) {
-			if (equipped[i] == null) continue;
-			
-			equipped[i].getEffects().endAllAnimations();
+		
+		private Slot(SlotValidator validator, SubIconGetter subIconGetter) {
+			this.slotValidator = validator;
+			this.subIconGetter = subIconGetter;
 		}
-	}
-	
-	public InventoryCallbackFactory getCallbackFactory() { return callbackFactory; }
-	
-	public Creature getParent() { return parent; }
-	
-	public void elapseRounds(int rounds) {
-		for (Item item : equipped) {
-			if (item != null) item.elapseRounds(rounds);
+		
+		/**
+		 * Returns true if this Slot can hold the specified item, false otherwise
+		 * Note that this does not check any other conditions such as AP, currently
+		 * equipped items, etc.  It only validates the item type against the slot type
+		 * @param item the item to check
+		 * @return whether the specified item can be equipped in this slot
+		 */
+		
+		public boolean matchesItemType(EquippableItem item) {
+			return this.slotValidator.matchesItemType(item);
+		}
+		
+		/**
+		 * Gets the SubIcon type associated with this EquippedItem slot
+		 * @param item
+		 * @return the SubIconType
+		 */
+		
+		public SubIcon.Type getSubIconType(EquippableItem item) {
+			return subIconGetter.getType(item);
 		}
 	}
 	
 	/**
-	 * Removes the first instance of an Item with the specified ID from this Inventory.
-	 * @param item the item to remove
-	 * @return true if and only if the item was removed.
+	 * Classes to get the appropriate subicon for this Slot
+	 * @author Jared
+	 *
 	 */
 	
-	public boolean removeItemEvenIfEquipped(String item) {
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i].getID().equals(item)) {
-				unequip(i);
+	private interface SubIconGetter {
+		public SubIcon.Type getType(EquippableItem item);
+	}
+	
+	private static class NormalSubIconGetter implements SubIconGetter {
+		private final SubIcon.Type type;
+		
+		private NormalSubIconGetter() {
+			this.type = null;
+		}
+		
+		private NormalSubIconGetter(SubIcon.Type type) {
+			this.type = type;
+		}
+
+		@Override public Type getType(EquippableItem item) {
+			return type;
+		}
+	}
+	
+	private static class OffHandSubIconGetter implements SubIconGetter {
+		@Override public Type getType(EquippableItem item) {
+			switch (item.getTemplate().getType()) {
+			case Shield:
+				return SubIcon.Type.Shield;
+			case Weapon:
+				return SubIcon.Type.OffHandWeapon;
+			default:
+				return null;
+			}
+		}
+	}
+	
+	/**
+	 * Classes to check to see if an item can be equipped to a given slot
+	 * @author Jared
+	 *
+	 */
+	
+	private interface SlotValidator {
+		public boolean matchesItemType(EquippableItem item);
+	}
+	
+	private static class MainHandSlotValidator implements SlotValidator {
+		@Override public boolean matchesItemType(EquippableItem item) {
+			return item.getTemplate().getType() == EquippableItemTemplate.Type.Weapon;
+		}
+	}
+	
+	private static class OffHandSlotValidator implements SlotValidator {
+		@Override public boolean matchesItemType(EquippableItem item) {
+			EquippableItemTemplate.Type type = item.getTemplate().getType();
+			
+			switch (type) {
+			case Shield:
 				return true;
-			}
-		}
-		
-		int index = items.findItem(item, 1);
-		
-		if (index == -1) return false;
-		else {
-			items.removeItem(index);
-			return true;
-		}
-	}
-	
-	public void removeEquippedItem(Item item) {
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i] == item) {
-				unequip(i);
-				return;
+			case Weapon:
+				return ( ((Weapon)item).getTemplate().getHanded() != WeaponTemplate.Handed.TwoHanded );
+			default:
+				return false;
 			}
 		}
 	}
 	
-	public void unequipItem(String ref) {
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i].getID().equals(ref)) {
-				unequipItem(i);
-				break;
-			}
+	private static class GenericSlotValidator implements SlotValidator {
+		private final EquippableItemTemplate.Type type;
+		
+		private GenericSlotValidator(EquippableItemTemplate.Type type) {
+			this.type = type;
+		}
+		
+		@Override public boolean matchesItemType(EquippableItem item) {
+			return (item.getTemplate().getType() == type);
 		}
 	}
 	
-	public void unequipItem(int slot) {
+	@Override public JSONOrderedObject save() {
+		JSONOrderedObject out = new JSONOrderedObject();
 		
-		addItem(equipped[slot]);
-		
-		unequip(slot);
-	}
-	
-	public boolean canUnequipCurrentItemInSlot(Item item, int slot) {
-		if (item == null) return false;
-		
-		switch (item.getItemType()) {
-		case CLOAK:
-			if (equipped[EQUIPPED_CLOAK] != null) return !equipped[EQUIPPED_CLOAK].isCursed();
-			break;
-		case BELT:
-			if (equipped[EQUIPPED_BELT] != null) return !equipped[EQUIPPED_BELT].isCursed();
-			break;
-		case AMULET:
-			if (equipped[EQUIPPED_AMULET] != null) return !equipped[EQUIPPED_AMULET].isCursed();
-			break;
-		case RING:
-			if (equipped[EQUIPPED_RING_RIGHT] != null && equipped[EQUIPPED_RING_LEFT] != null)
-				return (!equipped[EQUIPPED_RING_RIGHT].isCursed()) || (!equipped[EQUIPPED_RING_LEFT].isCursed());
-			break;
-		case AMMO:
-			if (equipped[EQUIPPED_QUIVER] != null) return !equipped[EQUIPPED_QUIVER].isCursed();
-			break;
-		case ARMOR:
-			if (equipped[EQUIPPED_ARMOR] != null) return !equipped[EQUIPPED_ARMOR].isCursed();
-			break;
-		case SHIELD:
-			if (equipped[EQUIPPED_MAIN_HAND] != null) {
-				if (equipped[EQUIPPED_MAIN_HAND].getWeaponHandedForCreature(parent) == Item.WeaponHanded.TWO_HANDED)
-					return false;
+		JSONOrderedObject equippedOut = new JSONOrderedObject();
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippableItem item = equippedItems.get(slot);
+			
+			if (item == null) continue;
+			
+			JSONOrderedObject itemOut = new JSONOrderedObject();
+			
+			itemOut.put("id", item.getTemplate().getID());
+			
+			if (item.getTemplate().hasQuality()) {
+				itemOut.put("quality", item.getQuality().getName());
 			}
 			
-			if (equipped[EQUIPPED_OFF_HAND] != null) return !equipped[EQUIPPED_OFF_HAND].isCursed();
-			break;
-		case GLOVES:
-			if (equipped[EQUIPPED_GLOVES] != null) return !equipped[EQUIPPED_GLOVES].isCursed();
-			break;
-		case BOOTS:
-			if (equipped[EQUIPPED_BOOTS] != null) return !equipped[EQUIPPED_BOOTS].isCursed();
-			break;
-		case HELMET:
-			if (equipped[EQUIPPED_HELMET] != null) return !equipped[EQUIPPED_HELMET].isCursed();
-			break;
-		case WEAPON:
-			if (slot == EQUIPPED_OFF_HAND) {
-				if (equipped[EQUIPPED_MAIN_HAND] != null) {
-					if (equipped[EQUIPPED_MAIN_HAND].getWeaponHandedForCreature(parent) == Item.WeaponHanded.TWO_HANDED)
-						return false;
+			if (item.getEffects().size() > 0) {
+				itemOut.put("effects", item.getEffects().save());
+			}
+			
+			equippedOut.put(slot.name(), itemOut);
+		}
+		out.put("equipped", equippedOut);
+		
+		out.put("unequipped", unequippedItems.save());
+		
+		return out;
+	}
+	
+	/**
+	 * Loads this inventory from JSON data.  If refHandler is non-null, then will attempt to
+	 * resolve any effect references in the JSON.  Otherwise, any effects are ignored
+	 * @param data
+	 * @param refHandler
+	 * @throws LoadGameException
+	 */
+	
+	public void load(SimpleJSONObject data, ReferenceHandler refHandler) throws LoadGameException {
+		if (data.containsKey("createdItems")) {
+			// add any created items from this inventory to the campaign
+			// this step will only occur when loading an exported player character file
+			
+			for (SimpleJSONArrayEntry entry : data.getArray("createdItems")) {
+				CreatedItem createdItem = CreatedItem.load(entry.getObject());
+				// register the created item, so that later when it is referenced
+				// in this inventory, it can be found by the EntityManager
+				Game.curCampaign.addCreatedItem(createdItem);
+			}
+		}
+		
+		if (data.containsKey("equipped")) {
+			SimpleJSONObject equipped = data.getObject("equipped");
+			
+			for (Inventory.Slot slot : Inventory.Slot.values()) {
+				if (!equipped.containsKey(slot.toString())) continue;
+				
+				SimpleJSONObject slotData = equipped.getObject(slot.toString());
+				
+				String id = slotData.get("id", null);
+				
+				EquippableItem item;
+				if (slotData.containsKey("quality")) {
+					item = (EquippableItem)EntityManager.getItem(id, slotData.get("quality", null));
+				} else {
+					item = (EquippableItem)EntityManager.getItem(id);
 				}
 				
-				if (equipped[EQUIPPED_OFF_HAND] != null) return !equipped[EQUIPPED_OFF_HAND].isCursed();
-			} else {
-				if (equipped[EQUIPPED_MAIN_HAND] != null) return !equipped[EQUIPPED_MAIN_HAND].isCursed();
+				if (item == null) {
+					Logger.appendToWarningLog("Item " + id + " cannot be loaded.");
+					continue;
+				}
+				
+				if (refHandler != null && slotData.containsKey("effects")) {
+					item.getEffects().load(slotData.getObject("effects"), refHandler, item);
+					item.getEffects().startAnimations();
+					for (Effect effect : item.getEffects()) {
+						item.applyEffectBonuses(effect);
+					}
+					//item.applyEffectBonuses(effect);
+				}
+				
+				equip(item, slot, false);
 			}
-			break;
+		}
+		
+		if (data.containsKey("unequipped")) {
+			unequippedItems.load(data.getArray("unequipped"));
+		}
+	}
+	
+	/**
+	 * Creates a new Inventory for the specified parent creature
+	 * @param parent the parent creature owning this inventory
+	 */
+	
+	public Inventory(Creature parent) {
+		this.parent = parent;
+		
+		unequippedItems = new ItemList();
+		unequippedItems.addListener(this);
+		
+		// set up empty equipment slots
+		equippedItems = new HashMap<Slot, EquippableItem>();
+	}
+	
+	/**
+	 * Creates a new inventory which is a copy of the specified inventory,
+	 * but for the new specified parent
+	 * @param other
+	 * @param parent
+	 */
+	
+	public Inventory(Inventory other, Creature parent) {
+		this.parent = parent;
+		
+		unequippedItems = new ItemList(other.unequippedItems);
+		unequippedItems.addListener(this);
+		
+		equippedItems = new HashMap<Slot, EquippableItem>();
+		for (Inventory.Slot key : other.equippedItems.keySet()) {
+			EquippableItem otherItem = other.equippedItems.get(key);
+			
+			equip((EquippableItem)EntityManager.getItem(otherItem.getTemplate().getID(), otherItem.getQuality()), key, false);
+		}
+	}
+	
+	/**
+	 * Ends all animations on all equipped items
+	 */
+	
+	public void endAllAnimations() {
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippableItem item = equippedItems.get(slot);
+			
+			if (item != null) {
+				item.getEffects().endAllAnimations();
+			}
+		}
+	}
+	
+	/*
+	 * Responsible for removing the item from the specified slot.  If there is
+	 * no item equipped in the slot, no action is performed
+	 * This will also remove subIcons and run scripts as needed
+	 * @param addToUnequipped true to add the item in the slot to the list of
+	 * unequipped items, false to discard the item
+	 */
+	
+	private void unequip(Slot slot, boolean addToUnequipped) {
+		EquippableItem currentlyEquippedItem = equippedItems.get(slot);
+		
+		if (currentlyEquippedItem != null) {
+			// stop any active animations
+			currentlyEquippedItem.getEffects().endAllAnimations();
+			currentlyEquippedItem.setOwner(null);
+			
+			if (addToUnequipped) {
+				unequippedItems.add(currentlyEquippedItem);
+			}
+			
+			equippedItems.remove(slot);
+			
+			parent.stats.changeEquipment(currentlyEquippedItem.getTemplate().getType());
+			parent.stats.removeAll(currentlyEquippedItem.getBonusList());
+			parent.removeSubIcon(currentlyEquippedItem, slot);
+			
+			if (currentlyEquippedItem.getTemplate().hasScript()) {
+				currentlyEquippedItem.getTemplate().getScript().executeFunction(ScriptFunctionType.onUnequipItem,
+						parent, currentlyEquippedItem);
+			}
+		}
+	}
+	
+	/*
+	 * Responsible for the actual equipping of an item.  Performs no checks.  This will
+	 * also add subicons, run scripts as needed
+	 * @param modifyParentStats whether the parent stat manager will be notified of the
+	 * change in equipment.  This should always be true, except for when first creating
+	 * a creature.  In that case, stats will be fully recomputed after creation.
+	 */
+	
+	private void equip(EquippableItem item, Slot slot, boolean modifyParentStats) {
+		equippedItems.put(slot, item);
+		item.setOwner(parent);
+		
+		unequippedItems.remove(item);
+
+		if (modifyParentStats) {
+			parent.stats.changeEquipment(item.getTemplate().getType());
+			parent.stats.addAll(item.getBonusList());
+		}
+		
+		parent.addSubIcon(item, slot);
+		
+		if (item.getTemplate().hasScript()) {
+			item.getTemplate().getScript().executeFunction(ScriptFunctionType.onEquipItem, parent, item);
+		}
+	}
+	
+	/**
+	 * Checks if the item can be equipped, and actually equips it if performEquip is true
+	 * and the item can be equipped
+	 * @param item
+	 * @param slot
+	 * @param performEquip
+	 * @return
+	 */
+	
+	private boolean checkAndEquip(EquippableItem item, Slot slot, boolean performEquip) {
+		// set the default slot if one was not specified
+		if (slot == null) {
+			slot = getDefaultSlot(item);
+		}
+		
+		if (!parent.timer.canPerformEquipAction(item))
+			return false;
+
+		if (!slot.matchesItemType(item))
+			return false;
+		
+		if (!hasPrereqsToEquip(item))
+			return false;
+		
+		// check for dual wielding proficiency
+		if (item instanceof Weapon && slot == Slot.OffHand &&
+				!parent.stats.has(Bonus.Type.DualWieldTraining)) {
+			return false;
+		}
+
+		// all checks on the item have passed, now make sure the currently equipped
+		// items can be removed
+		EquippableItem currentlyEquippedItem = equippedItems.get(slot);
+
+		if (currentlyEquippedItem != null) {
+			if (!currentlyEquippedItem.getTemplate().isUnequippable()) return false;
+		}
+		
+		
+		Slot secondaryUsedSlot = null;
+
+		if (item instanceof Weapon) {
+			Weapon weapon = (Weapon)item;
+			
+			// two handed weapons take up both main hand and off hand slots
+			if (weapon.isTwoHanded()) {
+				secondaryUsedSlot = Slot.OffHand;
+			}
+		}
+		
+		// check the main hand weapon if we are equipping off hand
+		if (slot == Slot.OffHand) {
+			Weapon mainHand = getEquippedMainHand();
+
+			if (mainHand != null && mainHand.isTwoHanded()) {
+				secondaryUsedSlot = Slot.MainHand;
+			}
+		}
+
+		EquippableItem secondaryEquippedItem = null;
+		if (secondaryUsedSlot != null) {
+			secondaryEquippedItem = equippedItems.get(secondaryUsedSlot);
+
+			if (secondaryEquippedItem != null) {
+				if (!secondaryEquippedItem.getTemplate().isUnequippable()) return false;
+			}
+		}
+		
+		// now we have verified that the item can be equipped
+
+		if (performEquip) {
+			parent.timer.performEquipAction(item);
+			
+			// unequip any currently blocking items
+			if (currentlyEquippedItem != null) {
+				unequip(slot, true);
+			}
+
+			if (secondaryEquippedItem != null) {
+				unequip(secondaryUsedSlot, true);
+			}
+
+			// now the item can be equipped
+			equip(item, slot, true);
+			
+			if (Game.mainViewer != null) {
+				Game.mainViewer.updateInterface();
+			}
 		}
 		
 		return true;
 	}
 	
-	public boolean hasPrereqsToEquip(Item item) {
-		if (item == null) return false;
+	/**
+	 * Returns true if and only if the parent creature is currently able to equip
+	 * the specified item to the specified slot, or to the default slot if the specified
+	 * slot is null.  The parent must have sufficient AP, the prereqs to equip the item,
+	 * and the slots must not be blocked by any currently equipped but unremovable items
+	 * @param item the item to check
+	 * @param slot the slot to see if the item can be equipped to.  If the slot is invalid
+	 * for the item, this method returns false.  If the slot is null, then the default
+	 * slot for the item will be checked, see {@link #equipItem(EquippableItem, Slot)}
+	 * @return whether the item can be equipped
+	 */
+	
+	public boolean canEquip(EquippableItem item, Slot slot) {
+		return checkAndEquip(item, slot, false);
+	}
+	
+	/**
+	 * Attempts to equip the specified item to the default slot.  See {@link #equipItem(EquippableItem, Slot)}
+	 * @param itemID
+	 * @param quality
+	 * @return true if the item was successfully equipped, false otherwise
+	 */
+	
+	public boolean equipItem(String itemID, String quality) {
+		EquippableItem item = (EquippableItem)EntityManager.getItem(itemID, quality);
 		
-		switch (item.getItemType()) {
-		case ARMOR:
-		case SHIELD:
-		case GLOVES:
-		case BOOTS:
-		case HELMET:
-			return parent.stats().hasArmorProficiency(item.getArmorType().getName());
-		case WEAPON:
-			return parent.stats().hasWeaponProficiency(item.getBaseWeapon().getName());
-		case ITEM:
-			return false;
+		return checkAndEquip(item, null, true);
+	}
+	
+	/**
+	 * Attempts to equip the specified item to the specified slot.  The owner of the inventory
+	 * must have sufficient AP to equip the item.  Any items currently in the slot or any
+	 * conflicting slots (for two handed weapons) are unequipped.  Items that the parent
+	 * creature does not have prereqs to equip will not be equipped.
+	 * @param item the item to be equipped.  This item must currently be contained in the list
+	 * of unequipped items
+	 * @param slot the slot to equip the item to.  If the slot is invalid for the item,
+	 * the item is not equipped.  If the slot is null, then it will equip the item in the
+	 * unique valid slot if that slot is unique.  Rings will be equipped in the empty
+	 * ring slot, or if neither ring slot is empty, the right ring slot.  Weapons will be
+	 * equipped in the main hand slot, unless the main hand slot is occupied, the off hand
+	 * slot is not occupied, the weapon is light, and the owner can dual wield
+	 * @return true if the item was successfully equipped, false otherwise
+	 */
+	
+	public boolean equipItem(EquippableItem item, Slot slot) {
+		return checkAndEquip(item, slot, true);
+	}
+	
+	/**
+	 * Adds the specified item to this inventory, then equips it to the default
+	 * slot
+	 * @param item the item to add
+	 */
+	
+	public void addAndEquip(EquippableItem item) {
+		unequippedItems.add(item);
+		
+		checkAndEquip(item, null, true);
+	}
+	
+	/**
+	 * Adds the specified item to this inventory, then equips it to the specified
+	 * slot
+	 * @param item the item to add
+	 * @param slot
+	 */
+	
+	public void addAndEquip(EquippableItem item, Slot slot) {
+		unequippedItems.add(item);
+		
+		checkAndEquip(item, slot, true);
+	}
+	
+	/**
+	 * Adds the specified item to this inventory, then equips it to the default
+	 * slot
+	 * @param itemID the id of the item
+	 * @param quality the quality of the item
+	 */
+	
+	public void addAndEquip(String itemID, String quality) {
+		EquippableItem item = (EquippableItem)EntityManager.getItem(itemID, quality);
+		
+		unequippedItems.add(item);
+		checkAndEquip(item, null, true);
+	}
+	
+	/**
+	 * Adds the specified item to this inventory, then equips it to the default
+	 * slot
+	 * @param itemID the id of the item
+	 */
+	
+	public void addAndEquip(String itemID) {
+		EquippableItem item = (EquippableItem)EntityManager.getItem(itemID);
+		
+		unequippedItems.add(item);
+		checkAndEquip(item, null, true);
+	}
+	
+	/**
+	 * Returns true if the parent of this inventory has the needed prereqs to equip
+	 * the item, false otherwise
+	 * @param item
+	 * @return whether the parent has the prereqs to equip this item
+	 */
+	
+	public boolean hasPrereqsToEquip(EquippableItem item) {
+		if (item instanceof Weapon) {
+			BaseWeapon baseWeapon = ((Weapon)item).getTemplate().getBaseWeapon();
+			
+			return parent.stats.hasWeaponProficiency(baseWeapon.getName());
+		} else if (item instanceof Armor) {
+			ArmorType armorType = ((Armor)item).getTemplate().getArmorType();
+			
+			return parent.stats.hasArmorProficiency(armorType.getName());
+		}
+		
+		return true;
+	}
+	
+	/*
+	 * Gets the default slot for the specified item if no slot is specified
+	 */
+	
+	private Slot getDefaultSlot(EquippableItem item) {
+		switch (item.getTemplate().getType()) {
+		case Weapon:
+			Weapon mainHand = this.getEquippedMainHand();
+			
+			if (mainHand != null && !mainHand.isTwoHanded() && getEquippedOffHand() == null &&
+					parent.stats.has(Bonus.Type.DualWieldTraining) && !((Weapon)item).isTwoHanded()) {
+				return Slot.OffHand;
+			} else {
+				return Slot.MainHand;
+			}
+		case Ring:
+			if (equippedItems.get(Slot.LeftRing) == null) {
+				return Slot.LeftRing;
+			} else {
+				return Slot.RightRing;
+			}
+		case Armor:
+			return Slot.Armor;
+		case Gloves:
+			return Slot.Gloves;
+		case Helmet:
+			return Slot.Helmet;
+		case Cloak:
+			return Slot.Cloak;
+		case Boots:
+			return Slot.Boots;
+		case Belt:
+			return Slot.Belt;
+		case Amulet:
+			return Slot.Amulet;
+		case Ammo:
+			return Slot.Quiver;
+		case Shield:
+			return Slot.OffHand;
+		default:
+			return Slot.MainHand;
+		}
+	}
+	
+	/**
+	 * Returns the parent (owning) creature for this inventory
+	 * @return the parent creature
+	 */
+	
+	public Creature getParent() {
+		return parent;
+	}
+	
+	/**
+	 * Returns true if the current main weapon can be used based on the currently equipped ammo.  This is
+	 * true if the main weapon does not require ammo.  If the main weapon does require ammo, it is true if
+	 * and only if the equipped ammo is usable by the main weapon.
+	 * 
+	 * the ammo is usable by the equipped weapon.
+	 * @return whether this inventory has ammo equipped for its main weapon
+	 */
+	
+	public boolean hasAmmoEquippedForWeapon() {
+		Weapon mainHand = parent.getMainHandWeapon();
+		
+		switch (mainHand.getTemplate().getWeaponType()) {
+		case Ranged:
+			return mainHand.getTemplate().isAmmoForThisWeapon(getEquippedQuiver());
 		default:
 			return true;
 		}
 	}
 	
-	public boolean canEquipAsOffHandWeapon(Item item) {
-		if (item == null) return false;
+	/**
+	 * Gets the weapon equipped in this Inventory's main hand, or null
+	 * if nothing is equipped in that slot
+	 * @return the weapon in the main hand slot
+	 */
+	
+	public Weapon getEquippedMainHand() {
+		return (Weapon)equippedItems.get(Slot.MainHand);
+	}
+	
+	/**
+	 * Gets the weapon or shield equipped in this Inventory's off hand, or
+	 * null if nothing is equipped in that slot
+	 * @return the item in the off hand slot
+	 */
+	
+	public EquippableItem getEquippedOffHand() {
+		return equippedItems.get(Slot.OffHand);
+	}
+	
+	/**
+	 * Gets the shield equipped in this Inventory's off hand, or null
+	 * if nothing is equipped in that slot or if a weapon is equipped in that slot
+	 * @return the shield in the off hand slot
+	 */
+	
+	public Armor getEquippedShield() {
+		EquippableItem offHand = equippedItems.get(Slot.OffHand);
 		
-		if (item.getItemType() != Item.ItemType.WEAPON) return false;
+		if (offHand == null) return null;
 		
-		if (!item.isMeleeWeapon()) return false;
+		if (offHand instanceof Armor)
+			return (Armor)offHand;
+		else
+			return null;
+	}
+	
+	/**
+	 * Gets the weapon equipped in this Inventory's off hand, or null
+	 * if nothing is equipped in that slot or if a shield is equipped in that slot
+	 * @return the weapon in the off hand slot
+	 */
+	
+	public Weapon getEquippedOffHandWeapon() {
+		EquippableItem offHand = equippedItems.get(Slot.OffHand);
 		
-		Item mainWeapon = equipped[EQUIPPED_MAIN_HAND];
-		if (mainWeapon == null) mainWeapon = parent.getRace().getDefaultWeapon();
+		if (offHand == null) return null;
 		
-		if (!mainWeapon.isMeleeWeapon()) return false;
+		if (offHand instanceof Weapon)
+			return (Weapon)offHand;
+		else
+			return null;
+	}
+	
+	/**
+	 * Gets the Armor equipped in the Armor slot, or null if no item is equipped in
+	 * the Armor Slot
+	 * @return the item in the Armor slot
+	 */
+	
+	public Armor getEquippedArmor() {
+		return (Armor)equippedItems.get(Slot.Armor);
+	}
+	
+	/**
+	 * Gets the gloves equipped in the Gloves slot, or null if no item is in that slot
+	 * @return the item in the Gloves slot
+	 */
+	
+	public Armor getEquippedGloves() {
+		return (Armor)equippedItems.get(Slot.Gloves);
+	}
+	
+	/**
+	 * Gets the helmet equipped in the Helmet slot, or null if no item is in that slot
+	 * @return the item in the Helmet slot
+	 */
+	
+	public Armor getEquippedHelmet() {
+		return (Armor)equippedItems.get(Slot.Helmet);
+	}
+	
+	/**
+	 * Gets the boots equipped in the Boots slot, or null if no item is in that slot
+	 * @return the item in the Boots slot
+	 */
+	
+	public Armor getEquippedBoots() {
+		return (Armor)equippedItems.get(Slot.Boots);
+	}
+	
+	/**
+	 * Gets the item equipped in the Cloak slot, or null if no item is in that slot
+	 * @return the item in the Cloak slot
+	 */
+	
+	public EquippableItem getEquippedCloak() {
+		return equippedItems.get(Slot.Cloak);
+	}
+	
+	/**
+	 * Gets the item equipped in the Belt slot, or null if no item is in that slot
+	 * @return the item in the Belt slot
+	 */
+	
+	public EquippableItem getEquippedBelt() {
+		return equippedItems.get(Slot.Belt);
+	}
+	
+	/**
+	 * Gets the item equipped in the Amulet slot, or null if no item is in that slot
+	 * @return the item in the Amulet slot
+	 */
+	
+	public EquippableItem getEquippedAmulet() {
+		return equippedItems.get(Slot.Amulet);
+	}
+	
+	/**
+	 * Gets the item equipped in the Right Ring slot, or null if no item is in that slot
+	 * @return the item in the Right Ring slot
+	 */
+	
+	public EquippableItem getEquippedRightRing() {
+		return equippedItems.get(Slot.RightRing);
+	}
+	
+	/**
+	 * Gets the item equipped in the Left Ring slot, or null if no item is in that slot
+	 * @return the item in the Left Ring slot
+	 */
+	
+	public EquippableItem getEquippedLeftRing() {
+		return equippedItems.get(Slot.LeftRing);
+	}
+	
+	/**
+	 * Gets the ammo equipped in the Quiver slot, or null if no item is in that slot
+	 * @return the item in the Quiver slot
+	 */
+	
+	public Ammo getEquippedQuiver() {
+		return (Ammo)equippedItems.get(Slot.Quiver);
+	}
+	
+	/**
+	 * Returns the item currently equipped in the specified slot, or null
+	 * if no item is equipped in that slot
+	 * @param slot
+	 * @return the item currently equipped in the specified slot
+	 */
+	
+	public EquippableItem getEquippedItem(Slot slot) {
+		return this.equippedItems.get(slot);
+	}
+	
+	/**
+	 * Removes the equipped item from the specified slot
+	 * @param slot the name of the slot to remove the item from
+ 	 * @return the item that was removed, or null if no item was present in the
+ 	 * slot and so no item was removed
+	 */
+	
+	public EquippableItem removeEquippedItem(String slot) {
+		return removeEquippedItem(Slot.valueOf(slot));
+	}
+	
+	/**
+	 * Removes the equipped item from the specified slot
+	 * @param slot the slot to remove the item from
+ 	 * @return the item that was removed, or null if no item was present in the
+ 	 * slot and so no item was removed
+	 */
+	
+	public EquippableItem removeEquippedItem(Slot slot) {
+		EquippableItem item = equippedItems.get(slot);
 		
-		switch (mainWeapon.getWeaponHandedForCreature(parent.getRace().getSize())) {
-		case NONE: return false;
-		case TWO_HANDED: return false;
+		if (item != null) {
+			unequip(slot, false);
 		}
-		
-		switch (item.getWeaponHandedForCreature(parent.getRace().getSize())) {
-		case NONE: return false;
-		case TWO_HANDED: return false;
-		}
-		
-		if (!parent.stats().has(Bonus.Type.DualWieldTraining)) return false;
-		
-		return hasPrereqsToEquip(item);
-	}
-	
-	public boolean hasEquippedOffHandWeapon() {
-		Item item = equipped[Inventory.EQUIPPED_OFF_HAND];
-		
-		if (item == null) return false;
-		
-		return item.isMeleeWeapon();
-	}
-	
-	private SubIcon.Type getType(int slot, Item item) {
-		
-		switch (slot) {
-		case EQUIPPED_MAIN_HAND:
-			if (item.getWeaponType() == Item.WeaponType.BOW) return SubIcon.Type.OffHandWeapon;
-			else return SubIcon.Type.MainHandWeapon;
-		case EQUIPPED_OFF_HAND:
-			if (item.getItemType() == Item.ItemType.SHIELD) return SubIcon.Type.Shield;
-			else return SubIcon.Type.OffHandWeapon;
-		case EQUIPPED_ARMOR: return SubIcon.Type.Torso;
-		case EQUIPPED_GLOVES: return SubIcon.Type.Gloves;
-		case EQUIPPED_HELMET: return SubIcon.Type.Head;
-		case EQUIPPED_BOOTS: return SubIcon.Type.Boots;
-		case EQUIPPED_QUIVER: return SubIcon.Type.Quiver;
-		case EQUIPPED_CLOAK: return SubIcon.Type.Cloak;
-		default: return null;
-		}
-	}
-	
-	public void addAllSubIcons() {
-		if (!parent.drawWithSubIcons()) return;
-		
-		if (parent.getRace() == null || parent.getGender() == null) return;
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] == null) continue;
-			
-			SubIcon.Type type = getType(i, equipped[i]);
-			if (type == null || equipped[i].getSubIcon() == null) continue;
-			
-			if (parent.drawOnlyHandSubIcons) {
-				switch (type) {
-				case Shield: case MainHandWeapon: case OffHandWeapon:
-					break;
-				default:
-					continue;
-				}
-			}
-			
-			// create the sub icon and add it
-			SubIcon.Factory factory = new SubIcon.Factory(type, parent.getRace(), parent.getGender());
-			factory.setPrimaryIcon(equipped[i].getSubIcon(), equipped[i].getSubIconColor());
-			factory.setSecondaryIcon(null, parent.getSubIcons().getClothingColor());
-			factory.setCoversBeard(equipped[i].coversBeardIcon());
-			this.getParent().subIconList.add(factory.createSubIcon());
-		}
-	}
-	
-	private void equip(Item item, int slot) {
-		equipped[slot] = item;
-		item.setOwner(this.getParent());
-		
-		this.getParent().stats().changeEquipment(item.getItemType());
-		this.getParent().stats().addAll(item.getAllAppliedBonuses());
-		
-		if (item.hasScript()) 
-			item.getScript().executeFunction(ScriptFunctionType.onEquipItem, this.parent, item);
-		
-		if (!parent.drawWithSubIcons()) return;
-		
-		SubIcon.Type type = getType(slot, item);
-		
-		if (type == null || item.getSubIcon() == null) return;
-		
-		if (parent.drawOnlyHandSubIcons) {
-			switch (type) {
-			case Shield: case MainHandWeapon: case OffHandWeapon:
-				break;
-			default:
-				return;
-			}
-		}
-		
-		// create the sub icon and add it
-		SubIcon.Factory factory = new SubIcon.Factory(type, parent.getRace(), parent.getGender());
-		factory.setPrimaryIcon(item.getSubIcon(), item.getSubIconColor());
-		factory.setSecondaryIcon(null, parent.getSubIcons().getClothingColor());
-		factory.setCoversBeard(item.coversBeardIcon());
-		this.getParent().subIconList.add(factory.createSubIcon());
-	}
-	
-	private void unequip(int slot) {
-		Item item = equipped[slot];
-		if (item == null) return;
-		
-		item.setOwner(null);
-		equipped[slot] = null;
-		
-		this.getParent().stats().changeEquipment(item.getItemType());
-		this.getParent().stats().removeAll(item.getAllAppliedBonuses());
-		
-		if (parent.drawWithSubIcons()) {
-			SubIcon.Type type = getType(slot, item);
-			if (type != null && item.getSubIcon() != null) {
-				this.getParent().subIconList.remove(type);
-			}
-		}
-		
-		// stop all active animations on the item
-		item.getEffects().endAllAnimations();
-		
-		if (item.hasScript()) 
-			item.getScript().executeFunction(ScriptFunctionType.onUnequipItem, this.parent, item);
-	}
-	
-	public boolean equipItem(String itemID) {
-		return equipItem(Game.entityManager.getItem(itemID), 0);		
-	}
-	
-	public boolean canEquip(String itemID) {
-		return canEquip(Game.entityManager.getItem(itemID));
-	}
-	
-	public boolean canEquip(Item itemToEquip) {
-		if (itemToEquip == null) return false;
-		
-		if (!hasPrereqsToEquip(itemToEquip)) return false;
-		
-		switch (itemToEquip.getItemType()) {
-		case ITEM: return false;
-		case WEAPON:
-			if (itemToEquip.getWeaponHandedForCreature(parent.getRace().getSize()) == Item.WeaponHanded.NONE)
-				return false; 
-		}
-		
-		return parent.getTimer().canPerformEquipAction(itemToEquip);
-	}
-	
-	public boolean equipItem(Item itemToEquip) {
-		return equipItem(itemToEquip, 0);
-	}
-	
-	public boolean equipItem(Item itemToEquip, int slot) {
-		if (itemToEquip == null) return false;
-		
-		Item item = new Item(itemToEquip);
-		
-		if (!hasPrereqsToEquip(item)) {
-			return false;
-		}
-		
-		switch(item.getItemType()) {
-		case ITEM: return false;
-		case AMMO:
-			addItem(equipped[EQUIPPED_QUIVER]);
-			unequip(EQUIPPED_QUIVER);
-			equip(item, EQUIPPED_QUIVER);
-			break;
-		case AMULET:
-			addItem(equipped[EQUIPPED_AMULET]);
-			unequip(EQUIPPED_AMULET);
-			equip(item, EQUIPPED_AMULET);
-			break;
-		case ARMOR:
-			addItem(equipped[EQUIPPED_ARMOR]);
-			unequip(EQUIPPED_ARMOR);
-			equip(item, EQUIPPED_ARMOR);
-			break;
-		case BELT:
-			addItem(equipped[EQUIPPED_BELT]);
-			unequip(EQUIPPED_BELT);
-			equip(item, EQUIPPED_BELT);
-			break;
-		case BOOTS:
-			addItem(equipped[EQUIPPED_BOOTS]);
-			unequip(EQUIPPED_BOOTS);
-			equip(item, EQUIPPED_BOOTS);
-			break;
-		case CLOAK:
-			addItem(equipped[EQUIPPED_CLOAK]);
-			unequip(EQUIPPED_CLOAK);
-			equip(item, EQUIPPED_CLOAK);
-			break;
-		case GLOVES:
-			addItem(equipped[EQUIPPED_GLOVES]);
-			unequip(EQUIPPED_GLOVES);
-			equip(item, EQUIPPED_GLOVES);
-			break;
-		case HELMET:
-			addItem(equipped[EQUIPPED_HELMET]);
-			unequip(EQUIPPED_HELMET);
-			equip(item, EQUIPPED_HELMET);
-			break;
-		case RING:
-			if (slot == EQUIPPED_RING_RIGHT) {
-				addItem(equipped[EQUIPPED_RING_RIGHT]);
-				unequip(EQUIPPED_RING_RIGHT);
-				equip(item, EQUIPPED_RING_RIGHT);
-			} else if (slot == EQUIPPED_RING_LEFT) {
-				addItem(equipped[EQUIPPED_RING_LEFT]);
-				unequip(EQUIPPED_RING_LEFT);
-				equip(item, EQUIPPED_RING_LEFT);
-			} else {
-				if (equipped[EQUIPPED_RING_RIGHT] == null) {
-					equip(item, EQUIPPED_RING_RIGHT);
-				} else if (equipped[EQUIPPED_RING_LEFT] == null) {
-					equip(item, EQUIPPED_RING_LEFT);
-				} else if (!equipped[EQUIPPED_RING_LEFT].isCursed()) {
-					addItem(equipped[EQUIPPED_RING_LEFT]);
-					unequip(EQUIPPED_RING_LEFT);
-					equip(item, EQUIPPED_RING_LEFT);
-				} else if (!equipped[EQUIPPED_RING_RIGHT].isCursed()) {
-					addItem(equipped[EQUIPPED_RING_RIGHT]);
-					unequip(EQUIPPED_RING_RIGHT);
-					equip(item, EQUIPPED_RING_RIGHT);
-				}
-			}
-			break;
-		case SHIELD:
-			if (equipped[EQUIPPED_OFF_HAND] != null) {
-				addItem(equipped[EQUIPPED_OFF_HAND]);
-				unequip(EQUIPPED_OFF_HAND);
-				equip(item, EQUIPPED_OFF_HAND);
-			} else if (equipped[EQUIPPED_MAIN_HAND] == null) {
-				equip(item, EQUIPPED_OFF_HAND);
-			} else {
-				Item.WeaponHanded handed = equipped[EQUIPPED_MAIN_HAND].getWeaponHandedForCreature(parent.getRace().getSize());
-				if (handed == Item.WeaponHanded.TWO_HANDED) {
-					addItem(equipped[EQUIPPED_MAIN_HAND]);
-					unequip(EQUIPPED_MAIN_HAND);
-					equip(item, EQUIPPED_OFF_HAND);
-				}
-				else {
-					equip(item, EQUIPPED_OFF_HAND);
-				}
-			}
-			break;
-		case WEAPON:
-			Item.WeaponHanded handed = item.getWeaponHandedForCreature(parent.getRace().getSize());
-
-			if (slot == EQUIPPED_OFF_HAND) {
-				if (!parent.stats().has(Bonus.Type.DualWieldTraining)) return false; 
-				
-				if (equipped[EQUIPPED_MAIN_HAND] == null) {
-					if (handed == Item.WeaponHanded.NONE || handed == Item.WeaponHanded.TWO_HANDED) return false;
-					else {
-						addItem(equipped[EQUIPPED_OFF_HAND]);
-						unequip(EQUIPPED_OFF_HAND);
-						equip(item, EQUIPPED_OFF_HAND);
-					}
-				} else {
-					if (!equipped[EQUIPPED_MAIN_HAND].isMeleeWeapon()) return false;
-					Item.WeaponHanded mainHanded = equipped[EQUIPPED_MAIN_HAND].getWeaponHandedForCreature(parent.getRace().getSize());
-					if (mainHanded == Item.WeaponHanded.TWO_HANDED) {
-						return false;
-					} else {
-						if (handed == Item.WeaponHanded.NONE || handed == Item.WeaponHanded.TWO_HANDED) return false;
-						else {
-							addItem(equipped[EQUIPPED_OFF_HAND]);
-							unequip(EQUIPPED_OFF_HAND);
-							equip(item, EQUIPPED_OFF_HAND);
-						}
-					}
-				}
-			} else {
-				if (equipped[EQUIPPED_OFF_HAND] == null) {
-					if (handed == Item.WeaponHanded.NONE) return false;
-					else {
-						addItem(equipped[EQUIPPED_MAIN_HAND]);
-						unequip(EQUIPPED_MAIN_HAND);
-						equip(item, EQUIPPED_MAIN_HAND);
-					}
-				} else {
-					if (handed == Item.WeaponHanded.NONE) return false;
-					else if (handed == Item.WeaponHanded.TWO_HANDED) {
-						addItem(equipped[EQUIPPED_MAIN_HAND]);
-						addItem(equipped[EQUIPPED_OFF_HAND]);
-						unequip(EQUIPPED_MAIN_HAND);
-						unequip(EQUIPPED_OFF_HAND);
-						equip(item, EQUIPPED_MAIN_HAND);
-					}
-					else {
-						addItem(equipped[EQUIPPED_MAIN_HAND]);
-						unequip(EQUIPPED_MAIN_HAND);
-						equip(item, EQUIPPED_MAIN_HAND);
-					}
-				}
-			}
-			break;
-		}
-		
-		int index = this.items.findItem(itemToEquip);
-		if (index != -1) removeItem(index);
-		
-		return true;
-	}
-	
-	public void dropEquippedItemAction(int slotIndex) {
-		Item item = equipped[slotIndex];
-		if (!item.isQuestItem()) {
-			
-			if (!parent.getTimer().performAction(Game.ruleset.getValue("DropItemCost")))
-				return;
-			
-			unequip(slotIndex);
-		}
-	}
-	
-	public void dropItemAction(int itemIndex, int quantity) {
-		Item item = items.getItem(itemIndex);
-		if (!item.isQuestItem()) {
-
-			if (!parent.getTimer().performAction(Game.ruleset.getValue("DropItemCost")))
-				return;
-
-			items.removeItem(itemIndex, quantity);
-		}
-	}
-	
-	public void pickupItemAction(Item item, int quantity) {
-		if (!parent.getTimer().performAction(Game.ruleset.getValue("PickUpItemCost")))
-			return;
-		
-		addItem(item, quantity);
-	}
-	
-	public void pickupItemAction(Item item) {
-		if (!parent.getTimer().performAction(Game.ruleset.getValue("PickUpItemCost")))
-			return;
-		
-		addItem(item);
-	}
-	
-	public void pickupAndWieldAction(Item item) {
-		if (!parent.getTimer().performAction(Game.ruleset.getValue("PickUpAndWieldItemCost")))
-			return;
-		
-		addItem(item);
-		if (item.getItemType() == Item.ItemType.WEAPON) {
-			equipItem(item, EQUIPPED_MAIN_HAND);
-		} else if (item.getItemType() == Item.ItemType.SHIELD) {
-			equipItem(item, EQUIPPED_OFF_HAND);
-		}
-	}
-	
-	public boolean equipAction(Item item, int slot) {
-		if (!parent.getTimer().performEquipAction(item))
-			return false;
-		
-		return equipItem(item, slot);
-	}
-	
-	public void equipmentAction(Item item, boolean equip, boolean offHand) {
-		if (!parent.getTimer().performEquipAction(item))
-			return;
-		
-		if (equip) {
-			if (offHand) equipItem(item, Inventory.EQUIPPED_OFF_HAND);
-			else equipItem(item, 0);
-		} else {
-			if (offHand) this.unequipItem(Inventory.EQUIPPED_OFF_HAND);
-			else unequipItem(item.getID());
-		}
-	}
-	
-	public void doubleEquipmentAction(Item mainItem, Item secondaryItem) {
-		if (!parent.getTimer().performEquipAction(mainItem))
-			return;
-		
-		if (this.hasEquippedItem(mainItem)) {
-			// this is for handling the case when the main weapon and off hand weapon have the same ID and quality
-			if (secondaryItem == null && mainItem.getItemType() == Item.ItemType.WEAPON) {
-				if (equipped[Inventory.EQUIPPED_MAIN_HAND] == null) {
-					equipItem(mainItem);
-				} else {
-					unequipItem(Inventory.EQUIPPED_MAIN_HAND);
-				}
-				
-			} else {
-				unequipItem(mainItem.getID());
-			}
-				
-			if (secondaryItem != null) {
-				unequipItem(Inventory.EQUIPPED_OFF_HAND);
-			}
-		} else {
-			equipItem(mainItem);
-			
-			if (secondaryItem != null) {
-				equipItem(secondaryItem, Inventory.EQUIPPED_OFF_HAND);
-			}
-		}
-	}
-	
-	public void giveEquippedItemAction(int slot, Creature creature) {
-		if (!parent.getTimer().performAction(Game.ruleset.getValue("GiveItemCost")))
-			return;
-		
-		Item item = equipped[slot];
-		
-		unequip(slot);
-		
-		creature.getInventory().getUnequippedItems().addItem(item, 1);
-		
-	}
-	
-	public void giveItemAction(Item item, Creature creature, int quantity) {
-		if (!parent.getTimer().performAction(Game.ruleset.getValue("GiveItemCost")))
-			return;
-		
-		this.items.removeItem(item, quantity);
-		
-		creature.getInventory().getUnequippedItems().addItem(item, quantity);
-	}
-	
-	public void clear() {
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			this.unequip(i);
-		}
-		
-		items.clear();
-	}
-	
-	public boolean hasBothItems(Item item1, Item item2) {
-		if ( item1 != null && item2 != null && item1.getID().equals(item2.getID()) && item1.getQuality().equals(item2.getQuality()) ) {
-			return hasItem(item1.getID(), 2, item1.getQuality().getName());
-			
-			// make sure count of identical items is greater than 2
-		} else {
-			if (item1 != null) {
-				if (!hasItem(item1)) return false;
-			}
-			
-			if (item2 != null) {
-				if (!hasItem(item2)) return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	public boolean hasItem(Item item) {
-		if (item == null) return false;
-		
-		return hasItem(item.getID(), 1, item.getQuality().getName());
-	}
-	
-	public boolean hasItem(String itemID, int quantity, String quality) {
-		if (itemID == null) return false;
-		
-		int count = 0;
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i].getID().equals(itemID) && equipped[i].getQuality().getName().equals(quality))
-				count++;
-		}
-		
-		return items.containsItem(itemID, quantity - count, quality);
-	}
-	
-	public boolean hasAmmoEquippedForWeapon() {
-		Item weapon = getEquippedMainHand();
-		
-		if (weapon == null) return true;
-		
-		if (weapon.getWeaponType() == Item.WeaponType.THROWN  || weapon.getWeaponType() == Item.WeaponType.MELEE)
-			return true;
-		
-		Item ammo = equipped[EQUIPPED_QUIVER];
-		if (ammo == null) return false;
-		
-		if (ammo.getWeaponType() == weapon.getWeaponType()) return true;
-		else return false;
-	}
-	
-	public Item getOffHandWeapon() {
-		Item weapon = getEquippedOffHand();
-		
-		if (weapon == null) return null;
-		
-		if (weapon.isMeleeWeapon()) return weapon;
-		else return null;
-	}
-	
-	public Item getMainWeapon() {
-		Item weapon = getEquippedMainHand();
-		
-		if (weapon == null) return parent.getRace().getDefaultWeapon();
-		else return weapon;
-	}
-	
-	public boolean hasEquippedShield() {
-		Item shield = getEquippedOffHand();
-		
-		return (shield != null && shield.getItemType() == Item.ItemType.SHIELD); 
-	}
-	
-	public Item getEquippedBoots() { return equipped[EQUIPPED_BOOTS]; }
-	public Item getEquippedGloves() { return equipped[EQUIPPED_GLOVES]; }
-	public Item getEquippedHelmet() { return equipped[EQUIPPED_HELMET]; }
-	public Item getEquippedArmor() { return equipped[EQUIPPED_ARMOR]; }
-	public Item getEquippedMainHand() { return equipped[EQUIPPED_MAIN_HAND]; }
-	public Item getEquippedOffHand() { return equipped[EQUIPPED_OFF_HAND]; }
-	
-	public Item getEquippedItem(int slot) {
-		if (slot < 0 || slot >= EQUIPPED_SIZE) return null;
-		
-		return equipped[slot];
-	}
-	
-	public boolean hasEquippedItem(Item item) {
-		for (int i = 0; i < equipped.length; i++) {
-			if (equipped[i] != null) {
-				if (equipped[i].getID().equals(item.getID()) && equipped[i].getQuality().equals(item.getQuality())) return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public int getEquippedSlot(Item item) {
-		for (int i = 0; i < equipped.length; i++) {
-			if (equipped[i] != null) {
-				if (equipped[i].getID().equals(item.getID()) && equipped[i].getQuality().equals(item.getQuality()))
-					return i;
-			}
-		}
-		
-		return -1;
-	}
-	
-	public Item[] getEquippedItems() { return equipped; }
-	
-	public ItemList getUnequippedItems() {
-		return items;
-	}
-	
-	public ItemList getAllItems() {
-		ItemList list = new ItemList(this.items);
-		
-		for (int i = 0; i < equipped.length; i++) {
-			if (equipped[i] != null) list.addItem(equipped[i]);
-		}
-		
-		return list;
-	}
-	
-	public Item addItem(String itemID, int quantity, String quality) {
-		if (itemID != null) {
-			
-			Item item = Game.entityManager.getItem(itemID);
-			item.setQuality(Game.ruleset.getItemQuality(quality));
-			addItem(item, quantity);
-			
-			return item;
-		}
-		
-		return null;
-	}
-	
-	public Item addItem(String itemID, String quality) {
-		return addItem(itemID, 1, quality);
-	}
-	
-	public Item addItemAndEquip(String itemID, String quality) {
-		Item item = addItem(itemID, quality);
-		equipItem(item);
 		
 		return item;
 	}
 	
-	public void addItemAndEquip(Item item) {
-		addItem(item);
-		equipItem(item);
+	/**
+	 * Returns the list of unequipped items in this inventory
+	 * @return the unequipped items
+	 */
+	
+	public ItemList getUnequippedItems() {
+		return unequippedItems;
 	}
 	
-	public void addItem(Item item) {
-		if (item != null) {
-			items.addItem(item);
+	/**
+	 * Returns true if the inventory of this character is completely empty
+	 * other than the default clothes item that is created on new characters
+	 * @return whether or not this inventory is empty other than the default
+	 * clothes armor
+	 */
+	
+	public boolean isEmptyOtherThanDefaultClothes() {
+		if (unequippedItems.size() > 0) return false;
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if ( equippedItems.get(slot) != null && (slot != Inventory.Slot.Armor ||
+					!equippedItems.get(slot).getTemplate().getID().equals(Game.ruleset.getString("DefaultClothes")) ) ) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Removes all items (equipped and unequipped) from this inventory
+	 */
+	
+	public void clear() {
+		for (Slot slot : Slot.values()) {
+			unequip(slot, false);
+		}
+		
+		unequippedItems.clear();
+	}
+	
+	/**
+	 * Returns a weight representing the total weight of all the items, equipped and
+	 * unequipped, in this inventory
+	 * @return the total weight of all items in this inventory
+	 */
+	
+	public Weight getTotalWeight() {
+		int grams = unequippedItems.getTotalWeight().grams;
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippableItem item = equippedItems.get(slot);
+			if (item == null) continue;
 			
-			if (item.hasScript()) 
-				item.getScript().executeFunction(ScriptFunctionType.onAddItem, this.parent, item);
+			grams += item.getTemplate().getWeightInGrams();
+		}
+		
+		return new Weight(grams);
+	}
+	
+	/**
+	 * Returns true if this inventory contains both of the specified items, false
+	 * otherwise.  If the items are identical, then this inventory must contain
+	 * a count of at least two of that item
+	 * @param firstItem
+	 * @param secondItem
+	 * @return whether this inventory contains both items
+	 */
+	
+	public boolean hasBoth(Item firstItem, Item secondItem) {
+		if (firstItem.equals(secondItem)) {
+			return getTotalQuantity(firstItem) >= 2;
+		} else {
+			return getTotalQuantity(firstItem) >= 1 && getTotalQuantity(secondItem) >= 1;
 		}
 	}
 	
-	public void addItem(Item item, int quantity) {
-		if (item != null) {
-			items.addItem(item, quantity);
-			
-			if (item.hasScript()) 
-				item.getScript().executeFunction(ScriptFunctionType.onAddItem, this.parent, item);
+	/**
+	 * Returns the total quantity of items held in this inventory (both equipped
+	 * and unequipped items) matching the specified item
+	 * @param item
+	 * @return the total quantity held of the item
+	 */
+	
+	public int getTotalQuantity(Item item) {
+		int quantity = unequippedItems.getQuantity(item);
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if ( item.equals(equippedItems.get(slot)) )
+				quantity++;
 		}
+		
+		return quantity;
 	}
 	
-	public void removeItem(Item item) {
-		if (item != null) items.removeItem(item);
+	/**
+	 * Returns the total quantity of items held in this inventory (both
+	 * equipped and unequipped) with an ID matching that specified
+	 * @param itemID
+	 * @return the total quantity of items with matching ID
+	 */
+	
+	public int getTotalQuantity(String itemID) {
+		int quantity = unequippedItems.getQuantity(itemID);
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			Item item = equippedItems.get(slot);
+			if (item == null) continue;
+			
+			if (item.getTemplate().getID().equals(itemID))
+				quantity++;
+		}
+		
+		return quantity;
 	}
 	
-	public void removeItem(int index) {
-		if (items.size() > index && index >= 0) items.removeItem(index);
+	/**
+	 * Removes up to a quantity of one of the specified item
+	 * this inventory, including all equipped and unequipped items.  Note that
+	 * no AP is deducted for this action.  Unequipped items are checked first.
+	 * @param item
+	 * @return the actual quantity of items that was removed
+	 */
+	
+	public int remove(Item item) {
+		return remove(item, 1);
 	}
 	
-	public Item getItem(int index) {
-		if (items.size() > index && index >= 0) return items.getItem(index);
+	/**
+	 * Removes up to the specified quantity of items matching the specified item
+	 * this inventory, including all equipped and unequipped items.  Note that
+	 * no AP is deducted for this action.  Unequipped items are checked first.
+	 * @param item
+	 * @param quantity
+	 * @return the actual quantity of items that was removed
+	 */
+	
+	public int remove(Item item, int quantity) {
+		int qtyRemovedFromUnequipped = unequippedItems.remove(item, quantity);
+		
+		if (qtyRemovedFromUnequipped == quantity)
+			return quantity;
+		
+		int qtyRemovedFromEquipped = 0;
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if ( item.equals(equippedItems.get(slot)) ) {
+				qtyRemovedFromEquipped++;
+				unequip(slot, false);
+				
+				// the entire requested quantity was removed
+				if (qtyRemovedFromEquipped + qtyRemovedFromUnequipped == quantity)
+					return quantity;
+			}
+		}
+		
+		
+		
+		return qtyRemovedFromEquipped + qtyRemovedFromUnequipped;
+	}
+	
+	/**
+	 * Removes up to a quantity of one of items matching the specified ID from
+	 * this inventory, including all equipped and unequipped items.  Note that
+	 * no AP is deducted for this action.  Unequipped items are checked first.
+	 * @param itemID
+	 * @return the actual quantity of items that was removed
+	 */
+	
+	public int remove(String itemID) {
+		return remove(itemID, 1);
+	}
+	
+	/**
+	 * Removes up to the specified quantity of items matching the specified ID from
+	 * this inventory, including all equipped and unequipped items.  Note that
+	 * no AP is deducted for this action.  Unequipped items are checked first.
+	 * @param itemID
+	 * @param quantity
+	 * @return the actual quantity of items that was removed
+	 */
+	
+	public int remove(String itemID, int quantity) {
+		int qtyRemovedFromUnequipped = unequippedItems.remove(itemID, quantity);
+		
+		if (qtyRemovedFromUnequipped == quantity)
+			return quantity;
+		
+		int qtyRemovedFromEquipped = 0;
+		
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if (equippedItems.get(slot) == null) continue;
+			
+			if ( itemID.equals(equippedItems.get(slot).getTemplate().getID()) ) {
+				qtyRemovedFromEquipped++;
+				unequip(slot, false);
+				
+				// the entire requested quantity was removed
+				if (qtyRemovedFromEquipped + qtyRemovedFromUnequipped == quantity)
+					return quantity;
+			}
+		}
+		
+		return qtyRemovedFromEquipped + qtyRemovedFromUnequipped;
+	}
+	
+	/**
+	 * Returns the inventory slot that the specified item is equipped in, or
+	 * null if the item is not equipped
+	 * @param item
+	 * @return the inventory slot
+	 */
+	
+	public Slot getSlot(Item item) {
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			if ( item.equals(equippedItems.get(slot)) )
+				return slot;
+		}
 		
 		return null;
 	}
 	
-	public int getQuantity(String itemID) {
-		int count = 0;
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i].getID().equals(itemID)) {
-				count++;
-			}
-		}
-		
-		return count + items.getQuantity(itemID);
-	}
+	/**
+	 * Returns true if this Inventory has one or more of the specified item equipped,
+	 * false otherwise
+	 * @param item
+	 * @return whether this inventory has at least one of the specified item equipped
+	 */
 	
-	public int getQuantity(Item item) {
-		int count = 0;
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null && equipped[i].getID().equals(item.getID()) && equipped[i].getQuality().equals(item.getQuality())) {
-				count++;
-			}
-		}
-		
-		return count + items.getQuantity(item);
-	}
-	
-	public int size() { return items.size(); }
-	
-	public Weight getTotalWeight() {
-		return new Weight(getTotalWeightInGrams());
-	}
-	
-	public int getTotalWeightInGrams() {
-		int totalGrams = 0;
-		
-		for (int i = 0; i < EQUIPPED_SIZE; i++) {
-			if (equipped[i] != null)
-				totalGrams += equipped[i].getWeight().grams;
-		}
-		
-		for (int i = 0; i < items.size(); i++) {
-			totalGrams += items.getItem(i).getWeight().grams * items.getQuantity(i);
-		}
-		
-		return totalGrams;
+	public boolean isEquipped(Item item) {
+		return getSlot(item) != null;
 	}
 	
 	/**
-	 * Checks if all currently stored items in this inventory are valid for the
-	 * current campaign.  Any items that are not valid are discarded.
-	 * 
-	 * Note that this method will also remove all quest items, regardless of any other
-	 * status
+	 * Elapses the specified number of rounds for all equipped items
+	 * @param numRounds
 	 */
 	
-	public void checkAllItemsValid() {
-		for (int i = 0; i < equipped.length; i++) {
-			Item item = equipped[i];
-			
+	public void elapseTime(int numRounds) {
+		for (Inventory.Slot slot : Inventory.Slot.values()) {
+			EquippableItem item = equippedItems.get(slot);
 			if (item == null) continue;
 			
-			if (Game.entityManager.getItem(item.getID()) == null) {
-				unequip(i);
-			} else if (item.isQuestItem()) {
-				unequip(i);
+			item.elapseTime(numRounds);
+		}
+	}
+	
+	/**
+	 * Validates all items in this inventory, removing any with IDs that do not
+	 * have a valid reference
+	 */
+	
+	public void validateItems() {
+		unequippedItems.validate();
+	}
+	
+	/*
+	 * Callbacks section of code
+	 */
+	
+	/**
+	 * Returns a callback which, when run, will take the specified item from the container
+	 * and then equip it
+	 * @param item
+	 * @param container
+	 * @return a callback for taking and then equipping an item
+	 */
+	
+	public Runnable getTakeAndWieldCallback(EquippableItem item, Container container) {
+		return new TakeAndWieldCallback(item, container);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will unequip the item in the specified slot
+	 * @param slot
+	 * @return a callback for unequipping the specified item
+	 */
+	
+	public Runnable getUnequipCallback(Slot slot) {
+		return new UnequipCallback(slot);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will equip the item to the specified slot
+	 * @param item
+	 * @param slot the specified slot, or null for the default slot for this item
+	 * @return a callback for equipping the item
+	 */
+	
+	public Runnable getEquipCallback(EquippableItem item, Slot slot) {
+		return new EquipCallback(item, slot);
+	}
+	
+	/**
+	 * Returns a callback that, when run, will show the menu of possible give targets.
+	 * If the user selects a give target, then up to the maxQuantity of the item will
+	 * move from this inventory to the target's inventory.
+	 * See {@link #getGiveCallback(Item, int, Creature)}
+	 * @param item
+	 * @param maxQuantity
+	 * @return a callback that will give up to maxQuantity of the specified Item
+	 */
+	
+	public Runnable getGiveCallback(Item item, int maxQuantity) {
+		return new ShowGiveMenuCallback(item, maxQuantity);
+	}
+	
+	/**
+	 * Returns a callback, which, when run, will give the item in the slot specified
+	 * of this inventory to the specified target creature
+	 * @param slot the slot to give.  There must be an item in this slot when the callback
+	 * is run
+	 * @param target
+	 * @return a callback for giving an equipped item
+	 */
+	
+	public Runnable getGiveEquippedCallback(Slot slot, Creature target) {
+		return new GiveEquippedCallback(slot, target);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will give up to the specified quantity of the
+	 * item to the target.  If maxQuantity is one, then gives a quantity of one to the
+	 * target.  If maxQuantity is greater than one, then the player selects the quantity
+	 * (up to maxQuantity)
+	 * @param item
+	 * @param maxQuantity
+	 * @param target
+	 * @return a callback for giving an item
+	 */
+	
+	public Runnable getGiveCallback(Item item, int maxQuantity, Creature target) {
+		return new GiveCallback(item, maxQuantity, target);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will drop up to the specified quantity of the
+	 * item to the currently open container, or if no container is open, the ground beneath
+	 * the parent creature's feet
+	 * @param item
+	 * @param maxQuantity
+	 * @return a drop item callback
+	 */
+	
+	public Runnable getDropCallback(Item item, int maxQuantity) {
+		return new DropCallback(item, maxQuantity);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will drop the item in the specified inventory slot
+	 * to the currently open container, or if no container is open, the ground beneath
+	 * the parent creature's feet
+	 * @param slot
+	 * @return a drop equipped item callback
+	 */
+	
+	public Runnable getDropEquippedCallback(Inventory.Slot slot) {
+		return new DropEquippedCallback(slot);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will take up to the specified quantity of the item
+	 * from the container and put it in this inventory.  If maxQuantity is one, then a quantity
+	 * of one is taken.  If maxQuantity is greater than one, then the player selects a quantity up
+	 * to maxQuantity
+	 * @param item
+	 * @param maxQuantity
+	 * @param container
+	 * @return a callback for taking an item from a container
+	 */
+	
+	public Runnable getTakeCallback(Item item, int maxQuantity, Container container) {
+		return new TakeCallback(item, maxQuantity, container);
+	}
+	
+	/**
+	 * A callback which, when run, takes all the items from the specified container and
+	 * puts them in this inventory
+	 * @param container the container to take the items from
+	 * @return a callback for taking all items from the container
+	 */
+	
+	public Runnable getTakeAllCallback(Container container) {
+		return new TakeAllCallback(container);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will buy up to the specified quantity of the item from
+	 * the merchant and put the item in this inventory.  If maxQuantity is one, then a quantity
+	 * of one is bought.  If maxQuantity is greater than one, then the player selects a quantity up
+	 * to maxQuantity
+	 * @param item
+	 * @param maxQuantity
+	 * @param merchant
+	 * @return a callback for buying an item from a merchant
+	 */
+	
+	public Runnable getBuyCallback(Item item, int maxQuantity, Merchant merchant) {
+		return new BuyCallback(item, maxQuantity, merchant);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will sell up to the specified quantity of the item to
+	 * the merchant and take the item from this inventory.  If maxQuantity is one, then a quantity
+	 * of one is sold.  If maxQuantity is greater than one, then the player selects a quantity up
+	 * to maxQuantity
+	 * @param item
+	 * @param maxQuantity
+	 * @param merchant
+	 * @return a callback for selling an item to a merchant
+	 */
+	
+	public Runnable getSellCallback(Item item, int maxQuantity, Merchant merchant) {
+		return new SellCallback(item, maxQuantity, merchant);
+	}
+	
+	/**
+	 * Returns a callback which, when run, will sell the item in the specified inventory slot
+	 * to the specified merchant
+	 * @param slot
+	 * @param merchant
+	 * @return a callback for selling an equipped item
+	 */
+	
+	public Runnable getSellEquippedCallback(Inventory.Slot slot, Merchant merchant) {
+		return new SellEquippedCallback(slot, merchant);
+	}
+	
+	private class TakeAndWieldCallback implements Runnable {
+		private EquippableItem item;
+		private Container container;
+		
+		private TakeAndWieldCallback(EquippableItem item, Container container) {
+			this.item = item;
+			this.container = container;
+		}
+		
+		@Override public void run() {
+			if (!parent.timer.performAction(Game.ruleset.getValue("PickUpAndWieldItemCost")))
+				return;
+			
+			unequippedItems.add(item);
+			
+			equipItem(item, null);
+			
+			container.getCurrentItems().remove(item);
+    		if (container.getCurrentItems().size() == 0 && container.getTemplate().isTemporary()) {
+    			Game.curCampaign.curArea.removeEntity(container);
+    		}
+    		
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class UnequipCallback implements Runnable {
+		private Slot slot;
+		
+		private UnequipCallback(Slot slot) {
+			this.slot = slot;
+		}
+		
+		@Override public void run() {
+			if ( !parent.timer.performEquipAction(getEquippedItem(slot)) )
+				return;
+			
+			unequip(slot, true);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class EquipCallback implements Runnable {
+		private Slot slot;
+		private EquippableItem item;
+		
+		private EquipCallback(EquippableItem item, Slot slot) {
+			this.slot = slot;
+			this.item = item;
+		}
+		
+		@Override public void run() {
+			equipItem(item, slot);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class TakeAllCallback implements Runnable {
+		private Container container;
+		
+		private TakeAllCallback(Container container) {
+			this.container = container;
+		}
+		
+		@Override public void run() {
+			ItemList list = container.getCurrentItems();
+			
+			for (ItemList.Entry entry : list) {
+				if (!parent.timer.performAction(Game.ruleset.getValue("PickUpItemCost")))
+					return;
+				
+				unequippedItems.add(entry.getID(), entry.getQuality(), entry.getQuantity());
+			}
+			
+			container.getCurrentItems().clear();
+    		if (container.getTemplate().isTemporary()) {
+    			Game.curCampaign.curArea.removeEntity(container);
+    		}
+    		
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class GiveEquippedCallback implements Runnable {
+		private Creature target;
+		private Slot slot;
+		
+		private GiveEquippedCallback(Slot slot, Creature target) {
+			this.slot = slot;
+			this.target = target;
+		}
+		
+		@Override public void run() {
+			if (!parent.timer.performAction(Game.ruleset.getValue("GiveItemCost")))
+				return;
+			
+			EquippableItem item = equippedItems.get(slot);
+			
+			unequip(slot, false);
+			
+			target.inventory.getUnequippedItems().add(item);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private abstract class MultipleCallback implements MultipleItemPopup.Callback {
+		protected final Item item;
+		private final int maxQuantity;
+		private final String labelText;
+		
+		private MultipleCallback(Item item, int maxQuantity, String labelText) {
+			this.item = item;
+			this.maxQuantity = maxQuantity;
+			this.labelText = labelText;
+		}
+		
+		@Override public void run() {
+			if (maxQuantity == 1) {
+				performItemAction(1);
+			} else {
+				MultipleItemPopup popup = new MultipleItemPopup(Game.mainViewer);
+				popup.openPopupCentered(this);
 			}
 		}
 		
-		for (int i = 0; i < items.size(); i++) {
-			String id = items.getItemID(i);
-			
-			Item item = Game.entityManager.getItem(id);
-			
-			if ( item == null) {
-				items.removeItem(i, items.getQuantity(i));
-				i--;
-			} else if (item.isQuestItem()) {
-				items.removeItem(i, items.getQuantity(i));
-				i--;
-			}
+		@Override public String getLabelText() { return labelText; }
+		
+		@Override public int getMaximumQuantity() { return maxQuantity; }
+		
+		@Override public String getValueText(int quantity) { return ""; }
+	}
+	
+	/*
+	 * Shows a menu of player character give targets
+	 */
+	
+	private class ShowGiveMenuCallback implements Runnable {
+		private Item item;
+		private int maxQuantity;
+		
+		private ShowGiveMenuCallback(Item item, int maxQuantity) {
+			this.item = item;
+			this.maxQuantity = maxQuantity;
 		}
+		
+		@Override public void run() {
+			RightClickMenu menu = Game.mainViewer.getMenu();
+			menu.removeMenuLevelsAbove(1);
+			menu.addMenuLevel("Give");
+			for (PC pc : Game.curCampaign.party) {
+				if (pc == parent || pc.isSummoned()) continue;
+				
+				Button button = new Button();
+				button.setText(pc.getTemplate().getName());
+				button.addCallback(new GiveCallback(item, maxQuantity, pc));
+				
+				menu.addButton(button);
+			}
+			
+			menu.show();
+		}
+	}
+	
+	/*
+	 * The callback that actually gives the item to the target.  If maxQuantity
+	 * is greater than 1, it first opens a popup window in order to determine 
+	 * the quantity.
+	 */
+	
+	private class GiveCallback extends MultipleCallback {
+		private Creature target;
+		
+		private GiveCallback(Item item, int maxQuantity, Creature target) {
+			super(item, maxQuantity, "Give");
+			this.target = target;
+		}
+
+		@Override public void performItemAction(int quantity) {
+			if (!parent.timer.performAction(Game.ruleset.getValue("GiveItemCost")))
+				return;
+			
+			unequippedItems.remove(item, quantity);
+			
+			target.inventory.getUnequippedItems().add(item, quantity);
+
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class DropCallback extends MultipleCallback {
+		private DropCallback(Item item, int maxQuantity) {
+			super(item, maxQuantity, "Drop");
+		}
+		
+		@Override public void performItemAction(int quantity) {
+			//quest items cannot be dropped
+			if (item.getTemplate().isQuest()) return;
+			
+			if (!parent.timer.performAction(Game.ruleset.getValue("DropItemCost")))
+				return;
+			
+			// if the container window is open, drop it in the container,
+			// otherwise drop it at the creature's feet
+			Container container = Game.mainViewer.containerWindow.getContainer();
+			if (container != null)
+				item.setLocation(container.getLocation());
+			else
+				item.setLocation(parent.getLocation());
+			
+			Game.curCampaign.curArea.addItem(item, quantity);
+			
+			unequippedItems.remove(item, quantity);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class DropEquippedCallback implements Runnable {
+		private Slot slot;
+		
+		private DropEquippedCallback(Slot slot) {
+			this.slot = slot;
+		}
+		
+		@Override public void run() {
+			Item item = equippedItems.get(slot);
+			
+			if (item.getTemplate().isQuest()) return;
+			
+			if (!parent.timer.performAction(Game.ruleset.getValue("DropItemCost")))
+				return;
+			
+			// if the container window is open, drop it in the container,
+			// otherwise drop it at the creature's feet
+			Container container = Game.mainViewer.containerWindow.getContainer();
+			if (container != null)
+				item.setLocation(container.getLocation());
+			else
+				item.setLocation(parent.getLocation());
+			
+			unequip(slot, false);
+			
+			Game.curCampaign.curArea.addItem(item, 1);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class TakeCallback extends MultipleCallback {
+		private Container container;
+		
+		private TakeCallback(Item item, int maxQuantity, Container container) {
+			super(item, maxQuantity, "Take");
+			
+			this.container = container;
+		}
+		
+		@Override public void performItemAction(int quantity) {
+			if (!parent.timer.performAction(Game.ruleset.getValue("PickUpItemCost")))
+				return;
+			
+			unequippedItems.add(item);
+			
+			container.getCurrentItems().remove(item, quantity);
+    		if (container.getCurrentItems().size() == 0 && container.getTemplate().isTemporary()) {
+    			Game.curCampaign.curArea.removeEntity(container);
+    		}
+    		
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class BuyCallback extends MultipleCallback {
+		private Merchant merchant;
+		
+		private BuyCallback(Item item, int maxQuantity, Merchant merchant) {
+			super(item, maxQuantity, "Buy");
+			this.merchant = merchant;
+		}
+
+		@Override public String getValueText(int quantity) {
+			int percent = merchant.getCurrentSellPercentage();
+			return "Price: " + Currency.getPlayerBuyCost(item, quantity, percent).shortString();
+		}
+
+		@Override public void performItemAction(int quantity) {
+			merchant.sellItem(item, parent, quantity);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class SellCallback extends MultipleCallback {
+		private Merchant merchant;
+		
+		private SellCallback(Item item, int maxQuantity, Merchant merchant) {
+			super(item, maxQuantity, "Sell");
+			this.merchant = merchant;
+		}
+		
+		@Override public String getValueText(int quantity) {
+			int percent = merchant.getCurrentBuyPercentage();
+			return "Price: " + Currency.getPlayerSellCost(item, quantity, percent).shortString();
+		}
+		
+		@Override public void performItemAction(int quantity) {
+			merchant.buyItem(item, parent, quantity);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+	
+	private class SellEquippedCallback implements Runnable {
+		private Slot slot;
+		private Merchant merchant;
+		
+		private SellEquippedCallback(Slot slot, Merchant merchant) {
+			this.slot = slot;
+			this.merchant = merchant;
+		}
+		
+		@Override public void run() {
+			Item item = equippedItems.get(slot);
+			if (item.getTemplate().isQuest()) return;
+			
+			unequip(slot, false);
+			
+			merchant.buyItem(item, parent);
+			
+			Game.mainViewer.getMenu().hide();
+			Game.mainViewer.updateInterface();
+		}
+	}
+
+	@Override public void itemListItemAdded(String id, Quality quality, int quantity) {
+		ItemTemplate template = EntityManager.getItemTemplate(id);
+		
+		if (template.hasScript()) {
+			Item item = EntityManager.getItem(id, quality);
+			item.getTemplate().getScript().executeFunction(ScriptFunctionType.onAddItem, parent, item);
+		}
+	}
+	
+	@Override public boolean itemListEntryRemoved(ItemList.Entry entry) {
+		return false;
 	}
 }

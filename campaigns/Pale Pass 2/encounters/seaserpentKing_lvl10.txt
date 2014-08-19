@@ -1,8 +1,0 @@
-size 2
-faction "Hostile"
-challenge 95
-creature "kingSerpent" 0 0
-creature "seaSerpent" -1 -2
-creature "seaSerpent" 2 0
-creature "seaSerpent" -2 1
-creature "seaSerpent" 0 2

@@ -1,7 +1,6 @@
 { "name" : "Demon",
-  "size" : "Medium",
   "baseMovementCost" : 1000,
-  "unarmedWeapon" : "unarmedMediumThreatens",
+  "defaultWeapon" : "unarmedMediumThreatens",
   
   "racialTypes" : [
     "Demon"

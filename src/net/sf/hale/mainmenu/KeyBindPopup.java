@@ -119,7 +119,7 @@ public class KeyBindPopup extends PopupWindow {
 		
 		/**
 		 * Returns the action name for the key that is currently being bound
-		 * @return
+		 * @return the action name
 		 */
 		
 		public String getActionName();

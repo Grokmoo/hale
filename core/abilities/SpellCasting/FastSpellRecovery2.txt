@@ -1,9 +1,0 @@
-name "Fast Spell Recovery II"
-type "Spell Casting"
-description "You can cast spells more often than other spell casters.  Cooldowns for all of your spells are reduced by a further round for a total of 2 rounds."
-
-icon "icons/fastSpellRecovery2"
-
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('SpellCooldown', 'Stackable', 1); parent.applyEffect(effect); }"
-
-addPrereq Ability FastSpellRecovery1

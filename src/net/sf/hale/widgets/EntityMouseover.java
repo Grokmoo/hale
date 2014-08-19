@@ -19,8 +19,8 @@
 
 package net.sf.hale.widgets;
 
-import net.sf.hale.AreaTransition;
 import net.sf.hale.Game;
+import net.sf.hale.area.Transition;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.entity.Container;
 import net.sf.hale.entity.Creature;
@@ -97,43 +97,45 @@ public class EntityMouseover extends Widget {
 		Door door = Game.curCampaign.curArea.getDoorAtGridPoint(gridPoint);
 		Container container = Game.curCampaign.curArea.getContainerAtGridPoint(gridPoint);
 		Trap trap = Game.curCampaign.curArea.getTrapAtGridPoint(gridPoint);
-		AreaTransition transition = Game.curCampaign.curArea.getTransitionAtGridPoint(gridPoint);
+		Transition transition = Game.curCampaign.curArea.getTransitionAtGridPoint(gridPoint);
 		
 		if (transition != null && transition.isActivated()) {
 			selectedEntity = null;
 			name.setText("Travel to");
-			if (Game.curCampaign.curArea.getName().equals(transition.getAreaFrom()))
-				status.setText(transition.getAreaTo());
-			else
-				status.setText(transition.getAreaFrom());
+			Transition.EndPoint endPoint = transition.getEndPointForCreaturesInCurrentArea();
+			if (endPoint.isWorldMap()) {
+				status.setText("World Map");
+			} else {
+				status.setText(endPoint.getAreaID());
+			}
 			
 		} else if (creature != null) {
 			selectedEntity = creature;
-			name.setText(creature.getName());
+			name.setText(creature.getTemplate().getName());
 			if (creature.isDead())
 				status.setText("Dead");
-			else if ( creature.isPlayerSelectable() || creature.isSummoned() ||
+			else if ( creature.isPlayerFaction() || creature.isSummoned() ||
 					creature.getFaction().isHostile(Game.curCampaign.party.getSelected()) )
 				// only show HP for hostile creatures or player characters
-				status.setText(creature.getCurrentHP() + " / " + creature.stats().get(Stat.MaxHP));
+				status.setText(creature.getCurrentHitPoints() + " / " + creature.stats.get(Stat.MaxHP));
 			else
 				status.setText("");
 			
 		} else if (door != null) {
 			selectedEntity = door;
-			name.setText(door.getName());
+			name.setText(door.getTemplate().getName());
 			if (door.isLocked()) status.setText("Locked");
 			else status.setText("");
 			
 		} else if (container != null) {
 			selectedEntity = container;
-			name.setText(container.getName());
+			name.setText(container.getTemplate().getName());
 			if (container.isLocked()) status.setText("Locked");
 			else status.setText("");
 			
-		} else if (trap != null && trap.isVisible()) {
+		} else if (trap != null && trap.isSpotted()) {
 			selectedEntity = trap;
-			name.setText(trap.getName());
+			name.setText(trap.getTemplate().getName());
 			status.setText("");
 			
 		} else {

@@ -73,7 +73,7 @@ public class AssetModel<E> implements ListModel {
 		
 		/**
 		 * Returns the asset for this entry
-		 * @return
+		 * @return the asset for this entry
 		 */
 		
 		@SuppressWarnings("unchecked")
@@ -108,7 +108,7 @@ public class AssetModel<E> implements ListModel {
 		for (String resource : resources) {
 			PackageType packageType = ResourceManager.getPackageTypeOfResource(resource);
 			
-			String assetID = ResourceManager.getResourceIDNoPath(resource, ResourceType.Text);
+			String assetID = ResourceManager.getResourceIDNoPath(resource, ResourceType.JSON);
 			
 			Entry entry = new Entry(assetID, packageType);
 			entries.add(entry);

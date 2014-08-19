@@ -1,8 +1,0 @@
-size 1
-faction "Hostile"
-challenge 38
-randomize true
-numRandomCreatures 1 1
-respawn true
-respawnHours 24
-creature "gryphon" 0 0

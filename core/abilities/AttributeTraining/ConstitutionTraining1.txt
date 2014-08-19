@@ -1,9 +1,0 @@
-name "Constitution Training I"
-type "General"
-description "You gain a permanent +1 bonus to Constitution.
-activateable false
-
-icon "icons/trainConstitution1"
-script "function onApply(game, parent) { var effect = parent.createEffect(); effect.getBonuses().addBonus('BaseCon', 'Stackable', 1); parent.applyEffect(effect); }"
-
-addPrereq Stat CreatureLevel 2

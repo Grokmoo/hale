@@ -1,0 +1,28 @@
+{
+  "name" : "Unified",
+  "directory" : "tilesets/unified",
+  "entityLayer" : "entity",
+  "interfaceLayer" : "ceiling",
+  
+  "defaultVisibilityRadius" : 8,
+  "defaultTerrainType" : "Grass",
+  
+  "layers" : [
+    {
+	  "id" : "base",
+	  "spriteSheets" : [ "base" ]
+	}
+  ],
+  
+  "features" : {
+  
+  },
+  
+  "terrain" : {
+  
+  },
+  
+  "borders" : {
+  
+  }
+}

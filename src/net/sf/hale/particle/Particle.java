@@ -19,9 +19,9 @@
 
 package net.sf.hale.particle;
 
-import net.sf.hale.Area;
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
+import net.sf.hale.area.Area;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 

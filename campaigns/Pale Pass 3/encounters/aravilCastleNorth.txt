@@ -1,9 +1,0 @@
-size 5
-faction "Neutral"
-challenge 0
-creature "aravilGateGuard" -2 -3
-creature "aravilGateGuard" 2 -3
-creature "aravilGateGuard" 1 2
-creature "aravilRoyalGuard" -4 1
-creature "aravilRoyalGuard" -3 -1
-creature "aravilRoyalGuard" -4 -2

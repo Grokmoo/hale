@@ -25,10 +25,13 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.hale.Game;
+import net.sf.hale.SavedParty;
 import net.sf.hale.characterbuilder.Buildable;
 import net.sf.hale.characterbuilder.CharacterBuilder;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.rules.SavedParty;
+import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.PC;
+import net.sf.hale.resource.ResourceType;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.EditField;
 import de.matthiasmann.twl.Label;
@@ -116,7 +119,12 @@ public class PartyFormationWindow extends Widget {
 			postFix = minSize + " to " + maxSize + " Characters";
 		}
 		
-		int minLevel = Game.curCampaign.getMinStartingLevel();
+		int minLevel;
+		if (Game.curCampaign.allowLevelUp()) {
+			minLevel = 1;
+		} else {
+			minLevel = Game.curCampaign.getMinStartingLevel();
+		}
 		int maxLevel = Game.curCampaign.getMaxStartingLevel();
 		
 		if (minLevel == maxLevel) {
@@ -205,6 +213,32 @@ public class PartyFormationWindow extends Widget {
 		setAcceptEnabled();
 	}
 	
+	private List<PC> getPCsInDirectory(String directory) {
+		List<PC> pcs = new ArrayList<PC>();
+		
+		File directoryFile = new File(directory);
+		
+		for (String idPath : directoryFile.list()) {
+			if (!idPath.endsWith(ResourceType.JSON.getExtension())) continue;
+			
+			File creatureFile = new File(directory + idPath);
+			if (!creatureFile.isFile()) continue;
+			
+			String creatureID = idPath.substring(0, idPath.length() - 5);
+			
+			PC pc = EntityManager.getPC(creatureID);
+			// TODO verify PC is valid for campaign
+			
+			if (pc.getTemplate().isPregenerated() && !showPregeneratedCharactersButton.isActive()) continue;
+			
+			pc.resetTime();
+			
+			pcs.add(pc);
+		}
+		
+		return pcs;
+	}
+	
 	/**
 	 * Adds character selectors for each available unique character
 	 */
@@ -212,39 +246,27 @@ public class PartyFormationWindow extends Widget {
 	private void populateSelectableList() {
 		availablePaneContent.clear();
 		
-		File charDir = new File("characters/");
+		List<PC> pcs = new ArrayList<PC>();
+		pcs.addAll(getPCsInDirectory("characters/"));
+		pcs.addAll(getPCsInDirectory(Game.getCharactersBaseDirectory()));
 		
 		List<UniqueCharacter> characters = new ArrayList<UniqueCharacter>();
 		
-		// loop through the list of character files in the characters directory
-		for (String idPath : charDir.list()) {
-			File creatureFile = new File(charDir.getPath() + "/" + idPath);
-			if (!creatureFile.isFile()) continue;
-			
-			String creatureID = idPath.substring(0, idPath.length() - 4);
-			
-			Creature creature = Game.entityManager.getCharacter(creatureID);
-			if (!Game.entityManager.isCharacterValidForCampaign(creature)) continue;
-			
-			if (creature.isPregenerated() && !showPregeneratedCharactersButton.isActive()) continue;
-			
-			creature.stats().recomputeAllStats();
-			creature.resetAll();
-			
+		for (PC pc : pcs) {
 			// check adding the creature to the existing unique characters
 			boolean creatureAdded = false;
-			
+
 			for (UniqueCharacter character : characters) {
-				if (character.addIfMatches(creature)) {
+				if (character.addIfMatches(pc)) {
 					creatureAdded = true;
 					break;
 				}
 			}
-			
+
 			// if the creature didn't match any of the existing ones, create a new one
 			if (!creatureAdded) {
-				UniqueCharacter uc = new UniqueCharacter(creature);
-				
+				UniqueCharacter uc = new UniqueCharacter(pc);
+
 				characters.add(uc);
 			}
 		}
@@ -267,8 +289,8 @@ public class PartyFormationWindow extends Widget {
 			
 			Creature creature = selector.getCreature();
 			
-			maxLevel = Math.max(maxLevel, creature.getRoles().getTotalLevel());
-			minLevel = Math.min(minLevel, creature.getRoles().getTotalLevel());
+			maxLevel = Math.max(maxLevel, creature.roles.getTotalLevel());
+			minLevel = Math.min(minLevel, creature.roles.getTotalLevel());
 		}
 		
 		SavedParty party = new SavedParty(characterIDs, nameField.getText(), minLevel, maxLevel, 0);
@@ -377,9 +399,9 @@ public class PartyFormationWindow extends Widget {
         mainMenu.add(builder);
         builder.addFinishCallback(new CharacterBuilder.FinishCallback() {
         	@Override public void creatureModified(String id) {
-        		Creature c = Game.entityManager.getCharacter(id);
+        		PC pc = EntityManager.getPC(id);
 				
-				CharacterSelector selector = new CharacterSelector(c, mainMenu);
+				CharacterSelector selector = new CharacterSelector(pc, mainMenu);
 				availablePaneContent.addSelectorToTop(selector, true, false);
 				
 				// highlight and scroll to the newly created character

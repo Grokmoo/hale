@@ -19,12 +19,13 @@
 
 package net.sf.hale.defaultability;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Trap;
-import net.sf.hale.util.AreaUtil;
-import net.sf.hale.util.Point;
 
 /**
  * A default ability for disarming a trap in the area.  If the parent is not currently
@@ -42,29 +43,28 @@ public class DisarmTrap implements DefaultAbility {
 		return "Disarm Trap";
 	}
 
-	@Override public boolean canActivate(Creature parent, Point targetPosition) {
-		if (!parent.getTimer().canPerformAction("DisarmTrapCost")) return false;
+	@Override public boolean canActivate(PC parent, Location targetPosition) {
+		if (!parent.timer.canPerformAction("DisarmTrapCost")) return false;
 		
-		if (!parent.stats().has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
 		
-		trap = Game.curCampaign.curArea.getTrapAtGridPoint(targetPosition);
-		if (trap == null) return false;
-		
-		if (!trap.isArmed()) return false;
+		trap = targetPosition.getTrap();
+		if (trap == null || !trap.isSpotted()) return false;
 		
 		move = new Move();
+		move.setAllowPartyMove(false);
 		
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
-			// need to move towards the door before opening
+		if (targetPosition.getDistance(parent) > 1) {
+			// need to move towards the trap before disarming
 			return move.canMove(parent, targetPosition, 1);
 		}
 		
 		return true;
 	}
 
-	@Override public void activate(Creature parent, Point targetPosition) {
-		if (AreaUtil.distance(parent.getPosition(), targetPosition) > 1) {
-			// move towards the door then open
+	@Override public void activate(PC parent, Location targetPosition) {
+		if (targetPosition.getDistance(parent) > 1) {
+			// move towards the trap then disarm
 			move.addCallback(new DisarmCallback(parent));
 			move.moveTowards(parent, targetPosition, 1);
 		} else {
@@ -86,18 +86,27 @@ public class DisarmTrap implements DefaultAbility {
 	 */
 	
 	public boolean disarm(Creature parent, Trap trap) {
-		if (AreaUtil.distance(parent.getX(), parent.getY(),
-				trap.getX(), trap.getY()) > 1) return false;
+		if (trap == null) return false;
 		
-		if (trap == null || !parent.getTimer().canPerformAction("DisarmTrapCost")) return false;
+		if (trap.getLocation().getDistance(parent) > 1) return false;
 		
-		if (!parent.stats().has(Bonus.Type.TrapHandling)) return false;
+		if (!parent.timer.canPerformAction("DisarmTrapCost")) return false;
 		
-		parent.getTimer().performAction("DisarmTrapCost");
+		if (!parent.stats.has(Bonus.Type.TrapHandling)) return false;
 		
-		if (!trap.isArmed()) return false;
+		parent.timer.performAction("DisarmTrapCost");
 		
-		return trap.tryDisarm(parent);
+		boolean isDisarmed = trap.attemptDisarm(parent);
+		
+		if (!isDisarmed) {
+			Game.mainViewer.addFadeAway("Disarm Trap Failed", trap.getLocation().getX(), trap.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		} else {
+			Game.mainViewer.addFadeAway("Trap Disarmed", trap.getLocation().getX(), trap.getLocation().getY(),
+					new Color(0xFFAbA9A9));
+		}
+		
+		return isDisarmed;
 	}
 	
 	@Override public DefaultAbility getInstance() {

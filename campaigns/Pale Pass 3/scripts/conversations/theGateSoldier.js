@@ -43,7 +43,7 @@ function convo05(game, parent, target, conversation) {
 }
 
 function moveAndRemove(game, parent) {
-    parent.getTimer().reset();
+    parent.timer.reset();
     
     game.ai.moveTowards(parent, 37, 6, 0);
     game.sleep(1000);

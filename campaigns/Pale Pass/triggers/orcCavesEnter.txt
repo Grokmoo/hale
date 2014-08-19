@@ -1,3 +1,0 @@
-area "Orc Cave"
-script "triggers/onOrcCavesEnter"
-addPoints

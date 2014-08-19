@@ -26,8 +26,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.hale.Sprite;
 import net.sf.hale.resource.ResourceType;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 
 /**
@@ -83,7 +83,7 @@ public class Layer {
 		
 		for (String spriteSheet : spriteSheets) {
 			List<String> tileIDs = SpriteManager.readSpriteSheet(directory + "/" + spriteSheet +
-					ResourceType.SpriteSheet.getExtension());
+					ResourceType.JSON.getExtension());
 			
 			Iterator<String> iter = tileIDs.iterator();
 			// if empty spritesheet, continue

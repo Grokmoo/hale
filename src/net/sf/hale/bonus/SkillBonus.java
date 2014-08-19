@@ -60,8 +60,8 @@ public class SkillBonus extends IntBonus implements BonusWithSuperType {
 	
 	@Override public void appendDescription(StringBuilder sb) {
 		sb.append("<span style=\"font-family: blue;\">");
-		sb.append(Game.ruleset.getSkill(skillID).getName());
-		sb.append("</span> ");
+		sb.append(Game.ruleset.getSkill(skillID).getNoun());
+		sb.append("</span> Skill ");
 		
 		super.appendDescription(sb);
 	}

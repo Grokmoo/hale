@@ -2,9 +2,8 @@ package net.sf.hale.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import net.sf.hale.Sprite;
+import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.Button;
-import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Event;
 import de.matthiasmann.twl.GUI;
 import de.matthiasmann.twl.ThemeInfo;
@@ -17,27 +16,11 @@ import de.matthiasmann.twl.ThemeInfo;
  */
 
 public class IconViewer extends Button {
-	/**
-	 * The type of offset to use when drawing the sprite for this iconviewer
-	 * @author Jared Stephen
-	 *
-	 */
-	
-	public enum DrawOffset {
-		/** Draw with the icon offset (the default behavior) */
-		Icon,
-		
-		/** Draw with no offset */
-		None
-	}
 	
 	private short minWidth, minHeight;
 	
 	private boolean enableEventHandling;
-	private Color color;
-	private Sprite sprite;
-	
-	private DrawOffset drawOffset;
+	private Icon icon;
 	
 	/**
 	 * Creates a new IconViewer displaying blank
@@ -48,30 +31,28 @@ public class IconViewer extends Button {
 	}
 	
 	/**
-	 * Creates a new IconViewer displaying the specified sprite
+	 * Creates a new IconViewer displaying the specified icon
 	 * 
-	 * @param sprite the Sprite to be displayed
+	 * @param icon the Icon to be displayed
 	 */
 	
-	public IconViewer(Sprite sprite) {
-		this.sprite = sprite;
-		this.color = Color.WHITE;
+	public IconViewer(Icon icon) {
+		this.icon = icon;
 		
 		enableEventHandling = true;
-		drawOffset = DrawOffset.Icon;
 	}
 	
 	/**
-	 * Creates a new IconViewer displaying the specified sprite
+	 * Creates a new IconViewer displaying the specified icon
 	 * and showing the specified tooltip
 	 * 
-	 * @param sprite the Sprite to be displayed
+	 * @param icon the Icon to be displayed
 	 * @param tooltip the tooltip that will appear when the user
 	 * hovers the mouse over this Widget
 	 */
 	
-	public IconViewer(Sprite sprite, String tooltip) {
-		this(sprite);
+	public IconViewer(Icon icon, String tooltip) {
+		this(icon);
 		this.setTooltipContent(tooltip);
 	}
 	
@@ -86,71 +67,30 @@ public class IconViewer extends Button {
 	}
 	
 	/**
-	 * Sets the type of offset to use when drawing this IconViewer
-	 * @param offset the type of offset to use
-	 */
-	
-	public void setDrawOffset(DrawOffset offset) {
-		this.drawOffset = offset;
-	}
-	
-	/**
-	 * Returns the Sprite that this IconViewer is currently displaying.
-	 * If no Sprite is being displayed, returns null.
+	 * Returns the Icon that this IconViewer is currently displaying.
+	 * If no Icon is being displayed, returns null.
 	 * 
-	 * @return the Sprite currently being displayed
+	 * @return the Icon currently being displayed
 	 */
 	
-	public Sprite getSprite() {
-		return this.sprite;
+	public Icon getIcon() {
+		return this.icon;
 	}
 	
 	/**
-	 * Sets the Sprite that will be displayed by this Widget to sprite
-	 * @param sprite the Sprite to be displayed
+	 * Sets the Icon that will be displayed by this Widget
+	 * @param icon the Icon to be displayed
 	 */
 	
-	public void setSprite(Sprite sprite) {
-		this.sprite = sprite;
-	}
-	
-	/**
-	 * Returns the Color that this IconViewer is currently using to
-	 * display the Sprite.
-	 * @return the Color that this IconViewer is using for the Sprite.
-	 */
-	
-	public Color getColor() {
-		return this.color;
-	}
-	
-	/**
-	 * Sets the Color that the background Sprite for this IconViewer will
-	 * be multiplied by prior to being drawn.  By default, this Color is
-	 * pure white.
-	 * 
-	 * @param color the color to draw the background Sprite
-	 */
-	
-	public void setColor(Color color) {
-		if (color == null) this.color = Color.WHITE;
-		else this.color = color;
+	public void setIcon(Icon icon) {
+		this.icon = icon;
 	}
 	
 	@Override protected void paintWidget(GUI gui) {
 		super.paintWidget(gui);
 		
-		// draw the icon if the ability is set
-		if (sprite != null) {
-			GL11.glColor4ub(color.getR(), color.getG(), color.getB(), color.getA());
-			
-			switch (drawOffset) {
-			case Icon:
-				sprite.drawWithIconOffset(getInnerX(), getInnerY());
-				break;
-			case None:
-				sprite.draw(getInnerX(), getInnerY());
-			}
+		if (icon != null) {
+			icon.drawCentered(getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
 			
 			GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		}
@@ -178,14 +118,14 @@ public class IconViewer extends Button {
 	
 	@Override public int getPreferredWidth() {
 		int width = getBorderHorizontal();
-		if (sprite != null) width += sprite.getWidth();
+		if (icon != null) width += icon.getWidth();
 
 		return Math.max(width, minWidth);
 	}
 	
 	@Override public int getPreferredHeight() {
 		int height = getBorderVertical();
-		if (sprite != null) height += sprite.getHeight();
+		if (icon != null) height += icon.getHeight();
 		
 		return Math.max(height, minHeight);
 	}

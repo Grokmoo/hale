@@ -28,9 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import net.sf.hale.Campaign;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.rules.Campaign;
 
 /**
  * The header data that is written at the beginning of save files to allow
@@ -61,9 +61,9 @@ public class SaveFileHeader {
 			// don't write out summoned creature names
 			if (pc.isSummoned()) continue;
 			
-			characterNames.add(pc.getName());
+			characterNames.add(pc.getTemplate().getName());
 			
-			maxLevel = Math.max(maxLevel, pc.stats().getCreatureLevel());
+			maxLevel = Math.max(maxLevel, pc.stats.getCreatureLevel());
 		}
 		
 		this.level = maxLevel;

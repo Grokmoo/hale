@@ -26,7 +26,7 @@ import java.util.TreeSet;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.util.Point;
+import net.sf.hale.entity.Path;
 
 /**
  * The global class responsible for locking the interface, preventing player
@@ -107,7 +107,7 @@ public class InterfaceLocker {
 	 * @return the move created for this movement
 	 */
 	
-	public MovementHandler.Mover addMove(Creature mover, List<Point> path, boolean provokeAoOs) {
+	public MovementHandler.Mover addMove(Creature mover, Path path, boolean provokeAoOs) {
 		interfaceLocked = true;
 		
 		return movementHandler.addMove(mover, path, provokeAoOs);
@@ -162,7 +162,6 @@ public class InterfaceLocker {
 			interfaceLocked = true;
 			
 			// recompute mouse state including check pathing
-			Game.areaViewer.mouseHoverTile.valid = false;
 			Game.areaListener.computeMouseState();
 			Game.mainViewer.updateInterface();
 		}
@@ -221,7 +220,6 @@ public class InterfaceLocker {
 			}
 
 			// recompute mouse state including check pathing
-			Game.areaViewer.mouseHoverTile.valid = false;
 			Game.areaListener.computeMouseState();
 			Game.mainViewer.updateInterface();
 		}

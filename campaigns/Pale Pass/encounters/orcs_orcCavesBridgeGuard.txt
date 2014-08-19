@@ -1,9 +1,0 @@
-size 2
-faction "Hostile"
-challenge 15
-respawn true
-respawnHours 24
-creature "orcArcher_lvl01" -2 0
-creature "orcArcher_lvl01" 2 0
-creature "orcWarrior_lvl01" 0 0
-creature "orcWarrior_lvl01" 0 -1

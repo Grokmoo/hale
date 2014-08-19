@@ -1,3 +1,0 @@
-area "Grassland"
-script "triggers/onCampaignLoad"
-addPoints

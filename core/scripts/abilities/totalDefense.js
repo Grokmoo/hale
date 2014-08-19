@@ -1,7 +1,5 @@
 function canActivate(game, parent) {
-	var offHand = parent.getInventory().getEquippedOffHand();
-	
-	return (offHand != null && offHand.isShield());
+	return parent.inventory.getEquippedShield() != null;
 }
 
 function onActivate(game, slot) {
@@ -10,6 +8,7 @@ function onActivate(game, slot) {
 	slot.setActiveRoundsLeft(1);
 	
 	var effect = slot.createEffect();
+	effect.addPositiveIcon("items/enchant_armor_small");
 	effect.setTitle(slot.getAbility().getName());
 	effect.getBonuses().addBonus('ArmorClass', 'Stackable', 40);
 	parent.applyEffect(effect);

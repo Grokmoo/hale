@@ -22,12 +22,13 @@ package net.sf.hale.interfacelock;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
+import net.sf.hale.CombatRunner;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
-import net.sf.hale.entity.Entity;
-import net.sf.hale.rules.CombatRunner;
+import net.sf.hale.entity.Location;
+import net.sf.hale.entity.Path;
+import net.sf.hale.rules.Faction;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -79,7 +80,7 @@ public class MovementHandler {
 		while (moveIter.hasNext()) {
 			Mover move = moveIter.next();
 			
-			if (move.creature.isDead() && (!move.creature.isPlayerSelectable() || Game.isInTurnMode()) ) {
+			if (move.creature.isDead() && (!move.creature.isPlayerFaction() || Game.isInTurnMode()) ) {
 				move.finish();
 				moveIter.remove();
 			} else if (move.isReadyForMovement(curTime)) {
@@ -142,9 +143,8 @@ public class MovementHandler {
 	 * @return the Move created for this movement
 	 */
 	
-	public Mover addMove(Creature creature, List<Point> path, boolean provokeAoOs) {
+	public Mover addMove(Creature creature, Path path, boolean provokeAoOs) {
 		creature.setCurrentlyMoving(true);
-		
 		Mover mover = new Mover(creature, path, provokeAoOs);
 		
 		synchronized(this) {
@@ -160,12 +160,12 @@ public class MovementHandler {
 	 * Removes all current moves from this MovementHandler
 	 */
 	
-	public void clear() {
+	public synchronized void clear() {
 		// set all creatures to not moving so any overlaping creatures
 		// can find empty tiles
 		for (Mover mover : moves) {
 			mover.creature.setCurrentlyMoving(false);
-			mover.creature.cancelOffsetAnimation();
+			mover.creature.setOffsetAnimation(null);
 		}
 		
 		for (Mover mover : moves) {
@@ -173,9 +173,7 @@ public class MovementHandler {
 			mover.finish();
 		}
 		
-		synchronized(this) {
-			moves.clear();
-		}
+		moves.clear();
 	}
 	
 	/**
@@ -185,9 +183,9 @@ public class MovementHandler {
 	 */
 	
 	public class Mover {
-		private Point initialPosition;
+		private Location initialPosition;
 		private Creature creature;
-		private List<Point> path;
+		private Path path;
 		private long lastTime;
 		private int lastIndex;
 		
@@ -243,7 +241,7 @@ public class MovementHandler {
 			return finished;
 		}
 		
-		public Point getNextPosition() {
+		public Location getNextPosition() {
 			return path.get(lastIndex - 1);
 		}
 		
@@ -281,22 +279,19 @@ public class MovementHandler {
 			}
 		}
 		
-		private Mover(Creature creature, List<Point> path, boolean provokeAoOs) {
+		private Mover(Creature creature, Path path, boolean provokeAoOs) {
 			this.provokeAoOs = provokeAoOs;
 			this.callbacks = new ArrayList<Runnable>();
 			this.creature = creature;
 			
-			this.path = new ArrayList<Point>();
-			for (Point p : path) {
-				this.path.add(new Point(p));
-			}
+			this.path = path;
 			
 			// save the creature's initial position for moving back to it
 			// if needed
-			this.initialPosition = creature.getPosition();
+			this.initialPosition = creature.getLocation();
 			
 			this.lastTime = System.currentTimeMillis();
-			this.lastIndex = path.size();
+			this.lastIndex = path.length();
 			
 			this.combatRunner = Game.areaListener.getCombatRunner();
 			this.finished = false;
@@ -318,13 +313,13 @@ public class MovementHandler {
 			}
 		}
 		
-		private void animateMovement(Point dest) {
-			Point curScreen = AreaUtil.convertGridToScreen(creature.getPosition());
-			Point destScreen = AreaUtil.convertGridToScreen(dest);
+		private void animateMovement(Location dest) {
+			Point curScreen = creature.getLocation().getScreenPoint();
+			Point destScreen = dest.getScreenPoint();
 			
 			EntityMovementAnimation animation = new EntityMovementAnimation(creature,
 					destScreen.x - curScreen.x, destScreen.y - curScreen.y, 0, 0);
-			creature.addOffsetAnimation(animation);
+			creature.setOffsetAnimation(animation);
 			Game.particleManager.addEntityOffsetAnimation(animation);
 		}
 		
@@ -349,15 +344,18 @@ public class MovementHandler {
 			
 			lastIndex--;
 			
+			boolean interrupted = false;
+			
 			// remove the AP cost from the mover
-			creature.getTimer().move( path.get(lastIndex) );
+			if (!creature.timer.move( path.get(lastIndex) )) {
+				// if we do not have enough AP, interrupt
+				interrupted = true;
+			} else {
+				// set the new position
+				interrupted = creature.setLocation( path.get(lastIndex) );
+			}
 			
-			// set the new position
-			boolean interrupted = creature.setPosition( path.get(lastIndex) );
-			
-			creature.setVisibility(false);
-			
-			if (creature.isPlayerSelectable()) {
+			if (creature.isPlayerFaction()) {
 				if (combatRunner.checkAIActivation()) {
 					interrupted = true;
 				}
@@ -367,8 +365,8 @@ public class MovementHandler {
 			Game.mainViewer.updateInterface();
 			
 			// set visibility for PCs
-			if (creature.isPlayerSelectable()) {
-				Game.areaListener.getAreaUtil().setPartyVisibility(Game.curCampaign.curArea);
+			if (creature.isPlayerFaction()) {
+				creature.getLocation().getArea().getUtil().setPartyVisibility();
 			}
 			
 			// if interrupted, set global interrupt to stop all movement
@@ -382,10 +380,17 @@ public class MovementHandler {
 			if (lastIndex == 0 || MovementHandler.this.interrupted) {
 				moveBackToEmptyTile();
 				
-				if (!creature.isPlayerSelectable())
+				if (!creature.isPlayerFaction()) {
 					this.currentMoveIncrement = Game.config.getCombatDelay() * 5;
+					
+					// check for hostiles to add to the encounter
+					if (creature.getEncounter() != null) {
+						creature.getEncounter().addHostiles(AreaUtil.getVisibleCreatures(creature,
+								Faction.Relationship.Hostile));
+					}
+				}
 				
-				if (!background)
+				if (!background && Game.config.autoScrollDuringCombat())
 					Game.areaViewer.addDelayedScrollToCreature(creature);
 			} else {
 				checkAoOsAndAnimate();
@@ -408,60 +413,48 @@ public class MovementHandler {
 		
 		private void moveBackToEmptyTile() {
 			// allow player to move all the way back to their initial position
-			path.add(initialPosition);
+			Path backPath = path.append(initialPosition.getX(), initialPosition.getY());
 			
 			// save the initial screen position
-			Point initialScreen = creature.getScreenPosition();
-			int initialX = initialScreen.x + creature.getAnimatingOffsetPoint().x;
-			int initialY = initialScreen.y + creature.getAnimatingOffsetPoint().y;
+			Point initialScreen = creature.getLocation().getScreenPoint();
+			int initialX = initialScreen.x + creature.getAnimatingOffsetX();
+			int initialY = initialScreen.y + creature.getAnimatingOffsetY();
 			
-			for (int index = lastIndex; index < path.size(); index++) {
-				Point p = path.get(index);
+			for (int i = lastIndex; i < backPath.length(); i++) {
+				Location current = backPath.get(i);
 				
-				Set<Entity> entities = Game.curCampaign.curArea.getEntities().getEntitiesSet(p.x, p.y);
-				
-				int creatureCount = 0;
-				
-				if (entities != null) {
-					for (Entity entity : entities) {
-						if (entity != creature && entity.getType() == Entity.Type.CREATURE) {
-							Creature creature = (Creature)entity;
-							
-							// if the other creature on this tile is still moving,
-							// allow this creature to stay
-							if (!creature.isCurrentlyMoving()) 
-								creatureCount++;
-						}
+				// check for creatures at the current location
+				boolean locationBlocked = false;
+				for ( Creature otherCreature : current.getArea().getEntities().getCreatures(current.getX(), current.getY()) ) {
+					if (!otherCreature.isCurrentlyMoving() && creature != otherCreature) {
+						locationBlocked = true;
 					}
 				}
+
+				if (locationBlocked) continue;
 				
-				// we have found an empty tile
-				if (creatureCount == 0) {
-					// if this is the last index, the creature is already on the found tile
-					if (index != lastIndex) {
-						creature.setPosition(p);
-						creature.setVisibility(false);
-					}
-					
-					break;
-				}
+				// we have found an empty tile, set it if it is not
+				// the current creature location
+				if (!current.equals(creature.getLocation()))
+					creature.setLocation(current);
+				
+				break;
 			}
 			
 			// figure out the animation to smoothly move the player to the new point
-			Point newScreen = creature.getScreenPosition();
+			Point newScreen = creature.getLocation().getScreenPoint();
 			
 			int deltaX = initialX - newScreen.x;
 			int deltaY = initialY - newScreen.y;
 			
 			EntityMovementAnimation animation = new EntityMovementAnimation(creature,
 					-deltaX, -deltaY, deltaX, deltaY);
-			creature.addOffsetAnimation(animation);
+			creature.setOffsetAnimation(animation);
 			Game.particleManager.addEntityOffsetAnimation(animation);
 			
 			// set the initial animating offset so that if the frame is drawn
 			// before the animation starts, there is no "jump"
-			creature.getAnimatingOffsetPoint().x = deltaX;
-			creature.getAnimatingOffsetPoint().y = deltaY;
+			creature.setOffsetPoint(deltaX, deltaY);
 		}
 	}
 }

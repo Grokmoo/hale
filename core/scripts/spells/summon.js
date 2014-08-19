@@ -1,7 +1,7 @@
 function onActivate(game, slot) {
-	game.addMenuLevel(slot.getAbility().getName());
+	if (!game.addMenuLevel(slot.getAbility().getName())) return;
 	
-	var casterLevel = slot.getParent().getCasterLevel();
+	var casterLevel = slot.getParent().stats.getCasterLevel();
 	
 	// add the highest level version of the wolf that is available
 	if (casterLevel >= 13) addButton(game, "summon_wolfgiant", slot);
@@ -20,7 +20,7 @@ function onActivate(game, slot) {
 	if (casterLevel >= 12) addButton(game, "summon_yeti", slot);
 	
 	// add the elementals if applicable
-	if (slot.getParent().getAbilities().has("SummonElemental")) {
+	if (slot.getParent().abilities.has("SummonElemental")) {
 		addButton(game, "summon_elementalAir", slot);
 		addButton(game, "summon_elementalEarth", slot);
 		addButton(game, "summon_elementalFire", slot);
@@ -34,7 +34,7 @@ function addButton(game, creatureID, slot) {
 	var cb = game.createButtonCallback(slot, "castSpell");
 	cb.addArgument(creatureID);
 		
-	var name = game.entities().getCreature(creatureID).getName();
+	var name = game.getNPC(creatureID).getName();
 		
 	game.addMenuButton(name, cb);
 }
@@ -52,34 +52,28 @@ function castSpell(game, slot, id) {
 function onTargetSelect(game, targeter, id) {
 	var spell = targeter.getSlot().getAbility();
 	var parent = targeter.getParent();
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
 	var position = targeter.getAffectedPoints().get(0);
 	
-	var duration = parseInt(3 + casterLevel / 2);
+	var duration = parseInt(3 + casterLevel / 4);
 	
 	targeter.getSlot().setActiveRoundsLeft(duration);
 	targeter.getSlot().activate();
 	
 	if (!spell.checkSpellFailure(parent)) return;
 	
-	var creature = game.summonCreature(id, position, parent, duration);
-	
-	if (parent.getAbilities().has("ImprovedSummon")) {
+	var creature = game.createSummon(id, parent, duration);
+
+	if (parent.abilities.has("ImprovedSummon")) {
 		var bonusLevels = parseInt(casterLevel - 1);
 	} else {
 		var bonusLevels = parseInt(casterLevel - 5);
 	}
 	
 	if (bonusLevels > 0) {
-		var roleSet = creature.getRoles();
-		roleSet.addLevels(roleSet.getBaseRole(), bonusLevels);
+		creature.roles.addLevels(creature.roles.getBaseRole(), bonusLevels);
 	}
 	
-	// set this if we want direct player control of the creature, otherwise the
-	// creature will follow in party follow mode and use its AI in combat mode
-	// creature.setPlayerSelectable(true);
-	
-	// this will reset the creature's hit points to maximum
-	creature.resetAll();
+	game.finishSummon(creature, position);
 }

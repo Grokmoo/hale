@@ -22,7 +22,9 @@ package net.sf.hale.view;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.TabbedPane;
 import de.matthiasmann.twl.Widget;
-import net.sf.hale.entity.Creature;
+import net.sf.hale.entity.Entity;
+import net.sf.hale.entity.EntityListener;
+import net.sf.hale.entity.PC;
 
 /**
  * The window showing the detailed statistics about a Character.  Includes tabs for an
@@ -31,7 +33,7 @@ import net.sf.hale.entity.Creature;
  *
  */
 
-public class CharacterWindow extends GameSubWindow {
+public class CharacterWindow extends GameSubWindow implements EntityListener {
 	private final Content content;
 	
 	private final Button exportButton;
@@ -43,7 +45,7 @@ public class CharacterWindow extends GameSubWindow {
 	private final AbilitiesSheet abilitiesSheet;
 	
 	/**
-	 * Creates a new CharacterWindow.  You must call {@link #updateContent(Creature)}
+	 * Creates a new CharacterWindow.  You must call {@link #updateContent(PC)}
 	 * to specify the Creature being viewed.
 	 */
 	
@@ -74,13 +76,12 @@ public class CharacterWindow extends GameSubWindow {
 	}
 	
 	/**
-	 * Updates the content of this CharacterWindow with the specified Creature.  Any changes
-	 * that have happened to the Creature are applied to this Widget.
-	 * @param creature the Creature to view
+	 * Updates the content of this CharacterWindow for the specified Creature.
+	 * @param creature the Player Character Creature to view
 	 */
 	
-	public void updateContent(Creature creature) {
-		this.setTitle("Character Record for " + creature.getName());
+	public void updateContent(PC creature) {
+		this.setTitle("Character Record for " + creature.getTemplate().getName());
 		
 		characterSheet.updateContent(creature);
 		skillSetViewer.updateContent(creature);
@@ -107,5 +108,13 @@ public class CharacterWindow extends GameSubWindow {
 			exportButton.setSize(exportButton.getPreferredWidth(), exportButton.getPreferredHeight());
 			exportButton.setPosition(getInnerRight() - exportButton.getWidth(), getInnerY());
 		}
+	}
+
+	@Override public void entityUpdated(Entity entity) {
+		// TODO implement
+	}
+
+	@Override public void removeListener() {
+		getParent().removeChild(this);
 	}
 }

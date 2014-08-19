@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.hale.Area;
 import net.sf.hale.ability.AbilitySlot;
 import net.sf.hale.ability.Effect;
+import net.sf.hale.area.Area;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.util.Logger;
 
@@ -121,10 +121,11 @@ public class ReferenceHandler {
 			for (String childRef : effectsWithChildren.get(parent)) {
 				Effect child = effectRefs.get(childRef);
 				
-				if (child == null)
-					Logger.appendToErrorLog("Error resolving reference for effect " + childRef);
-				else
+				if (child == null) {
+					Logger.appendToErrorLog("Error resolving reference for child effect " + childRef);
+				} else {
 					parent.addChildEffect(child);
+				}
 			}
 		}
 		
@@ -134,23 +135,25 @@ public class ReferenceHandler {
 			
 			AbilitySlot slot = this.slotRefs.get(abilitySlotRef);
 			
-			if (slot == null)
+			if (slot == null) {
 				Logger.appendToErrorLog("Error resolving reference for ability slot " + abilitySlotRef);
-			else
+			} else {
 				parent.setSlot( slot);
+			}
 		}
 		
-		// resolve slot effect references
+		// resolve slot child effect references
 		for (AbilitySlot parent : slotChildren.keySet()) {
 			List<Effect> effects = new ArrayList<Effect>();
 			
 			for (String childRef : slotChildren.get(parent)) {
 				Effect child = effectRefs.get(childRef);
 				
-				if (child == null)
-					Logger.appendToErrorLog("Error resolving reference for effect " + childRef);
-				else
+				if (child == null) {
+					Logger.appendToErrorLog("Error resolving reference for slot effect " + childRef);
+				} else {
 					effects.add(child);
+				}
 			}
 			
 			parent.loadActiveEffects(effects);
@@ -175,9 +178,6 @@ public class ReferenceHandler {
 	 */
 	
 	public Area getArea(String ref) {
-		if (!areaRefs.containsKey(ref))
-			throw new IllegalArgumentException("Area reference " + ref + " not found.");
-		
 		return areaRefs.get(ref);
 	}
 	
@@ -199,9 +199,6 @@ public class ReferenceHandler {
 	 */
 	
 	public Entity getEntity(String ref) {
-		if (!entityRefs.containsKey(ref))
-			throw new IllegalArgumentException("Entity reference " + ref + " not found.");
-		
 		return entityRefs.get(ref);
 	}
 	
@@ -223,9 +220,6 @@ public class ReferenceHandler {
 	 */
 	
 	public Effect getEffect(String ref) {
-		if (!effectRefs.containsKey(ref))
-			throw new IllegalArgumentException("Effect reference " + ref + " not found.");
-		
 		return effectRefs.get(ref);
 	}
 	

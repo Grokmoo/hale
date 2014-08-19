@@ -72,11 +72,11 @@ function frag04(game, parent, target, conversation) {
 }
 
 function frag05(game, parent, target, conversation) {
-    target.getInventory().addItem("gateKey", 1, "Good");
+    target.inventory.getUnequippedItems().add("gateKey");
     game.addMessage(target.getName() + " was given the Gate Key.");
     
     conversation.addString("<div style=\"font-family: blue\">");
-    conversation.addString("The key is solid in your hands.  It glows ever slow slightly with a mystical aura.");
+    conversation.addString("The key is solid in your hands.  It glows ever so slightly with a mystical aura.");
     conversation.addString("</div>");
     
     conversation.addResponse("So now, we can return to the surface?", "frag06");

@@ -42,7 +42,7 @@ function onExit(game, parent, talker, conversation) {
 }
 
 function moveAndRemove(game, parent) {
-    parent.getTimer().reset();
+    parent.timer.reset();
     
     game.ai.moveTowards(parent, 14, 10, 0);
     game.sleep(1000);
@@ -77,7 +77,7 @@ function onExit2(game, parent, talker, conversation) {
 }
 
 function moveAndRemove2(game, parent) {
-    parent.getTimer().reset();
+    parent.timer.reset();
     
     game.ai.moveTowards(parent, 33, 6, 0);
     game.sleep(1000);

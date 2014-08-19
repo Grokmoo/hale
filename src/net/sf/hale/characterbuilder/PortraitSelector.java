@@ -25,9 +25,9 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import net.sf.hale.Game;
-import net.sf.hale.Sprite;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.rules.Race;
 import net.sf.hale.util.FileUtil;

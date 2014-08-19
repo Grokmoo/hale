@@ -6,7 +6,7 @@ function onActivate(game, slot) {
 	targeter.setUniqueSelectionsRequired(true);
 	
 	// don't do multi selection mode unless there are at least two valid selections
-	if (creatures.size() > 1 && slot.getParent().getAbilities().has("MultiDuel"))
+	if (creatures.size() > 1 && slot.getParent().abilities.has("MultiDuel"))
 		targeter.setNumberOfSelections(2);
 	
 	targeter.activate();

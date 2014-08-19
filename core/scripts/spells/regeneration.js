@@ -1,9 +1,9 @@
 function onActivate(game, slot) {
-	if (slot.getParent().getAbilities().has("MassRegeneration")) {
+	if (slot.getParent().abilities.has("MassRegeneration")) {
 		var targeter = game.createCircleTargeter(slot);
 		targeter.setRadius(4);
 		targeter.setRelationshipCriterion("Friendly");
-		targeter.addAllowedPoint(slot.getParent().getPosition());
+		targeter.addAllowedPoint(slot.getParent().getLocation());
 		targeter.activate();
 	} else {
 		var creatures = game.ai.getTouchableCreatures(slot.getParent(), "Friendly");
@@ -15,7 +15,7 @@ function onActivate(game, slot) {
 }
 
 function onTargetSelect(game, targeter) {
-	if (targeter.getSlot().getParent().getAbilities().has("MassRegeneration")) {
+	if (targeter.getSlot().getParent().abilities.has("MassRegeneration")) {
 	    massRegeneration(game, targeter);
     } else {
 	    regeneration(game, targeter);
@@ -59,9 +59,9 @@ function regeneration(game, targeter) {
 function applyEffect(game, targeter, target, spell, duration) {
 	var parent = targeter.getParent();
 
-	var casterLevel = parent.getCasterLevel();
+	var casterLevel = parent.stats.getCasterLevel();
 	
-	if (parent.getAbilities().has("MonstrousRegeneration")) {
+	if (parent.abilities.has("MonstrousRegeneration")) {
 		var healingLeft = game.dice().randInt(6 * casterLevel, 12 * casterLevel);
 	} else {
 		var healingLeft = game.dice().randInt(4 * casterLevel, 8 * casterLevel);
@@ -70,6 +70,7 @@ function applyEffect(game, targeter, target, spell, duration) {
 	var effect = targeter.getSlot().createEffect("effects/regeneration");
 	effect.setDuration(duration);
 	effect.setTitle(spell.getName());
+	effect.addPositiveIcon("items/enchant_spellHealing_small");
 	
 	effect.put("healingLeft", healingLeft);
 	effect.put("totalRounds", duration);
@@ -82,7 +83,7 @@ function applyEffect(game, targeter, target, spell, duration) {
 	anim.setGreen(1.0);
 	anim.setBlue(1.0);
 	
-	var position = target.getScreenPosition();
+	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y - 10);
 	
 	game.runAnimationNoWait(anim);
