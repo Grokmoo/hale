@@ -138,7 +138,7 @@ public class OpenGLThread extends Thread {
 		
 		viewer.getArea().getTileGrid().cacheSprites();
 		
-		parent.getPalette().setArea(viewer.getArea());
+		parent.getPalette().setArea(viewer);
 		parent.validate();
 	}
 	

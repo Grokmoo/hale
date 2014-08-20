@@ -20,6 +20,10 @@
 package net.sf.hale.swingeditor;
 
 import java.awt.Canvas;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.SpinnerNumberModel;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -27,10 +31,12 @@ import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.AnimationState;
 import net.sf.hale.area.Area;
+import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.tileset.AreaTileGrid;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
 
 /**
  * A class for viewing an area in the swing editor
@@ -42,9 +48,15 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	private final Canvas canvas;
 	private final Area area;
 	
+	private SpinnerNumberModel mouseRadius;
 	private Point mouseGrid;
 	private Point mouseScreen;
 	private int scrollX, scrollY;
+	
+	private Sprite actionPreviewTile;
+	private AreaPalette.AreaClickHandler clickHandler;
+	
+	private static final int MaxRadius = 20;
 	
 	/**
 	 * Creates a new Viewer for the specified Area
@@ -55,6 +67,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	public AreaRenderer(Area area, Canvas canvas) {
 		this.canvas = canvas;
 		this.area = area;
+		mouseRadius = new SpinnerNumberModel(0, 0, AreaRenderer.MaxRadius, 1);
 	}
 	
 	/**
@@ -75,6 +88,25 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	}
 	
 	/**
+	 * Sets the sprite that is drawn under the mouse cursor to preview
+	 * the action that clicking will cause
+	 * @param sprite
+	 */
+	
+	public void setActionPreviewTile(Sprite sprite) {
+		this.actionPreviewTile = sprite;
+	}
+	
+	/**
+	 * Sets the object which is notified of right and left click events
+	 * @param handler
+	 */
+	
+	public void setClickHandler(AreaPalette.AreaClickHandler handler) {
+		this.clickHandler = handler;
+	}
+	
+	/**
 	 * Handles input from the LWJGL input polling
 	 */
 	
@@ -90,19 +122,68 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		mouseGrid = AreaUtil.convertScreenToGrid(mouseX, mouseY);
 		mouseScreen = AreaUtil.convertGridToScreen(mouseGrid);
 		
-		if (Mouse.isButtonDown(0)) {
+		boolean leftClick = Mouse.isButtonDown(0);
+		boolean rightClick = Mouse.isButtonDown(1);
+		
+		if (leftClick || rightClick) {
 			int mouseDX = Mouse.getDX();
 			int mouseDY = Mouse.getDY();
 			
 			if (Mouse.isGrabbed()) {
 				scrollX -= (mouseDX);
 				scrollY += (mouseDY);
+			} else if (clickHandler != null) {
+				if (leftClick) {
+					clickHandler.leftClicked(getHoverPoints());
+				}
+				
+				if (rightClick) {
+					clickHandler.rightClicked(getHoverPoints());
+				}
 			}
 
 			Mouse.setGrabbed(true);
 		} else if (Mouse.isGrabbed()) {
 			Mouse.setGrabbed(false);
 		}
+		
+		int scrollAmount = Mouse.getDWheel();
+		if (scrollAmount > 0 && mouseRadius.getNextValue() != null) {
+			mouseRadius.setValue(mouseRadius.getNextValue());
+		} else if (scrollAmount < 0 && mouseRadius.getPreviousValue() != null) {
+			mouseRadius.setValue(mouseRadius.getPreviousValue());
+		}
+	}
+	
+	/**
+	 * Gets the number model containing the value of the mouse radius
+	 * @return the mouse radius model
+	 */
+	
+	public SpinnerNumberModel getMouseRadiusModel() {
+		return mouseRadius;
+	}
+	
+	/**
+	 * @return a list of all points (in grid coordinates) that the mouse is hovering over
+	 */
+	
+	private List<PointImmutable> getHoverPoints() {
+		List<PointImmutable> points = new ArrayList<PointImmutable>();
+		
+		if (mouseGrid != null) {
+			points.add(new PointImmutable(mouseGrid));
+			
+			int radius = (Integer)mouseRadius.getValue();
+			
+			for (int r = 1; r <= radius; r++) {
+				for (int i = 0; i < 6 * r; i++) {
+					points.add(new PointImmutable(AreaUtil.convertPolarToGrid(mouseGrid, r, i)));
+				}
+			}
+		}
+		
+		return points;
 	}
 	
 	@Override public Area getArea() {
@@ -114,6 +195,23 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	@Override public void drawInterface(AnimationState as) { 
 		if (mouseScreen != null) {
 			SpriteManager.getSprite("editor/hexBorder").draw(mouseScreen.x, mouseScreen.y);
+			int radius = (Integer)mouseRadius.getValue();
+			for (int r = 1; r <= radius; r++) {
+				for (int i = 0; i < 6 * r; i++) {
+					Point pGrid = AreaUtil.convertPolarToGrid(mouseGrid.x, mouseGrid.y, r, i);
+					Point pScreen = AreaUtil.convertGridToScreen(pGrid);
+					
+					SpriteManager.getSprite("editor/hexBorder").draw(pScreen.x, pScreen.y);
+				}
+			}
+			
+			if (actionPreviewTile != null) {
+				GL11.glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+				
+				actionPreviewTile.draw(mouseScreen.x, mouseScreen.y);
+				
+				GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			}
 		}
 	}
 }

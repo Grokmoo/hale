@@ -207,7 +207,7 @@ public class TileLayerList {
 	 * @param y the y grid coordinate
 	 */
 	
-	protected void removeTiles(int x, int y) {
+	public void removeTiles(int x, int y) {
 		tiles[x][y].clear();
 	}
 	
