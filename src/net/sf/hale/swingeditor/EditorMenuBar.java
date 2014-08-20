@@ -50,7 +50,7 @@ public class EditorMenuBar extends JMenuBar {
 	private SwingEditor frame;
 	
 	private JMenu areasMenu;
-	private JMenu openAreasMenu;
+	private JMenuItem createAreaItem;
 	private JMenu editorsMenu;
 	
 	private JTextField logItem;
@@ -111,14 +111,10 @@ public class EditorMenuBar extends JMenuBar {
 		areasMenu.setMnemonic(KeyEvent.VK_A);
 		add(areasMenu);
 		
-		JMenuItem createAreaItem = new JMenuItem(new CreateAreaAction());
+		createAreaItem = new JMenuItem(new CreateAreaAction());
 		createAreaItem.setMnemonic(KeyEvent.VK_C);
 		createAreaItem.setEnabled(false);
 		areasMenu.add(createAreaItem);
-		
-		openAreasMenu = new JMenu("Open");
-		openAreasMenu.setMnemonic(KeyEvent.VK_O);
-		areasMenu.add(openAreasMenu);
 		
 		// create editors menu
 		editorsMenu = new JMenu("Windows");
@@ -160,7 +156,10 @@ public class EditorMenuBar extends JMenuBar {
 	 */
 	
 	public void updateCampaign() {
-		openAreasMenu.removeAll();
+		areasMenu.removeAll();
+		
+		areasMenu.add(createAreaItem);
+		areasMenu.addSeparator();
 		
 		if (Game.curCampaign == null) {
 			areasMenu.setEnabled(false);
@@ -176,7 +175,7 @@ public class EditorMenuBar extends JMenuBar {
 				String ref = file.getName().substring(0, file.getName().length() - ResourceType.JSON.getExtension().length());
 				
 				JMenuItem item = new JMenuItem(new OpenAreaAction(ref));
-				openAreasMenu.add(item);
+				areasMenu.add(item);
 			}
 		}
 	}

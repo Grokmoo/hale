@@ -202,16 +202,14 @@ public class AreaPalette extends JPanel {
 	}
 	
 	private class DefaultClickHandler implements AreaClickHandler {
-		@Override public void leftClicked(List<PointImmutable> points) {
-			// do nothing
-		}
+		@Override public void leftClicked(List<PointImmutable> points) { /* do nothign */ }
 
 		@Override public void rightClicked(List<PointImmutable> points) {
-			AreaPalette.this.rightClicked(points);
+			AreaPalette.this.removeAllTiles(points);
 		}
 	}
 	
-	private void rightClicked(List<PointImmutable> points) {
+	private void removeAllTiles(List<PointImmutable> points) {
 		// remove tiles at the specified coordinates
 		for (PointImmutable p : points) {
 			if (!p.isWithinBounds(area)) continue;
@@ -248,7 +246,7 @@ public class AreaPalette extends JPanel {
 		}
 
 		@Override public void rightClicked(List<PointImmutable> points) {
-			AreaPalette.this.rightClicked(points);
+			AreaPalette.this.removeAllTiles(points);
 		}
 	}
 	
@@ -262,7 +260,17 @@ public class AreaPalette extends JPanel {
 		}
 		
 		@Override public void leftClicked(List<PointImmutable> points) {
+			removeAllTiles(points);
 			
+			for (PointImmutable p : points) {
+				if (!p.isWithinBounds(area)) continue;
+				
+				TerrainTile tile = terrainType.getRandomTerrainTile();
+				
+				area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), p.x, p.y);
+			}
+			
+			area.getTileGrid().cacheSprites();
 		}
 	}
 	
