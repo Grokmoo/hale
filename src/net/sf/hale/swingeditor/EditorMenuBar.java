@@ -113,7 +113,6 @@ public class EditorMenuBar extends JMenuBar {
 		
 		createAreaItem = new JMenuItem(new CreateAreaAction());
 		createAreaItem.setMnemonic(KeyEvent.VK_C);
-		createAreaItem.setEnabled(false);
 		areasMenu.add(createAreaItem);
 		
 		// create editors menu
@@ -208,7 +207,8 @@ public class EditorMenuBar extends JMenuBar {
 		private CreateAreaAction() { super("Create"); }
 		
 		@Override public void actionPerformed(ActionEvent e) {
-			
+			CreateAreaDialog dialog = new CreateAreaDialog(frame);
+			dialog.setVisible(true);
 		}
 	}
 	
