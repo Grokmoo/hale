@@ -36,6 +36,7 @@ import javax.swing.KeyStroke;
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;
 import net.sf.hale.resource.ResourceType;
+import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.FileUtil;
 
@@ -221,6 +222,9 @@ public class EditorMenuBar extends JMenuBar {
 		}
 		
 		@Override public void actionPerformed(ActionEvent e) {
+			// set sprite manager to save bufferedImages of all spritesheets for use later
+			SpriteManager.setSaveSourceImages(true);
+			
 			Area area = Game.curCampaign.getArea(areaID);
 			AreaUtil.setMatrix(area.getExplored(), true);
 			

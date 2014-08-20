@@ -55,6 +55,21 @@ public class SpriteManager {
 	private final static Map<String, Sprite> sprites = new HashMap<String, Sprite>();
 	private final static Map<String, Sprite> spriteSheets = new HashMap<String, Sprite>();
 	
+	private final static Map<String, BufferedImage> sourceImages = new HashMap<String, BufferedImage>();
+	
+	private static boolean saveSourceImages = false;
+	
+	/**
+	 * Sets whether the buffered images that are read in to create spritesheets are saved or discarded.  if false,
+	 * these images are discarded once the spritesheets have been loaded into an openGL context.  if true, the
+	 * BufferedImages are saved for later use
+	 * @param saveSourceImages
+	 */
+	
+	public static void setSaveSourceImages(boolean saveSourceImages) {
+		SpriteManager.saveSourceImages = saveSourceImages;
+	}
+	
 	/**
 	 * Performs preloading of all Sprites specified as part of a spritesheet in the "images"
 	 * resource directory.  The Sprites in those spritesheets will be accessible via their
@@ -169,6 +184,18 @@ public class SpriteManager {
 		spriteSheets.put(reference, spriteSheet);
 		
 		return images;
+	}
+	
+	/**
+	 * Returns the source image created for the spritesheet of the specified ID.  Note that
+	 * {@link #setSaveSourceImages(boolean)} needs to be set to true when the spritesheet is
+	 * loaded for this method to find the image
+	 * @param id
+	 * @return the saved image or null if no such image exists
+	 */
+	
+	public static BufferedImage getSourceImage(String id) {
+		return sourceImages.get(id);
 	}
 	
 	/**
@@ -292,6 +319,10 @@ public class SpriteManager {
 		} catch (IOException e) {
 			Logger.appendToErrorLog("Failed to load image: " + ref, e);
 			throw new IllegalArgumentException("Image does not exist at " + ref);
+		}
+		
+		if (saveSourceImages) {
+			sourceImages.put(ref, sourceImage);
 		}
 		
 		// get the rgb color data from the read image
