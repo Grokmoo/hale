@@ -58,6 +58,12 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	
 	private static final int MaxRadius = 20;
 	
+	private long lastClickTime;
+	private static final int MouseTimeout = 400;
+	private boolean[] lastMouseState;
+	
+	private Point prevMouseGrid;
+	
 	/**
 	 * Creates a new Viewer for the specified Area
 	 * @param area
@@ -68,6 +74,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		this.canvas = canvas;
 		this.area = area;
 		mouseRadius = new SpinnerNumberModel(0, 0, AreaRenderer.MaxRadius, 1);
+		lastMouseState = new boolean[Mouse.getButtonCount()];
 	}
 	
 	/**
@@ -122,24 +129,13 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		mouseGrid = AreaUtil.convertScreenToGrid(mouseX, mouseY);
 		mouseScreen = AreaUtil.convertGridToScreen(mouseGrid);
 		
-		boolean leftClick = Mouse.isButtonDown(0);
-		boolean rightClick = Mouse.isButtonDown(1);
-		
-		if (leftClick || rightClick) {
+		if (Mouse.isButtonDown(2)) {
 			int mouseDX = Mouse.getDX();
 			int mouseDY = Mouse.getDY();
 			
 			if (Mouse.isGrabbed()) {
 				scrollX -= (mouseDX);
 				scrollY += (mouseDY);
-			} else if (clickHandler != null) {
-				if (leftClick) {
-					clickHandler.leftClicked(getHoverPoints());
-				}
-				
-				if (rightClick) {
-					clickHandler.rightClicked(getHoverPoints());
-				}
 			}
 
 			Mouse.setGrabbed(true);
@@ -147,11 +143,35 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 			Mouse.setGrabbed(false);
 		}
 		
+		long curTime = System.currentTimeMillis();
+		if (curTime - lastClickTime > MouseTimeout) {
+			if (Mouse.isButtonDown(0)) {
+				clickHandler.leftClicked(getHoverPoints());
+				lastClickTime = curTime;
+			} else if (Mouse.isButtonDown(1)) {
+				lastClickTime = curTime;
+				clickHandler.rightClicked(getHoverPoints());
+			}
+		}
+		
 		int scrollAmount = Mouse.getDWheel();
 		if (scrollAmount > 0 && mouseRadius.getNextValue() != null) {
 			mouseRadius.setValue(mouseRadius.getNextValue());
 		} else if (scrollAmount < 0 && mouseRadius.getPreviousValue() != null) {
 			mouseRadius.setValue(mouseRadius.getPreviousValue());
+		}
+		
+		// reset the click timeout and check for updates to the mouse state
+		for (int i = 0; i < Mouse.getButtonCount(); i++) {
+			if (Mouse.isButtonDown(i) != lastMouseState[i]) {
+				lastClickTime = 0l;
+				lastMouseState[i] = !lastMouseState[i];
+			}
+		}
+		
+		if (!mouseGrid.equals(prevMouseGrid)) {
+			lastClickTime = 0l;
+			prevMouseGrid = mouseGrid;
 		}
 	}
 	
