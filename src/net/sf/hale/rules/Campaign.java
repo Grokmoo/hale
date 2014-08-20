@@ -204,7 +204,7 @@ public class Campaign {
 			SimpleJSONObject areaData = entry.getObject();
 			
 			Area area = Area.load(areaData, refHandler);
-			areas.put(area.getName(), area);
+			areas.put(area.getID(), area);
 		}
 		
 		this.party = Party.load(data.getObject("party"), refHandler);

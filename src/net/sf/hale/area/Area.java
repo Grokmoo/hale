@@ -77,7 +77,7 @@ public class Area implements EffectTarget, Saveable {
 	private final AreaEffectList effects;
 	private final List<Encounter> encounters;
 	private final Map<String, Trigger> triggers;
-	private final String id;
+	private final String id, name;
 	private final boolean[][] explored;
 	
 	private AreaUtil areaUtil;
@@ -156,6 +156,12 @@ public class Area implements EffectTarget, Saveable {
 		this.id = id;
 		
 		SimpleJSONParser parser = new SimpleJSONParser("areas/" + id + ResourceType.JSON.getExtension());
+		
+		if (parser.containsKey("name")) {
+			this.name = parser.get("name", null);
+		} else {
+			this.name = id;
+		}
 		
 		this.width = parser.get("width", 0);
 		this.height = parser.get("height", 0);
@@ -478,7 +484,7 @@ public class Area implements EffectTarget, Saveable {
 	}
 	
 	public String getTileset() { return tileset; }
-	public String getName() { return id; }
+	public String getName() { return name; }
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
@@ -819,6 +825,11 @@ public class Area implements EffectTarget, Saveable {
 			lastCreature = creature;
 		}
 	}
+	
+	/**
+	 * Returns the unique ID of this area
+	 * @return the unique ID
+	 */
 	
 	public String getID() {
 		return id;
