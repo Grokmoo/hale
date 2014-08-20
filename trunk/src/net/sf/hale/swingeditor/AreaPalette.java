@@ -2,15 +2,20 @@ package net.sf.hale.swingeditor;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 
 import net.sf.hale.Game;
@@ -19,7 +24,10 @@ import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.Layer;
+import net.sf.hale.tileset.TerrainTile;
+import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tileset;
 
 /**
@@ -75,58 +83,148 @@ public class AreaPalette extends JPanel {
 		c.weighty = 1.0;
 		
 		
-		JPanel tilesPanel = new JPanel(new GridBagLayout());
+		JTabbedPane contentPane = new JTabbedPane();
+		add(contentPane, c);
 		
-		int col = 0;
-		int row = 0;
-		GridBagConstraints c2 = new GridBagConstraints();
-		c2.insets = new Insets(2, 2, 2, 2);
+		// add terrain tab
+		List<JButton> tileButtons = new ArrayList<JButton>();
+		
+		for (String terrainTypeID : tileset.getTerrainTypeIDs()) {
+			tileButtons.add(createTerrainButton(tileset.getTerrainType(terrainTypeID)));
+		}
+		
+		contentPane.addTab("Terrain", getTabPanel(tileButtons));
+		
+		// add features tab
+		tileButtons.clear();
+		
+		for (String featureTypeID : tileset.getFeatureTypeIDs()) {
+			tileButtons.add(createFeatureButton(tileset.getFeatureType(featureTypeID)));
+		}
+		
+		contentPane.addTab("Features", getTabPanel(tileButtons));
+		
+		// add tiles tab
+		tileButtons.clear();
 		
 		for (String layerID : tileset.getLayerIDs()) {
 			Layer layer = tileset.getLayer(layerID);
 			
 			for (String tileID : layer.getTiles()) {
-				c2.gridx = col;
-				c2.gridy = row;
-				
-				tilesPanel.add(new TileButton(tileID, layerID), c2);
-				
-				col++;
-				if (col == 2) {
-					col = 0;
-					row++;
-				}
+				tileButtons.add(createTileButton(tileID, layerID));
 			}
 		}
 		
-		JScrollPane tilesPane = new JScrollPane(tilesPanel);
-		tilesPane.getVerticalScrollBar().setUnitIncrement(64);
-		tilesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		add(tilesPane, c);
+		contentPane.addTab("Tiles", getTabPanel(tileButtons));
 	}
 	
-	private class TileButton extends JButton {
-		private String tileID;
+	private JScrollPane getTabPanel(List<JButton> tileButtons) {
+		JPanel panel = new JPanel(new GridBagLayout());
 		
-		private TileButton(String tileID, String layerID) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(2, 2, 2, 2);
+		
+		int row = 0;
+		int col = 0;
+		
+		for (JButton tileButton : tileButtons) {
+			c.gridx = row;
+			c.gridy = col;
+			
+			panel.add(tileButton, c);
+			
+			row++;
+			if (row == 2) {
+				row = 0;
+				col++;
+			}
+		}
+		
+		JScrollPane scrollPane = new JScrollPane(panel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(64);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		return scrollPane;
+	}
+	
+	private Icon getIconFromImage(String tileID, String layerID) {
+		String spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
+		
+		String spriteSheetID = ResourceManager.getResourceDirectory(spriteID) + ResourceType.PNG.getExtension();
+		
+		BufferedImage sourceImage = SpriteManager.getSourceImage(spriteSheetID);
+		
+		Sprite tileSprite = SpriteManager.getImage(spriteID);
+		
+		int x = (int) (tileSprite.getTexCoordStartX() * sourceImage.getWidth());
+		int y = (int) (tileSprite.getTexCoordStartY() * sourceImage.getHeight());
+		int x2 = (int) (tileSprite.getTexCoordEndX() * sourceImage.getWidth());
+		int y2 = (int) (tileSprite.getTexCoordEndY() * sourceImage.getHeight());
+		
+		return new ImageIcon(sourceImage.getSubimage(x, y, x2 - x, y2 - y));
+	}
+	
+	private JButton createTileButton(String tileID, String layerID) {
+		TileAction action = new TileAction( tileID, getIconFromImage(tileID, layerID) );
+		
+		return new JButton(action);
+	}
+	
+	private JButton createTerrainButton(TerrainType terrainType) {
+		TerrainTile previewTile = terrainType.getPreviewTile();
+		String tileID = previewTile.getID();
+		String layerID = previewTile.getLayerID();
+		
+		return new JButton( new TerrainAction(terrainType, tileID, getIconFromImage(tileID, layerID)) );
+	}
+	
+	private JButton createFeatureButton(FeatureType featureType) {
+		TerrainTile previewTile = featureType.getPreviewTile();
+		String tileID = previewTile.getID();
+		String layerID = previewTile.getLayerID();
+		
+		return new JButton( new FeatureAction(featureType, tileID, getIconFromImage(tileID, layerID)) );
+	}
+	
+	private class TileAction extends AbstractAction {
+		private final String tileID;
+		
+		private TileAction(String tileID, Icon icon) {
+			super(null, icon);
+			
 			this.tileID = tileID;
+		}
+
+		@Override public void actionPerformed(ActionEvent evt) {
 			
-			String spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
+		}
+	}
+	
+	private class TerrainAction extends TileAction {
+		private final TerrainType terrainType;
+		
+		private TerrainAction(TerrainType terrainType, String tileID, Icon icon) {
+			super(tileID, icon);
 			
-			String spriteSheetID = ResourceManager.getResourceDirectory(spriteID) + ResourceType.PNG.getExtension();
+			this.terrainType = terrainType;
+		}
+		
+		@Override public void actionPerformed(ActionEvent evt) {
 			
-			BufferedImage sourceImage = SpriteManager.getSourceImage(spriteSheetID);
+		}
+	}
+	
+	private class FeatureAction extends TileAction {
+		private final FeatureType featureType;
+		
+		private FeatureAction(FeatureType featureType, String tileID, Icon icon) {
+			super(tileID, icon);
 			
-			Sprite tileSprite = SpriteManager.getImage(spriteID);
+			this.featureType = featureType;
+		}
+		
+		@Override public void actionPerformed(ActionEvent evt) {
 			
-			int x = (int) (tileSprite.getTexCoordStartX() * sourceImage.getWidth());
-			int y = (int) (tileSprite.getTexCoordStartY() * sourceImage.getHeight());
-			int x2 = (int) (tileSprite.getTexCoordEndX() * sourceImage.getWidth());
-			int y2 = (int) (tileSprite.getTexCoordEndY() * sourceImage.getHeight());
-			
-			BufferedImage subImage = sourceImage.getSubimage(x, y, x2 - x, y2 - y);
-			
-			this.setIcon(new ImageIcon(subImage));
 		}
 	}
 }
