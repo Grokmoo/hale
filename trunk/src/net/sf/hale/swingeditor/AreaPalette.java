@@ -4,7 +4,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,6 +15,10 @@ import javax.swing.ScrollPaneConstants;
 
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;
+import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.resource.Sprite;
+import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.tileset.Layer;
 import net.sf.hale.tileset.Tileset;
 
@@ -69,17 +75,32 @@ public class AreaPalette extends JPanel {
 		c.weighty = 1.0;
 		
 		
-		JPanel tilesPanel = new JPanel(new GridLayout(0, 2));
+		JPanel tilesPanel = new JPanel(new GridBagLayout());
+		
+		int col = 0;
+		int row = 0;
+		GridBagConstraints c2 = new GridBagConstraints();
+		c2.insets = new Insets(2, 2, 2, 2);
 		
 		for (String layerID : tileset.getLayerIDs()) {
 			Layer layer = tileset.getLayer(layerID);
 			
 			for (String tileID : layer.getTiles()) {
-				tilesPanel.add(new TileButton(tileID));
+				c2.gridx = col;
+				c2.gridy = row;
+				
+				tilesPanel.add(new TileButton(tileID, layerID), c2);
+				
+				col++;
+				if (col == 2) {
+					col = 0;
+					row++;
+				}
 			}
 		}
 		
 		JScrollPane tilesPane = new JScrollPane(tilesPanel);
+		tilesPane.getVerticalScrollBar().setUnitIncrement(64);
 		tilesPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		add(tilesPane, c);
 	}
@@ -87,8 +108,25 @@ public class AreaPalette extends JPanel {
 	private class TileButton extends JButton {
 		private String tileID;
 		
-		private TileButton(String tileID) {
+		private TileButton(String tileID, String layerID) {
 			this.tileID = tileID;
+			
+			String spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
+			
+			String spriteSheetID = ResourceManager.getResourceDirectory(spriteID) + ResourceType.PNG.getExtension();
+			
+			BufferedImage sourceImage = SpriteManager.getSourceImage(spriteSheetID);
+			
+			Sprite tileSprite = SpriteManager.getImage(spriteID);
+			
+			int x = (int) (tileSprite.getTexCoordStartX() * sourceImage.getWidth());
+			int y = (int) (tileSprite.getTexCoordStartY() * sourceImage.getHeight());
+			int x2 = (int) (tileSprite.getTexCoordEndX() * sourceImage.getWidth());
+			int y2 = (int) (tileSprite.getTexCoordEndY() * sourceImage.getHeight());
+			
+			BufferedImage subImage = sourceImage.getSubimage(x, y, x2 - x, y2 - y);
+			
+			this.setIcon(new ImageIcon(subImage));
 		}
 	}
 }

@@ -113,6 +113,16 @@ public class ResourceManager {
 	}
 	
 	/**
+	 * Gets the directory that contains the specified resource without the resource name and type
+	 * @param resource
+	 * @return the directory ID
+	 */
+	
+	public static String getResourceDirectory(String resource) {
+		return new File(resource).getParent();
+	}
+	
+	/**
 	 * Gets the Resource ID of the resource of the specified resource and type.
 	 * This corresponds to the path relative to the root node (with no extension)
 	 * for a file based resource.
