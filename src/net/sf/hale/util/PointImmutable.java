@@ -19,6 +19,8 @@
 
 package net.sf.hale.util;
 
+import net.sf.hale.area.Area;
+
 /**
  * An immutable version of the Point class, with efficient implementations of hashing, etc
  * @author Jared
@@ -73,5 +75,19 @@ public class PointImmutable {
 	
 	@Override public String toString() {
 		return x + ", " + y;
+	}
+	
+	/**
+	 * Returns true if and only if this point is within the grid bounds of the specified area
+	 * @param area
+	 * @return whether this point is within the grid bounds of the area
+	 */
+	
+	public boolean isWithinBounds(Area area) {
+		if (x < 0 || y < 0) return false;
+		
+		if (x >= area.getWidth() || y >= area.getHeight()) return false;
+		
+		return true;
 	}
 }

@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 
@@ -28,7 +29,9 @@ import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.Layer;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
+import net.sf.hale.tileset.TileLayerList;
 import net.sf.hale.tileset.Tileset;
+import net.sf.hale.util.PointImmutable;
 
 /**
  * Class for selecting different types of objects such as terrain which
@@ -38,6 +41,7 @@ import net.sf.hale.tileset.Tileset;
  */
 
 public class AreaPalette extends JPanel {
+	private AreaRenderer renderer;
 	private Area area;
 	private Tileset tileset;
 	
@@ -56,8 +60,9 @@ public class AreaPalette extends JPanel {
 	 * @param area
 	 */
 	
-	public void setArea(Area area) {
-		this.area = area;
+	public void setArea(AreaRenderer areaRenderer) {
+		this.renderer = areaRenderer;
+		this.area = areaRenderer.getArea();
 		
 		this.removeAll();
 		
@@ -66,22 +71,34 @@ public class AreaPalette extends JPanel {
 			
 			addWidgets();
 		}
+		
+		renderer.setClickHandler(new DefaultClickHandler());
 	}
 	
 	private void addWidgets() {
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = GridBagConstraints.RELATIVE;
+		c.gridx = 0;
 		c.gridy = 0;
 		c.insets = new Insets(2, 5, 2, 5);
+		c.ipadx = 100;
 		
 		JLabel title = new JLabel("Tileset: " + area.getTileset());
 		add(title, c);
 		
+		c.gridx++;
+		c.ipadx = 0;
+		add(new JLabel("Radius"), c);
+		
+		c.gridx++;
+		JSpinner radius = new JSpinner(renderer.getMouseRadiusModel());
+		add(radius, c);
+		
 		c.gridy++;
+		c.gridx = 0;
+		c.gridwidth = 3;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1.0;
 		c.weighty = 1.0;
-		
 		
 		JTabbedPane contentPane = new JTabbedPane();
 		add(contentPane, c);
@@ -165,9 +182,7 @@ public class AreaPalette extends JPanel {
 	}
 	
 	private JButton createTileButton(String tileID, String layerID) {
-		TileAction action = new TileAction( tileID, getIconFromImage(tileID, layerID) );
-		
-		return new JButton(action);
+		return new JButton( new TileAction(tileID, layerID, getIconFromImage(tileID, layerID)) );
 	}
 	
 	private JButton createTerrainButton(TerrainType terrainType) {
@@ -175,7 +190,7 @@ public class AreaPalette extends JPanel {
 		String tileID = previewTile.getID();
 		String layerID = previewTile.getLayerID();
 		
-		return new JButton( new TerrainAction(terrainType, tileID, getIconFromImage(tileID, layerID)) );
+		return new JButton( new TerrainAction(terrainType, tileID, layerID, getIconFromImage(tileID, layerID)) );
 	}
 	
 	private JButton createFeatureButton(FeatureType featureType) {
@@ -183,33 +198,70 @@ public class AreaPalette extends JPanel {
 		String tileID = previewTile.getID();
 		String layerID = previewTile.getLayerID();
 		
-		return new JButton( new FeatureAction(featureType, tileID, getIconFromImage(tileID, layerID)) );
+		return new JButton( new FeatureAction(featureType, tileID, layerID, getIconFromImage(tileID, layerID)) );
 	}
 	
-	private class TileAction extends AbstractAction {
+	private class DefaultClickHandler implements AreaClickHandler {
+		@Override public void leftClicked(List<PointImmutable> points) {
+			// do nothing
+		}
+
+		@Override public void rightClicked(List<PointImmutable> points) {
+			AreaPalette.this.rightClicked(points);
+		}
+	}
+	
+	private void rightClicked(List<PointImmutable> points) {
+		// remove tiles at the specified coordinates
+		for (PointImmutable p : points) {
+			if (!p.isWithinBounds(area)) continue;
+			
+			for (String layerID : area.getTileGrid().getLayerIDs()) {
+				TileLayerList list = area.getTileGrid().getLayer(layerID);
+				
+				list.removeTiles(p.x, p.y);
+			}
+		}
+	}
+	
+	private class TileAction extends AbstractAction implements AreaClickHandler {
 		private final String tileID;
+		private final String layerID;
+		private final String spriteID;
 		
-		private TileAction(String tileID, Icon icon) {
+		private TileAction(String tileID, String layerID, Icon icon) {
 			super(null, icon);
 			
 			this.tileID = tileID;
+			this.layerID = layerID;
+			this.spriteID = tileset.getLayer(layerID).getSpriteID(tileID);
 		}
 
+		// called when the button is clicked
 		@Override public void actionPerformed(ActionEvent evt) {
+			renderer.setActionPreviewTile(SpriteManager.getImage(spriteID));
+			renderer.setClickHandler(this);
+		}
+
+		@Override public void leftClicked(List<PointImmutable> points) {
 			
+		}
+
+		@Override public void rightClicked(List<PointImmutable> points) {
+			AreaPalette.this.rightClicked(points);
 		}
 	}
 	
 	private class TerrainAction extends TileAction {
 		private final TerrainType terrainType;
 		
-		private TerrainAction(TerrainType terrainType, String tileID, Icon icon) {
-			super(tileID, icon);
+		private TerrainAction(TerrainType terrainType, String tileID, String layerID, Icon icon) {
+			super(tileID, layerID, icon);
 			
 			this.terrainType = terrainType;
 		}
 		
-		@Override public void actionPerformed(ActionEvent evt) {
+		@Override public void leftClicked(List<PointImmutable> points) {
 			
 		}
 	}
@@ -217,14 +269,37 @@ public class AreaPalette extends JPanel {
 	private class FeatureAction extends TileAction {
 		private final FeatureType featureType;
 		
-		private FeatureAction(FeatureType featureType, String tileID, Icon icon) {
-			super(tileID, icon);
+		private FeatureAction(FeatureType featureType, String tileID, String layerID, Icon icon) {
+			super(tileID, layerID, icon);
 			
 			this.featureType = featureType;
 		}
 		
-		@Override public void actionPerformed(ActionEvent evt) {
+		@Override public void leftClicked(List<PointImmutable> points) {
 			
 		}
+	}
+	
+	/**
+	 * Used by AreaRenderer to pass information about a given click
+	 * back to the appropriate action
+	 * @author jared
+	 *
+	 */
+	
+	public interface AreaClickHandler {
+		/**
+		 * Called when the user left clicks on the area
+		 * @param points the points in grid coordinates that are selected
+		 */
+		
+		public void leftClicked(List<PointImmutable> points);
+		
+		/**
+		 * Called when the user right clicks on the area
+		 * @param points the points in grid coordinates that are selected
+		 */
+		
+		public void rightClicked(List<PointImmutable> points);
 	}
 }
