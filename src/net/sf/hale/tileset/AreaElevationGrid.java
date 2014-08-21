@@ -38,6 +38,22 @@ public class AreaElevationGrid {
 	private byte[][] elevation;
 	
 	/**
+	 * returns an array representing this elevation grid
+	 * @return the elevation array
+	 */
+	
+	public byte[][] writeToJSON() {
+		byte[][] out = new byte[elevation[0].length][elevation.length];
+		for (int x = 0; x < elevation.length; x++) {
+			for (int y = 0; y < elevation[x].length; y++) {
+				out[y][x] = elevation[x][y];
+			}
+		}
+		
+		return out;
+	}
+	
+	/**
 	 * Creates a new AreaElevationGrid for an area with the specified dimensions
 	 * @param width the width of the grid
 	 * @param height the height of the grid

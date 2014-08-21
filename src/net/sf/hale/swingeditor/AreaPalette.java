@@ -75,6 +75,15 @@ public class AreaPalette extends JPanel {
 		renderer.setClickHandler(new DefaultClickHandler());
 	}
 	
+	/**
+	 * Returns the area associated with this palette
+	 * @return the area
+	 */
+	
+	public Area getArea() {
+		return area;
+	}
+	
 	private void addWidgets() {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;

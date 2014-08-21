@@ -20,6 +20,7 @@
 package net.sf.hale.area;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class Trigger implements Saveable {
 	private boolean enteredByPlayer;
 	private boolean areaLoaded;
 	
+	private final List<PointImmutable> points;
 	private final int pointsOffsetX, pointsOffsetY;
 	private final boolean[][] pointsArray;
 	
@@ -104,7 +106,8 @@ public class Trigger implements Saveable {
 		
 		int smallestX = Integer.MAX_VALUE, smallestY = Integer.MAX_VALUE;
 		int largestX = 0, largestY = 0;
-		List<PointImmutable> points = new ArrayList<PointImmutable>();
+		
+		points = new ArrayList<PointImmutable>();
 		
 		if (data.containsKey("points")) {
 			SimpleJSONArray pointsIn = data.getArray("points");
@@ -139,6 +142,24 @@ public class Trigger implements Saveable {
 		}
 		
 		this.entitiesCurrentlyInside = new ArrayList<Entity>();
+	}
+	
+	/**
+	 * Returns a list of all points in this trigger.  this list is unmodifiable
+	 * @return a list of all points
+	 */
+	
+	public List<PointImmutable> getPoints() {
+		return Collections.unmodifiableList(points);
+	}
+	
+	/**
+	 * Returns the script object for this trigger
+	 * @return the script object
+	 */
+	
+	public Scriptable getScript() {
+		return script;
 	}
 	
 	/**
