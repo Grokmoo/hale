@@ -27,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 import de.matthiasmann.twl.AnimationState;
-
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;
+import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 
@@ -44,6 +44,25 @@ public class AreaTileGrid {
 	private Map<String, TileLayerList> tiles;
 	
 	private Point[][] screenCoordinates;
+	
+	/**
+	 * saves this grid to JSON format for creating area files
+	 * @return this grid JSON data
+	 */
+	
+	public JSONOrderedObject writeToJSON() {
+		JSONOrderedObject data = new JSONOrderedObject();
+		
+		for (String layerID : tiles.keySet()) {
+			JSONOrderedObject layerData = new JSONOrderedObject();
+			
+			// TODO implement
+			
+			data.put(layerID, layerData);
+		}
+		
+		return data;
+	}
 	
 	/**
 	 * Creates a new AreaTileGrid of the specified dimensions with the

@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -35,10 +36,12 @@ import javax.swing.KeyStroke;
 
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;
+import net.sf.hale.loading.SaveWriter;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.FileUtil;
+import net.sf.hale.util.Logger;
 
 /**
  * The menu bar for the swing campaign Editor
@@ -54,6 +57,8 @@ public class EditorMenuBar extends JMenuBar {
 	private JMenu editorsMenu;
 	
 	private JTextField logItem;
+	
+	private JMenuItem saveItem;
 	
 	/**
 	 * Creates a new menu bar
@@ -73,7 +78,7 @@ public class EditorMenuBar extends JMenuBar {
 		newItem.setMnemonic(KeyEvent.VK_N);
 		campaignMenu.add(newItem);
 		
-		JMenuItem saveItem = new JMenuItem(new SaveAction());
+		saveItem = new JMenuItem(new SaveAction());
 		saveItem.setMnemonic(KeyEvent.VK_S);
 		saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
 		campaignMenu.add(saveItem);
@@ -138,6 +143,8 @@ public class EditorMenuBar extends JMenuBar {
 		logItem.setHorizontalAlignment(JTextField.RIGHT);
 		logItem.setBorder(null);
 		add(logItem);
+		
+		updateCampaign();
 	}
 	
 	/**
@@ -163,9 +170,13 @@ public class EditorMenuBar extends JMenuBar {
 		if (Game.curCampaign == null) {
 			areasMenu.setEnabled(false);
 			editorsMenu.setEnabled(false);
+			
+			saveItem.setEnabled(false);
 		} else {
 			areasMenu.setEnabled(true);
 			editorsMenu.setEnabled(true);
+			
+			saveItem.setEnabled(true);
 			
 			// populate the list of areas
 			File areaDir = new File("campaigns/" + Game.curCampaign.getID() + "/areas");
@@ -245,11 +256,27 @@ public class EditorMenuBar extends JMenuBar {
 	private class SaveAction extends AbstractAction {
 		private SaveAction() {
 			super("Save");
-			setEnabled(false);
 		}
 		
 		@Override public void actionPerformed(ActionEvent e) {
-			
+			if (frame.getPalette() != null && frame.getPalette().getArea() != null) {
+				Area area = frame.getPalette().getArea();
+				
+				try {
+					PrintWriter out = new PrintWriter(new File("campaigns/" + Game.curCampaign.getID() +
+							"/areas/" + area.getID() + ResourceType.JSON.getExtension()));
+
+					SaveWriter.writeJSON(area.writeToJSON(), out);
+
+					out.close();
+					
+					EditorManager.addLogEntry("Saved area: " + area.getID());
+				} catch (Exception ex) {
+					Logger.appendToErrorLog("Error saving area" + area.getID(), ex);
+					
+					EditorManager.addLogEntry("Error saving area: " + area.getID());
+				}
+			}
 		}
 	}
 	

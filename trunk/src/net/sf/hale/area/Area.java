@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,7 @@ public class Area implements EffectTarget, Saveable {
 	private final List<Encounter> encounters;
 	private final Map<String, Trigger> triggers;
 	private final String id, name;
+	private final boolean isExplored;
 	private final boolean[][] explored;
 	
 	private AreaUtil areaUtil;
@@ -125,6 +127,114 @@ public class Area implements EffectTarget, Saveable {
 	}
 	
 	/**
+	 * Creates a json object representing the data used for loading this area in a campaign.  this is the
+	 * base data of the area, not the save game area created from {@link #save()}
+	 * @return the json data
+	 */
+	
+	public JSONOrderedObject writeToJSON() {
+		JSONOrderedObject data = new JSONOrderedObject();
+		
+		data.put("name", name);
+		data.put("width", width);
+		data.put("height", height);
+		data.put("visibilityRadius", visibilityRadius);
+		data.put("explored", isExplored);
+		data.put("tileset", tileset);
+
+		// write encounter coords
+		Map<String, ArrayList<int[]>> encountersData = new LinkedHashMap<String, ArrayList<int[]>>();
+		
+		for (Encounter encounter : encounters) {
+			int[] coords = new int[2];
+			coords[0] = encounter.getLocation().getX();
+			coords[1] = encounter.getLocation().getY();
+			
+			if (!encountersData.containsKey(encounter.getTemplate().getID())) {
+				encountersData.put(encounter.getTemplate().getID(), new ArrayList<int[]>());
+			}
+			
+			encountersData.get(encounter.getTemplate().getID()).add(coords);
+		}
+		
+		JSONOrderedObject encountersOut = new JSONOrderedObject();
+		for (String id : encountersData.keySet()) {
+			encountersOut.put(id, encountersData.get(id).toArray());
+		}
+		
+		data.put("encounters", encountersOut);
+		
+		// write containers
+		List<JSONOrderedObject> containersData = new ArrayList<JSONOrderedObject>();
+		for (Container container : entityList.getAllContainers()) {
+			JSONOrderedObject containerData = new JSONOrderedObject();
+			containerData.put("id", container.getTemplate().getID());
+			containerData.put("x", container.getLocation().getX());
+			containerData.put("y", container.getLocation().getY());
+			
+			containersData.add(containerData);
+		}
+		data.put("containers", containersData.toArray());
+		
+		// write triggers
+		JSONOrderedObject triggersData = new JSONOrderedObject();
+		for (String id : triggers.keySet()) {
+			JSONOrderedObject triggerData = new JSONOrderedObject();
+			
+			Trigger trigger = triggers.get(id);
+			
+			triggerData.put("script", trigger.getScript().getScriptLocation());
+			
+			List<PointImmutable> points = trigger.getPoints();
+			if (points.size() > 0) {
+				List<int[]> pointsData = new ArrayList<int[]>();
+				
+				for (PointImmutable p : points) {
+					int[] coords = new int[2];
+					coords[0] = p.x;
+					coords[1] = p.y;
+					
+					pointsData.add(coords);
+				}
+				
+				triggerData.put("points", pointsData.toArray());
+			}
+			
+			triggersData.put(id, triggerData);
+		}
+		
+		data.put("triggers", triggersData);
+		
+		// write layers
+		JSONOrderedObject layersData = new JSONOrderedObject();
+		
+		data.put("layers", tileGrid.writeToJSON());
+		
+		// write transparency
+		int[][] transparencyData = new int[transparency[0].length][transparency.length];
+		for (int x = 0; x < transparency.length; x++) {
+			for (int y = 0; y < transparency[x].length; y++) {
+				transparencyData[y][x] = transparency[x][y] ? 0 : 1;
+			}
+		}
+		data.put("transparencyGrid", transparencyData);
+		
+		// write passability
+		int[][] passabilityData = new int[passable[0].length][passable.length];
+		for (int x = 0; x < passable.length; x++) {
+			for (int y = 0; y < passable[x].length; y++) {
+				passabilityData[y][x] = passable[x][y] ? 1 : 0;
+			}
+		}
+		data.put("passabilityGrid", passabilityData);
+		
+		// write elevation
+		data.put("elevationGrid", elevation.writeToJSON());
+		
+		return data;
+	}
+	
+	/**
 	 * Loads an area from the specified saved JSON data
 	 * @param data
 	 * @param refHandler
@@ -167,6 +277,7 @@ public class Area implements EffectTarget, Saveable {
 		this.height = parser.get("height", 0);
 		this.tileset = parser.get("tileset", null);
 		this.visibilityRadius = parser.get("visibilityRadius", 0);
+		this.isExplored = parser.get("explored", false);
 		
 		// initialize matrices
 		explored = new boolean[width][height];

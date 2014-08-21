@@ -432,6 +432,21 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 		return entities[x][y];
 	}
 	
+	/**
+	 * Returns all containers in this list at any grid position
+	 * @return all containers in this list
+	 */
+	
+	public final List<Container> getAllContainers() {
+		List<Container> containers = new ArrayList<Container>();
+		
+		for (Entity entity : entitiesSet) {
+			if (entity instanceof Container) containers.add((Container)entity);
+		}
+		
+		return containers;
+	}
+	
 	public List<Trap> getVisibleTraps(boolean[][] visibility) {
 		List<Trap> traps = new LinkedList<Trap>();
 		

@@ -35,6 +35,7 @@ public class SaveWriter {
 	private static char[] DIGITS = "0123456789".toCharArray();
 	
 	private static void appendInt(int l, PrintWriter out) throws IOException {
+//		out.append(new Integer(l).toString());
 		if (l < 0) {
 			out.append('-');
 			l = -l;
