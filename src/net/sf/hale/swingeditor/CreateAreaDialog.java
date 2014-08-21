@@ -4,9 +4,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,6 +22,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import net.sf.hale.Game;
+import net.sf.hale.loading.JSONOrderedObject;
+import net.sf.hale.loading.SaveWriter;
+import net.sf.hale.resource.ResourceManager;
+import net.sf.hale.resource.ResourceType;
+import net.sf.hale.util.Logger;
+
 /**
  * A widget for creating a new area within a campaign
  * @author jared
@@ -26,8 +38,9 @@ import javax.swing.event.DocumentListener;
 public class CreateAreaDialog extends JDialog {
 	private JButton ok, cancel;
 	
-	private JTextField name;
-	private JSpinner width, height;
+	private JTextField idField, nameField;
+	private JSpinner widthSpinner, heightSpinner, visibilitySpinner;
+	private JCheckBox exploredCheckBox;
 	
 	public CreateAreaDialog(JFrame parent) {
 		super(parent, "Create New Area", true);
@@ -41,14 +54,27 @@ public class CreateAreaDialog extends JDialog {
 		
 		c.gridx = 0;
 		c.gridy = 0;
+		content.add(new JLabel("ID"), c);
+		
+		c.gridx++;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 3;
+		idField = new JTextField();
+		idField.getDocument().addDocumentListener(new NameChangedListener());
+		content.add(idField, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.NONE;
 		content.add(new JLabel("Name"), c);
 		
 		c.gridx++;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridwidth = 3;
-		name = new JTextField();
-		name.getDocument().addDocumentListener(new NameChangedListener());
-		content.add(name, c);
+		nameField = new JTextField();
+		nameField.getDocument().addDocumentListener(new NameChangedListener());
+		content.add(nameField, c);
 		
 		c.gridy++;
 		c.gridx = 0;
@@ -57,18 +83,33 @@ public class CreateAreaDialog extends JDialog {
 		content.add(new JLabel("Size"), c);
 		
 		c.gridx++;
-		width = new JSpinner(new SpinnerNumberModel(20, 5, 200, 1));
-		content.add(width, c);
+		widthSpinner = new JSpinner(new SpinnerNumberModel(20, 5, 200, 1));
+		content.add(widthSpinner, c);
 		
 		c.gridx++;
 		content.add(new JLabel(" x "), c);
 		
 		c.gridx++;
-		height = new JSpinner(new SpinnerNumberModel(20, 5, 200, 1));
-		content.add(height, c);
+		heightSpinner = new JSpinner(new SpinnerNumberModel(20, 5, 200, 1));
+		content.add(heightSpinner, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		content.add(new JLabel("Visibility"), c);
+		
+		c.gridx++;
+		visibilitySpinner = new JSpinner(new SpinnerNumberModel(8, 1, 20, 1));
+		content.add(visibilitySpinner, c);
+		
+		c.gridx = 0;
+		c.gridy++;
+		c.gridwidth = 4;
+		exploredCheckBox = new JCheckBox("Explored");
+		content.add(exploredCheckBox, c);
 		
 		c.gridx = 1;
 		c.gridy++;
+		c.gridwidth = 1;
 		ok = new JButton(new OKAction());
 		ok.setEnabled(false);
 		content.add(ok, c);
@@ -81,28 +122,63 @@ public class CreateAreaDialog extends JDialog {
 		pack();
 	}
 	
-	private void checkValid() {
-		boolean valid = true;
+	private void createArea() {
+		if (!isValidToCreateArea()) return;
 		
-		if (name.getText().length() == 0) valid = false;
+		JSONOrderedObject areaData = new JSONOrderedObject();
+		areaData.put("name", nameField.getText());
+		areaData.put("width", widthSpinner.getValue());
+		areaData.put("height", heightSpinner.getValue());
+		areaData.put("visibilityRadius", visibilitySpinner.getValue());
+		areaData.put("explored", exploredCheckBox.isSelected());
+		areaData.put("tileset", "outdoor");
+		areaData.put("layers", new JSONOrderedObject());
+		
+		String outputLocation = "campaigns/" + Game.curCampaign.getID() + "/areas/" +
+				idField.getText() + ResourceType.JSON.getExtension();
+		
+		try {
+			PrintWriter out = new PrintWriter(new File(outputLocation));
+			SaveWriter.writeJSON(areaData, out);
+			out.close();
+		} catch (Exception e) {
+			Logger.appendToErrorLog("Error writing new area to disk", e);
+		}
+		
+		EditorManager.addLogEntry("Created area: " + outputLocation);
+		ResourceManager.addCampaignResource("areas/" + idField.getText() + ResourceType.JSON.getExtension());
+		EditorManager.updateCampaign();
+		
+		setVisible(false);
+		dispose();
+	}
+	
+	private boolean isValidToCreateArea() {
+		if (idField.getText().length() == 0) return false;
 		
 		// if name is alphanumeric or underscore
-		if (!name.getText().matches("^[a-zA-Z0-9_-]*$")) valid = false;
+		if (!idField.getText().matches("^[a-zA-Z0-9_-]*$")) return false;
 		
-		ok.setEnabled(valid);
+		if (nameField.getText().length() == 0) return false;
+		
+		return true;
+	}
+	
+	private void checkValidToCreateArea() {
+		ok.setEnabled(isValidToCreateArea());
 	}
 	
 	private class NameChangedListener implements DocumentListener {
 		@Override public void changedUpdate(DocumentEvent e) {
-			checkValid();
+			checkValidToCreateArea();
 		}
 
 		@Override public void insertUpdate(DocumentEvent e) {
-			checkValid();
+			checkValidToCreateArea();
 		}
 
 		@Override public void removeUpdate(DocumentEvent e) {
-			checkValid();
+			checkValidToCreateArea();
 		}
 	}
 	
@@ -123,7 +199,7 @@ public class CreateAreaDialog extends JDialog {
 		}
 		
 		@Override public void actionPerformed(ActionEvent e) {
-			
+			createArea();
 		}
 	}
 }

@@ -145,6 +145,14 @@ public class SwingEditor extends JFrame implements ComponentListener {
 	public Canvas getOpenGLCanvas() {
 		return canvas;
 	}
+
+	/**
+	 * Updates the list of campaign assets, areas, etc
+	 */
+	
+	public void updateCampaign() {
+		menuBar.updateCampaign();
+	}
 	
 	/**
 	 * Sets the AreaViewer that is used to draw the OpenGL content

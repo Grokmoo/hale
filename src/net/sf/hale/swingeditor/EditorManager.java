@@ -79,6 +79,14 @@ public class EditorManager {
 	}
 	
 	/**
+	 * Updates all campaign assets, areas, etc
+	 */
+	
+	public static void updateCampaign() {
+		EditorManager.editor.updateCampaign();
+	}
+	
+	/**
 	 * Shows the log viewer
 	 */
 	

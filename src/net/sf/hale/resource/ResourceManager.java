@@ -119,7 +119,9 @@ public class ResourceManager {
 	 */
 	
 	public static String getResourceDirectory(String resource) {
-		return new File(resource).getParent();
+		String dir = new File(resource).getParent();
+		
+		return dir.replace('\\', '/');
 	}
 	
 	/**
