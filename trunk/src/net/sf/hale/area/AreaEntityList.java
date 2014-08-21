@@ -447,6 +447,21 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 		return containers;
 	}
 	
+	/**
+	 * Returns a list of all doors at all locations in this list
+	 * @return a list of all doors
+	 */
+	
+	public List<Door> getAllDoors() {
+		List<Door> doors = new ArrayList<Door>();
+		
+		for (Entity entity : entitiesSet) {
+			if (entity instanceof Door) doors.add((Door)entity);
+		}
+		
+		return doors;
+	}
+	
 	public List<Trap> getVisibleTraps(boolean[][] visibility) {
 		List<Trap> traps = new LinkedList<Trap>();
 		

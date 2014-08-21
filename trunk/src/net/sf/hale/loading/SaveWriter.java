@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import net.minidev.json.JSONValue;
-
 /**
  * An object providing for better formatting of output file than the standard JSONObject
  * @author Jared
@@ -32,18 +30,32 @@ import net.minidev.json.JSONValue;
  */
 
 public class SaveWriter {
-	private static char[] DIGITS = "0123456789".toCharArray();
+	/**
+	 * Whether to use newlines to separate out elements of arrays
+	 */
 	
-	private static void appendInt(int l, PrintWriter out) throws IOException {
-//		out.append(new Integer(l).toString());
-		if (l < 0) {
-			out.append('-');
-			l = -l;
+	public static boolean CompactArrays = false;
+	
+	private static void writeJSONList(Iterable<? extends Object> list, PrintWriter out, String indent)
+			throws IOException {
+		if (list == null) {
+			out.append("null");
+			return;
 		}
-		do {
-			out.append(DIGITS[(int) (l % 10)]);
-			l = l / 10;
-		} while (l > 0);
+
+		boolean first = true;
+		out.append('[');
+		for (Object value : list) {
+			if (first)
+				first = false;
+			else
+				out.append(',');
+			if (value == null)
+				out.append("null");
+			else
+				SaveWriter.writeJSONValue(value, out, indent);
+		}
+		out.append(']');
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -52,7 +64,7 @@ public class SaveWriter {
 			out.append("null");
 		} else if (value instanceof String) {
 			out.append('"');
-			JSONValue.escape((String) value, out);
+			escape((String) value, out);
 			out.append('"');
 		} else if (value instanceof Number) {
 			if (value instanceof Double) {
@@ -72,6 +84,8 @@ public class SaveWriter {
 			out.append(value.toString());
 		} else if (value instanceof Map<?, ?>) {
 			SaveWriter.writeJSON((Map<String, Object>) value, out, indent);
+		} else if (value instanceof Iterable<?>) { // List
+			SaveWriter.writeJSONList((Iterable<Object>) value, out, indent);
 		} else if (value.getClass().isArray()) {
 			Class<?> arrayClz = value.getClass();
 			Class<?> c = arrayClz.getComponentType();
@@ -80,8 +94,10 @@ public class SaveWriter {
 			String indentPlusOne = indent + "  ";
 			
 			out.append('[');
-			out.println();
-			out.append(indentPlusOne);
+			if (!CompactArrays) {
+				out.println();
+				out.append(indentPlusOne);
+			}
 			
 			if (c.isPrimitive()) {
 				if (c == int.class) {
@@ -90,23 +106,23 @@ public class SaveWriter {
 							out.append(", ");
 						else
 							needSep = true;
-						appendInt(b, out);
+						out.append(Integer.toString(b));
 					}
 				} else if (c == short.class) {
-					for (int b : ((short[]) value)) {
+					for (short b : ((short[]) value)) {
 						if (needSep)
 							out.append(", ");
 						else
 							needSep = true;
-						appendInt(b, out);
+						out.append(Short.toString(b));
 					}
 				} else if (c == byte.class) {
-					for (int b : ((byte[]) value)) {
+					for (byte b : ((byte[]) value)) {
 						if (needSep)
 							out.append(", ");
 						else
 							needSep = true;
-						appendInt(b, out);
+						out.append(Byte.toString(b));
 					}
 				} else if (c == long.class) {
 					for (long b : ((long[]) value)) {
@@ -114,14 +130,7 @@ public class SaveWriter {
 							out.append(", ");
 						else
 							needSep = true;
-						if (b < 0) {
-							out.append('-');
-							b = -b;
-						}
-						do {
-							out.append(DIGITS[(int) (b % 10)]);
-							b = b / 10;
-						} while (b > 0);
+						out.append(Long.toString(b));
 					}
 				} else if (c == float.class) {
 					for (float b : ((float[]) value)) {
@@ -162,8 +171,10 @@ public class SaveWriter {
 				}
 			}
 			
-			out.println();
-			out.append(indent);
+			if (!CompactArrays) {
+				out.println();
+				out.append(indent);
+			}
 			out.append(']');
 		}
 	}
@@ -202,7 +213,7 @@ public class SaveWriter {
 				out.append("null");
 			else {
 				out.append('"');
-				JSONValue.escape(key, out);
+				escape(key, out);
 				out.append('"');
 			}
 			out.append(" : ");
@@ -223,5 +234,58 @@ public class SaveWriter {
 	
 	public static void writeJSON(Map<String, ? extends Object> map, PrintWriter out) throws IOException {
 		writeJSON(map, out, "");
+	}
+    
+    /**
+     * Escape special chars from String except /
+     * @param s - Must not be null.
+     * @param out
+     */
+
+	private static void escape(String s, Appendable out) {
+		try {
+			for (int i = 0; i < s.length(); i++) {
+				char ch = s.charAt(i);
+				switch (ch) {
+				case '"':
+					out.append("\\\"");
+					break;
+				case '\\':
+					out.append("\\\\");
+					break;
+				case '\b':
+					out.append("\\b");
+					break;
+				case '\f':
+					out.append("\\f");
+					break;
+				case '\n':
+					out.append("\\n");
+					break;
+				case '\r':
+					out.append("\\r");
+					break;
+				case '\t':
+					out.append("\\t");
+					break;
+				default:
+					// Reference:
+					// http://www.unicode.org/versions/Unicode5.1.0/
+					if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
+							|| (ch >= '\u2000' && ch <= '\u20FF')) {
+						out.append("\\u");
+						String hex = "0123456789ABCDEF";
+						out.append(hex.charAt(ch >> 12 & 0x000F));
+						out.append(hex.charAt(ch >> 8 & 0x000F));
+						out.append(hex.charAt(ch >> 4 & 0x000F));
+						out.append(hex.charAt(ch >> 0 & 0x000F));
+					} else {
+						out.append(ch);
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new RuntimeException("Impossible Exeption");
+		}
 	}
 }
