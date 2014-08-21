@@ -266,8 +266,10 @@ public class EditorMenuBar extends JMenuBar {
 					PrintWriter out = new PrintWriter(new File("campaigns/" + Game.curCampaign.getID() +
 							"/areas/" + area.getID() + ResourceType.JSON.getExtension()));
 
+					SaveWriter.CompactArrays = true;
 					SaveWriter.writeJSON(area.writeToJSON(), out);
-
+					SaveWriter.CompactArrays = false;
+					
 					out.close();
 					
 					EditorManager.addLogEntry("Saved area: " + area.getID());

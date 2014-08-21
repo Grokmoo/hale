@@ -19,13 +19,13 @@
 
 package net.sf.hale.tileset;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
@@ -35,6 +35,7 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Door;
 import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.Trap;
+import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.util.Point;
 
 /**
@@ -45,12 +46,49 @@ import net.sf.hale.util.Point;
 
 public class TileLayerList {
 	private TileList[][] tiles;
-	private String layerID;
 	
 	// helpers for drawing entity tiles
 	private boolean[][] explored;
 	private boolean[][] visibility;
 	private Area area;
+	
+	/**
+	 * saves this grid to JSON format for creating area files
+	 * @return this grid JSON data
+	 */
+	
+	public JSONOrderedObject writeToJSON() {
+		JSONOrderedObject data = new JSONOrderedObject();
+		
+		Map<String, List<int[]>> out = new LinkedHashMap<String, List<int[]>>();
+		
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				// important to create the array here each time so it isn't overwritten later
+				int[] coords = new int[2];
+				coords[0] = x;
+				coords[1] = y;
+				
+				TileList list = tiles[x][y];
+				
+				for (Tile tile : list) {
+					String id = tile.getTileID();
+					
+					if (!out.containsKey(id)) {
+						out.put(id, new ArrayList<int[]>());
+					}
+					
+					out.get(id).add(coords);
+				}
+			}
+		}
+		
+		for (String tileID : out.keySet()) {
+			data.put(tileID, out.get(tileID).toArray());
+		}
+		
+		return data;
+	}
 	
 	/**
 	 * Creates a new TileLayerList of the specified size.  All added tiles
@@ -59,8 +97,7 @@ public class TileLayerList {
 	 * @param height the height of the area
 	 */
 	
-	public TileLayerList(String layerID, int width, int height) {
-		this.layerID = layerID;
+	public TileLayerList(int width, int height) {
 		tiles = new TileList[width][height];
 		
 		// initialize an empty TileList at each point
@@ -112,19 +149,6 @@ public class TileLayerList {
 	
 	public List<Tile> getTilesAt(int x, int y) {
 		return Collections.unmodifiableList(tiles[x][y]);
-	}
-	
-	/**
-	 * Writes the tile data contained in this List out to the specified Writer
-	 * @param out the Writer to write with
-	 */
-	
-	protected void write(BufferedWriter out) throws IOException {
-		for (int y = tiles[0].length - 1; y >= 0; y--) {
-			for (int x = tiles.length - 1; x >= 0; x--) {
-				tiles[x][y].write(out, x, y);
-			}
-		}
 	}
 	
 	/**
@@ -301,20 +325,6 @@ public class TileLayerList {
 		private void cacheSprites() {
 			for (Tile tile : this) {
 				tile.cacheSprite();
-			}
-		}
-		
-		private void write(BufferedWriter out, int x, int y) throws IOException {
-			for (Tile tile : this) {
-				out.write("tile ");
-				out.write(layerID);
-				out.write(" ");
-				out.write(Integer.toString(x));
-				out.write(" ");
-				out.write(Integer.toString(y));
-				out.write(" ");
-				out.write(tile.getTileID());
-				out.newLine();
 			}
 		}
 	}

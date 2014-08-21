@@ -176,6 +176,18 @@ public class Area implements EffectTarget, Saveable {
 		}
 		data.put("containers", containersData.toArray());
 		
+		// write doors
+		List<JSONOrderedObject> doorsData = new ArrayList<JSONOrderedObject>();
+		for (Door door : entityList.getAllDoors()) {
+			JSONOrderedObject doorData = new JSONOrderedObject();
+			doorData.put("id", door.getTemplate().getID());
+			doorData.put("x", door.getLocation().getX());
+			doorData.put("y", door.getLocation().getY());
+			
+			doorsData.add(doorData);
+		}
+		data.put("doors", doorsData.toArray());
+		
 		// write triggers
 		JSONOrderedObject triggersData = new JSONOrderedObject();
 		for (String id : triggers.keySet()) {
@@ -206,8 +218,6 @@ public class Area implements EffectTarget, Saveable {
 		data.put("triggers", triggersData);
 		
 		// write layers
-		JSONOrderedObject layersData = new JSONOrderedObject();
-		
 		data.put("layers", tileGrid.writeToJSON());
 		
 		// write transparency

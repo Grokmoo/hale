@@ -19,8 +19,6 @@
 
 package net.sf.hale.tileset;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -54,11 +52,7 @@ public class AreaTileGrid {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
 		for (String layerID : tiles.keySet()) {
-			JSONOrderedObject layerData = new JSONOrderedObject();
-			
-			// TODO implement
-			
-			data.put(layerID, layerData);
+			data.put(layerID, tiles.get(layerID).writeToJSON());
 		}
 		
 		return data;
@@ -78,7 +72,7 @@ public class AreaTileGrid {
 		tiles = new LinkedHashMap<String, TileLayerList>();
 		
 		for (String layerID : tileset.getLayerIDs()) {
-			tiles.put(layerID, new TileLayerList(layerID, width, height));
+			tiles.put(layerID, new TileLayerList(width, height));
 		}
 		
 		// precompute screen coordinates
@@ -107,18 +101,6 @@ public class AreaTileGrid {
 			for (int x = 0; x < newWidth; x++) {
 				screenCoordinates[x][y] = AreaUtil.convertGridToScreen(x, y);
 			}
-		}
-	}
-	
-	/**
-	 * Writes the tile data contained in this List out to the specified Writer
-	 * @param out the Writer to write with
-	 * @throws IOException 
-	 */
-	
-	public void write(BufferedWriter out) throws IOException {
-		for (String layerID : tileset.getLayerIDs()) {
-			tiles.get(layerID).write(out);
 		}
 	}
 	
