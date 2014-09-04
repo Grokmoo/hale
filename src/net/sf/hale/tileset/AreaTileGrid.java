@@ -191,12 +191,13 @@ public class AreaTileGrid {
 	 * @param layerID the String ID of the layer to add this tile to
 	 * @param x the x grid coordinate for the tile
 	 * @param y the y grid coordinate for the tile
+	 * @return the tile that was just created
 	 */
 	
-	public void addTile(String tileID, String layerID, int x, int y) {
+	public Tile addTile(String tileID, String layerID, int x, int y) {
 		TileLayerList tileLayerList = tiles.get(layerID);
 		
-		tileLayerList.addTile(tileID, tileset.getLayer(layerID).getSpriteID(tileID), x, y);
+		return tileLayerList.addTile(tileID, tileset.getLayer(layerID).getSpriteID(tileID), x, y);
 	}
 	
 	/**
@@ -206,12 +207,14 @@ public class AreaTileGrid {
 	 * @param layerID the ID String of the layer to add the tile to
 	 * @param x the x grid coordinate
 	 * @param y the y grid coordinate
+	 * @return the tile that was passed in, or the duplicate tile that already existing if the tile
+	 * was not added
 	 */
 	
-	public void addTile(Tile tile, String layerID, int x, int y) {
+	public Tile addTile(Tile tile, String layerID, int x, int y) {
 		TileLayerList tileLayerList = tiles.get(layerID);
 		
-		tileLayerList.addTile(tile, x, y);
+		return tileLayerList.addTile(tile, x, y);
 	}
 	
 	/**

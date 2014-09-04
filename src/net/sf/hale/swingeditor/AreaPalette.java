@@ -29,7 +29,6 @@ import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.Layer;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
-import net.sf.hale.tileset.TileLayerList;
 import net.sf.hale.tileset.Tileset;
 import net.sf.hale.util.PointImmutable;
 
@@ -44,6 +43,8 @@ public class AreaPalette extends JPanel {
 	private AreaRenderer renderer;
 	private Area area;
 	private Tileset tileset;
+	
+	private TerrainGrid grid;
 	
 	/**
 	 * Creates a new palette.  It is empty until an area is set
@@ -73,6 +74,8 @@ public class AreaPalette extends JPanel {
 		}
 		
 		renderer.setClickHandler(new DefaultClickHandler());
+
+		grid = new TerrainGrid(area);
 	}
 	
 	/**
@@ -214,22 +217,10 @@ public class AreaPalette extends JPanel {
 		@Override public void leftClicked(List<PointImmutable> points) { /* do nothign */ }
 
 		@Override public void rightClicked(List<PointImmutable> points) {
-			AreaPalette.this.removeAllTiles(points);
+			grid.removeAllTiles(points);
 		}
 	}
 	
-	private void removeAllTiles(List<PointImmutable> points) {
-		// remove tiles at the specified coordinates
-		for (PointImmutable p : points) {
-			if (!p.isWithinBounds(area)) continue;
-			
-			for (String layerID : area.getTileGrid().getLayerIDs()) {
-				TileLayerList list = area.getTileGrid().getLayer(layerID);
-				
-				list.removeTiles(p.x, p.y);
-			}
-		}
-	}
 	
 	private class TileAction extends AbstractAction implements AreaClickHandler {
 		private final String tileID;
@@ -255,7 +246,7 @@ public class AreaPalette extends JPanel {
 		}
 
 		@Override public void rightClicked(List<PointImmutable> points) {
-			AreaPalette.this.removeAllTiles(points);
+			grid.removeAllTiles(points);
 		}
 	}
 	
@@ -269,17 +260,7 @@ public class AreaPalette extends JPanel {
 		}
 		
 		@Override public void leftClicked(List<PointImmutable> points) {
-			removeAllTiles(points);
-			
-			for (PointImmutable p : points) {
-				if (!p.isWithinBounds(area)) continue;
-				
-				TerrainTile tile = terrainType.getRandomTerrainTile();
-				
-				area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), p.x, p.y);
-			}
-			
-			area.getTileGrid().cacheSprites();
+			grid.setTerrain(points, terrainType);
 		}
 	}
 	

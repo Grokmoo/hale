@@ -118,6 +118,20 @@ public abstract class AbstractTerrainType implements Iterable<TerrainTile> {
 	}
 	
 	/**
+	 * Returns the terrain tile with a matching tile ID if one exists
+	 * @param tileID
+	 * @return the terrain tile, or null if none exists
+	 */
+	
+	public TerrainTile getTerrainTile(String tileID) {
+		for (TerrainTile tile : tiles) {
+			if (tile.getID().equals(tileID)) return tile;
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Randomly returns one terrain tile from the list of terrain tiles in this TerrainType.
 	 * The tiles are weighted based on their individual probability factors
 	 * @return a randomly chosen terrain tile, or null if this terrain type does not have a terrain tile
