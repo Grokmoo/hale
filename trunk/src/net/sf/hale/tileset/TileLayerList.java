@@ -169,10 +169,15 @@ public class TileLayerList {
 	 * @param spriteID the sprite to add
 	 * @param x the x grid coordinate
 	 * @param y the y grid coordinate
+	 * @return the tile that was just created
 	 */
 	
-	protected void addTile(String tileID, String spriteID, int x, int y) {
-		tiles[x][y].add(new Tile(tileID, spriteID));
+	protected Tile addTile(String tileID, String spriteID, int x, int y) {
+		Tile tile = new Tile(tileID, spriteID);
+		
+		tiles[x][y].add(tile);
+		
+		return tile;
 	}
 	
 	/**
@@ -181,14 +186,17 @@ public class TileLayerList {
 	 * @param tile the tile to add
 	 * @param x the x grid coordinate
 	 * @param y the y grid coordinate
+	 * @return the tile that was passed in, or the duplicate existing tile if no tile was created
 	 */
 	
-	protected void addTile(Tile tile, int x, int y) {
+	protected Tile addTile(Tile tile, int x, int y) {
 		for (Tile existingTile : tiles[x][y]) {
-			if (existingTile.getTileID().equals(tile.getTileID())) return;
+			if (existingTile.getTileID().equals(tile.getTileID())) return existingTile;
 		}
 		
 		tiles[x][y].add(tile);
+		
+		return tile;
 	}
 	
 	/**
