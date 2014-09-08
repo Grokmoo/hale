@@ -31,7 +31,6 @@ import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tile;
 import net.sf.hale.tileset.Tileset;
-import net.sf.hale.util.PointImmutable;
 
 /**
  * Class for selecting different types of objects such as terrain which
@@ -215,10 +214,10 @@ public class AreaPalette extends JPanel {
 	}
 	
 	private class DefaultClickHandler implements AreaClickHandler {
-		@Override public void leftClicked(List<PointImmutable> points) { /* do nothign */ }
+		@Override public void leftClicked(int x, int y, int r) { /* do nothign */ }
 
-		@Override public void rightClicked(List<PointImmutable> points) {
-			grid.removeAllTiles(points);
+		@Override public void rightClicked(int x, int y, int r) {
+			grid.removeAllTiles(x, y, r);
 		}
 	}
 	
@@ -242,12 +241,12 @@ public class AreaPalette extends JPanel {
 			renderer.setClickHandler(this);
 		}
 
-		@Override public void leftClicked(List<PointImmutable> points) {
+		@Override public void leftClicked(int x, int y, int r) {
 			
 		}
 
-		@Override public void rightClicked(List<PointImmutable> points) {
-			grid.removeAllTiles(points);
+		@Override public void rightClicked(int x, int y, int r) {
+			grid.removeAllTiles(x, y, r);
 		}
 	}
 	
@@ -260,8 +259,8 @@ public class AreaPalette extends JPanel {
 			this.terrainType = terrainType;
 		}
 		
-		@Override public void leftClicked(List<PointImmutable> points) {
-			grid.setTerrain(points, terrainType);
+		@Override public void leftClicked(int x, int y, int r) {
+			grid.setTerrain(x, y, r, terrainType);
 		}
 	}
 	
@@ -274,7 +273,7 @@ public class AreaPalette extends JPanel {
 			this.featureType = featureType;
 		}
 		
-		@Override public void leftClicked(List<PointImmutable> points) {
+		@Override public void leftClicked(int x, int y, int r) {
 			
 		}
 	}
@@ -289,16 +288,20 @@ public class AreaPalette extends JPanel {
 	public interface AreaClickHandler {
 		/**
 		 * Called when the user left clicks on the area
-		 * @param points the points in grid coordinates that are selected
+		 * @param x the grid x coordinate
+		 * @param y the grid y coordinate
+		 * @param r the grid radius
 		 */
 		
-		public void leftClicked(List<PointImmutable> points);
+		public void leftClicked(int x, int y, int r);
 		
 		/**
 		 * Called when the user right clicks on the area
-		 * @param points the points in grid coordinates that are selected
+		 * @param x the grid x coordinate
+		 * @param y the grid y coordinate
+		 * @param r the grid radius
 		 */
 		
-		public void rightClicked(List<PointImmutable> points);
+		public void rightClicked(int x, int y, int r);
 	}
 }

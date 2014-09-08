@@ -20,8 +20,6 @@
 package net.sf.hale.swingeditor;
 
 import java.awt.Canvas;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.SpinnerNumberModel;
 
@@ -36,7 +34,6 @@ import net.sf.hale.tileset.AreaTileGrid;
 import net.sf.hale.tileset.Tile;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
-import net.sf.hale.util.PointImmutable;
 
 /**
  * A class for viewing an area in the swing editor
@@ -75,6 +72,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		this.area = area;
 		mouseRadius = new SpinnerNumberModel(0, 0, AreaRenderer.MaxRadius, 1);
 		lastMouseState = new boolean[Mouse.getButtonCount()];
+		mouseGrid = new Point(-100, -100);
 	}
 	
 	/**
@@ -147,11 +145,11 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		long curTime = System.currentTimeMillis();
 		if (curTime - lastClickTime > MouseTimeout) {
 			if (Mouse.isButtonDown(0)) {
-				clickHandler.leftClicked(getHoverPoints());
+				clickHandler.leftClicked(mouseGrid.x, mouseGrid.y, (Integer)mouseRadius.getValue());
 				lastClickTime = curTime;
 			} else if (Mouse.isButtonDown(1)) {
 				lastClickTime = curTime;
-				clickHandler.rightClicked(getHoverPoints());
+				clickHandler.rightClicked(mouseGrid.x, mouseGrid.y, (Integer)mouseRadius.getValue());
 			}
 		}
 		
@@ -183,28 +181,6 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	
 	public SpinnerNumberModel getMouseRadiusModel() {
 		return mouseRadius;
-	}
-	
-	/**
-	 * @return a list of all points (in grid coordinates) that the mouse is hovering over
-	 */
-	
-	private List<PointImmutable> getHoverPoints() {
-		List<PointImmutable> points = new ArrayList<PointImmutable>();
-		
-		if (mouseGrid != null) {
-			points.add(new PointImmutable(mouseGrid));
-			
-			int radius = (Integer)mouseRadius.getValue();
-			
-			for (int r = 1; r <= radius; r++) {
-				for (int i = 0; i < 6 * r; i++) {
-					points.add(new PointImmutable(AreaUtil.convertPolarToGrid(mouseGrid, r, i)));
-				}
-			}
-		}
-		
-		return points;
 	}
 	
 	@Override public Area getArea() {
