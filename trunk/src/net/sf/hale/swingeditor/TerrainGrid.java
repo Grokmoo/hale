@@ -153,7 +153,12 @@ public class TerrainGrid {
 	 */
 	
 	public void setTerrain(int x, int y, int radius, TerrainType type) {
-		removeButNotTerrain(x, y);
+		PointImmutable center = new PointImmutable(x, y);
+		
+		if (center.isWithinBounds(area)) {
+			removeButNotTerrain(x, y);
+		}
+		
 		for (int r = 1; r <= radius + 1; r++) {
 			for (int i = 0; i < 6 * r; i++) {
 				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
@@ -164,7 +169,10 @@ public class TerrainGrid {
 			}
 		}
 		
-		setTerrain(x, y, type);
+		if (center.isWithinBounds(area)) {
+			setTerrain(x, y, type);
+		}
+		
 		for (int r = 1; r <= radius; r++) {
 			for (int i = 0; i < 6 * r; i++) {
 				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
