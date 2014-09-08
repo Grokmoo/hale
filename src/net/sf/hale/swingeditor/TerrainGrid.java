@@ -13,6 +13,7 @@ import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tile;
 import net.sf.hale.tileset.TileLayerList;
 import net.sf.hale.tileset.Tileset;
+import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.PointImmutable;
 
@@ -109,15 +110,15 @@ public class TerrainGrid {
 	}
 	
 	/**
-	 * Removes all tiles and clears the terrain at the specified grid points
-	 * @param points the grid points.  for any points that are out of bounds for
-	 * the area, no action is taken
+	 * Removes all tiles and clears the terrain at the specified grid points.  for
+	 * any grid points outside the area bounds, no action is taken
+	 * @param x the grid x coordinate
+	 * @param y the grid y coordinate
+	 * @param r the grid radius
 	 */
 	
-	public void removeAllTiles(List<PointImmutable> points) {
-		for (PointImmutable p : points) {
-			if (!p.isWithinBounds(area)) continue;
-			
+	public void removeAllTiles(int x, int y, int r) {
+		for (PointImmutable p : getPoints(x, y, r)) {
 			removeAllTiles(p.x, p.y);
 		}
 	}
@@ -135,16 +136,16 @@ public class TerrainGrid {
 	
 	/**
 	 * Sets the terrain type at the specified grid points.  sets an appropriate
-	 * tile based on the terrain.
-	 * @param points the grid points.  for any points that are out of bounds for
-	 * the area, no action is taken
+	 * tile based on the terrain.  for any grid points outside the area bounds,
+	 * no action is taken
+	 * @param x the grid x coordinate
+	 * @param y the grid y coordinate
+	 * @param r the grid radius
 	 * @param type
 	 */
 	
-	public void setTerrain(List<PointImmutable> points, TerrainType type) {
-		for (PointImmutable p : points) {
-			if (!p.isWithinBounds(area)) continue;
-			
+	public void setTerrain(int x, int y, int r, TerrainType type) {
+		for (PointImmutable p : getPoints(x, y, r)) {
 			setTerrain(p.x, p.y, type);
 		}
 		
@@ -160,5 +161,31 @@ public class TerrainGrid {
 		area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), x, y);
 		
 		addBorderTiles(x, y);
+	}
+	
+	/**
+	 * @return a list of all points (in grid coordinates) based on the x, y, r
+	 */
+	
+	private List<PointImmutable> getPoints(int x, int y, int radius) {
+		List<PointImmutable> points = new ArrayList<PointImmutable>();
+		
+		PointImmutable pCenter = new PointImmutable(x, y);
+		
+		if (pCenter.isWithinBounds(area)) {
+			points.add(pCenter);
+		}
+
+		for (int r = 1; r <= radius; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(area)) continue;
+				
+				points.add(p);
+			}
+		}
+
+		return points;
 	}
 }
