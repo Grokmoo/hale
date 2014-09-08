@@ -134,26 +134,70 @@ public class TerrainGrid {
 		}
 	}
 	
+	private void removeButNotTerrain(int x, int y) {
+		for (String layerID : area.getTileGrid().getLayerIDs()) {
+			TileLayerList list = area.getTileGrid().getLayer(layerID);
+			
+			list.removeTiles(x, y);
+		}
+	}
+	
 	/**
 	 * Sets the terrain type at the specified grid points.  sets an appropriate
 	 * tile based on the terrain.  for any grid points outside the area bounds,
 	 * no action is taken
 	 * @param x the grid x coordinate
 	 * @param y the grid y coordinate
-	 * @param r the grid radius
+	 * @param radius the grid radius
 	 * @param type
 	 */
 	
-	public void setTerrain(int x, int y, int r, TerrainType type) {
-		for (PointImmutable p : getPoints(x, y, r)) {
-			setTerrain(p.x, p.y, type);
+	public void setTerrain(int x, int y, int radius, TerrainType type) {
+		removeButNotTerrain(x, y);
+		for (int r = 1; r <= radius + 1; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(area)) continue;
+				
+				removeButNotTerrain(p.x, p.y);
+			}
+		}
+		
+		setTerrain(x, y, type);
+		for (int r = 1; r <= radius; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(area)) continue;
+				
+				setTerrain(p.x, p.y, type);
+			}
+		}
+		
+		// re-add nearby tiles
+		for (int i = 0; i < 6 * (radius + 1); i++) {
+			PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, radius + 1, i));
+			
+			if (!p.isWithinBounds(area)) continue;
+			
+			setTerrain(p.x, p.y, terrain[p.x][p.y]);
+		}
+		
+		// re-add nearby border tiles
+		for (int i = 0; i < 6 * (radius + 2); i++) {
+			PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, radius + 2, i));
+			
+			if (!p.isWithinBounds(area)) continue;
+			
+			addBorderTiles(p.x, p.y);
 		}
 		
 		area.getTileGrid().cacheSprites();
 	}
 	
 	private void setTerrain(int x, int y, TerrainType type) {
-		removeAllTiles(x, y);
+		if (type == null) return;
 		
 		TerrainTile tile = type.getRandomTerrainTile();
 		terrain[x][y] = type;

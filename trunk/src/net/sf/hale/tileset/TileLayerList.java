@@ -164,7 +164,8 @@ public class TileLayerList {
 	}
 	
 	/**
-	 * Adds the specified sprite to be drawn at the specified coordinates
+	 * Adds the specified sprite to be drawn at the specified coordinates.  This method
+	 * enforces that no duplicate tiles are added
 	 * @param tileID the ID of the tile to add
 	 * @param spriteID the sprite to add
 	 * @param x the x grid coordinate
@@ -175,9 +176,7 @@ public class TileLayerList {
 	protected Tile addTile(String tileID, String spriteID, int x, int y) {
 		Tile tile = new Tile(tileID, spriteID);
 		
-		tiles[x][y].add(tile);
-		
-		return tile;
+		return addTile(tile, x, y);
 	}
 	
 	/**

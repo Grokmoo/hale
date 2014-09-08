@@ -186,7 +186,8 @@ public class AreaTileGrid {
 	}
 	
 	/**
-	 * Adds a tile at the specified layer and coordinates
+	 * Adds a tile at the specified layer and coordinates.  This method
+	 * enforces that no duplicate tiles will be added
 	 * @param tileID the tile resource image based on the layer
 	 * @param layerID the String ID of the layer to add this tile to
 	 * @param x the x grid coordinate for the tile
