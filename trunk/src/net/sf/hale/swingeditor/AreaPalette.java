@@ -29,6 +29,7 @@ import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.Layer;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
+import net.sf.hale.tileset.Tile;
 import net.sf.hale.tileset.Tileset;
 import net.sf.hale.util.PointImmutable;
 
@@ -237,7 +238,7 @@ public class AreaPalette extends JPanel {
 
 		// called when the button is clicked
 		@Override public void actionPerformed(ActionEvent evt) {
-			renderer.setActionPreviewTile(SpriteManager.getImage(spriteID));
+			renderer.setActionPreviewTile(new Tile(tileID, spriteID));
 			renderer.setClickHandler(this);
 		}
 

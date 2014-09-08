@@ -66,7 +66,7 @@ public class Tile {
 	 * @param screenY the y coordinate
 	 */
 	
-	protected final void draw(int screenX, int screenY) {
+	public final void draw(int screenX, int screenY) {
 		sprite.draw(screenX + offsetX, screenY + offsetY);
 	}
 	

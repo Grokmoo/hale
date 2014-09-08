@@ -31,9 +31,9 @@ import org.lwjgl.opengl.GL11;
 
 import de.matthiasmann.twl.AnimationState;
 import net.sf.hale.area.Area;
-import net.sf.hale.resource.Sprite;
 import net.sf.hale.resource.SpriteManager;
 import net.sf.hale.tileset.AreaTileGrid;
+import net.sf.hale.tileset.Tile;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
 import net.sf.hale.util.PointImmutable;
@@ -53,7 +53,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	private Point mouseScreen;
 	private int scrollX, scrollY;
 	
-	private Sprite actionPreviewTile;
+	private Tile actionPreviewTile;
 	private AreaPalette.AreaClickHandler clickHandler;
 	
 	private static final int MaxRadius = 20;
@@ -97,11 +97,12 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	/**
 	 * Sets the sprite that is drawn under the mouse cursor to preview
 	 * the action that clicking will cause
-	 * @param sprite
+	 * @param tile
 	 */
 	
-	public void setActionPreviewTile(Sprite sprite) {
-		this.actionPreviewTile = sprite;
+	public void setActionPreviewTile(Tile tile) {
+		this.actionPreviewTile = tile;
+		tile.cacheSprite();
 	}
 	
 	/**
