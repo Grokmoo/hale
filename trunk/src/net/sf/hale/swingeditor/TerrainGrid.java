@@ -8,6 +8,7 @@ import net.sf.hale.area.Area;
 import net.sf.hale.tileset.Border;
 import net.sf.hale.tileset.BorderList;
 import net.sf.hale.tileset.BorderTile;
+import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tile;
@@ -30,8 +31,10 @@ public class TerrainGrid {
 	
 	private final int width, height;
 	private final TerrainType[][] terrain;
-	
 	private final TerrainTile[][] terrainTiles; // the actual tiles present on each terrain location
+	
+	private final FeatureType[][] features;
+	private final TerrainTile[][] featureTiles;
 	
 	/**
 	 * Creates a new terrain grid for the given area.  initializes the terrain type for each
@@ -47,6 +50,8 @@ public class TerrainGrid {
 		
 		terrain = new TerrainType[width][height];
 		terrainTiles = new TerrainTile[width][height];
+		features = new FeatureType[width][height];
+		featureTiles = new TerrainTile[width][height];
 		
 		List<Tile> tiles = new ArrayList<Tile>();
 		
@@ -60,6 +65,31 @@ public class TerrainGrid {
 				}
 				
 				setTerrainType(tiles, x, y);
+				
+				setFeatureType(tiles, x, y);
+			}
+		}
+	}
+	
+	/**
+	 * Sets the feature type at the specified coordinates based on the list of tiles.  if no
+	 * matching feature is found, nothing is set
+	 * @param tiles
+	 * @param x
+	 * @param y
+	 */
+	
+	private void setFeatureType(List<Tile> tiles, int x, int y) {
+		for (String featureTypeID : tileset.getFeatureTypeIDs()) {
+			FeatureType featureType = tileset.getFeatureType(featureTypeID);
+			
+			for (Tile tile : tiles) {
+				TerrainTile featureTile = featureType.getTerrainTile(tile.getTileID());
+				
+				if (featureTile != null) {
+					features[x][y] = featureType;
+					featureTiles[x][y] = featureTile;
+				}
 			}
 		}
 	}
@@ -110,6 +140,27 @@ public class TerrainGrid {
 	}
 	
 	/**
+	 * Removes all tiles at the specified grid points that are from a feature.  for
+	 * any points outside the area bounds, no action is taken
+	 * @param x the grid x coordinate
+	 * @param y the grid y coordinate
+	 * @param r the grid radius
+	 */
+	
+	public void removeFeatureTiles(int x, int y, int r) {
+		for (PointImmutable p : getPoints(x, y, r)) {
+			removeFeatureTiles(p.x, p.y);
+		}
+	}
+	
+	private void removeFeatureTiles(int x, int y) {
+		FeatureType featureType = features[x][y];
+		if (featureType == null) return;
+		
+		area.getTileGrid().removeMatchingTiles(featureType, x, y);
+	}
+	
+	/**
 	 * Removes all tiles and clears the terrain at the specified grid points.  for
 	 * any grid points outside the area bounds, no action is taken
 	 * @param x the grid x coordinate
@@ -143,6 +194,48 @@ public class TerrainGrid {
 	}
 	
 	/**
+	 * Sets the feature type at the specified grid points.  sets an appropriate tile
+	 * based on feature.  for any points outside the area bounds, no action is taken
+	 * @param x the grid x coordinate
+	 * @param y the grid y coordinate
+	 * @param radius the grid radius
+	 * @param type
+	 */
+	
+	public void setFeature(int x, int y, int radius, FeatureType type) {
+		PointImmutable center = new PointImmutable(x, y);
+		
+		if (center.isWithinBounds(area)) {
+			setFeature(center.x, center.y, type);
+		}
+		
+		for (int r = 1; r <= radius; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(area)) continue;
+				
+				setFeature(p.x, p.y, type);
+			}
+		}
+		
+		area.getTileGrid().cacheSprites();
+	}
+	
+	private void setFeature(int x, int y, FeatureType type) {
+		if (type == null) return;
+		
+		if (features[x][y] != null) {
+			area.getTileGrid().removeMatchingTiles(features[x][y], x, y);
+		}
+		
+		TerrainTile tile = type.getRandomTerrainTile();
+		features[x][y] = type;
+		featureTiles[x][y] = tile;
+		area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), x, y);
+	}
+	
+	/**
 	 * Sets the terrain type at the specified grid points.  sets an appropriate
 	 * tile based on the terrain.  for any grid points outside the area bounds,
 	 * no action is taken
@@ -171,6 +264,7 @@ public class TerrainGrid {
 		
 		if (center.isWithinBounds(area)) {
 			setTerrain(x, y, type);
+			setFeature(x, y, features[x][y]);
 		}
 		
 		for (int r = 1; r <= radius; r++) {
@@ -180,6 +274,7 @@ public class TerrainGrid {
 				if (!p.isWithinBounds(area)) continue;
 				
 				setTerrain(p.x, p.y, type);
+				setFeature(p.x, p.y, features[p.x][p.y]);
 			}
 		}
 		

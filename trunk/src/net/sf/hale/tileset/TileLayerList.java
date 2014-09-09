@@ -199,6 +199,23 @@ public class TileLayerList {
 	}
 	
 	/**
+	 * Removes any tiles found at the specified coordinates matching the given feature type
+	 * @param featureType
+	 * @param x
+	 * @param y
+	 */
+	
+	protected void removeMatchingTiles(FeatureType featureType, int x, int y) {
+		Iterator<Tile> iter = tiles[x][y].iterator();
+		
+		while (iter.hasNext()) {
+			if (featureType.getTerrainTile(iter.next().getTileID()) != null) {
+				iter.remove();
+			}
+		}
+	}
+	
+	/**
 	 * Removes all tiles in this layer at the specified coordinates except those with a
 	 * sprite ID contained in the set
 	 * @param spriteIDs the set of sprite IDs
