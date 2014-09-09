@@ -50,8 +50,8 @@ public class AreaPalette extends JPanel {
 	
 	private TerrainGrid grid;
 	
-	private final String[] tabTitles = { "Terrain", "Features", "Tiles" };
-	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(), new TileAction() };
+	private final String[] tabTitles = { "Terrain", "Features", "Elevation", "Tiles" };
+	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(), new ElevationAction(), new TileAction() };
 	private int tabIndex;
 	
 	/**
@@ -143,6 +143,9 @@ public class AreaPalette extends JPanel {
 		
 		contentPane.addTab(tabTitles[1], getTabPanel(tileButtons));
 		
+		// add elevation tab
+		contentPane.addTab(tabTitles[2], new JPanel());
+		
 		// add tiles tab
 		tileButtons.clear();
 		
@@ -154,7 +157,7 @@ public class AreaPalette extends JPanel {
 			}
 		}
 		
-		contentPane.addTab(tabTitles[2], getTabPanel(tileButtons));
+		contentPane.addTab(tabTitles[3], getTabPanel(tileButtons));
 	}
 	
 	private JScrollPane getTabPanel(List<JButton> tileButtons) {
@@ -237,14 +240,28 @@ public class AreaPalette extends JPanel {
 		}
 	}
 	
+	private class ElevationAction extends AbstractAction implements AreaClickHandler {
+		private ElevationAction() {
+			
+		}
+
+		@Override public void actionPerformed(ActionEvent evt) { }
+
+		@Override public void leftClicked(int x, int y, int r) {
+			grid.modifyElevation(x, y, r, (byte) +1);
+		}
+
+		@Override public void rightClicked(int x, int y, int r) {
+			grid.modifyElevation(x, y, r, (byte) -1);
+		}
+	}
+	
 	private class TileAction extends AbstractAction implements AreaClickHandler {
 		private final String tileID;
 		private final String layerID;
 		private final String spriteID;
 		
 		private TileAction() {
-			super(null, null);
-			
 			this.tileID = null;
 			this.layerID = null;
 			this.spriteID = null;
@@ -297,7 +314,6 @@ public class AreaPalette extends JPanel {
 		private final TerrainType terrainType;
 		
 		private TerrainAction() {
-			super();
 			this.terrainType = null;
 		}
 		
@@ -318,7 +334,6 @@ public class AreaPalette extends JPanel {
 		private final FeatureType featureType;
 		
 		private FeatureAction() {
-			super();
 			this.featureType = null;
 		}
 		
