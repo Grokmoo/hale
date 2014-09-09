@@ -565,6 +565,7 @@
 	"Wall" : {
 	  "passable" : false,
 	  "transparent" : false,
+          "previewTile" : { "id" : "walls/wall-stone-n-ne", "layer" : "entity" },
 	  "tiles" : [ { "id" : "wall-base/wall", "layer" : "wall-base", "probability" : 1 } ],
 	  "borders" : [
 	    { "with" : "Path", "id" : "BorderWall" },
