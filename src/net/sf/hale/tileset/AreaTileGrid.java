@@ -149,6 +149,19 @@ public class AreaTileGrid {
 	}
 	
 	/**
+	 * Removes any tiles found at the specified coordinates matching the given feature type
+	 * @param featureType
+	 * @param x
+	 * @param y
+	 */
+	
+	public void removeMatchingTiles(FeatureType featureType, int x, int y) {
+		for (String layerID : tileset.getLayerIDs()) {
+			tiles.get(layerID).removeMatchingTiles(featureType, x, y);
+		}
+	}
+	
+	/**
 	 * Removes all tiles from all layers at the specified coordinates, except for
 	 * those tiles with a Sprite ID contained in the specified set
 	 * @param spriteIDs the set of sprite IDs 

@@ -273,8 +273,12 @@ public class AreaPalette extends JPanel {
 			this.featureType = featureType;
 		}
 		
+		@Override public void rightClicked(int x, int y, int r) {
+			grid.removeFeatureTiles(x, y, r);
+		}
+		
 		@Override public void leftClicked(int x, int y, int r) {
-			
+			grid.setFeature(x, y, r, featureType);
 		}
 	}
 	
