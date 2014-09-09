@@ -100,7 +100,9 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	
 	public void setActionPreviewTile(Tile tile) {
 		this.actionPreviewTile = tile;
-		tile.cacheSprite();
+		if (tile != null) {
+			tile.cacheSprite();
+		}
 	}
 	
 	/**

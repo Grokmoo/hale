@@ -18,6 +18,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;
@@ -31,6 +33,8 @@ import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tile;
 import net.sf.hale.tileset.Tileset;
+import net.sf.hale.util.AreaUtil;
+import net.sf.hale.util.PointImmutable;
 
 /**
  * Class for selecting different types of objects such as terrain which
@@ -45,6 +49,10 @@ public class AreaPalette extends JPanel {
 	private Tileset tileset;
 	
 	private TerrainGrid grid;
+	
+	private final String[] tabTitles = { "Terrain", "Features", "Tiles" };
+	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(), new TileAction() };
+	private int tabIndex;
 	
 	/**
 	 * Creates a new palette.  It is empty until an area is set
@@ -73,7 +81,8 @@ public class AreaPalette extends JPanel {
 			addWidgets();
 		}
 		
-		renderer.setClickHandler(new DefaultClickHandler());
+		tabIndex = 0;
+		renderer.setClickHandler(defaultHandlers[tabIndex]);
 
 		grid = new TerrainGrid(area);
 	}
@@ -113,6 +122,7 @@ public class AreaPalette extends JPanel {
 		c.weighty = 1.0;
 		
 		JTabbedPane contentPane = new JTabbedPane();
+		contentPane.addChangeListener(new TabChangedListener());
 		add(contentPane, c);
 		
 		// add terrain tab
@@ -122,7 +132,7 @@ public class AreaPalette extends JPanel {
 			tileButtons.add(createTerrainButton(tileset.getTerrainType(terrainTypeID)));
 		}
 		
-		contentPane.addTab("Terrain", getTabPanel(tileButtons));
+		contentPane.addTab(tabTitles[0], getTabPanel(tileButtons));
 		
 		// add features tab
 		tileButtons.clear();
@@ -131,7 +141,7 @@ public class AreaPalette extends JPanel {
 			tileButtons.add(createFeatureButton(tileset.getFeatureType(featureTypeID)));
 		}
 		
-		contentPane.addTab("Features", getTabPanel(tileButtons));
+		contentPane.addTab(tabTitles[1], getTabPanel(tileButtons));
 		
 		// add tiles tab
 		tileButtons.clear();
@@ -144,7 +154,7 @@ public class AreaPalette extends JPanel {
 			}
 		}
 		
-		contentPane.addTab("Tiles", getTabPanel(tileButtons));
+		contentPane.addTab(tabTitles[2], getTabPanel(tileButtons));
 	}
 	
 	private JScrollPane getTabPanel(List<JButton> tileButtons) {
@@ -213,19 +223,32 @@ public class AreaPalette extends JPanel {
 		return new JButton( new FeatureAction(featureType, tileID, layerID, getIconFromImage(tileID, layerID)) );
 	}
 	
-	private class DefaultClickHandler implements AreaClickHandler {
-		@Override public void leftClicked(int x, int y, int r) { /* do nothign */ }
+	private class TabChangedListener implements ChangeListener {
+		@Override public void stateChanged(ChangeEvent changeEvent) {
+			JTabbedPane source = (JTabbedPane) changeEvent.getSource();
+			
+			int index = source.getSelectedIndex();
 
-		@Override public void rightClicked(int x, int y, int r) {
-			grid.removeAllTiles(x, y, r);
+			if (index != tabIndex) {
+				tabIndex = index;
+				renderer.setClickHandler(defaultHandlers[tabIndex]);
+				renderer.setActionPreviewTile(null);
+			}
 		}
 	}
-	
 	
 	private class TileAction extends AbstractAction implements AreaClickHandler {
 		private final String tileID;
 		private final String layerID;
 		private final String spriteID;
+		
+		private TileAction() {
+			super(null, null);
+			
+			this.tileID = null;
+			this.layerID = null;
+			this.spriteID = null;
+		}
 		
 		private TileAction(String tileID, String layerID, Icon icon) {
 			super(null, icon);
@@ -241,8 +264,28 @@ public class AreaPalette extends JPanel {
 			renderer.setClickHandler(this);
 		}
 
-		@Override public void leftClicked(int x, int y, int r) {
+		@Override public void leftClicked(int x, int y, int radius) {
+			if (tileID == null) return;
 			
+			area.getTileGrid().addTile(tileID, layerID, x, y);
+			
+			PointImmutable center = new PointImmutable(x, y);
+			
+			if (center.isWithinBounds(area)) {
+				area.getTileGrid().addTile(tileID, layerID, x, y);
+			}
+			
+			for (int r = 1; r <= radius; r++) {
+				for (int i = 0; i < 6 * r; i++) {
+					PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+					
+					if (!p.isWithinBounds(area)) continue;
+					
+					area.getTileGrid().addTile(tileID, layerID, p.x, p.y);
+				}
+			}
+			
+			area.getTileGrid().cacheSprites();
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
@@ -253,6 +296,11 @@ public class AreaPalette extends JPanel {
 	private class TerrainAction extends TileAction {
 		private final TerrainType terrainType;
 		
+		private TerrainAction() {
+			super();
+			this.terrainType = null;
+		}
+		
 		private TerrainAction(TerrainType terrainType, String tileID, String layerID, Icon icon) {
 			super(tileID, layerID, icon);
 			
@@ -260,12 +308,19 @@ public class AreaPalette extends JPanel {
 		}
 		
 		@Override public void leftClicked(int x, int y, int r) {
+			if (terrainType == null) return;
+			
 			grid.setTerrain(x, y, r, terrainType);
 		}
 	}
 	
 	private class FeatureAction extends TileAction {
 		private final FeatureType featureType;
+		
+		private FeatureAction() {
+			super();
+			this.featureType = null;
+		}
 		
 		private FeatureAction(FeatureType featureType, String tileID, String layerID, Icon icon) {
 			super(tileID, layerID, icon);
@@ -278,7 +333,9 @@ public class AreaPalette extends JPanel {
 		}
 		
 		@Override public void leftClicked(int x, int y, int r) {
-			grid.setFeature(x, y, r, featureType);
+			if (featureType != null) {
+				grid.setFeature(x, y, r, featureType);
+			}
 		}
 	}
 	
