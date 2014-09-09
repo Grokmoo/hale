@@ -8,6 +8,7 @@ import net.sf.hale.area.Area;
 import net.sf.hale.tileset.Border;
 import net.sf.hale.tileset.BorderList;
 import net.sf.hale.tileset.BorderTile;
+import net.sf.hale.tileset.ElevationList;
 import net.sf.hale.tileset.FeatureType;
 import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
@@ -119,6 +120,27 @@ public class TerrainGrid {
 		}
 	}
 	
+	/**
+	 * Modifies the elevation at the specified grid points by the specified delta amount.
+	 * For points outside the area bounds, no action is taken
+	 * @param x
+	 * @param y
+	 * @param r
+	 * @param delta
+	 */
+	
+	public void modifyElevation(int x, int y, int r, byte delta) {
+		for (PointImmutable p : getPoints(x, y, r)) {
+			modifyElevation(p.x, p.y, delta);
+		}
+		
+		setTerrain(x, y, r, null); // update tiles but don't modify terrain
+	}
+	
+	private void modifyElevation(int x, int y, byte delta) {
+		area.getElevationGrid().modifyElevation(x, y, delta );
+	}
+	
 	private void addBorderTiles(int x, int y) {
 		if (terrain[x][y] == null) return;
 		
@@ -137,6 +159,20 @@ public class TerrainGrid {
 			}
 		}
 		
+		for (ElevationList.Elevation elevation : tileset.getElevationList().
+				getMatchingElevationRules(area.getElevationGrid(), p)) {
+			
+			Border border = elevation.getBorder();
+			
+			for (BorderTile borderTile : border) {
+				Point borderPoint = borderTile.getPosition().getRelativePoint(p);
+				
+				PointImmutable bP = new PointImmutable(borderPoint);
+				if (!bP.isWithinBounds(area)) continue;
+				
+				area.getTileGrid().addTile(borderTile.getID(), borderTile.getLayerID(), bP.x, bP.y);
+			}
+		}
 	}
 	
 	/**
@@ -305,14 +341,20 @@ public class TerrainGrid {
 	}
 	
 	private void setTerrain(int x, int y, TerrainType type) {
-		if (type == null) return;
-		
-		TerrainTile tile = type.getRandomTerrainTile();
-		terrain[x][y] = type;
-		terrainTiles[x][y] = tile;
-		area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), x, y);
-		
-		addBorderTiles(x, y);
+		if (type != null) {
+			TerrainTile tile = type.getRandomTerrainTile();
+			terrain[x][y] = type;
+			terrainTiles[x][y] = tile;
+			area.getTileGrid().addTile(tile.getID(), tile.getLayerID(), x, y);
+			
+			addBorderTiles(x, y);
+		} else {
+			if (terrainTiles[x][y] != null) {
+				area.getTileGrid().addTile(terrainTiles[x][y].getID(), terrainTiles[x][y].getLayerID(), x, y);
+			}
+			
+			addBorderTiles(x, y);
+		}
 	}
 	
 	/**
