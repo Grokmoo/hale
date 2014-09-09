@@ -158,6 +158,9 @@ public class TerrainGrid {
 		if (featureType == null) return;
 		
 		area.getTileGrid().removeMatchingTiles(featureType, x, y);
+		
+		features[x][y] = null;
+		featureTiles[x][y] = null;
 	}
 	
 	/**
@@ -182,6 +185,8 @@ public class TerrainGrid {
 			
 			terrain[x][y] = null;
 			terrainTiles[x][y] = null;
+			features[x][y] = null;
+			featureTiles[x][y] = null;
 		}
 	}
 	
