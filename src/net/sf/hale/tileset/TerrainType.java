@@ -36,13 +36,15 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class TerrainType extends AbstractTerrainType {
 	private final Map<String, String> borders;
+	private final String defaultBorder;
 	
 	private TerrainType(String id, boolean transparent, boolean passable,
-			TerrainTile previewTile, List<TerrainTile> tiles) {
+			TerrainTile previewTile, List<TerrainTile> tiles, String defaultBorder) {
 		
 		super(id, transparent, passable, previewTile, tiles);
 		
 		this.borders = new HashMap<String, String>();
+		this.defaultBorder = defaultBorder;
 	}
 	
 	/**
@@ -57,7 +59,13 @@ public class TerrainType extends AbstractTerrainType {
 	public String getBorderIDWith(TerrainType terrainType) {
 		if (terrainType == null) return null;
 		
-		return borders.get(terrainType.getID());
+		String borderID = borders.get(terrainType.getID());
+		
+		if (borderID != null) return borderID;
+		
+		if (terrainType != this) return defaultBorder;
+		
+		return null;
 	}
 	
 	/**
@@ -79,7 +87,15 @@ public class TerrainType extends AbstractTerrainType {
 		boolean passable = data.get("passable", true);
 		boolean transparent = data.get("transparent", true);
 		
-		TerrainType terrainType = new TerrainType(id, transparent, passable, previewTile, tiles);
+		String defaultBorder;
+		if (data.containsKey("defaultBorder")) {
+			defaultBorder = data.get("defaultBorder", null);
+		} else {
+			defaultBorder = null;
+		}
+		
+		TerrainType terrainType = new TerrainType(id, transparent, passable, previewTile,
+				tiles, defaultBorder);
 		
 		SimpleJSONArray array = data.getArray("borders");
 		for (SimpleJSONArrayEntry entry : array) {
