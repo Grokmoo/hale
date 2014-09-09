@@ -5,8 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.AbstractAction;
@@ -131,7 +129,7 @@ public class CreateAreaDialog extends JDialog {
 		areaData.put("height", heightSpinner.getValue());
 		areaData.put("visibilityRadius", visibilitySpinner.getValue());
 		areaData.put("explored", exploredCheckBox.isSelected());
-		areaData.put("tileset", "outdoor");
+		areaData.put("tileset", "unified");
 		areaData.put("layers", new JSONOrderedObject());
 		
 		String outputLocation = "campaigns/" + Game.curCampaign.getID() + "/areas/" +
