@@ -36,15 +36,13 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class TerrainType extends AbstractTerrainType {
 	private final Map<String, String> borders;
-	private final String defaultBorder;
 	
 	private TerrainType(String id, boolean transparent, boolean passable,
-			TerrainTile previewTile, List<TerrainTile> tiles, String defaultBorder) {
+			TerrainTile previewTile, List<TerrainTile> tiles) {
 		
 		super(id, transparent, passable, previewTile, tiles);
 		
 		this.borders = new HashMap<String, String>();
-		this.defaultBorder = defaultBorder;
 	}
 	
 	/**
@@ -59,23 +57,18 @@ public class TerrainType extends AbstractTerrainType {
 	public String getBorderIDWith(TerrainType terrainType) {
 		if (terrainType == null) return null;
 		
-		String borderID = borders.get(terrainType.getID());
-		
-		if (borderID != null) return borderID;
-		
-		if (terrainType != this) return defaultBorder;
-		
-		return null;
+		return borders.get(terrainType.getID());
 	}
 	
 	/**
 	 * Creates a new TerrainType from the data contained in the specified JSON object
 	 * @param data the JSON data for the TerrainType
 	 * @param id the ID String for the TerrainType
+	 * @param terrainTypes the terrainTypes that have been read in so far, prior to this terrain type
 	 * @return the newly created TerrainType
 	 */
 	
-	public static TerrainType parse(SimpleJSONObject data, String id) {
+	public static TerrainType parse(SimpleJSONObject data, String id, Map<String, TerrainType> terrainTypes) {
 		List<TerrainTile> tiles = AbstractTerrainType.parseTiles(data);
 		
 		// default the previewTile to the first tile
@@ -87,15 +80,16 @@ public class TerrainType extends AbstractTerrainType {
 		boolean passable = data.get("passable", true);
 		boolean transparent = data.get("transparent", true);
 		
-		String defaultBorder;
-		if (data.containsKey("defaultBorder")) {
-			defaultBorder = data.get("defaultBorder", null);
-		} else {
-			defaultBorder = null;
-		}
-		
 		TerrainType terrainType = new TerrainType(id, transparent, passable, previewTile,
-				tiles, defaultBorder);
+				tiles);
+		
+		if (data.containsKey("defaultBorder")) {
+			String defaultBorder = data.get("defaultBorder", null);
+			
+			for (String otherTerrainTypeID : terrainTypes.keySet()) {
+				terrainType.borders.put(otherTerrainTypeID, defaultBorder);
+			}
+		}
 		
 		SimpleJSONArray array = data.getArray("borders");
 		for (SimpleJSONArrayEntry entry : array) {
