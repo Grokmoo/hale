@@ -64,11 +64,17 @@ public class TerrainType extends AbstractTerrainType {
 	 * Creates a new TerrainType from the data contained in the specified JSON object
 	 * @param data the JSON data for the TerrainType
 	 * @param id the ID String for the TerrainType
-	 * @param terrainTypes the terrainTypes that have been read in so far, prior to this terrain type
+	 * @param terrainBorderPriority the list used to determine which terraintypes this terraintype
+	 * should share its default border with.  the list is iterated through until this terrain type is found,
+	 * and then stops.  this terrain type will be given the default border with all terrain types up to that
+	 * point.  this means that if this terrain type's id is not in the list, it will be given the default
+	 * border with all terrain types in the list.  note that this parameter only functions if the terrain type
+	 * specifies a default border in the JSON, and default borders can be overriden by a specified border in the
+	 * JSON
 	 * @return the newly created TerrainType
 	 */
 	
-	public static TerrainType parse(SimpleJSONObject data, String id, Map<String, TerrainType> terrainTypes) {
+	public static TerrainType parse(SimpleJSONObject data, String id, List<String> terrainBorderPriority) {
 		List<TerrainTile> tiles = AbstractTerrainType.parseTiles(data);
 		
 		// default the previewTile to the first tile
@@ -86,7 +92,9 @@ public class TerrainType extends AbstractTerrainType {
 		if (data.containsKey("defaultBorder")) {
 			String defaultBorder = data.get("defaultBorder", null);
 			
-			for (String otherTerrainTypeID : terrainTypes.keySet()) {
+			for (String otherTerrainTypeID : terrainBorderPriority) {
+				if (otherTerrainTypeID.equals(id)) break;
+				
 				terrainType.borders.put(otherTerrainTypeID, defaultBorder);
 			}
 		}

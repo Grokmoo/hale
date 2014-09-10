@@ -121,13 +121,22 @@ public class Tileset {
 			featureTypes.put(featureID, featureType);
 		}
 		
+		List<String> terrainBorderPriority = new ArrayList<String>();
+		if (parser.containsKey("terrainBorderPriority")) {
+			SimpleJSONArray priorityArray = parser.getArray("terrainBorderPriority");
+			
+			for (SimpleJSONArrayEntry entry : priorityArray) {
+				terrainBorderPriority.add(entry.getString());
+			}
+		}
+		
 		// parse set of terrain types
 		this.terrainTypes = new HashMap<String, TerrainType>();
 		SimpleJSONObject terrainTypeObject = parser.getObject("terrain");
 		for (String terrainID : terrainTypeObject.keySet()) {
 			SimpleJSONObject terrainObject = terrainTypeObject.getObject(terrainID);
 			
-			TerrainType terrainType = TerrainType.parse(terrainObject, terrainID, terrainTypes);
+			TerrainType terrainType = TerrainType.parse(terrainObject, terrainID, terrainBorderPriority);
 			terrainTypes.put(terrainID, terrainType);
 		}
 		
