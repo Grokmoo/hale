@@ -33,7 +33,6 @@ import net.sf.hale.tileset.TerrainTile;
 import net.sf.hale.tileset.TerrainType;
 import net.sf.hale.tileset.Tile;
 import net.sf.hale.tileset.Tileset;
-import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.PointImmutable;
 
 /**
@@ -260,21 +259,29 @@ public class AreaPalette extends JPanel {
 	
 	private class PassableAction implements AreaClickHandler {
 		@Override public void leftClicked(int x, int y, int r) {
-			
+			for (PointImmutable p : grid.getPoints(x, y, r)) {
+				area.getPassability()[p.x][p.y]= true; 
+			}
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
-
+			for (PointImmutable p : grid.getPoints(x, y, r)) {
+				area.getPassability()[p.x][p.y]= false; 
+			}
 		}
 	}
 	
 	private class TransparentAction implements AreaClickHandler {
 		@Override public void leftClicked(int x, int y, int r) {
-
+			for (PointImmutable p : grid.getPoints(x, y, r)) {
+				area.getTransparency()[p.x][p.y] = true;
+			}
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
-
+			for (PointImmutable p : grid.getPoints(x, y, r)) {
+				area.getTransparency()[p.x][p.y] = false;
+			}
 		}
 	}
 	
@@ -306,22 +313,8 @@ public class AreaPalette extends JPanel {
 		@Override public void leftClicked(int x, int y, int radius) {
 			if (tileID == null) return;
 			
-			area.getTileGrid().addTile(tileID, layerID, x, y);
-			
-			PointImmutable center = new PointImmutable(x, y);
-			
-			if (center.isWithinBounds(area)) {
-				area.getTileGrid().addTile(tileID, layerID, x, y);
-			}
-			
-			for (int r = 1; r <= radius; r++) {
-				for (int i = 0; i < 6 * r; i++) {
-					PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
-					
-					if (!p.isWithinBounds(area)) continue;
-					
-					area.getTileGrid().addTile(tileID, layerID, p.x, p.y);
-				}
+			for (PointImmutable p : grid.getPoints(x, y, radius)) {
+				area.getTileGrid().addTile(tileID, layerID, p.x, p.y);
 			}
 			
 			area.getTileGrid().cacheSprites();

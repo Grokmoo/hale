@@ -397,10 +397,15 @@ public class TerrainGrid {
 	}
 	
 	/**
+	 * Gets a list of all valid grid points based on the specified center coordinates with the specified
+	 * radius
+	 * @param x
+	 * @param y
+	 * @param radius
 	 * @return a list of all points (in grid coordinates) based on the x, y, r
 	 */
 	
-	private List<PointImmutable> getPoints(int x, int y, int radius) {
+	public List<PointImmutable> getPoints(int x, int y, int radius) {
 		List<PointImmutable> points = new ArrayList<PointImmutable>();
 		
 		PointImmutable pCenter = new PointImmutable(x, y);
