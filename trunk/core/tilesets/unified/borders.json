@@ -113,11 +113,7 @@
     "wood-se-s-sw" : [ 3, 8 ],
     "wood-n"       : [ 4, 8 ],
     "wood-n-nw"    : [ 5, 8 ],
-    "wood-ne-n-nw"   : [ 6, 8 ]
+    "wood-ne-n-nw"   : [ 6, 8 ],
     "wood-n-ne"      : [ 7, 8 ]
-    "caveWet-s-se"   : [ 8, 8 ]
-    "caveWet-s-sw"   : [ 9, 8 ]
-    "pathStone-s-se" : [10, 8 ]
-    "pathStone-s-sw" : [11, 8 ]
   }
 }
