@@ -30,6 +30,12 @@
   
   },
   
+  "terrainBorderPriority" : [
+    "water", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
+    "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone",
+    "lava", "pathDark", "hillsCave", "wall", "caveWet", "wood", "pathStone"
+  ],
+  
   "terrain" : {
     "path" : {
       "tiles" : [
@@ -274,7 +280,8 @@
         { "id" : "base/wood2", "layer" : "base", "probability" : 1 }
       ],
       "borders" : [
-      ]
+      ],
+      "defaultBorder" : "BorderWood"
     },
     "pathStone" : {
       "tiles" : [
@@ -605,6 +612,42 @@
       { "MustHave" : [ "SouthEast" ],
         "tiles" : [ { "id" : "borders/stone-se", "layer" : "borders", "position" : "SouthEast" } ]
       }
+    ],
+    "BorderWood" : [
+	  { "MustHave" : [ "South", "SouthEast", "SouthWest" ],
+	    "tiles" : [ { "id" : "borders/wood-s", "layer" : "borders", "position" : "South" } ]
+	  },
+	  { "MustHave" : [ "SouthWest", "SouthWest-NorthWest" ],
+	    "tiles" : [ { "id" : "borders/wood-s-sw", "layer" : "borders", "position" : "SouthWest" } ]
+	  },
+	  { "MustHave" : [ "SouthEast", "SouthEast-NorthEast" ],
+	    "tiles" : [ { "id" : "borders/wood-s-se", "layer" : "borders", "position" : "SouthEast" } ]
+	  },
+	  { "MustHave" : [ "South" ],
+	    "MustNotHave" : [ "SouthEast", "SouthWest" ],
+	    "tiles" : [ { "id" : "borders/wood-se-s-sw", "layer" : "borders", "position" : "South" } ]
+	  },
+	  { "MustHave" : [ "SouthEast", "NorthEast" ],
+	    "MustNotHave" : [ "SouthEast-NorthEast" ],
+	    "tiles" : [ { "id" : "borders/wood-se-s-sw", "layer" : "borders", "position" : "SouthEast" } ]
+	  },
+	  { "MustHave" : [ "North", "NorthEast", "NorthWest" ],
+	    "tiles" : [ { "id" : "borders/wood-n", "layer" : "borders", "position" : "North" } ]
+	  },
+	  { "MustHave" : [ "NorthWest", "NorthWest-SouthWest" ],
+	    "tiles" : [ { "id" : "borders/wood-n-nw", "layer" : "borders", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "North" ],
+	    "MustNotHave" : [ "NorthWest", "NorthEast" ],
+	    "tiles" : [ { "id" : "borders/wood-ne-n-nw", "layer" : "borders", "position" : "North" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "SouthEast" ],
+	    "MustNotHave" : [ "NorthEast-SouthEast" ],
+		"tiles" : [ { "id" : "borders/wood-ne-n-nw", "layer" : "borders", "position" : "NorthEast" } ]
+	  }
+	  { "MustHave" : [ "NorthEast", "NorthEast-SouthEast" ],
+	    "tiles" : [ { "id" : "borders/wood-n-ne", "layer" : "borders", "position" : "NorthEast" } ]
+	  }
     ]
   }
 }
