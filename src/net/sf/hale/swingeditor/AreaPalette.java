@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -211,7 +212,7 @@ public class AreaPalette extends JPanel {
 	}
 	
 	private JButton createTileButton(String tileID, String layerID) {
-		return new JButton( new TileAction(tileID, layerID, getIconFromImage(tileID, layerID)) );
+		return new JButton( new TileAction(null, tileID, layerID, getIconFromImage(tileID, layerID)) );
 	}
 	
 	private JButton createTerrainButton(TerrainType terrainType) {
@@ -219,7 +220,11 @@ public class AreaPalette extends JPanel {
 		String tileID = previewTile.getID();
 		String layerID = previewTile.getLayerID();
 		
-		return new JButton( new TerrainAction(terrainType, tileID, layerID, getIconFromImage(tileID, layerID)) );
+		JButton button = new JButton( new TerrainAction(terrainType, tileID, layerID, getIconFromImage(tileID, layerID)) );
+		button.setVerticalTextPosition(SwingConstants.TOP);
+		button.setHorizontalTextPosition(SwingConstants.CENTER);
+		
+		return button;
 	}
 	
 	private JButton createFeatureButton(FeatureType featureType) {
@@ -227,7 +232,11 @@ public class AreaPalette extends JPanel {
 		String tileID = previewTile.getID();
 		String layerID = previewTile.getLayerID();
 		
-		return new JButton( new FeatureAction(featureType, tileID, layerID, getIconFromImage(tileID, layerID)) );
+		JButton button = new JButton( new FeatureAction(featureType, tileID, layerID, getIconFromImage(tileID, layerID)) );
+		button.setVerticalTextPosition(SwingConstants.TOP);
+		button.setHorizontalTextPosition(SwingConstants.CENTER);
+		
+		return button;
 	}
 	
 	private class TabChangedListener implements ChangeListener {
@@ -296,8 +305,8 @@ public class AreaPalette extends JPanel {
 			this.spriteID = null;
 		}
 		
-		private TileAction(String tileID, String layerID, Icon icon) {
-			super(null, icon);
+		private TileAction(String label, String tileID, String layerID, Icon icon) {
+			super(label, icon);
 			
 			this.tileID = tileID;
 			this.layerID = layerID;
@@ -333,7 +342,7 @@ public class AreaPalette extends JPanel {
 		}
 		
 		private TerrainAction(TerrainType terrainType, String tileID, String layerID, Icon icon) {
-			super(tileID, layerID, icon);
+			super(terrainType.getID(), tileID, layerID, icon);
 			
 			this.terrainType = terrainType;
 		}
@@ -353,7 +362,7 @@ public class AreaPalette extends JPanel {
 		}
 		
 		private FeatureAction(FeatureType featureType, String tileID, String layerID, Icon icon) {
-			super(tileID, layerID, icon);
+			super(featureType.getID(), tileID, layerID, icon);
 			
 			this.featureType = featureType;
 		}
