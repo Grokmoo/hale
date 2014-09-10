@@ -94,7 +94,7 @@
     "hillsCave0" : [ 0, 8 ],
     "hillsCave1" : [ 1, 8 ],
     "hillsCave2" : [ 2, 8 ],
-    "wall0"      : [ 3, 8 ],
+    "chasm0"      : [ 3, 8 ],
     "caveWet0"   : [ 4, 8 ],
     "caveWet1"   : [ 5, 8 ],
     "caveWet2"   : [ 6, 8 ],
