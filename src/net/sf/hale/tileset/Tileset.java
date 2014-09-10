@@ -127,7 +127,7 @@ public class Tileset {
 		for (String terrainID : terrainTypeObject.keySet()) {
 			SimpleJSONObject terrainObject = terrainTypeObject.getObject(terrainID);
 			
-			TerrainType terrainType = TerrainType.parse(terrainObject, terrainID);
+			TerrainType terrainType = TerrainType.parse(terrainObject, terrainID, terrainTypes);
 			terrainTypes.put(terrainID, terrainType);
 		}
 		
