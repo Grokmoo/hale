@@ -190,6 +190,7 @@
       "defaultBorder" : "BorderHillsDesert"
     },
     "water" : {
+      "passable" : false,
       "tiles" : [
         { "id" : "base/water0", "layer" : "base", "probability" : 1 },
         { "id" : "base/water1", "layer" : "base", "probability" : 1 },
@@ -224,6 +225,7 @@
       "defaultBorder" : "BorderStone"
     },
     "lava" : {
+      "passable" : false,
       "tiles" : [
         { "id" : "base/lava0", "layer" : "base", "probability" : 1 },
         { "id" : "base/lava1", "layer" : "base", "probability" : 1 },
@@ -251,6 +253,8 @@
       "defaultBorder" : "BorderHillsCave"
     },
     "wall" : {
+      "passable" : false,
+      "transparent" : false,
       "tiles" : [
         { "id" : "base/wall0", "layer" : "base", "probability" : 1 }
       ],

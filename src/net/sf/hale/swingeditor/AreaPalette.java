@@ -50,8 +50,9 @@ public class AreaPalette extends JPanel {
 	
 	private TerrainGrid grid;
 	
-	private final String[] tabTitles = { "Terrain", "Features", "Elevation", "Tiles" };
-	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(), new ElevationAction(), new TileAction() };
+	private final String[] tabTitles = { "Terrain", "Features", "Elevation", "Tiles", "Passable", "Transparent" };
+	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(),
+			new ElevationAction(), new TileAction(), new PassableAction(), new TransparentAction() };
 	private int tabIndex;
 	
 	/**
@@ -158,6 +159,10 @@ public class AreaPalette extends JPanel {
 		}
 		
 		contentPane.addTab(tabTitles[3], getTabPanel(tileButtons));
+		
+		contentPane.addTab(tabTitles[4], new JPanel());
+		
+		contentPane.addTab(tabTitles[5], new JPanel());
 	}
 	
 	private JScrollPane getTabPanel(List<JButton> tileButtons) {
@@ -236,23 +241,40 @@ public class AreaPalette extends JPanel {
 				tabIndex = index;
 				renderer.setClickHandler(defaultHandlers[tabIndex]);
 				renderer.setActionPreviewTile(null);
+				
+				renderer.setDrawPassable(tabIndex == 4);
+				renderer.setDrawTransparent(tabIndex == 5);
 			}
 		}
 	}
 	
-	private class ElevationAction extends AbstractAction implements AreaClickHandler {
-		private ElevationAction() {
-			
-		}
-
-		@Override public void actionPerformed(ActionEvent evt) { }
-
+	private class ElevationAction implements AreaClickHandler {
 		@Override public void leftClicked(int x, int y, int r) {
 			grid.modifyElevation(x, y, r, (byte) +1);
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
 			grid.modifyElevation(x, y, r, (byte) -1);
+		}
+	}
+	
+	private class PassableAction implements AreaClickHandler {
+		@Override public void leftClicked(int x, int y, int r) {
+			
+		}
+
+		@Override public void rightClicked(int x, int y, int r) {
+
+		}
+	}
+	
+	private class TransparentAction implements AreaClickHandler {
+		@Override public void leftClicked(int x, int y, int r) {
+
+		}
+
+		@Override public void rightClicked(int x, int y, int r) {
+
 		}
 	}
 	

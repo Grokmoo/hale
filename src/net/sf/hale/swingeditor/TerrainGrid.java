@@ -338,6 +338,45 @@ public class TerrainGrid {
 		}
 		
 		area.getTileGrid().cacheSprites();
+		
+		// compute passability & transparency
+		if (center.isWithinBounds(area)) {
+			setTransparencyAndPassability(center.x, center.y);
+		}
+		
+		for (int r = 1; r <= radius + 2; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(area)) continue;
+				
+				setTransparencyAndPassability(p.x, p.y);
+			}
+		}
+	}
+	
+	private void setTransparencyAndPassability(int x, int y) {
+		// set passability
+		boolean passable = true;
+		
+		if (terrain[x][y] != null && !terrain[x][y].isPassable()) passable = false;
+		
+		if (features[x][y] != null && !features[x][y].isPassable()) passable = false;
+		
+		if (area.getElevationGrid().getElevation(x, y) != 0) passable = false;
+		
+		area.getPassability()[x][y] = passable;
+		
+		// set transparency
+		boolean transparent = true;
+		
+		if (terrain[x][y] != null && !terrain[x][y].isTransparent()) transparent = false;
+		
+		if (features[x][y] != null && !features[x][y].isTransparent()) transparent = false;
+		
+		if (area.getElevationGrid().getElevation(x, y) > 0) transparent = false;
+		
+		area.getTransparency()[x][y] = transparent;
 	}
 	
 	private void setTerrain(int x, int y, TerrainType type) {
