@@ -61,6 +61,8 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	
 	private Point prevMouseGrid;
 	
+	private boolean drawPassable, drawTransparent;
+	
 	/**
 	 * Creates a new Viewer for the specified Area
 	 * @param area
@@ -103,6 +105,24 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		if (tile != null) {
 			tile.cacheSprite();
 		}
+	}
+	
+	/**
+	 * Sets whether to draw the transparency of the area
+	 * @param drawTransparent
+	 */
+	
+	public void setDrawTransparent(boolean drawTransparent) {
+		this.drawTransparent = drawTransparent;
+	}
+	
+	/**
+	 * Sets whether to draw the passability of the area
+	 * @param drawPassable
+	 */
+	
+	public void setDrawPassable(boolean drawPassable) {
+		this.drawPassable = drawPassable;
 	}
 	
 	/**
@@ -210,6 +230,28 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 				actionPreviewTile.draw(mouseScreen.x, mouseScreen.y);
 				
 				GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+		}
+		
+		if (drawPassable) {
+			for (int x = 0; x < area.getWidth(); x++) {
+				for (int y = 0; y < area.getHeight(); y++) {
+					if (!area.isPassable(x, y)) {
+						Point pScreen = AreaUtil.convertGridToScreen(x, y);
+						SpriteManager.getSprite("editor/hexBorder").draw(pScreen.x, pScreen.y);
+					}
+				}
+			}
+		}
+		
+		if (drawTransparent) {
+			for (int x = 0; x < area.getWidth(); x++) {
+				for (int y = 0; y < area.getHeight(); y++) {
+					if (!area.isTransparent(x, y)) {
+						Point pScreen = AreaUtil.convertGridToScreen(x, y);
+						SpriteManager.getSprite("editor/hexBorder").draw(pScreen.x, pScreen.y);
+					}
+				}
 			}
 		}
 	}
