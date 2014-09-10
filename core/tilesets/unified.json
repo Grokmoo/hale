@@ -33,7 +33,7 @@
   "terrainBorderPriority" : [
     "water", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
     "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone",
-    "lava", "pathDark", "hillsCave", "wall", "caveWet", "wood", "pathStone"
+    "lava", "pathDark", "hillsCave", "wall", "caveWet", "wood"
   ],
   
   "terrain" : {
@@ -286,14 +286,7 @@
       "borders" : [
       ],
       "defaultBorder" : "BorderWood"
-    },
-    "pathStone" : {
-      "tiles" : [
-        { "id" : "base/pathStone0", "layer" : "base", "probability" : 1 }
-      ],
-      "borders" : [
-      ]
-    },
+    }
   },
   
   "borders" : {
