@@ -145,6 +145,19 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		}
 		
 		// handle mouse
+		// reset the click timeout and check for updates to the mouse state
+		for (int i = 0; i < Mouse.getButtonCount(); i++) {
+			if (Mouse.isButtonDown(i) != lastMouseState[i]) {
+				lastClickTime = 0l;
+				lastMouseState[i] = !lastMouseState[i];
+			}
+		}
+
+		if (!mouseGrid.equals(prevMouseGrid)) {
+			lastClickTime = 0l;
+			prevMouseGrid = mouseGrid;
+		}
+
 		int mouseX = Mouse.getX() + scrollX;
 		int mouseY = (canvas.getHeight() - Mouse.getY()) + scrollY;
 		mouseGrid = AreaUtil.convertScreenToGrid(mouseX, mouseY);
@@ -180,19 +193,6 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 			mouseRadius.setValue(mouseRadius.getNextValue());
 		} else if (scrollAmount < 0 && mouseRadius.getPreviousValue() != null) {
 			mouseRadius.setValue(mouseRadius.getPreviousValue());
-		}
-		
-		// reset the click timeout and check for updates to the mouse state
-		for (int i = 0; i < Mouse.getButtonCount(); i++) {
-			if (Mouse.isButtonDown(i) != lastMouseState[i]) {
-				lastClickTime = 0l;
-				lastMouseState[i] = !lastMouseState[i];
-			}
-		}
-		
-		if (!mouseGrid.equals(prevMouseGrid)) {
-			lastClickTime = 0l;
-			prevMouseGrid = mouseGrid;
 		}
 	}
 	
