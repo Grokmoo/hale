@@ -44,7 +44,7 @@ import net.sf.hale.util.PointImmutable;
  *
  */
 
-public class AreaPalette extends JPanel {
+public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	private AreaRenderer renderer;
 	private Area area;
 	private Tileset tileset;
@@ -55,6 +55,8 @@ public class AreaPalette extends JPanel {
 	private final AreaClickHandler[] defaultHandlers = { new TerrainAction(), new FeatureAction(),
 			new ElevationAction(), new TileAction(), new PassableAction(), new TransparentAction() };
 	private int tabIndex;
+	
+	private JLabel mouse, view;
 	
 	/**
 	 * Creates a new palette.  It is empty until an area is set
@@ -85,6 +87,7 @@ public class AreaPalette extends JPanel {
 		
 		tabIndex = 0;
 		renderer.setClickHandler(defaultHandlers[tabIndex]);
+		renderer.setViewHandler(this);
 
 		grid = new TerrainGrid(area);
 	}
@@ -103,8 +106,23 @@ public class AreaPalette extends JPanel {
 		c.gridx = 0;
 		c.gridy = 0;
 		c.insets = new Insets(2, 5, 2, 5);
-		c.ipadx = 100;
+		c.anchor = GridBagConstraints.WEST;
 		
+		c.gridwidth = 3;
+		JLabel areaName = new JLabel("Editing Area: " + area.getID());
+		add(areaName, c);
+		
+		c.gridy++;
+		mouse = new JLabel(" ");
+		add(mouse, c);
+		
+		c.gridy++;
+		view = new JLabel("View at 0, 0");
+		add(view, c);
+		
+		c.gridy++;
+		c.gridwidth = 1;
+		c.ipadx = 100;
 		JLabel title = new JLabel("Tileset: " + area.getTileset());
 		add(title, c);
 		
@@ -410,5 +428,13 @@ public class AreaPalette extends JPanel {
 		 */
 		
 		public void rightClicked(int x, int y, int r);
+	}
+
+	@Override public void mouseMoved(int gridx, int gridy) {
+		mouse.setText("Mouse at " + gridx + ", " + gridy);
+	}
+
+	@Override public void viewMoved(int gridx, int gridy) {
+		view.setText("View at " + gridx + ", " + gridy);
 	}
 }

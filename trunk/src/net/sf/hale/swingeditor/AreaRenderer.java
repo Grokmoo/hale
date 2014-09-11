@@ -52,6 +52,7 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	
 	private Tile actionPreviewTile;
 	private AreaPalette.AreaClickHandler clickHandler;
+	private AreaRenderer.ViewHandler viewHandler;
 	
 	private static final int MaxRadius = 20;
 	
@@ -126,6 +127,15 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 	}
 	
 	/**
+	 * Sets the object which is notified of mouse and view grid movement
+	 * @param handler
+	 */
+	
+	public void setViewHandler(AreaRenderer.ViewHandler handler) {
+		this.viewHandler = handler;
+	}
+	
+	/**
 	 * Sets the object which is notified of right and left click events
 	 * @param handler
 	 */
@@ -156,6 +166,10 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 		if (!mouseGrid.equals(prevMouseGrid)) {
 			lastClickTime = 0l;
 			prevMouseGrid = mouseGrid;
+			
+			if (viewHandler != null) {
+				viewHandler.mouseMoved(mouseGrid.x, mouseGrid.y);
+			}
 		}
 
 		int mouseX = Mouse.getX() + scrollX;
@@ -170,6 +184,9 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 			if (Mouse.isGrabbed()) {
 				scrollX -= (mouseDX);
 				scrollY += (mouseDY);
+				
+				Point viewGrid = AreaUtil.convertScreenToGrid(new Point(scrollX, scrollY));
+				viewHandler.viewMoved(viewGrid.x, viewGrid.y);
 			}
 
 			Mouse.setGrabbed(true);
@@ -254,5 +271,29 @@ public class AreaRenderer implements AreaTileGrid.AreaRenderer {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * interface for listening for mouse and view changes from this area view
+	 * @author jared
+	 *
+	 */
+	
+	public interface ViewHandler {
+		/**
+		 * Called whenever the mouse cursor is moved to a new grid coordinate
+		 * @param gridx
+		 * @param gridy
+		 */
+		
+		public void mouseMoved(int gridx, int gridy);
+		
+		/**
+		 * Called whenever the view is scrolled to a new grid coordinate
+		 * @param gridx
+		 * @param gridy
+		 */
+		
+		public void viewMoved(int gridx, int gridy);
 	}
 }
