@@ -33,7 +33,7 @@
   "terrainBorderPriority" : [
     "water", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
     "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone",
-    "pathDark", "hillsCave", "wall", "caveWet", "wood", "lava", "chasm", "wallRough"
+    "pathDark", "hillsCave", "wall", "caveWet", "wood", "lava", "chasm", "wallRough", "wallWood"
   ],
   
   "terrain" : {
@@ -61,6 +61,11 @@
       "borders" : [  ],
       "defaultBorder" : "BorderWallRough"
     },
+	"wallWood" : {
+	  "tiles" : [ { "id" : "base/wall-wood", "layer" : "base", "probability" : 1 } ],
+	  "borders" : [ ],
+	  "defaultBorder" : "BorderWallWood"
+	},
     "path" : {
       "tiles" : [
         { "id" : "base/path0", "layer" : "base", "probability" : 1 },
@@ -781,6 +786,104 @@
 	  { "MustHave" : [ "SouthEast", "NorthEast" ],
 		"tiles" : [ { "id" : "walls/wall-rough-convex-r", "layer" : "entity", "position" : "Center" } ]
 	  }
-    ]
+    ],
+	"BorderWallWood" : [
+	  { "MustHave" : [ "South", "SouthEast", "SouthWest" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-n", "layer" : "entity", "position" : "South" } ]
+	  },
+	  { "MustHave" : [ "SouthWest", "SouthWest-NorthWest" ],
+	    "MustNotHave" : [ "NorthWest" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-n-ne", "layer" : "entity", "position" : "SouthWest" } ]
+	  },
+	  { "MustHave" : [ "SouthEast", "SouthEast-NorthEast" ],
+	    "MustNotHave" : [ "NorthEast" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-nw-n", "layer" : "entity", "position" : "SouthEast" } ]
+	  },
+	  { "MustHave" : [ "South" ],
+	    "MustNotHave" : [ "SouthEast", "SouthWest" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-nw-n-ne", "layer" : "entity", "position" : "South" } ]
+	  },
+	  { "MustHave" : [ "SouthWest", "NorthWest", "South" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-ne", "layer" : "entity", "position" : "SouthWest" } ]
+	  },
+	  { "MustHave" : [ "SouthEast", "NorthEast", "South" ],
+	    "tiles" : [ { "id" : "walls/wall-wood-nw", "layer" : "entity", "position" : "SouthEast" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "NorthEast-North" ],
+	    "MustNotHave" : [ "North", "SouthEast", "SouthEast-NorthEast" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-se-s-sw-nw", "layer" : "ceiling", "position" : "NorthEast" } ]
+	  },
+	  { "MustHave" : [ "NorthWest", "NorthWest-North", "NorthWest-SouthWest" ],
+	    "MustNotHave" : [ "North", "SouthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-ne-se-s", "layer" : "ceiling", "position" : "NorthWest" } ]
+      },
+	  { "MustHave" : [ "NorthWest", "NorthWest-North" ],
+	    "MustNotHave" : [ "North", "SouthWest", "SouthWest-NorthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-ne-se-s-sw", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "NorthEast-North", "NorthEast-SouthEast" ],
+	    "MustNotHave" : [ "North", "SouthEast" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-s-sw-nw", "layer" : "ceiling", "position" : "NorthEast" } ]
+      },
+	  { "MustHave" : [ "North" ],
+	    "MustNotHave" : [ "NorthEast", "NorthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-se-s-sw", "layer" : "ceiling", "position" : "North" } ]
+	  },
+	  { "MustHave" : [ "North" ],
+	    "MustNotHave" : [ "NorthEast", "NorthWest", "NorthEast-North", "NorthWest-North" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-n-s", "layer" : "ceiling", "position" : "North" } ]
+	  },
+	  { "MustHave" : [ "NorthWest" ],
+	    "MustNotHave" : [ "North", "SouthWest", "North-NorthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-n-ne-se-s-fg", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "North", "NorthEast", "NorthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-s", "layer" : "ceiling", "position" : "North" } ]
+	  },
+	  { "MustHave" : [ "NorthWest", "NorthWest-SouthWest" ],
+	    "MustNotHave" : [ "SouthWest" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-se-s", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "NorthEast-SouthEast" ],
+	    "MustNotHave" : [ "SouthEast" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-s-sw", "layer" : "ceiling", "position" : "NorthEast" } ]
+	  },
+	  { "MustHave" : [ "NorthEast" ],
+	    "MustNotHave" : [ "North", "SouthEast", "North-NorthEast" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-s-sw-ne-n-fg", "layer" : "ceiling", "position" : "NorthEast"} ]
+	  },
+	  
+	  { "MustHave" : [ "NorthWest", "North", "SouthWest" ],
+	    "MustNotHave" : [ "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-se", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "North", "SouthEast" ],
+	    "MustNotHave" : [ "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-sw", "layer" : "ceiling", "position" : "NorthEast" } ]
+	  },
+	  { "MustHave" : [ "NorthWest", "SouthWest" ],
+	    "MustNotHave" : [ "North", "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-ne-se", "layer" : "ceiling", "position" : "NorthWest" } ]
+      },
+	  { "MustHave" : [ "NorthEast", "SouthEast" ],
+	    "MustNotHave" : [ "North", "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-sw-ne", "layer" : "ceiling", "position" : "NorthEast" } ]
+      },
+	  
+	  { "MustHave" : [ "NorthWest", "North", "SouthWest", "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-se2", "layer" : "ceiling", "position" : "NorthWest" } ]
+	  },
+	  { "MustHave" : [ "NorthEast", "North", "SouthEast", "South" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-sw2", "layer" : "ceiling", "position" : "NorthEast" } ]
+	  },
+	  { "MustHave" : [ "NorthWest", "SouthWest", "South" ],
+	    "MustNotHave" : [ "North"],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-ne-se2", "layer" : "ceiling", "position" : "NorthWest" } ]
+      },
+	  { "MustHave" : [ "NorthEast", "SouthEast", "South" ],
+	    "MustNotHave" : [ "North" ],
+	    "tiles" : [ { "id" : "ceiling/wall-wood-sw-ne2", "layer" : "ceiling", "position" : "NorthEast" } ]
+      },
+	]
   }
 }
