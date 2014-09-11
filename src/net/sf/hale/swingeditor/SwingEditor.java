@@ -30,7 +30,6 @@ import javax.swing.SwingUtilities;
 
 import net.sf.hale.Config;
 import net.sf.hale.Game;
-import net.sf.hale.area.Area;
 import net.sf.hale.loading.AsyncTextureLoader;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.Dice;
