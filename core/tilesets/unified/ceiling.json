@@ -4,6 +4,27 @@
     "wall-rough-concave-bl" : [ 0, 0, 108, 144 ],
     "wall-rough-concave-br" : [ 108, 0, 108, 144 ],
     "wall-rough-convex-tl" : [ 216, 0, 108, 144 ],
-    "wall-rough-convex-tr" : [ 324, 0, 108, 144 ]
+    "wall-rough-convex-tr" : [ 324, 0, 108, 144 ],
+	
+	"wall-wood-se-s-sw-nw" : [ 0, 144, 100, 140 ],
+    "wall-wood-ne-se-s" : [ 100, 144, 100, 140 ],
+    "wall-wood-ne-se-s-sw" : [ 200, 144, 100, 140 ],
+    "wall-wood-s-sw-nw" : [ 300, 144, 100, 140 ],
+    "wall-wood-ne-se-s-sw-nw-fg" : [ 400, 144, 100, 140 ],
+    "wall-wood-se-s-sw" : [ 500, 144, 100, 140 ],
+    "wall-wood-n-s" : [ 600, 144, 100, 140 ],
+    "wall-wood-ne-se" : [ 0, 284, 100, 140 ],
+    "wall-wood-n-ne-se-s-fg" : [ 100, 284, 100, 140 ],
+    "wall-wood-s" : [ 200, 284, 100, 140 ],
+    "wall-wood-se" : [ 300, 284, 100, 140 ],
+    "wall-wood-se-s" : [ 400, 284, 100, 140 ],
+    "wall-wood-s-sw" : [ 500, 284, 100, 140 ],
+    "wall-wood-s-sw-ne-n-fg" : [ 0, 424, 100, 140 ],
+    "wall-wood-sw" : [ 100, 424, 100, 140 ],
+    "wall-wood-sw-ne" : [ 200, 424, 100, 140 ],
+    "wall-wood-se2" : [ 300, 424, 100, 140 ],
+    "wall-wood-sw2" : [ 400, 424, 100, 140 ],
+    "wall-wood-ne-se2" : [ 500, 424, 100, 140 ],
+    "wall-wood-sw-ne2" : [ 600, 424, 100, 140 ]
   }
 }
