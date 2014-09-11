@@ -142,6 +142,16 @@ public class Area implements EffectTarget, Saveable {
 		data.put("explored", isExplored);
 		data.put("tileset", tileset);
 
+		// write start locations
+		List<int[]> startLoc = new ArrayList<int[]>();
+		for (PointImmutable p : startLocations) {
+			int[] coords = new int[2];
+			coords[0] = p.x;
+			coords[1] = p.y;
+			startLoc.add(coords);
+		}
+		data.put("startLocations", startLoc.toArray());
+		
 		// write encounter coords
 		Map<String, ArrayList<int[]>> encountersData = new LinkedHashMap<String, ArrayList<int[]>>();
 		
