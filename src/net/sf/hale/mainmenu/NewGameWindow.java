@@ -29,7 +29,6 @@ import net.sf.hale.SavedParty;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.PC;
 import net.sf.hale.resource.ResourceType;
-import net.sf.hale.rules.XP;
 import net.sf.hale.widgets.TextAreaNoInput;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
@@ -418,16 +417,7 @@ public class NewGameWindow extends Widget {
 			int currency = Math.max(selectedParty.party.getCurrency(), Game.curCampaign.getMinCurrency());
 			
 			Game.curCampaign.partyCurrency.setValue(currency);
-			
-			if (Game.curCampaign.allowLevelUp()) {
-				int xp = XP.getPointsForLevel(Game.curCampaign.getMinStartingLevel());
-				
-				for (PC pc : Game.curCampaign.party) {
-					int pcXP = pc.getExperiencePoints();
-					
-					pc.addExperiencePoints(Math.max((xp - pcXP), 0));
-				}
-			}
+			Game.curCampaign.levelUpToMinIfAllowed();
 		}
 		
 		Game.ruleset.getDifficultyManager().setCurrentDifficulty(difficultySelector.getSelectedDifficulty());

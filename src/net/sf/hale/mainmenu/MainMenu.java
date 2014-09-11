@@ -134,8 +134,13 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         newGameButton.setTheme("newgamebutton");
         newGameButton.addCallback(new Runnable() {
         	@Override public void run() {
-        		NewGameWindow window = new NewGameWindow(MainMenu.this);
-        		add(window);
+        		if (Game.curCampaign.getStartingCharacter() == null && Game.curCampaign.getMaxPartySize() == 1) {
+        			PartyFormationWindow window = new PartyFormationWindow(MainMenu.this, null, null);
+        			add(window);
+        		} else {
+        			NewGameWindow window = new NewGameWindow(MainMenu.this);
+            		add(window);
+        		}
         	}
         });
         this.add(newGameButton);

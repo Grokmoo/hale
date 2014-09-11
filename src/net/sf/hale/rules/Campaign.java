@@ -713,4 +713,21 @@ public class Campaign {
 	 */
 	
 	public int getMinCurrency() { return minCurrency; }
+	
+	/**
+	 * If the campaign options allow party members to level up to the min level automatically,
+	 * do so
+	 */
+	
+	public void levelUpToMinIfAllowed() {
+		if (allowLevelUp()) {
+			int xp = XP.getPointsForLevel(getMinStartingLevel());
+			
+			for (PC pc : party) {
+				int pcXP = pc.getExperiencePoints();
+				
+				pc.addExperiencePoints(Math.max((xp - pcXP), 0));
+			}
+		}
+	}
 }
