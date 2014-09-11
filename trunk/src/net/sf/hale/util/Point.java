@@ -81,6 +81,10 @@ public class Point {
 		return ((Point)other).x == this.x && ((Point)other).y == this.y;
 	}
 	
+	@Override public int hashCode() {
+		return x + ( y << 16 );
+	}
+	
 	/**
 	 * Returns the angle between this point and the specified other point, assuming both points
 	 * are in grid coordinates

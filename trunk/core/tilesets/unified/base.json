@@ -109,6 +109,8 @@
     "wood0"      : [ 4, 9 ],
     "wood1"      : [ 5, 9 ],
     "wood2"      : [ 6, 9 ],
-	"wall-wood"  : [ 7, 9 ]
+    "wall-wood"  : [ 7, 9 ],
+    "wall-building" : [ 8, 9 ],
+    "wall-stone" : [ 9, 9 ]
   }
 }
