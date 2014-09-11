@@ -451,9 +451,7 @@
 		<param name="maxHeight"><int>600</int></param>
 		<param name="minHeight"><int>300</int></param>
 			
-		<theme name="titlelabel" ref="labelbigblack">
-			<param name="text"><string>Party Formation</string></param>
-		</theme>
+		<theme name="titlelabel" ref="labelbigblack"/>
 		
 		<theme name="namelabel" ref="labelbigblack">
 			<param name="text"><string>Party Name</string></param>
@@ -464,9 +462,7 @@
 			<theme name="renderer" ref="labelbigred"/>
 		</theme>
 		
-		<theme name="partytitlelabel" ref="labelbigred">
-			<param name="text"><string>Your Party</string></param>
-		</theme>
+		<theme name="partytitlelabel" ref="labelbigred"/>
 		
 		<theme name="partysizelabel" ref="labelblack"/>
 		

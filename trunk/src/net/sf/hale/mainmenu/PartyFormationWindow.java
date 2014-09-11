@@ -80,6 +80,7 @@ public class PartyFormationWindow extends Widget {
 	 * Creates a new PartyFormationWindow with the specified mainMenu as the parent Widget.
 	 * @param mainMenu the parent Widget for this PartyFormationWindow
 	 * @param window the NewGameWindow that is updated when a party is accepted
+	 * @param charactersInParties
 	 */
 	
 	public PartyFormationWindow(MainMenu mainMenu, NewGameWindow window, Set<String> charactersInParties) {
@@ -94,7 +95,6 @@ public class PartyFormationWindow extends Widget {
 		
 		nameLabel = new Label();
 		nameLabel.setTheme("namelabel");
-		add(nameLabel);
 		
 		nameField = new EditField();
 		nameField.addCallback(new EditField.Callback() {
@@ -103,18 +103,28 @@ public class PartyFormationWindow extends Widget {
 			}
 		});
 		nameField.setTheme("namefield");
-		add(nameField);
 		
 		partyTitle = new Label();
 		partyTitle.setTheme("partytitlelabel");
 		add(partyTitle);
 		
+		if (window != null) { // if we are forming a party
+			add(nameLabel);
+			add(nameField);
+			
+			titleLabel.setText("Party Formation");
+			partyTitle.setText("Your Party");
+		} else { // if we are choosing a single character
+			titleLabel.setText("Choose a Character");
+			partyTitle.setText("Your Character");
+		}
+		
 		int minSize = Game.curCampaign.getMinPartySize();
 		int maxSize = Game.curCampaign.getMaxPartySize();
 		String postFix;
 		if (minSize == maxSize) {
-			if (minSize == 1) postFix = "1 Character)";
-			else postFix = minSize + " Characters)";
+			if (minSize == 1) postFix = "1 Character";
+			else postFix = minSize + " Characters";
 		} else {
 			postFix = minSize + " to " + maxSize + " Characters";
 		}
@@ -281,22 +291,35 @@ public class PartyFormationWindow extends Widget {
 	}
 	
 	private void acceptParty() {
-		int maxLevel = 0;
-		int minLevel = Integer.MAX_VALUE;
-		List<String> characterIDs = new ArrayList<String>();
-		for (CharacterSelector selector : partyPaneContent.selectors) {
-			characterIDs.add(selector.getCreatureID());
+		if (newGameWindow != null) {
+			int maxLevel = 0;
+			int minLevel = Integer.MAX_VALUE;
+			List<String> characterIDs = new ArrayList<String>();
+			for (CharacterSelector selector : partyPaneContent.selectors) {
+				characterIDs.add(selector.getCreatureID());
+
+				Creature creature = selector.getCreature();
+
+				maxLevel = Math.max(maxLevel, creature.roles.getTotalLevel());
+				minLevel = Math.min(minLevel, creature.roles.getTotalLevel());
+			}
+
+			SavedParty party = new SavedParty(characterIDs, nameField.getText(), minLevel, maxLevel, 0);
+			party.writeToFile();
+
+			newGameWindow.populatePartySelectors(party.getID());
+		} else {
+			List<String> party = new ArrayList<String>();
+			for (CharacterSelector selector : partyPaneContent.selectors) {
+				party.add(selector.getCreatureID());
+			}
 			
-			Creature creature = selector.getCreature();
-			
-			maxLevel = Math.max(maxLevel, creature.roles.getTotalLevel());
-			minLevel = Math.min(minLevel, creature.roles.getTotalLevel());
+			Game.curCampaign.addParty(party, nameField.getText());
+			Game.curCampaign.party.setFirstMemberSelected();
+			Game.curCampaign.partyCurrency.setValue(0);
+			Game.curCampaign.levelUpToMinIfAllowed();
+			mainMenu.update();
 		}
-		
-		SavedParty party = new SavedParty(characterIDs, nameField.getText(), minLevel, maxLevel, 0);
-		party.writeToFile();
-		
-		newGameWindow.populatePartySelectors(party.getID());
 	}
 	
 	/**
@@ -363,7 +386,7 @@ public class PartyFormationWindow extends Widget {
 		nameField.setPosition(nameLabel.getRight() + smallGap,
 				titleLabel.getBottom() + sectionGap + nameHeight / 2 - nameField.getHeight() / 2);
 		
-		int nameBottom = Math.max(nameLabel.getBottom(), nameField.getBottom());
+		int nameBottom = Math.max(Math.max(nameLabel.getBottom(), nameField.getBottom()), titleLabel.getBottom());
 		
 		partyTitle.setSize(partyTitle.getPreferredWidth(), partyTitle.getPreferredHeight());
 		availableTitle.setSize(availableTitle.getPreferredWidth(), availableTitle.getPreferredHeight());
@@ -466,9 +489,9 @@ public class PartyFormationWindow extends Widget {
 		
 		private void add(CharacterSelector selector, boolean top, boolean addButton, boolean removeButton) {
 			if (addButton) {
-				selector.setAddRemoveButton("(+) Add to Party", new AddCallback(selector));
+				selector.setAddRemoveButton("(+) Select", new AddCallback(selector));
 			} else if (removeButton) {
-				selector.setAddRemoveButton("(-) Remove from Party", new RemoveCallback(selector));
+				selector.setAddRemoveButton("(-) Remove", new RemoveCallback(selector));
 			}
 			
 			if (top) selectors.add(0, selector);
