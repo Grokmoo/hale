@@ -29,9 +29,11 @@ import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.SimpleJSONArray;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONParser;
-import de.matthiasmann.twl.Label;
+import net.sf.hale.widgets.TextAreaNoInput;
+import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.ToggleButton;
 import de.matthiasmann.twl.Widget;
+import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 
 /*
  * A widget used within the CampaignPopup for selecting a campaign group to load
@@ -42,16 +44,24 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	
 	private CampaignPopup callback;
 	
-	private Label groupName;
+	private TextArea groupNameArea;
+	//private Label groupName;
 	
 	private CampaignSelector selected;
 	
 	private CampaignGroupSelector(CampaignGroup group) {
 		this.group = group;
 		
-		groupName = new Label(group.name);
-		groupName.setTheme("namelabel");
-		add(groupName);
+		HTMLTextAreaModel model = new HTMLTextAreaModel();
+		model.setHtml("<div style=\"font-family: large;\">" + group.name + "</div>");
+		
+		groupNameArea = new TextAreaNoInput(model);
+		groupNameArea.setTheme("namearea");
+		add(groupNameArea);
+		
+		//groupName = new Label(group.name);
+		//groupName.setTheme("namelabel");
+		//add(groupName);
 		
 		addCallback(this);
 	}
@@ -97,7 +107,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 		this.setActive(false);
 		
 		removeAllChildren();
-		add(groupName);
+		add(groupNameArea);
 		invalidateLayout();
 	}
 	
@@ -120,7 +130,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	
 	private void addChildWidgets(CampaignDescriptor descriptorToSelect) {
 		removeAllChildren();
-		add(groupName);
+		add(groupNameArea);
 		
 		for (CampaignDescriptor descriptor : group.entries) {
 			CampaignSelector selector = new CampaignSelector(descriptor);
@@ -198,13 +208,15 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 	@Override protected void layout() {
 		int numChildren = getNumChildren();
 		
+		groupNameArea.setSize(getInnerWidth(), groupNameArea.getPreferredHeight());
+		
 		// when not expanded, layout the name centered, when expanded, lay it out at the top
 		if (numChildren == 1)
-			groupName.setPosition(getInnerX(), getInnerY() + getInnerHeight() / 2);
+			groupNameArea.setPosition(getInnerX(), getInnerY() + getInnerHeight() / 2 - groupNameArea.getHeight() / 2);
 		else
-			groupName.setPosition(getInnerX(), getInnerY() + groupName.getPreferredHeight() / 2);
+			groupNameArea.setPosition(getInnerX(), getInnerY());
 		
-		int curY = getInnerY() + groupName.getPreferredHeight();
+		int curY = getInnerY() + groupNameArea.getPreferredHeight();
 		
 		for (int i = 1; i < numChildren; i++) {
 			Widget child = getChild(i);

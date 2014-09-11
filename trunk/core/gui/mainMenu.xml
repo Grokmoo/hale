@@ -396,12 +396,16 @@
 		<param name="minHeight"><int>50</int></param>
 		
 		<theme name="namelabel" ref="labelbigblack"/>
+                <theme name="namearea" ref="textarea">
+                  <param name="background"><image>transparent</image></param>
+                </theme>
 		
 		<theme name="campaignselector" ref="mainmenubutton"/>
 	</theme>
 	
 	<theme name="campaignpopup" ref="iconbuttongrey">
 		<theme name="content" ref="-defaults">
+                        <param name="selectorWidth"><int>250</int></param>
 			<param name="acceptCancelGap"><int>5</int></param>
 		
 			<param name="border"><border>10</border></param>

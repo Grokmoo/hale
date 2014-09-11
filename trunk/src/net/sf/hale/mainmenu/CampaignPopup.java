@@ -83,6 +83,7 @@ public class CampaignPopup extends PopupWindow {
 		private HTMLTextAreaModel textAreaModel;
 		private ScrollPane textPane;
 		
+		private int selectorWidth;
 		private int acceptCancelGap;
 		
 		private Content() {
@@ -152,6 +153,7 @@ public class CampaignPopup extends PopupWindow {
 			super.applyTheme(themeInfo);
 			
 			acceptCancelGap = themeInfo.getParameter("acceptCancelGap", 0);
+			selectorWidth = themeInfo.getParameter("selectorWidth", 0);
 		}
 		
 		@Override protected void layout() {
@@ -173,7 +175,7 @@ public class CampaignPopup extends PopupWindow {
 			int paneBottom = Math.min(accept.getY(), cancel.getY());
 			
 			selectorPane.setPosition(getInnerX(), title.getBottom());
-			selectorPane.setSize(selectorPane.getPreferredWidth(), paneBottom - title.getBottom());
+			selectorPane.setSize(selectorWidth, paneBottom - title.getBottom());
 			
 			textPane.setPosition(selectorPane.getRight(), title.getBottom());
 			textPane.setSize(getInnerRight() - textPane.getX(), paneBottom - title.getBottom());
