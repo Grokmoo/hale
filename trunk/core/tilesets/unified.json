@@ -318,6 +318,59 @@
     }
   },
   
+  "elevation" : [
+	{ "MustHave" : [ "NorthEast" ],
+	  "MustNotHave" : [ "SouthEast" ],
+          "tiles" : [ { "id" : "walls/cliff-concave-bl", "layer" : "entity", "position" : "SouthEast" } ],
+	  "impassable" : "SouthEast",
+	},
+	{ "MustHave" : [ "NorthWest" ],
+	  "MustNotHave" : [ "SouthWest" ],
+          "tiles" : [ { "id" : "walls/cliff-concave-br", "layer" : "entity", "position" : "SouthWest" } ],
+	  "impassable" : "SouthWest",
+	},
+	{ "MustHave" : [ "NorthEast" ],
+	  "MustNotHave" : [ "North" ],
+	  "tiles" : [ { "id" : "walls/cliff-concave-l", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+	},
+	{ "MustHave" : [ "NorthWest" ],
+	  "MustNotHave" : [ "North" ],
+	  "tiles" : [ { "id" : "walls/cliff-concave-r", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+	},
+	{ "MustHave" : [ "SouthEast" ],
+	  "MustNotHave" : [ "NorthEast" ],
+	  "tiles" : [ { "id" : "walls/cliff-concave-tl", "layer" : "entity", "position" : "Center" } ]
+	},
+	{ "MustHave" : [ "SouthWest" ],
+	  "MustNotHave" : [ "NorthWest" ],
+	  "tiles" : [ { "id" : "walls/cliff-concave-tr", "layer" : "entity", "position" : "NorthWest" } ]
+	},
+	{ "MustHave" : [ "South", "SouthWest" ],
+          "tiles" : [ { "id" : "walls/cliff-convex-bl", "layer" : "entity", "position" : "Center" } ]
+	},
+	{ "MustHave" : [ "South", "SouthEast" ],
+	  "tiles" : [ { "id" : "walls/cliff-convex-br", "layer" : "entity", "position" : "Center" } ]
+	},
+	{ "MustHave" : [ "NorthWest", "SouthWest" ],
+	  "tiles" : [ { "id" : "walls/cliff-convex-l", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+	},
+        { "MustHave" : [ "NorthEast", "SouthEast" ],
+          "tiles" : [ { "id" : "walls/cliff-convex-r", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+        },
+	{ "MustHave" : [ "North", "NorthWest" ],
+          "tiles" : [ { "id" : "walls/cliff-convex-tl", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+	},
+	{ "MustHave" : [ "North", "NorthEast" ],
+          "tiles" : [ { "id" : "walls/cliff-convex-tr", "layer" : "entity", "position" : "Center" } ],
+	  "impassable" : "Center"
+	},
+  ],
+
   "borders" : {
     "BorderPath" : [
       { "MustHave" : [ "North" ],

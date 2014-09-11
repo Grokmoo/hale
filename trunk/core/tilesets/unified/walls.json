@@ -29,6 +29,19 @@
     "building01" : [ 100, 708, 100, 140 ],
     "building02" : [ 200, 708, 100, 140 ],
     "building03" : [ 300, 708, 100, 140 ],
-    "building04" : [ 400, 708, 100, 140 ]
+    "building04" : [ 400, 708, 100, 140 ],
+
+    "cliff-concave-bl" : [ 504,   0, 108, 130 ],
+    "cliff-concave-br" : [ 612,   0, 108, 130 ],
+    "cliff-concave-l"  : [ 504, 130, 108, 130 ],
+    "cliff-concave-r"  : [ 612, 130, 108, 130 ],
+    "cliff-concave-tl" : [ 504, 260, 108, 130 ],
+    "cliff-concave-tr" : [ 612, 260, 108, 130 ],
+    "cliff-convex-bl"  : [ 504, 390, 108, 130 ],
+    "cliff-convex-br"  : [ 612, 390, 108, 130 ],
+    "cliff-convex-l"   : [ 504, 520, 108, 130 ],
+    "cliff-convex-r"   : [ 612, 520, 108, 130 ],
+    "cliff-convex-tl"  : [ 504, 650, 108, 130 ],
+    "cliff-convex-tr"  : [ 612, 650, 108, 130 ]
   }
 }
