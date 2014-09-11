@@ -117,7 +117,7 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		add(mouse, c);
 		
 		c.gridy++;
-		view = new JLabel("View at 0, 0");
+		view = new JLabel("View at -1, -1");
 		add(view, c);
 		
 		c.gridy++;
