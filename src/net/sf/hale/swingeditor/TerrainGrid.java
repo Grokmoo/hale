@@ -326,6 +326,7 @@ public class TerrainGrid {
 			if (!p.isWithinBounds(area)) continue;
 			
 			setTerrain(p.x, p.y, terrain[p.x][p.y]);
+			setFeature(p.x, p.y, features[p.x][p.y]);
 		}
 		
 		// re-add nearby border tiles

@@ -369,9 +369,9 @@
   },
   
   "terrainBorderPriority" : [
-    "water", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
+    "water", "caveWet", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
     "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone",
-    "pathDark", "hillsCave", "wall", "caveWet", "wood", "lava", "chasm", "wallRough", "wallWood",
+    "pathDark", "hillsCave", "wall", "wood", "lava", "chasm", "wallRough", "wallWood",
     "building", "wallStone"
   ],
   
