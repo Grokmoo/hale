@@ -6,7 +6,7 @@
     "wall-rough-convex-tl" : [ 216, 0, 108, 144 ],
     "wall-rough-convex-tr" : [ 324, 0, 108, 144 ],
 	
-	"wall-wood-se-s-sw-nw" : [ 0, 144, 100, 140 ],
+    "wall-wood-se-s-sw-nw" : [ 0, 144, 100, 140 ],
     "wall-wood-ne-se-s" : [ 100, 144, 100, 140 ],
     "wall-wood-ne-se-s-sw" : [ 200, 144, 100, 140 ],
     "wall-wood-s-sw-nw" : [ 300, 144, 100, 140 ],
@@ -47,6 +47,7 @@
     "wall-stone-sw2" : [ 400, 844, 100, 140 ],
     "wall-stone-ne-se2" : [ 500, 844, 100, 140 ],
     "wall-stone-sw-ne2" : [ 600, 844, 100, 140 ],
+
     "building-roof-01" : [ 0, 984, 136, 126 ],
     "building-roof-02" : [ 136, 984, 136, 126 ],
     "building-roof-03" : [ 272, 984, 136, 126 ],
