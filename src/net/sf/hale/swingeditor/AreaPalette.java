@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -129,7 +130,10 @@ public class AreaPalette extends JPanel {
 		// add terrain tab
 		List<JButton> tileButtons = new ArrayList<JButton>();
 		
-		for (String terrainTypeID : tileset.getTerrainTypeIDs()) {
+		List<String> terrainTypeIDs = new ArrayList<String>(tileset.getTerrainTypeIDs());
+		Collections.sort(terrainTypeIDs);
+		
+		for (String terrainTypeID : terrainTypeIDs) {
 			tileButtons.add(createTerrainButton(tileset.getTerrainType(terrainTypeID)));
 		}
 		
@@ -138,7 +142,10 @@ public class AreaPalette extends JPanel {
 		// add features tab
 		tileButtons.clear();
 		
-		for (String featureTypeID : tileset.getFeatureTypeIDs()) {
+		List<String> featureTypeIDs = new ArrayList<String>(tileset.getFeatureTypeIDs());
+		Collections.sort(featureTypeIDs);
+		
+		for (String featureTypeID : featureTypeIDs) {
 			tileButtons.add(createFeatureButton(tileset.getFeatureType(featureTypeID)));
 		}
 		
