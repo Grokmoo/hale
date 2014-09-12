@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.hale.Game;
 import net.sf.hale.SavedParty;
@@ -279,6 +280,16 @@ public class NewGameWindow extends Widget {
 		partyPaneContent.setVerticalGroup(mainV);
 		
 		setAcceptState();
+	}
+	
+	/**
+	 * Returns the set of characters which are used in one or more parties.  these
+	 * characters should not be deleted.  the set should not be modified
+	 * @return the set of characters used in one or more parties
+	 */
+	
+	public Set<String> getCharactersUsedInParties() {
+		return charactersUsedInParties;
 	}
 	
 	private List<SavedParty> getPartiesInDirectory(String directory) {
