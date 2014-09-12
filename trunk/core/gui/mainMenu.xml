@@ -143,7 +143,7 @@
 	</theme>
 	
 	<theme name="difficultyselector" ref="-defaults">
-		<param name="border"><border>5</border></param>
+		<param name="border"><border>3</border></param>
 		<param name="background"><image>-borderD</image></param>
 	
 		<theme name="difficultylabel" ref="labelbigblack">
@@ -444,13 +444,15 @@
 	<theme name="partyformationwindow" ref="iconbuttongrey">
 		<param name="defaultpartyname"><string>The Adventurers</string></param>
 		<param name="smallGap"><int>5</int></param>
-		<param name="sectionGap"><int>20</int></param>
+		<param name="sectionGap"><int>10</int></param>
 		<param name="selectableWidth"><int>600</int></param>
 	
 		<param name="border"><border>10</border></param>
 		<param name="maxHeight"><int>600</int></param>
 		<param name="minHeight"><int>300</int></param>
-			
+		
+		<theme name="difficultyselector" ref="difficultyselector"/>
+
 		<theme name="titlelabel" ref="labelbigblack"/>
 		
 		<theme name="namelabel" ref="labelbigblack">
@@ -527,7 +529,7 @@
 	
 	<theme name="newgamewindow" ref="iconbuttongrey">
 		<param name="acceptCancelGap"><int>5</int></param>
-		<param name="sectionGap"><int>20</int></param>
+		<param name="sectionGap"><int>10</int></param>
 		<param name="innerwidth"><int>580</int></param>
 		<param name="preselectedwidth"><int>290</int></param>
 		<param name="preselectedheight"><int>414</int></param>
