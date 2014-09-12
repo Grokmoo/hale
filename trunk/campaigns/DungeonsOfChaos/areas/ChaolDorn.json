@@ -12,7 +12,9 @@
   "containers" : [],
   "doors" : [],
   "triggers" : {
-
+    "onCampaignLoad" : {
+      "script" : "triggers/onCampaignLoad"
+    }
   },
   "layers" : {
     "base" : {
