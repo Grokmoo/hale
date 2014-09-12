@@ -111,6 +111,17 @@
     "wood2"      : [ 6, 9 ],
     "wall-wood"  : [ 7, 9 ],
     "wall-building" : [ 8, 9 ],
-    "wall-stone" : [ 9, 9 ]
+    "wall-stone" : [ 9, 9 ],
+
+    "mud0" : [ 0, 10 ],
+    "mud1" : [ 1, 10 ],
+    "mud2" : [ 2, 10 ],
+    "mud3" : [ 3, 10 ],
+    "swamp0" : [ 4, 10 ],
+    "swamp1" : [ 5, 10 ]
+    "swamp2" : [ 6, 10 ]
+    "swamp3" : [ 7, 10 ]
+    "swamp4" : [ 8, 10 ]
+    "swamp5" : [ 9, 10 ]
   }
 }

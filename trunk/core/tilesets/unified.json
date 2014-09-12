@@ -27,6 +27,17 @@
   ],
   
   "features" : {
+        "Reeds" : {
+          "tiles" : [
+            { "id" : "features/reeds0", "layer" : "entity", "probability" : 1 },
+            { "id" : "features/reeds1", "layer" : "entity", "probability" : 1 },
+	    { "id" : "features/reeds2", "layer" : "entity", "probability" : 1 },
+	    { "id" : "features/reeds3", "layer" : "entity", "probability" : 1 },
+	    { "id" : "features/reeds4", "layer" : "entity", "probability" : 1 },
+            { "id" : "features/reeds5", "layer" : "entity", "probability" : 1 }
+          ],
+          "terrainTypes" : [ "Water", "Swamp" ]
+        },
         "Water Lilies" : {
           "tiles" : [
             { "id" : "features/lilies0", "layer" : "entity", "probability" : 1 },
@@ -35,7 +46,7 @@
 	    { "id" : "features/lilies3", "layer" : "entity", "probability" : 1 },
 	    { "id" : "features/lilies4", "layer" : "entity", "probability" : 1 }
           ],
-          "terrainTypes" : [ "Water" ]
+          "terrainTypes" : [ "Water", "Swamp" ]
         },
 	"Reef" : {
 	  "tiles" : [
@@ -44,7 +55,7 @@
 		{ "id" : "features/reef2", "layer" : "entity", "probability" : 1 },
 		{ "id" : "features/reef3", "layer" : "entity", "probability" : 1 }
 	  ],
-	  "terrainTypes" : [ "Water" ]
+	  "terrainTypes" : [ "Water", "Swamp" ]
 	},
         "Altar" : {
 	  "previewTile" : { "id" : "features/altar", "layer" : "entity" },
@@ -370,7 +381,7 @@
   
   "terrainBorderPriority" : [
     "water", "caveWet", "path", "pathClean", "pathGrass", "snow", "hillsSnow", "ice", "dirt", "grassDry",
-    "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone",
+    "leaves", "grass", "hills", "desert", "hillsDesert", "cave", "stone", "swamp", "mud"
     "pathDark", "hillsCave", "wall", "wood", "lava", "chasm", "wallRough", "wallWood",
     "building", "wallStone"
   ],
@@ -423,6 +434,30 @@
       "tiles" : [ { "id" : "base/wall-wood", "layer" : "base", "probability" : 1 } ],
       "borders" : [ ],
       "defaultBorder" : "BorderWallWood"
+    },
+    "mud" : {
+      "tiles" : [
+        { "id" : "base/mud0", "layer" : "base", "probability" : 1 },
+        { "id" : "base/mud1", "layer" : "base", "probability" : 1 },
+        { "id" : "base/mud2", "layer" : "base", "probability" : 1 },
+        { "id" : "base/mud3", "layer" : "base", "probability" : 1 }
+      ],
+      "borders" : [
+      ],
+      "defaultBorder" : "BorderMud"
+    },
+    "swamp" : {
+      "tiles" : [
+        { "id" : "base/swamp0", "layer" : "base", "probability" : 5 },
+        { "id" : "base/swamp1", "layer" : "base", "probability" : 5 },
+        { "id" : "base/swamp2", "layer" : "base", "probability" : 1 },
+        { "id" : "base/swamp3", "layer" : "base", "probability" : 1 },
+        { "id" : "base/swamp4", "layer" : "base", "probability" : 1 },
+        { "id" : "base/swamp5", "layer" : "base", "probability" : 1 }
+      ],
+      "borders" : [
+      ],
+      "defaultBorder" : "BorderSwamp"
     },
     "path" : {
       "tiles" : [
@@ -1028,6 +1063,46 @@
       },
       { "MustHave" : [ "SouthEast" ],
         "tiles" : [ { "id" : "borders/stone-se", "layer" : "borders", "position" : "SouthEast" } ]
+      }
+    ],
+    "BorderMud" : [
+      { "MustHave" : [ "North" ],
+    	"tiles" : [ { "id" : "borders/mud-n", "layer" : "borders", "position" : "North" } ]
+      },
+      { "MustHave" : [ "NorthWest" ],
+    	  "tiles" : [ { "id" : "borders/mud-nw", "layer" : "borders", "position" : "NorthWest" } ]
+      },
+      { "MustHave" : [ "NorthEast" ],
+    	"tiles" : [ { "id" : "borders/mud-ne", "layer" : "borders", "position" : "NorthEast" } ]
+      },
+      { "MustHave" : [ "South" ],
+        "tiles" : [ { "id" : "borders/mud-s", "layer" : "borders", "position" : "South" } ]
+      },
+      { "MustHave" : [ "SouthWest" ],
+        "tiles" : [ { "id" : "borders/mud-sw", "layer" : "borders", "position" : "SouthWest" } ]
+      },
+      { "MustHave" : [ "SouthEast" ],
+        "tiles" : [ { "id" : "borders/mud-se", "layer" : "borders", "position" : "SouthEast" } ]
+      }
+    ],
+    "BorderSwamp" : [
+      { "MustHave" : [ "North" ],
+    	"tiles" : [ { "id" : "borders/swamp-n", "layer" : "borders", "position" : "North" } ]
+      },
+      { "MustHave" : [ "NorthWest" ],
+    	  "tiles" : [ { "id" : "borders/swamp-nw", "layer" : "borders", "position" : "NorthWest" } ]
+      },
+      { "MustHave" : [ "NorthEast" ],
+    	"tiles" : [ { "id" : "borders/swamp-ne", "layer" : "borders", "position" : "NorthEast" } ]
+      },
+      { "MustHave" : [ "South" ],
+        "tiles" : [ { "id" : "borders/swamp-s", "layer" : "borders", "position" : "South" } ]
+      },
+      { "MustHave" : [ "SouthWest" ],
+        "tiles" : [ { "id" : "borders/swamp-sw", "layer" : "borders", "position" : "SouthWest" } ]
+      },
+      { "MustHave" : [ "SouthEast" ],
+        "tiles" : [ { "id" : "borders/swamp-se", "layer" : "borders", "position" : "SouthEast" } ]
       }
     ],
     "BorderWood" : [
