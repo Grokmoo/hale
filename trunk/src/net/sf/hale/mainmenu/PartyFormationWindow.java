@@ -56,7 +56,6 @@ public class PartyFormationWindow extends Widget {
 	private EditField nameField;
 	
 	private ToggleButton showPregeneratedCharactersButton;
-	private Button newCharacterButton;
 	private Button cancel, accept;
 	
 	private Label partySize;
@@ -167,15 +166,6 @@ public class PartyFormationWindow extends Widget {
 		});
 		add(showPregeneratedCharactersButton);
 		
-		newCharacterButton = new Button();
-		newCharacterButton.setTheme("newcharacterbutton");
-		newCharacterButton.addCallback(new Runnable() {
-			@Override public void run() {
-				showCharacterEditor();
-			}
-		});
-		add(newCharacterButton);
-		
 		cancel = new Button();
 		cancel.setTheme("cancelbutton");
 		cancel.addCallback(new Runnable() {
@@ -254,12 +244,34 @@ public class PartyFormationWindow extends Widget {
 		return pcs;
 	}
 	
+	private class CreateCharacterSelector extends Widget implements Runnable {
+		private Button newChar;
+		
+		private CreateCharacterSelector() {
+			newChar = new Button();
+			newChar.setTheme("newcharacterbutton");
+			newChar.addCallback(this);
+			add(newChar);
+		}
+		
+		@Override protected void layout() {
+			newChar.setPosition(getInnerX(), getInnerY());
+			newChar.setSize(newChar.getPreferredWidth(), newChar.getPreferredHeight());
+		}
+		
+		@Override public void run() {
+			showCharacterEditor();
+		}
+	}
+	
 	/**
 	 * Adds character selectors for each available unique character
 	 */
 	
 	private void populateSelectableList() {
 		availablePaneContent.clear();
+		
+		availablePaneContent.add(new CreateCharacterSelector());
 		
 		List<PC> pcs = new ArrayList<PC>();
 		pcs.addAll(getPCsInDirectory("characters/"));
@@ -410,9 +422,6 @@ public class PartyFormationWindow extends Widget {
 		partyTitle.setPosition(getInnerX(), nameBottom + sectionGap);
 		availableTitle.setPosition(centerX, nameBottom + sectionGap);
 
-		newCharacterButton.setSize(newCharacterButton.getPreferredWidth(), newCharacterButton.getPreferredHeight());
-		newCharacterButton.setPosition(centerX, availableTitle.getBottom());
-
 		partySize.setSize(partySize.getPreferredWidth(), partySize.getPreferredHeight());
 		partySize.setPosition(getInnerX(), partyTitle.getBottom());
 
@@ -424,7 +433,7 @@ public class PartyFormationWindow extends Widget {
 		showPregeneratedCharactersButton.setPosition(getInnerRight() - showPregeneratedCharactersButton.getWidth(),
 				paneBottom - showPregeneratedCharactersButton.getHeight());
 		
-		availablePane.setPosition(partyPane.getRight(), newCharacterButton.getBottom());
+		availablePane.setPosition(partyPane.getRight(), nameBottom + sectionGap);
 		availablePane.setSize(getInnerWidth() - partyPane.getWidth(),
 				showPregeneratedCharactersButton.getY() - availablePane.getY());
 	}
@@ -516,6 +525,12 @@ public class PartyFormationWindow extends Widget {
 			
 			add(selector);
 			
+			if (top) {
+				// move the just added widget to the top of the list
+				// below the create character button
+				this.moveChild(getNumChildren() - 1, 1);
+			}
+				
 			invalidateLayout();
 		}
 		
@@ -541,18 +556,20 @@ public class PartyFormationWindow extends Widget {
 		
 		@Override public int getPreferredHeight() {
 			int height = 0;
-			for (CharacterSelector selector : selectors) {
-				height += selector.getPreferredHeight();
+			for (int i = 0; i < getNumChildren(); i++) {
+				height += getChild(i).getPreferredHeight();
 			}
-			height += Math.max((selectors.size() - 1), 0) * selectorGap;
+			height += Math.max((getNumChildren() - 1), 0) * selectorGap;
+			
 			return height + getBorderVertical();
 		}
 		
 		@Override public int getPreferredWidth() {
 			int width = 0;
-			for (CharacterSelector selector : selectors) {
-				width = Math.max(width, selector.getPreferredWidth());
+			for (int i = 0; i < getNumChildren(); i++) {
+				width = Math.max(width, getChild(i).getPreferredWidth());
 			}
+
 			return width + getBorderHorizontal();
 		}
 		
@@ -560,11 +577,12 @@ public class PartyFormationWindow extends Widget {
 			super.layout();
 			
 			int lastY = getInnerY();
-			for (CharacterSelector selector : selectors) {
-				selector.setSize(selector.getPreferredWidth(), selector.getPreferredHeight());
-				selector.setPosition(getInnerX(), lastY);
+			for (int i = 0; i < getNumChildren(); i++) {
+				Widget child = getChild(i);
+				child.setSize(child.getPreferredWidth(), child.getPreferredHeight());
+				child.setPosition(getInnerX(), lastY);
 				
-				lastY = selector.getBottom() + selectorGap;
+				lastY = child.getBottom() + selectorGap;
 			}
 		}
 	}
