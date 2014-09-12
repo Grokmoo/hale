@@ -76,6 +76,8 @@ public class PartyFormationWindow extends Widget {
 	
 	private Set<String> charactersInParties;
 	
+	private DifficultySelector difficultySelector;
+	
 	/**
 	 * Creates a new PartyFormationWindow with the specified mainMenu as the parent Widget.
 	 * @param mainMenu the parent Widget for this PartyFormationWindow
@@ -117,6 +119,9 @@ public class PartyFormationWindow extends Widget {
 		} else { // if we are choosing a single character
 			titleLabel.setText("Choose a Character");
 			partyTitle.setText("Your Character");
+			
+			difficultySelector = new DifficultySelector();
+			add(difficultySelector);
 		}
 		
 		int minSize = Game.curCampaign.getMinPartySize();
@@ -318,6 +323,7 @@ public class PartyFormationWindow extends Widget {
 			Game.curCampaign.party.setFirstMemberSelected();
 			Game.curCampaign.partyCurrency.setValue(0);
 			Game.curCampaign.levelUpToMinIfAllowed();
+			Game.ruleset.getDifficultyManager().setCurrentDifficulty(difficultySelector.getSelectedDifficulty());
 			mainMenu.update();
 		}
 	}
@@ -372,21 +378,32 @@ public class PartyFormationWindow extends Widget {
 		titleLabel.setSize(titleLabel.getPreferredWidth(), titleLabel.getPreferredHeight());
 		titleLabel.setPosition(centerX - titleLabel.getWidth() / 2, getInnerY());
 		
-		int paneBottom = Math.min(cancel.getY(), accept.getY());
-		
-		nameLabel.setSize(nameLabel.getPreferredWidth(), nameLabel.getPreferredHeight());
-		nameField.setSize(nameField.getPreferredWidth(), nameField.getPreferredHeight());
-		
-		int nameWidth = nameField.getWidth() + nameLabel.getWidth() + smallGap;
-		int nameHeight = Math.max(nameField.getHeight(), nameLabel.getHeight());
-		
-		nameLabel.setPosition(centerX - nameWidth / 2,
-				titleLabel.getBottom() + sectionGap + nameHeight / 2 - nameLabel.getHeight() / 2);
-		
-		nameField.setPosition(nameLabel.getRight() + smallGap,
-				titleLabel.getBottom() + sectionGap + nameHeight / 2 - nameField.getHeight() / 2);
-		
-		int nameBottom = Math.max(Math.max(nameLabel.getBottom(), nameField.getBottom()), titleLabel.getBottom());
+		int paneBottom, nameBottom;
+		if (difficultySelector == null) {
+			paneBottom = Math.min(cancel.getY(), accept.getY());
+			
+			nameLabel.setSize(nameLabel.getPreferredWidth(), nameLabel.getPreferredHeight());
+			nameField.setSize(nameField.getPreferredWidth(), nameField.getPreferredHeight());
+			
+			int nameWidth = nameField.getWidth() + nameLabel.getWidth() + smallGap;
+			int nameHeight = Math.max(nameField.getHeight(), nameLabel.getHeight());
+			
+			nameLabel.setPosition(centerX - nameWidth / 2,
+					titleLabel.getBottom() + sectionGap + nameHeight / 2 - nameLabel.getHeight() / 2);
+			
+			nameField.setPosition(nameLabel.getRight() + smallGap,
+					titleLabel.getBottom() + sectionGap + nameHeight / 2 - nameField.getHeight() / 2);
+			
+			nameBottom = Math.max(Math.max(nameLabel.getBottom(), nameField.getBottom()), titleLabel.getBottom());
+		} else {
+			difficultySelector.setSize(difficultySelector.getPreferredWidth(), difficultySelector.getPreferredHeight());
+			difficultySelector.setPosition(centerX - difficultySelector.getWidth() / 2,
+					accept.getY() - sectionGap - difficultySelector.getHeight());
+			
+			paneBottom = difficultySelector.getY() - sectionGap;
+			
+			nameBottom = titleLabel.getBottom();
+		}
 		
 		partyTitle.setSize(partyTitle.getPreferredWidth(), partyTitle.getPreferredHeight());
 		availableTitle.setSize(availableTitle.getPreferredWidth(), availableTitle.getPreferredHeight());

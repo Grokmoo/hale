@@ -88,7 +88,7 @@ public class DifficultyManager {
 		}
 		sb.append("</div>");
 		
-		sb.append("<div style=\"margin-top: 0.5em\">");
+		sb.append("<div style=\"margin-top: 0.2em\">");
 		if (level.friendlyFireOnPCs) {
 			sb.append("Normal Friendly Fire on Players from Area Spells");
 		} else {
@@ -96,7 +96,7 @@ public class DifficultyManager {
 		}
 		sb.append("</div>");
 		
-		sb.append("<div style=\"margin-top: 0.5em\">");
+		sb.append("<div style=\"margin-top: 0.2em\">");
 		sb.append("Players take ");
 		sb.append( Integer.toString(level.damageFactorOnPCs) );
 		sb.append("% damage");
