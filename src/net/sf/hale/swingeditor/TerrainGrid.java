@@ -248,6 +248,7 @@ public class TerrainGrid {
 		
 		if (center.isWithinBounds(area)) {
 			setFeature(center.x, center.y, type);
+			setTransparencyAndPassability(center.x, center.y);
 		}
 		
 		for (int r = 1; r <= radius; r++) {
@@ -257,6 +258,7 @@ public class TerrainGrid {
 				if (!p.isWithinBounds(area)) continue;
 				
 				setFeature(p.x, p.y, type);
+				setTransparencyAndPassability(p.x, p.y);
 			}
 		}
 		
