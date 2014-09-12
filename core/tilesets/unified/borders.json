@@ -114,6 +114,19 @@
     "wood-n"       : [ 4, 8 ],
     "wood-n-nw"    : [ 5, 8 ],
     "wood-ne-n-nw"   : [ 6, 8 ],
-    "wood-n-ne"      : [ 7, 8 ]
+    "wood-n-ne"      : [ 7, 8 ],
+
+    "mud-s"  : [ 0, 9 ],
+    "mud-sw" : [ 1, 9 ],
+    "mud-se" : [ 2, 9 ],
+    "mud-n"  : [ 3, 9 ],
+    "mud-nw" : [ 4, 9 ],
+    "mud-ne" : [ 5, 9 ],       
+    "swamp-s"  : [ 6, 9 ],
+    "swamp-sw" : [ 7, 9 ],
+    "swamp-se" : [ 8, 9 ],
+    "swamp-n"  : [ 9, 9 ],
+    "swamp-nw" : [10, 9 ],
+    "swamp-ne" : [11, 9 ]
   }
 }
