@@ -103,11 +103,7 @@ public class EntityMouseover extends Widget {
 			selectedEntity = null;
 			name.setText("Travel to");
 			Transition.EndPoint endPoint = transition.getEndPointForCreaturesInCurrentArea();
-			if (endPoint.isWorldMap()) {
-				status.setText("World Map");
-			} else {
-				status.setText(endPoint.getAreaID());
-			}
+			status.setText(endPoint.getLabel());
 			
 		} else if (creature != null) {
 			selectedEntity = creature;

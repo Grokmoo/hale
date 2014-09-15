@@ -244,6 +244,13 @@ public class Transition implements Saveable {
 			int centerX = data.get("x", 0);
 			int centerY = data.get("y", 0);
 			
+			String label;
+			if (data.containsKey("label")) {
+				label = data.get("label", null);
+			} else {
+				label = areaID;
+			}
+			
 			List<PointImmutable> partyPositions = new ArrayList<PointImmutable>();
 			
 			SimpleJSONArray partyPositionsIn = data.getArray("partyPositions");
@@ -267,7 +274,7 @@ public class Transition implements Saveable {
 			}
 			((ArrayList<PointImmutable>)partyPositions).trimToSize();
 			
-			return new AreaEndPoint(areaID, centerX, centerY, partyPositions);
+			return new AreaEndPoint(areaID, centerX, centerY, partyPositions, label);
 		}
 	}
 	
@@ -287,6 +294,14 @@ public class Transition implements Saveable {
 		 */
 		
 		public boolean isWorldMap();
+		
+		/**
+		 * Returns the text that should be shown when the user mouses over
+		 * this transition end point
+		 * @return the label text
+		 */
+		
+		public String getLabel();
 		
 		/**
 		 * Returns the id of the area that this end Point is located in,
@@ -323,6 +338,8 @@ public class Transition implements Saveable {
 	
 	private class WorldMapEndPoint implements EndPoint {
 		@Override public boolean isWorldMap() { return true; }
+		
+		@Override public String getLabel() { return "World Map"; }
 
 		@Override public String getAreaID() { return null; }
 
@@ -336,19 +353,25 @@ public class Transition implements Saveable {
 	}
 	
 	private class AreaEndPoint implements EndPoint {
+		private final String label;
 		private final String areaID;
 		private final int x, y;
 		private final List<PointImmutable> partyPositions;
 		
-		private AreaEndPoint(String areaID, int x, int y, List<PointImmutable> partyPositions) {
+		private AreaEndPoint(String areaID, int x, int y, List<PointImmutable> partyPositions, String label) {
 			this.areaID = areaID;
 			this.x = x;
 			this.y = y;
 			this.partyPositions = Collections.unmodifiableList(partyPositions);
+			this.label = label;
 		}
 		
 		@Override public boolean isWorldMap() { return false; }
 
+		@Override public String getLabel() {
+			return label;
+		}
+		
 		@Override public String getAreaID() {
 			return areaID;
 		}
