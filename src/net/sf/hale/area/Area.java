@@ -42,6 +42,7 @@ import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.Location;
+import net.sf.hale.entity.NPC;
 import net.sf.hale.entity.Openable;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Trap;
@@ -151,6 +152,18 @@ public class Area implements EffectTarget, Saveable {
 			startLoc.add(coords);
 		}
 		data.put("startLocations", startLoc.toArray());
+		
+		// write creatures
+		List<JSONOrderedObject> creaturesData = new ArrayList<JSONOrderedObject>();
+		for (Creature creature : entityList.getAllCreatures()) {
+			JSONOrderedObject creatureData = new JSONOrderedObject();
+			creatureData.put("id", creature.getTemplate().getID());
+			creatureData.put("x", creature.getLocation().getX());
+			creatureData.put("y", creature.getLocation().getY());
+
+			creaturesData.add(creatureData);
+		}
+		data.put("creatures", creaturesData.toArray());
 		
 		// write encounter coords
 		Map<String, ArrayList<int[]>> encountersData = new LinkedHashMap<String, ArrayList<int[]>>();
@@ -502,6 +515,23 @@ public class Area implements EffectTarget, Saveable {
 	// when saving / loading
 	
 	private void loadFromBaseFile(SimpleJSONParser parser) {
+		// parse creatures
+		if (parser.containsKey("creatures")) {
+			SimpleJSONArray creaturesIn = parser.getArray("creatures");
+			
+			for (SimpleJSONArrayEntry entry : creaturesIn) {
+				SimpleJSONObject obj = entry.getObject();
+				
+				String id = obj.get("id", null);
+				int x = obj.get("x", 0);
+				int y = obj.get("y", 0);
+
+				NPC npc = EntityManager.getNPC(id);
+				npc.setLocation(this, x, y);
+				entityList.addEntity(npc);
+			}
+		}
+		
 		// parse encounters
 		if (parser.containsKey("encounters")) {
 			SimpleJSONObject encountersIn = parser.getObject("encounters");

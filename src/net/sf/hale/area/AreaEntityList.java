@@ -433,6 +433,21 @@ public class AreaEntityList implements Saveable, Iterable<Entity> {
 	}
 	
 	/**
+	 * Returns all creatures in this list at any grid position
+	 * @return all creatures in this list
+	 */
+	
+	public final List<Creature> getAllCreatures() {
+		List<Creature> creatures = new ArrayList<Creature>();
+		
+		for (Entity entity : entitiesSet) {
+			if (entity instanceof Creature) creatures.add((Creature)entity);
+		}
+		
+		return creatures;
+	}
+	
+	/**
 	 * Returns all containers in this list at any grid position
 	 * @return all containers in this list
 	 */
