@@ -16,15 +16,15 @@
   "from" : {
     "area" : "ChaolDorn",
     "label" : "Chaol Dorn",
-    "x" : 20,
-    "y" : 26,
-    "partyPositions" : [ [ -2, -1 ], [ -1, -1 ], [ -2, 0 ], [ 0, -1 ] ]
+    "x" : 14,
+    "y" : 14,
+    "partyPositions" : [ [ -2, 0 ], [ -1, 0 ], [ -1, -1 ], [ 1, 0 ] ]
   },
   "to" : {
-    "area" : "DungeonLevel1",
-    "label" : "The Dungeon",
+    "area" : "HardyHearth",
+    "label" : "The Hardy Hearth",
     "x" : 3,
-    "y" : 2,
-    "partyPositions" : [ [ 0, 1 ] ]
+    "y" : 17,
+    "partyPositions" : [ [ 2, -1 ], [ 1, 0 ], [ 0, 1 ], [ 2, 0 ] ]
   }
 }
