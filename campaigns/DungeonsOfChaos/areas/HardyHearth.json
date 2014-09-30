@@ -6,7 +6,13 @@
   "explored" : false,
   "tileset" : "unified",
   "startLocations" : [],
-  "creatures" : [],
+  "creatures" : [
+    {
+      "id" : "Companion-Koral",
+      "x" : 16,
+      "y" : 12
+    }
+  ],
   "encounters" : {
 
   },

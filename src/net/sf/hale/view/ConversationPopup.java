@@ -129,6 +129,10 @@ public class ConversationPopup extends PopupWindow {
 		this.text.append("<div style=\"margin-top: 1em;\">").append(text).append("</div>");
 	}
 	
+	public void addTextWithFont(String text, String font) {
+		this.text.append("<div style=\"margin-top: 1em; font-family: " + font + "\">").append(text).append("</div>");
+	}
+	
 	/**
 	 * Adds a response widget with the specified text to the list of responses
 	 * currently shown for this conversation
