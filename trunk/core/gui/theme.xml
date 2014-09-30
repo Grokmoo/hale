@@ -980,6 +980,7 @@
         <param name="border"><border>background.border</border></param>
         <param name="fonts"><map>
            <param name="default"><font>normal</font></param>
+           <param name="mono"><font>code</font></param>
 		   <param name="black"><font>black</font></param>
 		   <param name="red"><font>red</font></param>
 		   <param name="green"><font>green</font></param>
