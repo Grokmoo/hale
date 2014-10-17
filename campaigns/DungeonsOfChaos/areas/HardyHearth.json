@@ -10,7 +10,8 @@
     {
       "id" : "Companion-Koral",
       "x" : 16,
-      "y" : 12
+      "y" : 12,
+	  "pc" : true
     }
   ],
   "encounters" : {

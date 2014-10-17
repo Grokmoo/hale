@@ -83,14 +83,14 @@ public class MouseActionList {
 		/** open the hovered Door */
 		Door(new net.sf.hale.defaultability.OpenDoor()),
 		
+		/** select the Entity being hovered */
+		Select(new net.sf.hale.defaultability.Select()),
+		
 		/** talk to the hovered Entity */
 		Talk(new net.sf.hale.defaultability.Talk()),
 		
 		/** activate the hovered AreaTransition */
 		Travel(new net.sf.hale.defaultability.Travel()),
-		
-		/** select the Entity being hovered */
-		Select(new net.sf.hale.defaultability.Select()),
 		
 		/** move the selected Entity to the hovered position */
 		Move(new net.sf.hale.defaultability.Move()),

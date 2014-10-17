@@ -80,6 +80,11 @@ public final class PC extends Creature {
 		out.put("gender", template.getGender().name());
 		out.put("race", template.getRace().getID());
 		out.put("portrait", template.getPortrait());
+		
+		if (template.getConversation() != null) {
+			out.put("conversation", template.getConversation().getScriptLocation());
+		}
+		
 		out.put("icon", template.getIcon().save());
 		
 		JSONOrderedObject attributes = new JSONOrderedObject();
