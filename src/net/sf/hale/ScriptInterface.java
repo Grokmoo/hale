@@ -857,4 +857,15 @@ public class ScriptInterface implements HasScriptState {
 		Game.curCampaign.party.add(companion);
 		Game.mainViewer.updateInterface();
 	}
+	
+	/**
+	 * Removes the specified PC as a companion to the party.  If the PC is not in
+	 * the party, does nothing.
+	 * @param companion
+	 */
+	
+	public void removeCompanion(PC companion) {
+		Game.curCampaign.party.remove(companion);
+		Game.mainViewer.updateInterface();
+	}
 }
