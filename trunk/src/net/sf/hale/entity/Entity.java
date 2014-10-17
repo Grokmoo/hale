@@ -311,6 +311,11 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 		Point oldScreen = this.location.getScreenPoint();
 		Point newScreen = newLocation.getScreenPoint();
 		
+		if (oldLocation.getArea() != null && oldLocation.getArea() != newLocation.getArea()) {
+			// moving to a new area
+			oldLocation.getArea().getEntities().removeEntity(this);
+		}
+		
 		this.location = newLocation;
 		
 		effects.offsetAnimationPositions(newScreen.x - oldScreen.x, newScreen.y - oldScreen.y);
@@ -324,7 +329,6 @@ public abstract class Entity implements EffectTarget, Saveable, HasScriptState, 
 			this.location.getArea().getEntities().moveEntity(this, oldLocation);
 		} else {
 			// moving to a new area
-			oldLocation.getArea().getEntities().removeEntity(this);
 			newLocation.getArea().getEntities().addEntity(this);
 		}
 		

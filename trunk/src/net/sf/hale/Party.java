@@ -318,6 +318,8 @@ public class Party implements Iterable<PC>, Saveable {
 		}
 		
 		recomputePortraits = true;
+		
+		creature.setFaction( Game.ruleset.getFaction(Game.ruleset.getString("DefaultFaction")) );
 	}
 	
 	/**
