@@ -846,4 +846,15 @@ public class ScriptInterface implements HasScriptState {
 	public CreatedItemModel getCreatedItemModel(String baseItemID, String createdItemID) {
 		return new CreatedItemModel(baseItemID, createdItemID);
 	}
+	
+	/**
+	 * Adds the specified PC as a companion in the party.  If the PC is already
+	 * a member of the party, does nothing.
+	 * @param companion
+	 */
+	
+	public void addCompanion(PC companion) {
+		Game.curCampaign.party.add(companion);
+		Game.mainViewer.updateInterface();
+	}
 }

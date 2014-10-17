@@ -43,7 +43,7 @@ public class Select implements DefaultAbility {
 		// this makes the interface a little nicer; showing cancel above the selected
 		// creature looks strange
 		
-		return (target != null && target instanceof PC);
+		return (target != null && target instanceof PC && target.isPlayerFaction());
 	}
 		
 	@Override public void activate(PC parent, Location targetPosition) {

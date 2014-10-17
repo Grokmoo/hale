@@ -42,7 +42,6 @@ import net.sf.hale.entity.Entity;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Item;
 import net.sf.hale.entity.Location;
-import net.sf.hale.entity.NPC;
 import net.sf.hale.entity.Openable;
 import net.sf.hale.entity.PC;
 import net.sf.hale.entity.Trap;
@@ -160,6 +159,10 @@ public class Area implements EffectTarget, Saveable {
 			creatureData.put("id", creature.getTemplate().getID());
 			creatureData.put("x", creature.getLocation().getX());
 			creatureData.put("y", creature.getLocation().getY());
+			
+			if (creature instanceof PC) {
+				creatureData.put("pc", true);
+			}
 
 			creaturesData.add(creatureData);
 		}
@@ -525,10 +528,20 @@ public class Area implements EffectTarget, Saveable {
 				String id = obj.get("id", null);
 				int x = obj.get("x", 0);
 				int y = obj.get("y", 0);
+				
+				boolean isPC = false;
+				if (obj.containsKey("pc")) {
+					isPC = obj.get("pc", false);
+				}
 
-				NPC npc = EntityManager.getNPC(id);
-				npc.setLocation(this, x, y);
-				entityList.addEntity(npc);
+				Creature creature;
+				if (isPC) {
+					creature = EntityManager.getPC(id);
+				} else {
+					creature = EntityManager.getNPC(id);
+				}
+				creature.setLocation(this, x, y);
+				entityList.addEntity(creature);
 			}
 		}
 		

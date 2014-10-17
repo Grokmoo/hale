@@ -281,6 +281,10 @@ public class Party implements Iterable<PC>, Saveable {
 	 */
 	
 	public void add(PC creature) {
+		for (PC pc : this.characters) {
+			if (pc == creature) return;
+		}
+		
 		creature.setFaction(Game.ruleset.getFaction(Game.ruleset.getString("PlayerFaction")));
 		characters.add(creature);
 		
