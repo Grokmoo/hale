@@ -5,7 +5,9 @@
   "visibilityRadius" : 8,
   "explored" : false,
   "tileset" : "unified",
-  "layers" : {
-
+  "layers" : { },
+  
+  "proceduralGenerator" : {
+    "baseTerrain" : "dirt"
   }
 }

@@ -211,6 +211,11 @@ public class AreaTileGrid {
 	public Tile addTile(String tileID, String layerID, int x, int y) {
 		TileLayerList tileLayerList = tiles.get(layerID);
 		
+		if (tileLayerList == null) {
+			tileLayerList = new TileLayerList(screenCoordinates.length, screenCoordinates[0].length);
+			tiles.put(layerID, tileLayerList);
+		}
+		
 		return tileLayerList.addTile(tileID, tileset.getLayer(layerID).getSpriteID(tileID), x, y);
 	}
 	
