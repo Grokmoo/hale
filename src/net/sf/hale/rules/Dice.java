@@ -44,8 +44,29 @@ public class Dice {
 		}
 	}
 	
+	/**
+	 * Initializes a new dice object using the specified seed, ignoring any seed from the
+	 * config
+	 * @param seed
+	 */
+	
+	public Dice(long seed) {
+		generator = new Random();
+		generator.setSeed(seed);
+	}
+	
 	public float gaussian(float mean, float stddev) {
 		return ((float)generator.nextGaussian()) * stddev + mean;
+	}
+	
+	/**
+	 * Generates a random long suitable for use as a seed in another random
+	 * generator
+	 * @return a random long
+	 */
+	
+	public long randSeed() {
+		return generator.nextLong();
 	}
 	
 	public double rand(double min, double max) {

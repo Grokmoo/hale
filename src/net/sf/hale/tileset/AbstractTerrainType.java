@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sf.hale.Game;
+import net.sf.hale.rules.Dice;
 import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
 
@@ -138,7 +139,19 @@ public abstract class AbstractTerrainType implements Iterable<TerrainTile> {
 	 */
 	
 	public TerrainTile getRandomTerrainTile() {
-		int randValue = Game.dice.rand(1, totalProbability);
+		return getRandomTerrainTile(Game.dice);
+	}
+	
+	/**
+	 * Randomly returns one terrain tile from the list of terrain tiles in this TerrainType.
+	 * The tiles are weighted based on their individual probability factors.  The random number
+	 * if pulled from the specified Dice
+	 * @param dice
+	 * @return a randomly chosen terrain tile, or null if this terrain type does not have a terrain tile
+	 */
+	
+	public TerrainTile getRandomTerrainTile(Dice dice) {
+		int randValue = dice.rand(1, totalProbability);
 		int curProbability = 0;
 		for (TerrainTile tile : tiles) {
 			curProbability += tile.getProbability();
