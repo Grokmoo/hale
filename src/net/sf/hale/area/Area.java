@@ -451,11 +451,6 @@ public class Area implements EffectTarget, Saveable {
 			parser.warnOnUnusedKeys();
 		}
 		
-		if (generator != null) {
-			// perform procedural generation if specified
-			generator.generateLayers();
-		}
-		
 		// update door transparency
 		for (Entity entity : entityList) {
 			if (entity instanceof Door) {
@@ -482,6 +477,11 @@ public class Area implements EffectTarget, Saveable {
 			for (Encounter encounter : encounters) {
 				encounter.checkSpawnCreatures();
 			}
+		}
+		
+		if (generator != null) {
+			// perform procedural generation if specified
+			generator.generateLayers();
 		}
 	}
 	
@@ -1029,5 +1029,36 @@ public class Area implements EffectTarget, Saveable {
 	
 	public String getID() {
 		return id;
+	}
+	
+	/**
+	 * Gets a list of all valid grid points based on the specified center coordinates with the specified
+	 * radius
+	 * @param x
+	 * @param y
+	 * @param radius
+	 * @return a list of all points (in grid coordinates) based on the x, y, r
+	 */
+	
+	public List<PointImmutable> getPoints(int x, int y, int radius) {
+		List<PointImmutable> points = new ArrayList<PointImmutable>();
+		
+		PointImmutable pCenter = new PointImmutable(x, y);
+		
+		if (pCenter.isWithinBounds(this)) {
+			points.add(pCenter);
+		}
+
+		for (int r = 1; r <= radius; r++) {
+			for (int i = 0; i < 6 * r; i++) {
+				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
+				
+				if (!p.isWithinBounds(this)) continue;
+				
+				points.add(p);
+			}
+		}
+
+		return points;
 	}
 }
