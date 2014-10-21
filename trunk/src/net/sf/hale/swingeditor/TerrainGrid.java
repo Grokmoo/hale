@@ -130,7 +130,7 @@ public class TerrainGrid {
 	 */
 	
 	public void modifyElevation(int x, int y, int r, byte delta) {
-		for (PointImmutable p : getPoints(x, y, r)) {
+		for (PointImmutable p : area.getPoints(x, y, r)) {
 			modifyElevation(p.x, p.y, delta);
 		}
 		
@@ -184,7 +184,7 @@ public class TerrainGrid {
 	 */
 	
 	public void removeFeatureTiles(int x, int y, int r) {
-		for (PointImmutable p : getPoints(x, y, r)) {
+		for (PointImmutable p : area.getPoints(x, y, r)) {
 			removeFeatureTiles(p.x, p.y);
 		}
 	}
@@ -208,7 +208,7 @@ public class TerrainGrid {
 	 */
 	
 	public void removeAllTiles(int x, int y, int r) {
-		for (PointImmutable p : getPoints(x, y, r)) {
+		for (PointImmutable p : area.getPoints(x, y, r)) {
 			removeAllTiles(p.x, p.y);
 		}
 	}
@@ -397,36 +397,5 @@ public class TerrainGrid {
 			
 			addBorderTiles(x, y);
 		}
-	}
-	
-	/**
-	 * Gets a list of all valid grid points based on the specified center coordinates with the specified
-	 * radius
-	 * @param x
-	 * @param y
-	 * @param radius
-	 * @return a list of all points (in grid coordinates) based on the x, y, r
-	 */
-	
-	public List<PointImmutable> getPoints(int x, int y, int radius) {
-		List<PointImmutable> points = new ArrayList<PointImmutable>();
-		
-		PointImmutable pCenter = new PointImmutable(x, y);
-		
-		if (pCenter.isWithinBounds(area)) {
-			points.add(pCenter);
-		}
-
-		for (int r = 1; r <= radius; r++) {
-			for (int i = 0; i < 6 * r; i++) {
-				PointImmutable p = new PointImmutable(AreaUtil.convertPolarToGrid(x, y, r, i));
-				
-				if (!p.isWithinBounds(area)) continue;
-				
-				points.add(p);
-			}
-		}
-
-		return points;
 	}
 }

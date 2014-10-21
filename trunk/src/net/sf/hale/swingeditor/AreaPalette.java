@@ -293,13 +293,13 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	
 	private class PassableAction implements AreaClickHandler {
 		@Override public void leftClicked(int x, int y, int r) {
-			for (PointImmutable p : grid.getPoints(x, y, r)) {
+			for (PointImmutable p : area.getPoints(x, y, r)) {
 				area.getPassability()[p.x][p.y]= true; 
 			}
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
-			for (PointImmutable p : grid.getPoints(x, y, r)) {
+			for (PointImmutable p : area.getPoints(x, y, r)) {
 				area.getPassability()[p.x][p.y]= false; 
 			}
 		}
@@ -307,13 +307,13 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 	
 	private class TransparentAction implements AreaClickHandler {
 		@Override public void leftClicked(int x, int y, int r) {
-			for (PointImmutable p : grid.getPoints(x, y, r)) {
+			for (PointImmutable p : area.getPoints(x, y, r)) {
 				area.getTransparency()[p.x][p.y] = true;
 			}
 		}
 
 		@Override public void rightClicked(int x, int y, int r) {
-			for (PointImmutable p : grid.getPoints(x, y, r)) {
+			for (PointImmutable p : area.getPoints(x, y, r)) {
 				area.getTransparency()[p.x][p.y] = false;
 			}
 		}
@@ -347,7 +347,7 @@ public class AreaPalette extends JPanel implements AreaRenderer.ViewHandler {
 		@Override public void leftClicked(int x, int y, int radius) {
 			if (tileID == null) return;
 			
-			for (PointImmutable p : grid.getPoints(x, y, radius)) {
+			for (PointImmutable p : area.getPoints(x, y, radius)) {
 				area.getTileGrid().addTile(tileID, layerID, p.x, p.y);
 			}
 			
