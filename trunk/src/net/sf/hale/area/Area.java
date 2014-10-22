@@ -83,7 +83,7 @@ public class Area implements EffectTarget, Saveable {
 	private final boolean[][] explored;
 	
 	private AreaUtil areaUtil;
-	private ProceduralGenerator generator;
+	private Procedural procedural;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
@@ -91,8 +91,8 @@ public class Area implements EffectTarget, Saveable {
 		data.put("ref", SaveGameUtil.getRef(this));
 		data.put("name", id);
 		
-		if (generator != null) {
-			long seed = generator.getSeed();
+		if (procedural != null) {
+			long seed = procedural.getSeed();
 			String seedStr = Long.toHexString(seed);
 			data.put("generatorSeed", seedStr);
 		}
@@ -367,8 +367,8 @@ public class Area implements EffectTarget, Saveable {
 			triggers = Collections.emptyMap();
 		}
 		
-		if (parser.containsKey("proceduralGenerator")) {
-			generator = new ProceduralGenerator(this, parser.getObject("proceduralGenerator"));
+		if (parser.containsKey("procedural")) {
+			procedural = new Procedural(this, parser.getObject("procedural"));
 		}
 		
 		int x, y;
@@ -479,9 +479,9 @@ public class Area implements EffectTarget, Saveable {
 			}
 		}
 		
-		if (generator != null) {
+		if (procedural != null) {
 			// perform procedural generation if specified
-			generator.generateLayers();
+			procedural.generateLayers();
 		}
 	}
 	
@@ -510,7 +510,7 @@ public class Area implements EffectTarget, Saveable {
 		if (data.containsKey("generatorSeed")) {
 			String seedHex = data.get("generatorSeed", null);
 			long seed = Long.parseLong(seedHex, 16);
-			generator.setSeed(seed);
+			procedural.setSeed(seed);
 		}
 		
 		// parse entities

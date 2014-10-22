@@ -1,13 +1,16 @@
 {
   "name" : "Dungeon Level 1",
-  "width" : 20,
-  "height" : 20,
+  "width" : 100,
+  "height" : 100,
   "visibilityRadius" : 8,
   "explored" : false,
   "tileset" : "unified",
   "layers" : { },
   
-  "proceduralGenerator" : {
-    "baseTerrain" : "dirt"
+  "procedural" : {
+    "baseTerrain" : "dirt",
+	"gridGenerator" : {
+	  "gridSize" : 5
+	}
   }
 }
