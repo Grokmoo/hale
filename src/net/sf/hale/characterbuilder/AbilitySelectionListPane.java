@@ -62,10 +62,11 @@ public class AbilitySelectionListPane extends Widget {
 	 * @param parentPC the Creature viewing the list
 	 * @param parent the parent widget that mouse hoverovers will be added to
 	 * @param showSelectable true if abilities where prereqs are met should be highlighted, false if not
+	 * @param listIDsNotToAdd IDs of sublists which should be ignored
 	 */
 	
 	public AbilitySelectionListPane(AbilitySelectionList list, PC parentPC,
-			AbilitySelectorButton.HoverHolder parent, boolean showSelectable) {
+			AbilitySelectorButton.HoverHolder parent, boolean showSelectable, List<String> listIDsNotToAdd) {
 		this.parentPC = parentPC;
 		this.list = list;
 		this.showSelectable = showSelectable;
@@ -101,7 +102,9 @@ public class AbilitySelectionListPane extends Widget {
 		for (String listID : subLists) {
 			AbilitySelectionList subList = Game.ruleset.getAbilitySelectionList(listID);
 			
-			AbilitySelectionListPane pane = new AbilitySelectionListPane(subList, parentPC, parent, showSelectable);
+			if (listIDsNotToAdd.contains(listID)) continue;
+			
+			AbilitySelectionListPane pane = new AbilitySelectionListPane(subList, parentPC, parent, showSelectable, listIDsNotToAdd);
 			add(pane);
 			subListPanes.add(pane);
 			

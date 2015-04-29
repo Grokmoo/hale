@@ -2,7 +2,12 @@ package net.sf.hale.area;
 
 import net.sf.hale.Game;
 import net.sf.hale.rules.Dice;
+import net.sf.hale.tileset.Border;
+import net.sf.hale.tileset.BorderTile;
+import net.sf.hale.tileset.ElevationList;
 import net.sf.hale.tileset.Tileset;
+import net.sf.hale.util.Point;
+import net.sf.hale.util.PointImmutable;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
@@ -48,37 +53,61 @@ public class GridGenerator implements Generator {
 		int[][] cells = new int[gridWidth][gridHeight];
 		generateMaze(cells, 0, 0);
 		
-//		// generate a simple maze
-//		int[][] elev = elevationMazeDepthFirst();
-//
-//		// set elevation grid
-//		for (int x = 0; x < area.getWidth(); x++) {
-//			for (int y = 0; y < area.getHeight(); y++) {
-//				area.getElevationGrid().setElevation(x, y, (byte)elev[x][y]);
-//			}
-//		}
-//
-//		// add elevation border tiles
-//		for (int x = 0; x < area.getWidth(); x++) {
-//			for (int y = 0; y < area.getHeight(); y++) {
-//				Point p = new Point(x, y);
-//
-//				for (ElevationList.Elevation elevation : tileset.getElevationList().
-//						getMatchingElevationRules(area.getElevationGrid(), p)) {
-//
-//					Border border = elevation.getBorder();
-//
-//					for (BorderTile borderTile : border) {
-//						Point borderPoint = borderTile.getPosition().getRelativePoint(p);
-//
-//						PointImmutable bP = new PointImmutable(borderPoint);
-//						if (!bP.isWithinBounds(area)) continue;
-//
-//						area.getTileGrid().addTile(borderTile.getID(), borderTile.getLayerID(), bP.x, bP.y);
-//					}
-//				}
-//			}
-//		}
+		for (int cellX = 0; cellX < cells.length; cellX++) {
+			for (int cellY = 0; cellY < cells[0].length; cellY++) {
+				if ( (cells[cellX][cellY] & Direction.North.bit) == 0 ) {
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize + 1, cellY * gridSize, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize + 2, cellY * gridSize, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize + 3, cellY * gridSize, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize + 4, cellY * gridSize, (byte)1);
+				}
+				
+				if ( (cells[cellX][cellY] & Direction.West.bit) == 0 ) {
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 1, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 2, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 3, (byte)1);
+					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 4, (byte)1);
+				}
+			}
+		}
+		
+		// set passability and transparency
+		for (int x = 0; x < area.getWidth(); x++) {
+			for (int y = 0; y < area.getHeight(); y++) {
+				if (area.getElevationGrid().getElevation(x, y) != 0) {
+					area.getPassability()[x][y] = false;
+				}
+				
+				if (area.getElevationGrid().getElevation(x, y) > 0) {
+					area.getTransparency()[x][y] = false;
+				}
+			}
+		}
+		
+		// add elevation border tiles
+		for (int x = 0; x < area.getWidth(); x++) {
+			for (int y = 0; y < area.getHeight(); y++) {
+				Point p = new Point(x, y);
+
+				for (ElevationList.Elevation elevation : tileset.getElevationList().
+						getMatchingElevationRules(area.getElevationGrid(), p)) {
+
+					Border border = elevation.getBorder();
+
+					for (BorderTile borderTile : border) {
+						Point borderPoint = borderTile.getPosition().getRelativePoint(p);
+
+						PointImmutable bP = new PointImmutable(borderPoint);
+						if (!bP.isWithinBounds(area)) continue;
+
+						area.getTileGrid().addTile(borderTile.getID(), borderTile.getLayerID(), bP.x, bP.y);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	private void generateMaze(int[][] cells, int x, int y) {

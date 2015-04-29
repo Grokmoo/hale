@@ -31,6 +31,7 @@ import net.sf.hale.characterbuilder.AbilitySelectionListPane;
 import net.sf.hale.characterbuilder.AbilitySelectorButton;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
+import net.sf.hale.rules.Ruleset;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
@@ -109,7 +110,7 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 		}
 		listPanes.clear();
 		
-		Set<AbilitySelectionList> lists = new LinkedHashSet<AbilitySelectionList>();
+		List<AbilitySelectionList> lists = new ArrayList<AbilitySelectionList>();
 		
 		// get all the list referenced by all roles for the parent Creature
 		for (String id : parent.roles.getRoleIDs()) {
@@ -121,11 +122,26 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 		// get all the lists references by the race for the parent creature
 		lists.addAll(parent.getTemplate().getRace().getAllReferencedAbilitySelectionLists());
 		
+		List<String> listsAlreadyAdded = new ArrayList<String>();
+		
 		// add the list buttons
 		for (AbilitySelectionList list : lists) {
-			AbilitySelectionListPane pane = new AbilitySelectionListPane(list, parent, this, false);
+			if (listsAlreadyAdded.contains(list.getID())) continue;
+			
+			AbilitySelectionListPane pane = new AbilitySelectionListPane(list, parent, this, false, listsAlreadyAdded);
 			listPanes.add(pane);
 			content.add(pane);
+			
+			addListsRecursive(listsAlreadyAdded, list);
+		}
+	}
+	
+	private void addListsRecursive(List<String> listIDs, AbilitySelectionList list) {
+		listIDs.add(list.getID());
+		
+		for (String id : list.getSubListIDs()) {
+			AbilitySelectionList subList = Game.ruleset.getAbilitySelectionList(id);
+			addListsRecursive(listIDs, subList);
 		}
 	}
 	
