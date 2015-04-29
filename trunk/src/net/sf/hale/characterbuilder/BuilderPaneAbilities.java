@@ -20,6 +20,7 @@
 package net.sf.hale.characterbuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -174,7 +175,7 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 				if (currentSelection == null) {
 					currentSelection = selection;
 					AbilitySelectionListPane pane = new AbilitySelectionListPane(selection.list,
-							workingCopy, this, true);
+							workingCopy, this, true, new ArrayList<String>());
 					pane.addAbilitySelectorCallback(this);
 					abilitiesPane.setContent(pane);
 				}
