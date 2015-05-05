@@ -521,14 +521,6 @@ public class Buildable {
 	protected void applySelectionsToCreature() {
 		if (selectedRole != null) {
 			creature.roles.addLevels(selectedRole, 1);
-			
-			int curLevel = creature.roles.getLevel(selectedRole);
-			
-			// check all added abilities to see if they are activateable; if so add them to the quickbar
-			for (Ability ability : selectedRole.getAbilitiesAddedAtLevel(curLevel)) {
-				if (creature.quickbar != null && ability.isActivateable())
-					creature.quickbar.addToFirstEmptySlot(ability);
-			}
 		}
 		
 		if (selectedSkills != null) {
@@ -539,10 +531,6 @@ public class Buildable {
 		int level = getCreatureLevel();
 		for (Ability ability : selectedAbilities) {
 			creature.abilities.add(ability, level - 1);
-			
-			if (creature.quickbar != null && ability.isActivateable()) {
-				creature.quickbar.addToFirstEmptySlot(ability);
-			}
 		}
 	}
 	

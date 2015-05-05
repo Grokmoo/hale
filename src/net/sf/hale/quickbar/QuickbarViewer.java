@@ -23,13 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.Game;
-import net.sf.hale.Keybindings;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
-import net.sf.hale.widgets.HotKeyButton;
-import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.DialogLayout;
-import de.matthiasmann.twl.Label;
 
 /**
  * A widget for viewing an entire Quickbar, with buttons to scroll through
@@ -44,14 +40,6 @@ public class QuickbarViewer extends DialogLayout {
 	private List<QuickbarSlotButton> buttons;
 	private List<QuickbarGroupButton> groupButtons;
 	
-	private Button scrollUp;
-	private Button scrollDown;
-	private Label currentIndexLabel;
-	
-	private int currentIndex;
-	
-	private HotKeyButton expand;
-	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
 	 * is empty until a {@link #setQuickbar(Quickbar)} is
@@ -59,55 +47,17 @@ public class QuickbarViewer extends DialogLayout {
 	 */
 	
 	public QuickbarViewer() {
-		currentIndexLabel = new Label();
-		currentIndexLabel.setTheme("currentindexlabel");
+		Group mainH = this.createSequentialGroup();
+		Group mainV = this.createParallelGroup();
 		
-		scrollUp = new Button();
-		scrollUp.setTheme("incrementbutton");
-		scrollUp.addCallback(new Runnable() {
-			@Override public void run() {
-				int index = getIndexWrapAround(currentIndex - 1);
-				
-				if (quickbar != null) quickbar.setLastViewSetIndex(index);
-				setCurrentIndex(index);
-				setQuickbar(quickbar);
-			}
-		});
-		
-		scrollDown = new Button();
-		scrollDown.setTheme("decrementbutton");
-		scrollDown.addCallback(new Runnable() {
-			@Override public void run() {
-				int index = getIndexWrapAround(currentIndex + 1);
-				
-				if (quickbar != null) quickbar.setLastViewSetIndex(index);
-				setCurrentIndex(index);
-				setQuickbar(quickbar);
-			}
-		});
-		
-		Group scrollButtonsH = this.createParallelGroup(scrollUp, scrollDown);
-		Group scrollButtonsV = this.createSequentialGroup(scrollUp, scrollDown);
-		
-		Group mainH = this.createSequentialGroup(currentIndexLabel);
-		Group mainV = this.createParallelGroup(currentIndexLabel);
-		mainH.addGroup(scrollButtonsH);
-		mainV.addGroup(scrollButtonsV);
-		
-		buttons = new ArrayList<QuickbarSlotButton>(Quickbar.SlotsAtOnce);
-		for (int i = 0; i < Quickbar.SlotsAtOnce; i++) {
-			QuickbarSlotButton button = new QuickbarSlotButton(i, this);
+		buttons = new ArrayList<QuickbarSlotButton>(Quickbar.ItemSlots);
+		for (int i = 0; i < Quickbar.ItemSlots; i++) {
+			QuickbarSlotButton button = new QuickbarSlotButton(i);
 			buttons.add(button);
 			
 			mainH.addWidget(button);
 			mainV.addWidget(button);
 		}
-		
-		expand = new HotKeyButton();
-		expand.setTheme("expandbutton");
-		expand.setHotKeyBinding(new Keybindings.ToggleQuickbarPopup());
-		mainH.addWidget(expand);
-		mainV.addWidget(expand);
 		
 		groupButtons = new ArrayList<QuickbarGroupButton>();
 		for (QuickbarGroup group : Game.ruleset.getAllQuickbarGroups()) {
@@ -121,37 +71,7 @@ public class QuickbarViewer extends DialogLayout {
 		this.setHorizontalGroup(mainH);
 		this.setVerticalGroup(mainV);
 		
-		setCurrentIndex(1);
 		setQuickbar(quickbar);
-	}
-	
-	/**
-	 * Displays the popup showing the entire quickbar (with all slots) to the user
-	 */
-	
-	public void showQuickbarPopup() {
-		QuickbarPopup popup = new QuickbarPopup(Game.mainViewer, this);
-		popup.openPopup();
-	}
-	
-	private int getIndexWrapAround(int index) {
-		if (index >= Quickbar.SetsOfSlots) return 0;
-		else if (index < 0) return Quickbar.SetsOfSlots - 1;
-		else return index;
-	}
-	
-	/**
-	 * This function should only be called with an index known to be in the valid
-	 * range from 0 to Quickbar.SetsOfSlots - 1 inclusive
-	 * @param index
-	 */
-	
-	private void setCurrentIndex(int index) {
-		if (index == currentIndex) return;
-		
-		this.currentIndex = index;
-		
-		currentIndexLabel.setText(Integer.toString(currentIndex));
 	}
 	
 	/**
@@ -164,30 +84,14 @@ public class QuickbarViewer extends DialogLayout {
 		this.quickbar = quickbar;
 		if (quickbar == null) {
 			for (QuickbarSlotButton button : buttons) {
-				button.setSlot(null, null, 0);
+				button.setSlot(null, null);
 			}
 		} else {
-			int startIndex = currentIndex * Quickbar.SlotsAtOnce;
-			int i = 0;
-			for (int index = startIndex; index < startIndex + Quickbar.SlotsAtOnce; index++) {
-				QuickbarSlot slot = quickbar.getSlot(index);
-				buttons.get(i).setSlot(slot, quickbar, index);
-				i++;
+			for (int i = 0; i < Quickbar.ItemSlots; i++) {
+				QuickbarSlot slot = quickbar.getSlot(i);
+				buttons.get(i).setSlot(slot, quickbar);
 			}
 		}
-	}
-	
-	/**
-	 * Returns the absolute position quickbar slot index of the specified slot, or
-	 * -1 if the slot is not currently being viewed by this viewer
-	 * @param slotButton the slot to find the index of
-	 * @return the index of the specified slot
-	 */
-	
-	public int getSlotIndex(QuickbarSlotButton slotButton) {
-		if (!buttons.contains(slotButton)) return -1;
-		
-		return slotButton.getIndex() + currentIndex * Quickbar.SlotsAtOnce;
 	}
 	
 	/**
@@ -203,28 +107,23 @@ public class QuickbarViewer extends DialogLayout {
 	public int findSlotIndexUnderMouse(int x, int y) {
 		for (QuickbarSlotButton button : buttons) {
 			if (button.isInside(x, y))
-				return button.getIndex() + currentIndex * Quickbar.SlotsAtOnce;
+				return button.getIndex();
 		}
 		
 		return -1;
 	}
 	
 	/**
-	 * Returns the QuickbarSlotButton that is currently displaying the QuickbarSlot
-	 * with the specified Quickbar index.  Note that the QuickbarSlotButton's internal
-	 * index will not in general be equal to this index.  If there is no QuickbarSlotButton
-	 * currently viewing the specified index, returns null.
+	 * Returns the QuickbarSlotButton with the specified index
 	 * 
 	 * @param index the Quickbar index of the QuickbarSlotButton to find.
 	 * @return the QuickbarSlotButton viewing the specified index.
 	 */
 	
 	public QuickbarSlotButton getButton(int index) {
-		int viewerIndex = index - currentIndex * Quickbar.SlotsAtOnce;
+		if (index < 0 || index >= Quickbar.ItemSlots) return null; 
 		
-		if (viewerIndex < 0 || viewerIndex >= Quickbar.SlotsAtOnce) return null;
-		
-		return buttons.get(viewerIndex);
+		return buttons.get(index);
 	}
 	
 	/**
@@ -259,14 +158,7 @@ public class QuickbarViewer extends DialogLayout {
 	
 	public void updateContent(PC selected) {
 		if (selected != null) {
-			Quickbar quickbar = selected.quickbar;
-			
-			if (quickbar != null) {
-				int index = quickbar.getLastViewSetIndex();
-				if (index != this.currentIndex) setCurrentIndex(index);
-			}
-			
-			setQuickbar(quickbar);
+			setQuickbar(selected.quickbar);
 			
 			// set enabled status of the group buttons
 			for (QuickbarGroupButton groupButton : groupButtons) {

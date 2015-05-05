@@ -93,8 +93,8 @@ public class QuickbarGroupPopup extends PopupWindow {
 				}
 				
 				// add button for ability
-				QuickbarSlotButton slotButton = new QuickbarSlotButton(100, viewer);
-				slotButton.setSlot(new AbilityActivateSlot(ability, parent), quickbar, -1);
+				QuickbarSlotButton slotButton = new QuickbarSlotButton(-1);
+				slotButton.setSlot(new AbilityActivateSlot(ability, parent), quickbar);
 				slotButton.setShowIndexLabel(false);
 				slotButton.setDisabledExceptActivate(true);
 				slotButton.addCallback(new Runnable() {

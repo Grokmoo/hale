@@ -99,6 +99,13 @@ public class MainPane extends Widget {
 	}
 	
 	/**
+	 * Returns the end turn button
+	 * @return the end turn button
+	 */
+	
+	public HotKeyButton getEndTurnButton() { return endTurn; }
+	
+	/**
 	 * Cancels all currently pending movement orders.  Used by the "stop" button
 	 */
 	
