@@ -14,6 +14,7 @@
     "base" : "A seismic shockwave is sent out, hitting all creatures in a narrow cone 8 hexes long.  All targets must succeed at a physical resistance check or be stunned for 1 round."
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Evocation",
   "isFixed" : true,
   "cooldown" : 9,
   "actionPointCost" : 6000,

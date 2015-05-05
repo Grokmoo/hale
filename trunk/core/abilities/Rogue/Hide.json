@@ -13,6 +13,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Class",
   "isFixed" : true,
   "isMode" : true,
   "isCancelable" : true,

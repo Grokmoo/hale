@@ -19,6 +19,7 @@
     }
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Enchantment",
   "isFixed" : true,
   "cooldown" : 11,
   "actionPointCost" : 6000,

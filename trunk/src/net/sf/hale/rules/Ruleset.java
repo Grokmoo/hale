@@ -19,9 +19,11 @@
 
 package net.sf.hale.rules;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,6 +32,7 @@ import net.sf.hale.DifficultyManager;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.entity.SavedItemList;
+import net.sf.hale.quickbar.QuickbarGroup;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.resource.ResourceType;
 import net.sf.hale.util.Logger;
@@ -73,6 +76,8 @@ public class Ruleset {
 	
 	private DifficultyManager difficultyManager;
 	
+	private final Map<String, QuickbarGroup> quickbarGroups;
+	
 	/**
 	 * Creates a new empty Ruleset.  The readData method must be called after this
 	 * to initialize all the rules.  This should not be done until both the
@@ -102,6 +107,8 @@ public class Ruleset {
 		itemQualities = new HashMap<String, Quality>();
 		
 		cutscenes = new HashMap<String, Cutscene>();
+		
+		quickbarGroups = new LinkedHashMap<String, QuickbarGroup>();
 	}
 	
 	/**
@@ -122,6 +129,7 @@ public class Ruleset {
 		
 		readAbilities();
 		readAbilitySelectionLists();
+		readQuickbarGroups();
 		
 		readRaces();
 		readSkills();
@@ -246,6 +254,41 @@ public class Ruleset {
 			
 			abilities.put(id, Ability.createAbilityFromResource(id, resource));
 		}
+	}
+	
+	/**
+	 * Note that this method must be run after reading in the abilities
+	 */
+	
+	private void readQuickbarGroups() {
+		quickbarGroups.clear();
+		
+		// create the set of abilities by group
+		Map<String, List<Ability>> abilitiesByGroup = new HashMap<String, List<Ability>>();
+		for (Ability ability : abilities.values()) {
+			if (!ability.isActivateable() || ability.getQuickbarGroup() == null) continue;
+			
+			String group = ability.getQuickbarGroup();
+			
+			if (!abilitiesByGroup.containsKey(group)) {
+				abilitiesByGroup.put(group, new ArrayList<Ability>());
+			}
+			
+			abilitiesByGroup.get(group).add(ability);
+		}
+		
+		SimpleJSONParser parser = new SimpleJSONParser("quickbarGroups", ResourceType.JSON);
+		parser.setWarnOnMissingKeys(true);
+		
+		SimpleJSONArray array = parser.getArray("quickbarGroups");
+		for (SimpleJSONArrayEntry entry : array) {
+			SimpleJSONObject object = entry.getObject();
+			
+			QuickbarGroup group = new QuickbarGroup(object, abilitiesByGroup);
+			quickbarGroups.put(group.getName(), group);
+		}
+		
+		parser.warnOnUnusedKeys();
 	}
 	
 	private void readItemQualities() {
@@ -448,6 +491,9 @@ public class Ruleset {
 	public String getString(String rule) {
 		return ruleStrings.get(rule);
 	}
+	
+	public QuickbarGroup getQuickbarGroup(String id) { return quickbarGroups.get(id); }
+	public Collection<QuickbarGroup> getAllQuickbarGroups() { return quickbarGroups.values(); }
 	
 	public Collection<DamageType> getAllDamageTypes() { return damageTypes.values(); }
 	public Collection<Race> getAllRaces() { return races.values(); }

@@ -18,6 +18,7 @@
     }
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Evocation",
   "isFixed" : true,
   "cooldown" : 8,
   "actionPointCost" : 6000,

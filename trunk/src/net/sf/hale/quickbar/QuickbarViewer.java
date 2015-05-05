@@ -41,6 +41,7 @@ import de.matthiasmann.twl.Label;
 public class QuickbarViewer extends DialogLayout {
 	private Quickbar quickbar;
 	private List<QuickbarSlotButton> buttons;
+	private List<QuickbarGroupButton> groupButtons;
 	
 	private Button scrollUp;
 	private Button scrollDown;
@@ -106,6 +107,15 @@ public class QuickbarViewer extends DialogLayout {
 		expand.setHotKeyBinding(new Keybindings.ToggleQuickbarPopup());
 		mainH.addWidget(expand);
 		mainV.addWidget(expand);
+		
+		groupButtons = new ArrayList<QuickbarGroupButton>();
+		for (QuickbarGroup group : Game.ruleset.getAllQuickbarGroups()) {
+			QuickbarGroupButton button = new QuickbarGroupButton(this, group);
+			groupButtons.add(button);
+			
+			mainH.addWidget(button);
+			mainV.addWidget(button);
+		}
 		
 		this.setHorizontalGroup(mainH);
 		this.setVerticalGroup(mainV);

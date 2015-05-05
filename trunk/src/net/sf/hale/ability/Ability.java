@@ -146,6 +146,8 @@ public class Ability extends Scriptable {
 	private final String description;
 	private Map<String, String> upgrades;
 	
+	private final String quickbarGroup;
+	
 	// stored here so generic ability activators can get it for abilities
 	// that may or may not be spells
 	private final int spellLevel;
@@ -286,6 +288,12 @@ public class Ability extends Scriptable {
 		else
 			this.spellLevel = 0;
 		
+		if (map.containsKey("quickbarGroup")) {
+			this.quickbarGroup = map.get("quickbarGroup", null);
+		} else {
+			this.quickbarGroup = null;
+		}
+		
 		if (!isActivateable && isMode)
 			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
 					" is not activateable.  Mode=true flag will have no effect.");
@@ -297,6 +305,11 @@ public class Ability extends Scriptable {
 		if (!isActivateable && isFixed)
 			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
 					" is not activateable.  Fixed=true flag will have no effect.");
+		
+		if (!isActivateable && quickbarGroup != null) {
+			Logger.appendToWarningLog("Ability at " + map.getObjectID() +
+					"is not activateable.  Quickbar group will have no affect.");
+		}
 		
 		
 		if (map.containsKey("cooldown")) {
@@ -389,6 +402,13 @@ public class Ability extends Scriptable {
 		
 		return level;
 	}
+	
+	/**
+	 * Returns the quickbar group ID associated with this ability or null if no group exists
+	 * @return the quickbar group ID
+	 */
+	
+	public String getQuickbarGroup() { return quickbarGroup; }
 	
 	/**
 	 * Returns the ID String for this Ability.  This ID must be

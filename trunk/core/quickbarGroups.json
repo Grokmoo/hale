@@ -1,0 +1,20 @@
+{
+  "quickbarGroups" : [
+    { "name" : "Class"
+	},
+	{ "name" : "Offensive"
+	},
+	{ "name" : "Defensive"
+	},
+	{ "name" : "Evocation"
+	},
+	{ "name" : "Restoration"
+	},
+	{ "name" : "Enchantment"
+	},
+	{ "name" : "Alteration"
+	},
+	{ "name" : "Conjuration"
+	}
+  ]
+}

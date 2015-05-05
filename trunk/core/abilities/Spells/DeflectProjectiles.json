@@ -15,6 +15,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Alteration",
   "isFixed" : true,
   "cooldown" : 11,
   "actionPointCost" : 6000,

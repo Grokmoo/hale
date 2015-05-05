@@ -14,6 +14,7 @@
     }
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Class",
   "isFixed" : true,
   "cooldown" : 3,
   "actionPointCost" : 1200,

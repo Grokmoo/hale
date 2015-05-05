@@ -19,6 +19,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Enchantment",
   "isFixed" : true,
   "isMode" : false,
   "cooldown" : 8,

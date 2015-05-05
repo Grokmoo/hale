@@ -51,9 +51,12 @@ public class Quickbar implements Saveable {
 	public static final int TotalSlots = 50;
 	
 	/** The number of QuickbarSlots shown at one time by the QuickbarViewer */
-	public static final int SlotsAtOnce = 10;
+	public static final int SlotsAtOnce = 5;
 	
-	/** The number of set of QuickbarSlots shown in total by the QuickbarViewer */
+	/** The number of Quickbar Ability buttons shown on a single row when viewing a QuickbarGroup **/
+	public static final int GroupButtonsPerRow = 12;
+	
+	/** The number of sets of QuickbarSlots shown in total by the QuickbarViewer */
 	public static final int SetsOfSlots = TotalSlots / SlotsAtOnce;
 	
 	private int lastViewSet;

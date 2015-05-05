@@ -14,6 +14,7 @@
     "base" : "The caster selects a single visible target.  The target is affected by Anti-Magic for 3 rounds plus one per 3 Avenger levels.  This causes an 8 round penalty to cooldowns for all spells cast by the target and a 20 plus 3 per Avenger level penalty to Spell Damage, Spell Healing, and Spell Duration.  This spell can cripple the effectiveness of enemy spell caster for a short time."
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Enchantment",
   "isFixed" : true,
   "cooldown" : 8,
   "actionPointCost" : 6000,

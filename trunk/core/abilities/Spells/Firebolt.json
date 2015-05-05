@@ -19,6 +19,7 @@
     }
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Evocation",
   "isFixed" : true,
   "isMode" : false,
   "cooldown" : 8,
