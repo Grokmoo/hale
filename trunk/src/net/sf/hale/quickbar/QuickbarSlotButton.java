@@ -42,11 +42,8 @@ import de.matthiasmann.twl.ThemeInfo;
  */
 
 public class QuickbarSlotButton extends Button implements DropTarget {
-	private QuickbarViewer viewer;
-	
 	private QuickbarSlot slot;
 	private Quickbar quickbar;
-	private int quickbarIndex;
 	
 	private Icon overrideIcon;
 	
@@ -54,7 +51,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	
 	private Icon secondaryIcon;
 	
-	private int index;
+	private final int index;
 	
 	private Label primaryLabel, indexLabel;
 	private String emptyTooltip;
@@ -69,16 +66,13 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	 * @param index the index that will displayed by this Quickbar.  In general, this
 	 * will not be the actual QuickbarSlot index.  It is instead the index within
 	 * the currently displayed set of QuickbarSlots by the QuickbarViewer.
-	 * @param viewer the quickbarviewer that created this button
 	 */
 	
-	public QuickbarSlotButton(int index, QuickbarViewer viewer) {
-		this.viewer = viewer;
+	public QuickbarSlotButton(int index) {
 		this.index = index;
 		
 		// key the keyboard mapping character
-		int slotKeyboardMapping = index % Quickbar.SlotsAtOnce;
-		int keyCode = Game.config.getKeyForAction(Keybindings.UseQuickbarSlot + Integer.toString(slotKeyboardMapping));
+		int keyCode = Game.config.getKeyForAction(Keybindings.UseQuickbarSlot + Integer.toString(index));
 		
 		if (keyCode != -1) {
 			String keyChar = Event.getKeyNameForCode(keyCode);
@@ -148,13 +142,11 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	 * 
 	 * @param slot the QuickbarSlot to display.
 	 * @param quickbar the Quickbar containing the specified slot
-	 * @param index the index of the specified Slot within the Quickbar
 	 */
 	
-	public void setSlot(QuickbarSlot slot, Quickbar quickbar, int index) {
+	public void setSlot(QuickbarSlot slot, Quickbar quickbar) {
 		this.slot = slot;
 		this.quickbar = quickbar;
-		this.quickbarIndex = index;
 		
 		if (slot == null) {
 			if (this.getTooltipContent() != emptyTooltip)
@@ -209,6 +201,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 				createRightClickMenu(getRight(), getY());
 				break;
 			}
+		default:
 		}
 		
 		return super.handleEvent(evt);
@@ -305,8 +298,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		}
 		
 		@Override public void run() {
-			button.quickbar.setSlot(null, button.quickbarIndex);
-			button.setSlot(null, button.quickbar, button.quickbarIndex);
+			button.quickbar.setSlot(null, button.index);
+			button.setSlot(null, button.quickbar);
 			Game.mainViewer.getMenu().hide();
 		}
 	}
@@ -339,8 +332,6 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	@Override public void dragAndDropStartHover(DragTarget target) {
 		if (target.getItem() != null && target.getParentPC() == this.quickbar.getParent()) {
 			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getItem(), target.getParentPC());
-		} else if (target.getAbility() != null && target.getParentPC() == this.quickbar.getParent()) {
-			dragSlotToAdd = Quickbar.getQuickbarSlot(target.getAbility(), target.getParentPC());
 		} else {
 			dragSlotToAdd = null;
 		}
@@ -357,10 +348,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	@Override public void dropDragTarget(DragTarget target) {
 		this.clearOverrideIcon();
 		
-		int slotIndex = viewer.getSlotIndex(this);
-		
 		if (dragSlotToAdd != null) {
-			quickbar.setSlot(dragSlotToAdd, slotIndex);
+			quickbar.setSlot(dragSlotToAdd, index);
 			Game.mainViewer.updateInterface();
 		}
 	}

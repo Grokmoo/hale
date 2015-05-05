@@ -756,7 +756,9 @@ public class MainViewer extends DesktopArea {
 		int centerX = getInnerX() + getInnerWidth() / 2;
 		
 		quickbarViewer.setSize(quickbarViewer.getPreferredWidth(), quickbarViewer.getPreferredHeight());
-		quickbarViewer.setPosition(centerX - quickbarViewer.getWidth() / 2,
+		
+		int maxQuickbarX = mainPane.getEndTurnButton().getX() - quickbarViewer.getWidth() - mainPane.getBorderLeft();
+		quickbarViewer.setPosition(Math.min(centerX - quickbarViewer.getWidth() / 2, maxQuickbarX),
 				getInnerBottom() - quickbarViewer.getHeight());
 		
 		int messageBoxWidthA = mainPane.getButtonsMinX() - mainPane.getInnerX();

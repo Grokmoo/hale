@@ -58,7 +58,6 @@ public class Keybindings {
 		bindings.add(new ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
-		bindings.add(new ToggleQuickbarPopup());
 		bindings.add(new ToggleWindow(Game.mainViewer.scriptConsole, "ScriptConsole"));
 		bindings.add(new CancelMovement());
 		bindings.add(new ShowMenu());
@@ -66,7 +65,7 @@ public class Keybindings {
 		bindings.add(new Quicksave());
 		bindings.add(new ToggleMovementMode());
 		
-		for (int i = 0; i < Quickbar.SlotsAtOnce; i++) {
+		for (int i = 0; i < Quickbar.ItemSlots; i++) {
 			bindings.add(new UseQuickbarSlot(i));
 		}
 		
@@ -86,17 +85,6 @@ public class Keybindings {
 				bindingsByKey.put(keyCode, binding);
 			}
 		}
-	}
-	
-	/**
-	 * Checks whether the specified key is the key associated with closing
-	 * the quickbar popup
-	 * @param key
-	 * @return true if the key is the key to close the quickbarpopup
-	 */
-	
-	public boolean isCloseQuickbarPopupKey(int key) {
-		return key == Game.config.getKeyForAction("ToggleQuickbarPopup");
 	}
 	
 	/**
@@ -172,18 +160,6 @@ public class Keybindings {
 
 		@Override public void run() {
 			window.setVisible(!window.isVisible());
-		}
-	}
-	
-	/**
-	 * A callback for toggling the quickbar
-	 * @author Jared
-	 *
-	 */
-	
-	public static class ToggleQuickbarPopup extends Binding {
-		@Override public void run() {
-			Game.mainViewer.getQuickbarViewer().showQuickbarPopup();
 		}
 	}
 	

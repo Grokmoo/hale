@@ -23,15 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.hale.ability.Ability;
-import net.sf.hale.entity.Container;
-import net.sf.hale.entity.Inventory;
-import net.sf.hale.entity.Item;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.Icon;
-import net.sf.hale.rules.Merchant;
 import net.sf.hale.view.AbilityDetailsWindow;
 import net.sf.hale.view.DragAndDropHandler;
-import net.sf.hale.view.DragTarget;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Event;
@@ -47,7 +42,7 @@ import de.matthiasmann.twl.utils.TintAnimator;
  *
  */
 
-public class AbilitySelectorButton extends Button implements Runnable, DragTarget {
+public class AbilitySelectorButton extends Button implements Runnable {
 	private static StateKey STATE_ALREADY_OWNED = StateKey.get("alreadyOwned");
 	private static StateKey STATE_PREREQS_NOT_MET = StateKey.get("prereqsNotMet");
 	
@@ -176,13 +171,6 @@ public class AbilitySelectorButton extends Button implements Runnable, DragTarge
 		switch (evt.getType()) {
 		case MOUSE_ENTERED: case MOUSE_MOVED:
 			return true;
-		case MOUSE_DRAGGED:
-			// only drag active abilities
-			if (!showSelectable && dragAndDropHandler == null &&
-				ability.isActivateable() && parent.abilities.has(ability)) {
-				dragAndDropHandler = new DragAndDropHandler(this);
-			}
-			break;
 		default:
 			// do nothing
 		}
@@ -347,26 +335,11 @@ public class AbilitySelectorButton extends Button implements Runnable, DragTarge
 			endHover();
 		}
 	}
-
-	@Override public Icon getDragIcon() {
-		return ability.getIcon();
-	}
-
-	@Override public PC getParentPC() {
-		return parent;
-	}
 	
 	/**
-	 * Returns the Ability that this button references and selects when clicked
-	 * @return the Ability that this button references
+	 * Returns the ability associated with this button
+	 * @return the associated ability
 	 */
 	
-	@Override public Ability getAbility() {
-		return ability;
-	}
-
-	@Override public Item getItem() { return null; }
-	@Override public Container getItemContainer() { return null; }
-	@Override public Merchant getItemMerchant() { return null; }
-	@Override public Inventory.Slot getItemEquipSlot() { return null; }
+	public Ability getAbility() { return ability; }
 }

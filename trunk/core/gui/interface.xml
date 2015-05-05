@@ -189,34 +189,18 @@
 		<theme name="indexlabel" ref="labelred"/>
 		<theme name="primarylabel" ref="labelgreen"/>
 			
-		<param name="emptytooltip"><string>Drag and Drop Active Abilities or Items here to use this Slot</string></param>
+		<param name="emptytooltip"><string>Drag and Drop Items here to use this Slot</string></param>
 	</theme>
 	
 	<theme name="quickbarviewer" ref="dialoglayout">
 		<param name=""><image>iconbuttonblack.*</image></param>
         <param name="border"><border>2</border></param>
-	
-		<theme name="currentindexlabel" ref="labelred"/>
-		<theme name="incrementbutton" ref="incrementbutton">
-			<param name="tooltip"><string>Previous Quickbar</string></param>
-		</theme>
-		<theme name="decrementbutton" ref="decrementbutton">
-			<param name="tooltip"><string>Next Quickbar</string></param>
-		</theme>
 		
 		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
-		
-		<theme name="expandbutton" ref="-defaults">
-			<param name=""><image>hoverbutton.*</image></param>
-			<param name="border"><border>5</border></param>
-			<param name="text"><string>+</string></param>
-			<param name="tooltip"><string>Show all Quickbar slots</string></param>
-		</theme>
-		
 		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
 	</theme>
 	
-	<theme name="quickbarpopup" ref="-defaults">
+	<theme name="quickbargrouppopup" ref="-defaults">
 		<theme name="content" ref="dialoglayout">
 			<param name=""><image>iconbuttonblack.*</image></param>
 			<param name="border"><border>2</border></param>
@@ -224,8 +208,6 @@
 			<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 		</theme>
 	</theme>
-	
-	<theme name="quickbargrouppopup" ref="quickbarpopup"/>
 	
 	<theme name="messagebox" ref="-defaults">
 		<param name="minHeight"><int>105</int></param>

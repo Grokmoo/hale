@@ -20,12 +20,9 @@
 package net.sf.hale.quickbar;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.hale.Game;
-import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.EquippableItem;
 import net.sf.hale.entity.Item;
@@ -48,25 +45,16 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class Quickbar implements Saveable {
 	/** The maximum total number of QuickbarSlots in any one Quickbar */
-	public static final int TotalSlots = 50;
-	
-	/** The number of QuickbarSlots shown at one time by the QuickbarViewer */
-	public static final int SlotsAtOnce = 5;
+	public static final int ItemSlots = 5;
 	
 	/** The number of Quickbar Ability buttons shown on a single row when viewing a QuickbarGroup **/
 	public static final int GroupButtonsPerRow = 12;
 	
-	/** The number of sets of QuickbarSlots shown in total by the QuickbarViewer */
-	public static final int SetsOfSlots = TotalSlots / SlotsAtOnce;
-	
-	private int lastViewSet;
 	private Map<Integer, QuickbarSlot> slots;
 	private PC parent;
 	
 	@Override public Object save() {
 		JSONOrderedObject data = new JSONOrderedObject();
-		
-		data.put("lastViewSet", lastViewSet);
 		
 		JSONOrderedObject slotsData = new JSONOrderedObject();
 		for (Integer key : slots.keySet()) {
@@ -83,11 +71,6 @@ public class Quickbar implements Saveable {
 	public void load(SimpleJSONObject data) {
 		this.clear();
 		
-		if (data.containsKey("lastViewerSet"))
-			this.lastViewSet = data.get("lastViewSet", 0);
-		else
-			this.lastViewSet = 0;
-		
 		SimpleJSONObject slotsObject = data.getObject("slots");
 		
 		for (String key : slotsObject.keySet()) {
@@ -98,9 +81,7 @@ public class Quickbar implements Saveable {
 			String type = slotData.get("type", null);
 			
 			if (type.equals("ability")) {
-				String abilityID = slotData.get("abilityID", null);
-				QuickbarSlot slot = new AbilityActivateSlot(Game.ruleset.getAbility(abilityID), parent);
-				putSlot(index, slot);
+				// legacy support for transitioning old saves; do nothing
 				
 			} else if (type.equals("use")) {
 				String itemID = slotData.get("itemID", null);
@@ -170,7 +151,6 @@ public class Quickbar implements Saveable {
 			}
 		}
 		
-		lastViewSet = other.lastViewSet;
 		this.parent = parent;
 	}
 	
@@ -184,7 +164,6 @@ public class Quickbar implements Saveable {
 	
 	public Quickbar(PC parent) {
 		slots = new HashMap<Integer, QuickbarSlot>();
-		lastViewSet = 0;
 		this.parent = parent;
 	}
 	
@@ -194,7 +173,6 @@ public class Quickbar implements Saveable {
 	
 	public void clear() {
 		slots.clear();
-		lastViewSet = 0;
 	}
 	
 	/**
@@ -206,7 +184,7 @@ public class Quickbar implements Saveable {
 	 */
 	
 	public QuickbarSlot getSlot(int index) {
-		if (index >= Quickbar.TotalSlots || index < 0) return null;
+		if (index >= Quickbar.ItemSlots || index < 0) return null;
 		
 		return slots.get(Integer.valueOf(index));
 	}
@@ -284,23 +262,10 @@ public class Quickbar implements Saveable {
 		addToFirstEmptySlot(Quickbar.getQuickbarSlot(item, parent));
 	}
 	
-	/**
-	 * Helper function to easily add the specified Ability to this Quickbar.  The
-	 * specified Ability is added to the QuickbarSlot with the lowest index that
-	 * is currently empty.  If all QuickbarSlots are currently occupied, no
-	 * action is perfomed.
-	 * 
-	 * @param ability the Ability to add
-	 */
-	
-	public void addToFirstEmptySlot(Ability ability) {
-		addToFirstEmptySlot(Quickbar.getQuickbarSlot(ability, parent));
-	}
-	
 	private void addToFirstEmptySlot(QuickbarSlot slot) {
 		if (slot == null) return;
 		
-		for (int i = 0; i < Quickbar.TotalSlots; i++) {
+		for (int i = 0; i < Quickbar.ItemSlots; i++) {
 			if (getSlot(i) == null) {
 				setSlot(slot, i);
 				break;
@@ -308,60 +273,6 @@ public class Quickbar implements Saveable {
 		}
 		
 		Game.mainViewer.updateInterface();
-	}
-	
-	/**
-	 * Sets the most recent viewed set of QuickbarSlots to the specified
-	 * index for this Quickbar.  The viewSetIndex can can be from 0 to
-	 * Quickbar.SetsOfSlots, and indicates the set of slots that was
-	 * most recently viewed with the QuickbarViewer for this Quickbar.
-	 * 
-	 * @param viewSetIndex the most recently viewed index
-	 */
-	
-	public void setLastViewSetIndex(int viewSetIndex) {
-		if (viewSetIndex < 0) viewSetIndex = 0;
-		if (viewSetIndex >= Quickbar.SetsOfSlots) viewSetIndex = Quickbar.SetsOfSlots - 1;
-		
-		this.lastViewSet = viewSetIndex;
-	}
-	
-	/**
-	 * Returns the most recently viewed set of QuickbarSlots for this
-	 * Quickbar by the QuickbarViewer.  See {@link #setLastViewSetIndex(int)}
-	 * 
-	 * @return the index of the most recently viewed set of QuickbarSlots.
-	 */
-	
-	public int getLastViewSetIndex() {
-		return lastViewSet;
-	}
-	
-	/**
-	 * Adds all Abilities owned by the parent of this Quickbar to empty
-	 * slots in this Quickbar, as possible.  Abilities are added first to
-	 * slots with the lowest index.
-	 */
-	
-	public void addAbilitiesToEmptySlots() {
-		List<Ability> abilities = parent.abilities.getActivateableAbilities();
-		Iterator<Ability> abilitiesIter = abilities.iterator();
-		
-		// if there are no abilities to add, we are done
-		if (!abilitiesIter.hasNext()) return;
-		
-		for (int i = 0; i < Quickbar.TotalSlots; i++) {
-			if (getSlot(i) == null) {
-				QuickbarSlot slot = Quickbar.getQuickbarSlot(abilitiesIter.next(), parent);
-				this.setSlot(slot, i);
-				
-				// if there are no more abilities, we are done
-				if (!abilitiesIter.hasNext()) return;
-			}
-		}
-		
-		// if control reaches this point, that means we ran out of slots before
-		// we ran out of abilities.
 	}
 	
 	private void putSlot(int index, QuickbarSlot slot) {
@@ -398,18 +309,5 @@ public class Quickbar implements Saveable {
 		}
 		
 		return null;
-	}
-	
-	/**
-	 * Returns a QuickbarSlot for the specified Ability that can be added to
-	 * a Quickbar
-	 * 
-	 * @param ability the Ability the QuickbarSlot will encapsulate
-	 * @param parent the parent Activator / Creature that owns the specified Ability
-	 * @return a QuickbarSlot for the Ability
-	 */
-	
-	public static QuickbarSlot getQuickbarSlot(Ability ability, PC parent) {
-		return new AbilityActivateSlot(ability, parent);
 	}
 }
