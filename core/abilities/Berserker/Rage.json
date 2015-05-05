@@ -16,6 +16,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Class",
   "isFixed" : true,
   "cooldown" : 8,
   "ai" : {

@@ -15,6 +15,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Restoration",
   "isFixed" : true,
   "cooldown" : 9,
   "actionPointCost" : 6000,

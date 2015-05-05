@@ -177,6 +177,11 @@
 		</theme>
     </theme>
 	
+	<theme name="quickbargroupbutton" ref="iconbutton">
+		<param name="minWidth"><int>48</int></param>
+		<param name="minHeight"><int>48</int></param>
+	</theme>
+	
 	<theme name="quickbarslotbutton" ref="iconbutton">
 		<param name="minWidth"><int>48</int></param>
 		<param name="minHeight"><int>48</int></param>
@@ -207,6 +212,8 @@
 			<param name="text"><string>+</string></param>
 			<param name="tooltip"><string>Show all Quickbar slots</string></param>
 		</theme>
+		
+		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
 	</theme>
 	
 	<theme name="quickbarpopup" ref="-defaults">
@@ -217,6 +224,8 @@
 			<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 		</theme>
 	</theme>
+	
+	<theme name="quickbargrouppopup" ref="quickbarpopup"/>
 	
 	<theme name="messagebox" ref="-defaults">
 		<param name="minHeight"><int>105</int></param>

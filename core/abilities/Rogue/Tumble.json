@@ -9,6 +9,7 @@
     "base" : "You quickly move to a targeted location up to 3 hexes away, deftly manuevering around any obstacles including hostile creatures.  You incur no attacks of opportunity from this, but you must have sufficient AP to perform the movement.  This ability can be used to retreat, move around enemy defenses, or set yourself up for a flanking attack."
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Class",
   "isFixed" : true,
   "cooldown" : 2,
   "actionPointCost" : "Same as movement",

@@ -18,6 +18,7 @@
     }
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Conjuration",
   "isFixed" : true,
   "isMode" : false,
   "cooldown" : 8,

@@ -10,6 +10,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Offensive",
   "isFixed" : true,
   "isMode" : true,
   "isCancelable" : true,

@@ -14,6 +14,7 @@
     "base" : "The caster creates a large blob of acid directly above a target up to 8 hexes away.  The acid falls onto the target, doing 1 to 8 plus 1 per caster level Acid damage each round for four rounds.  Note that this spell ignores spell resistance."
   },
   "isActivateable" : true,
+  "quickbarGroup" : "Conjuration",
   "isFixed" : true,
   "cooldown" : 10,
   "actionPointCost" : 6000,

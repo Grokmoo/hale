@@ -18,6 +18,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Enchantment",
   "isFixed" : true,
   "cooldown" : 9,
   "actionPointCost" : 6000,

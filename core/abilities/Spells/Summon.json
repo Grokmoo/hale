@@ -19,6 +19,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
+  "quickbarGroup" : "Conjuration",
   "isFixed" : true,
   "cooldown" : 9,
   "actionPointCost" : 6000,
