@@ -20,8 +20,11 @@
 package net.sf.hale.quickbar;
 
 import net.sf.hale.Game;
+import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Event;
+import de.matthiasmann.twl.GUI;
 
 /**
  * Class for a button that when clicked shows all available abilities in a quickbargroup
@@ -32,6 +35,7 @@ import de.matthiasmann.twl.Event;
 public class QuickbarGroupButton extends Button {
 	private QuickbarViewer viewer;
 	private final QuickbarGroup group;
+	private Icon icon;
 	
 	/**
 	 * Creates a new button for the specified group
@@ -42,6 +46,7 @@ public class QuickbarGroupButton extends Button {
 	public QuickbarGroupButton(QuickbarViewer viewer, QuickbarGroup group) {
 		this.viewer = viewer;
 		this.group = group;
+		setTooltipContent(group.getTooltip());
 	}
 	
 	@Override protected void layout() {
@@ -65,6 +70,23 @@ public class QuickbarGroupButton extends Button {
 		}
 		
 		return super.handleEvent(evt);
+	}
+	
+	@Override public void paintWidget(GUI gui) {
+		super.paintWidget(gui);
+		if (icon != null) {
+			icon.drawCentered(getInnerX(), getInnerY(), getInnerWidth(), getInnerHeight());
+		}
+	}
+	
+	@Override public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		
+		if (enabled) {
+			icon = group.getIcon();
+		} else {
+			icon = group.getIcon().multiplyByColor(new Color(0xFF7F7F7F));
+		}
 	}
 	
 	/**

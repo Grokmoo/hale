@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.hale.ability.Ability;
+import net.sf.hale.icon.Icon;
+import net.sf.hale.icon.IconFactory;
 import net.sf.hale.util.SimpleJSONObject;
 
 /**
@@ -34,6 +36,8 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class QuickbarGroup {
 	private final String name;
+	private final Icon icon;
+	private final String tooltip;
 	private final List<Ability> abilities;
 	
 	/**
@@ -44,6 +48,13 @@ public class QuickbarGroup {
 	
 	public QuickbarGroup(SimpleJSONObject data, Map<String, List<Ability>> abilitiesByGroup) {
 		this.name = data.get("name", null);
+		this.tooltip = data.get("tooltip", null);
+		
+		if (data.containsKey("icon")) {
+			icon = IconFactory.createIcon(data.getObject("icon"));
+		} else {
+			icon = IconFactory.emptyIcon;
+		}
 		
 		List<Ability> abilities = abilitiesByGroup.get(this.name);
 		if (abilities == null) {
@@ -60,6 +71,25 @@ public class QuickbarGroup {
 //		}
 //		System.out.println();
 	}
+	
+	/**
+	 * Returns the mouseover text for the button associated with this group
+	 * @return the mouseover text
+	 */
+	
+	public String getTooltip() { return tooltip; }
+	
+	/**
+	 * Returns the icon for this group
+	 * @return the icon
+	 */
+	
+	public Icon getIcon() { return icon; }
+	
+	/**
+	 * Returns the name / ID of this group
+	 * @return the name / ID
+	 */
 	
 	public String getName() { return name; }
 	

@@ -24,6 +24,7 @@ import java.util.List;
 
 import net.sf.hale.Game;
 import net.sf.hale.Keybindings;
+import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
 import net.sf.hale.widgets.HotKeyButton;
 import de.matthiasmann.twl.Button;
@@ -266,6 +267,19 @@ public class QuickbarViewer extends DialogLayout {
 			}
 			
 			setQuickbar(quickbar);
+			
+			// set enabled status of the group buttons
+			for (QuickbarGroupButton groupButton : groupButtons) {
+				boolean hasAbility = false;
+				for (Ability ability : groupButton.getGroup().getAbilities()) {
+					if (selected.abilities.has(ability)) {
+						hasAbility = true;
+						break;
+					}
+				}
+				
+				groupButton.setEnabled(hasAbility);
+			}
 		}
 	}
 }

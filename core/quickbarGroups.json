@@ -1,20 +1,52 @@
 {
   "quickbarGroups" : [
-    { "name" : "Class"
+    { "name" : "Class",
+	  "tooltip" : "Class Abilities",
+	  "icon" : {
+        "sprite" : "icons/groupClass"
+      },
 	},
-	{ "name" : "Offensive"
+	{ "name" : "Offensive",
+	  "tooltip" : "Offensive Abilities",
+	  "icon" : {
+        "sprite" : "icons/groupOffensive"
+      },
 	},
-	{ "name" : "Defensive"
+	{ "name" : "Defensive",
+	  "tooltip" : "Defensive Abilities",
+	  "icon" : {
+        "sprite" : "icons/groupDefensive"
+      },
 	},
-	{ "name" : "Evocation"
+	{ "name" : "Evocation",
+	  "tooltip" : "Evocation Spells",
+	  "icon" : {
+        "sprite" : "icons/groupEvocation"
+      },
 	},
-	{ "name" : "Restoration"
+	{ "name" : "Restoration",
+	  "tooltip" : "Restoration Spells",
+	  "icon" : {
+        "sprite" : "icons/groupRestoration"
+      },
 	},
-	{ "name" : "Enchantment"
+	{ "name" : "Enchantment",
+	  "tooltip" : "Enchantment Spells",
+	  "icon" : {
+        "sprite" : "icons/groupEnchantment"
+      },
 	},
-	{ "name" : "Alteration"
+	{ "name" : "Alteration",
+	  "tooltip" : "Alteration Spells",
+	  "icon" : {
+        "sprite" : "icons/groupAlteration"
+      },
 	},
-	{ "name" : "Conjuration"
+	{ "name" : "Conjuration",
+	  "tooltip" : "Conjuration Spells",
+	  "icon" : {
+        "sprite" : "icons/groupConjuration"
+      },
 	}
   ]
 }
