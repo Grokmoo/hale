@@ -62,14 +62,6 @@ public class QuickbarGroup {
 		} else {
 			this.abilities = Collections.unmodifiableList(abilities);
 		}
-		
-//		System.out.println("Created group " + name + " with " + abilities.size() + " abilities:");
-//		System.out.print("   ");
-//		for (Ability ability : abilities) {
-//			System.out.print(ability.getID());
-//			System.out.print(" ");
-//		}
-//		System.out.println();
 	}
 	
 	/**

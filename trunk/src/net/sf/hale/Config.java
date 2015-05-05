@@ -57,6 +57,9 @@ import net.sf.hale.util.SimpleJSONParser;
  */
 
 public class Config {
+	/** The config file version.  Used to know if a config file is out of date and should be replaced.  Shouldn't be used anywhere else **/
+	private static final int Version = 1;
+	
 	private int resolutionX, resolutionY;
 	private final boolean fullscreen;
 	private final boolean showFPS, capFPS;
@@ -226,8 +229,8 @@ public class Config {
 		
 		File configFile = new File(fileName);
 		
-		// create the config file if it does not already exist
-		if (!configFile.isFile()) {
+		// create the config file if it does not already exist or is old
+		if (!checkConfigFile(configFile)) {
 			createConfigFile(fileName);
 		}
 		
@@ -276,7 +279,32 @@ public class Config {
 			
 		}
 		
+		// prevent an unused key warning
+		parser.get("ConfigVersion", 0);
+		
 		parser.warnOnUnusedKeys();
+	}
+	
+	/**
+	 * Checks whether the current config file is ok to be used.  If it is not ok, then
+	 * the default config should be copied over
+	 * @param configFile
+	 * @return true if the file is ok, false if the default file should be copied over (either the
+	 * config doesn't exist or it is out of date)
+	 */
+	
+	private boolean checkConfigFile(File configFile) {
+		if (!configFile.isFile()) return false;
+		
+		SimpleJSONParser parser = new SimpleJSONParser(configFile);
+		
+		if (parser.get("ConfigVersion", 0) != Config.Version) {
+			Logger.appendToWarningLog("Removing existing config file as version does not match " + Config.Version);
+			configFile.delete();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	private void createConfigFile(String fileName) {
