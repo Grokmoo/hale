@@ -292,6 +292,15 @@
     "piercer" : [ 572, 704, 44, 44 ],
     "slasher" : [ 616, 704, 44, 44 ],
     "physicalVulnerability" : [ 660, 704, 44, 44 ],
-    "antiMagic" : [ 704, 704, 44, 44 ]
+    "antiMagic" : [ 704, 704, 44, 44 ],
+	
+	"groupClass" : [ 748, 220, 44, 44 ],
+	"groupOffensive" : [ 748, 264, 44, 44 ],
+	"groupDefensive" : [ 748, 308, 44, 44 ],
+	"groupEvocation" : [ 748, 352, 44, 44 ],
+	"groupRestoration" : [ 748, 396, 44, 44 ],
+	"groupEnchantment" : [ 748, 440, 44, 44 ],
+	"groupAlteration" : [ 748, 484, 44, 44 ],
+	"groupConjuration" : [ 748, 528, 44, 44 ],
   }
 }
