@@ -2,6 +2,7 @@
   "Resolution" : [
     1280, 800
   ],
+  "ConfigVersion" : 1,
   "Fullscreen" : false,
   "ShowFPS" : false,
   "CapFPS" : true,
