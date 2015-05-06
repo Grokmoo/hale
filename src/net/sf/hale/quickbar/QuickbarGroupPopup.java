@@ -64,7 +64,7 @@ public class QuickbarGroupPopup extends PopupWindow {
 		
 		content.setSize(content.getPreferredWidth(), content.getPreferredHeight());
 
-		setPosition(Math.min(groupButton.getX() - getWidth() / 2, super.getParent().getRight() - getWidth()),
+		setPosition(groupButton.getX() - getWidth() / 2 + groupButton.getWidth() / 2,
 				viewer.getY() - getHeight());
 	}
 	

@@ -113,6 +113,8 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	@Override protected void layout() {
 		super.layout();
 		
+		setSize(getPreferredWidth(), getPreferredHeight());
+		
 		indexLabel.setPosition(getInnerRight() - indexLabel.getPreferredWidth(), getInnerY() + indexLabel.getPreferredHeight() / 2);
 		primaryLabel.setPosition(getInnerX(), getInnerBottom() - primaryLabel.getPreferredHeight() / 2);
 	}

@@ -12,7 +12,7 @@
     }
   },
   "isActivateable" : true,
-  "quickbarGroup" : "Offensive",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "isMode" : true,
   "isCancelable" : true,

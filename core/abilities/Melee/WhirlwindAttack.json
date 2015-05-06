@@ -9,7 +9,7 @@
     "base" : "As a standard attack action, you launch into a spinning whirlwind, attacking all enemies adjacent to you.  Each attack is made at a -10 attack penalty.  This ability can only be used with a melee weapon."
   },
   "isActivateable" : true,
-  "quickbarGroup" : "Offensive",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "isMode" : false,
   "isCancelable" : false,

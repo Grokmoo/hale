@@ -12,7 +12,7 @@
     }
   },
   "isActivateable" : true,
-  "quickbarGroup" : "Offensive",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "cooldown" : 4,
   "actionPointCost" : "Same as an attack",
