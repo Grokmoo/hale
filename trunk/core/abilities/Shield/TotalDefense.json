@@ -10,7 +10,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
-  "quickbarGroup" : "Defensive",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "cooldown" : 3,
   "actionPointCost" : 8400,

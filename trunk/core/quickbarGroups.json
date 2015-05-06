@@ -1,21 +1,9 @@
 {
   "quickbarGroups" : [
-    { "name" : "Class",
-	  "tooltip" : "Class Abilities",
+    { "name" : "OtherAbility",
+	  "tooltip" : "Abilities",
 	  "icon" : {
-        "sprite" : "icons/groupClass"
-      },
-	},
-	{ "name" : "Offensive",
-	  "tooltip" : "Offensive Abilities",
-	  "icon" : {
-        "sprite" : "icons/groupOffensive"
-      },
-	},
-	{ "name" : "Defensive",
-	  "tooltip" : "Defensive Abilities",
-	  "icon" : {
-        "sprite" : "icons/groupDefensive"
+        "sprite" : "icons/groupAbility"
       },
 	},
 	{ "name" : "Evocation",

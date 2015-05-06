@@ -10,7 +10,7 @@
   },
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
-  "quickbarGroup" : "Class",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "cooldown" : 5,
   "actionPointCost" : 6000,

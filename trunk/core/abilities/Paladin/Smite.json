@@ -9,7 +9,7 @@
     "base" : "The Paladin charges their current weapon with holy might.  For the next 3 rounds, all hits with the weapon do 2 points per point of Charisma above 10 plus the wielder's Paladin level in Divine damage."
   },
   "isActivateable" : true,
-  "quickbarGroup" : "Offensive",
+  "quickbarGroup" : "OtherAbility",
   "isFixed" : true,
   "cooldown" : 5,
   "ai" : {

@@ -19,7 +19,9 @@
 
 package net.sf.hale.quickbar;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,12 +58,20 @@ public class QuickbarGroup {
 			icon = IconFactory.emptyIcon;
 		}
 		
-		List<Ability> abilities = abilitiesByGroup.get(this.name);
-		if (abilities == null) {
-			this.abilities = Collections.emptyList();
-		} else {
-			this.abilities = Collections.unmodifiableList(abilities);
+		List<Ability> abilities = new ArrayList<Ability>();
+		for (Ability ability : abilitiesByGroup.get(this.name)) {
+			abilities.add(ability);
 		}
+		
+		Collections.sort(abilities, new Comparator<Ability>() {
+			@Override public int compare(Ability o1, Ability o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+			
+		});
+		
+		((ArrayList<Ability>)abilities).trimToSize();
+		this.abilities = Collections.unmodifiableList(abilities);
 	}
 	
 	/**
