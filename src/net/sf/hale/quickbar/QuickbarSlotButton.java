@@ -186,7 +186,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 	
 	public int getIndex() { return index; }
 	
-	@Override public boolean handleEvent(Event evt) {
+	@Override protected boolean handleEvent(Event evt) {
 		if (Game.interfaceLocker.locked()) return super.handleEvent(evt);
 		
 		switch (evt.getType()) {
@@ -198,9 +198,11 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 				activateSlot(getRight(), getY());
 				break;
 			case Event.MOUSE_RBUTTON:
-				if (disabledExceptActivate) break;
-				
-				createRightClickMenu(getRight(), getY());
+				if (disabledExceptActivate) {
+					slot.showExamineWindow(this);
+				} else {
+					createRightClickMenu(getRight(), getY());
+				}
 				break;
 			}
 		default:

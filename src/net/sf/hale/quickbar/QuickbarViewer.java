@@ -26,6 +26,7 @@ import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
 import de.matthiasmann.twl.DialogLayout;
+import de.matthiasmann.twl.Widget;
 
 /**
  * A widget for viewing an entire Quickbar, with buttons to scroll through
@@ -39,6 +40,8 @@ public class QuickbarViewer extends DialogLayout {
 	private Quickbar quickbar;
 	private List<QuickbarSlotButton> buttons;
 	private List<QuickbarGroupButton> groupButtons;
+	
+	private Widget hover;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -157,7 +160,7 @@ public class QuickbarViewer extends DialogLayout {
 	 */
 	
 	public void updateContent(PC selected) {
-		if (selected != null) {
+		if (selected != null && quickbar != selected.quickbar) {
 			setQuickbar(selected.quickbar);
 			
 			// set enabled status of the group buttons
@@ -172,6 +175,22 @@ public class QuickbarViewer extends DialogLayout {
 				
 				groupButton.setEnabled(hasAbility);
 			}
+		}
+	}
+	
+	/**
+	 * Adds the specified widget at the hover over for the quickbar.  removes
+	 * any existing hover over
+	 * @param popup
+	 */
+	
+	public void setHoverPopup(Widget popup) {
+		if (this.hover != null) Game.mainViewer.removeChild(this.hover);
+		
+		this.hover = popup;
+		
+		if (this.hover != null) {
+			Game.mainViewer.add(popup);
 		}
 	}
 }

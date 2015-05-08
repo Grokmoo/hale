@@ -201,12 +201,10 @@
 	</theme>
 	
 	<theme name="quickbargrouppopup" ref="-defaults">
-		<theme name="content" ref="dialoglayout">
-			<param name=""><image>iconbuttonblack.*</image></param>
-			<param name="border"><border>2</border></param>
+		<param name=""><image>iconbuttonblack.*</image></param>
+		<param name="border"><border>2</border></param>
 		
-			<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
-		</theme>
+		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 	</theme>
 	
 	<theme name="messagebox" ref="-defaults">

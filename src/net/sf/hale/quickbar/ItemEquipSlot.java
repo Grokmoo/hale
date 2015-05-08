@@ -118,12 +118,18 @@ public class ItemEquipSlot extends QuickbarSlot {
 				return checkWeaponWeapon((Weapon)item, (Weapon)secondaryItem);
 			case Shield:
 				return checkWeaponShield((Weapon)item, (Armor)secondaryItem);
+			default:
+				break;
 			}
 		case Shield:
 			switch (secondaryItem.getTemplate().getType()) {
 			case Weapon:
 				return checkWeaponShield((Weapon)secondaryItem, (Armor)item);
+			default:
+				break;
 			}
+		default:
+			break;
 		}
 		
 		return false;
@@ -221,6 +227,14 @@ public class ItemEquipSlot extends QuickbarSlot {
 		}
 	}
 	
+	@Override public void showExamineWindow(QuickbarSlotButton button) {
+		item.getExamineDetailsCallback(button.getX(), button.getY()).run();
+		
+		if (secondaryItem != null) {
+			secondaryItem.getExamineDetailsCallback(button.getX(), button.getY()).run();
+		}
+	}
+	
 	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		
@@ -247,7 +261,6 @@ public class ItemEquipSlot extends QuickbarSlot {
 		if (!activate.isEnabled()) activate.setTooltipContent(disabledTooltip);
 		activate.addCallback(button.getActivateSlotCallback(this));
 		menu.addButton(activate);
-		
 		
 		Button examine = new Button(item.getTemplate().getName() + " Details");
 		examine.addCallback(item.getExamineDetailsCallback(menu.getX(), menu.getY()));
