@@ -22,8 +22,8 @@ package net.sf.hale.quickbar;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
-import de.matthiasmann.twl.DialogLayout;
-import de.matthiasmann.twl.PopupWindow;
+import de.matthiasmann.twl.Event;
+import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 
 /**
@@ -32,7 +32,7 @@ import de.matthiasmann.twl.Widget;
  *
  */
 
-public class QuickbarGroupPopup extends PopupWindow {
+public class QuickbarGroupPopup extends Widget {
 	private final QuickbarViewer viewer;
 	private final QuickbarGroup group;
 	private final QuickbarGroupButton groupButton;
@@ -44,78 +44,83 @@ public class QuickbarGroupPopup extends PopupWindow {
 	 * @param groupButton
 	 */
 	
-	public QuickbarGroupPopup(Widget owner, QuickbarViewer viewer, QuickbarGroupButton groupButton) {
-		super(owner);
-		
+	public QuickbarGroupPopup(QuickbarViewer viewer, QuickbarGroupButton groupButton) {
 		this.viewer = viewer;
 		this.group = groupButton.getGroup();
 		this.groupButton = groupButton;
+		PC parent = Game.curCampaign.party.getSelected();
 		
-		this.setCloseOnEscape(true);
-		this.setCloseOnClickedOutside(true);
-		
-		add(new Content());
+		// add buttons for relevant abilities
+		for (Ability ability : group.getAbilities()) {
+			if (!parent.abilities.has(ability)) continue;
+			
+			QuickbarGroupSlotButton slotButton = new QuickbarGroupSlotButton(-1);
+			slotButton.setSlot(new AbilityActivateSlot(ability, parent), parent.quickbar);
+			slotButton.setShowIndexLabel(false);
+			slotButton.setDisabledExceptActivate(true);
+			slotButton.addCallback(new Runnable() {
+				@Override public void run() {
+					QuickbarGroupPopup.this.viewer.setHoverPopup(null);
+				}
+			});
+			add(slotButton);
+		}
+	}
+	
+	@Override protected void applyTheme(ThemeInfo themeInfo) {
+		super.applyTheme(themeInfo);
 	}
 	
 	@Override public void layout() {
-		setSize(getPreferredWidth(), getPreferredHeight());
-		
-		Widget content = getChild(0);
-		
-		content.setSize(content.getPreferredWidth(), content.getPreferredHeight());
-
 		setPosition(groupButton.getX() - getWidth() / 2 + groupButton.getWidth() / 2,
-				viewer.getY() - getHeight());
+				groupButton.getInnerY() - getHeight());
+		
+		int xIndex = 0;
+		int x = 0;
+		int y = 0;
+		int rowHeight = 0;
+		int maxX = 0;
+		
+		for (int index = 0; index < getNumChildren(); index++) {
+			if (xIndex == Quickbar.GroupButtonsPerRow) {
+				xIndex = 0;
+				
+				x = 0;
+				y += rowHeight;
+				rowHeight = 0;
+			}
+			
+			Widget child = getChild(index);
+			
+			child.setPosition(getInnerX() + x, getInnerY() + y);
+			child.setSize(child.getPreferredWidth(), child.getPreferredHeight());
+			
+			x += child.getWidth();
+			rowHeight = Math.max(rowHeight, child.getHeight());
+			maxX = Math.max(maxX, x);
+			xIndex++;
+		}
+		
+		setSize(maxX + getBorderHorizontal(), y + rowHeight + getBorderVertical());
 	}
 	
-	private class Content extends DialogLayout {
-		private Content() {
-			PC parent = Game.curCampaign.party.getSelected();
-			Quickbar quickbar = parent.quickbar;
-			
-			Group mainH = createParallelGroup();
-			Group mainV = createSequentialGroup();
-			
-			int index = 0;
-			Group rowH = createSequentialGroup();
-			Group rowV = createParallelGroup();
-			
-			for (Ability ability : group.getAbilities()) {
-				if (!parent.abilities.has(ability)) continue;
-				
-				if (index >= Quickbar.GroupButtonsPerRow) { 
-					mainH.addGroup(rowH);
-					mainV.addGroup(rowV);
-					
-					rowH = createSequentialGroup();
-					rowV = createParallelGroup();
-					index = 0;
-				}
-				
-				// add button for ability
-				QuickbarSlotButton slotButton = new QuickbarSlotButton(-1);
-				slotButton.setSlot(new AbilityActivateSlot(ability, parent), quickbar);
-				slotButton.setShowIndexLabel(false);
-				slotButton.setDisabledExceptActivate(true);
-				slotButton.addCallback(new Runnable() {
-					@Override public void run() {
-						QuickbarGroupPopup.this.closePopup();
-					}
-				});
-				rowH.addWidget(slotButton);
-				rowV.addWidget(slotButton);
-				
-				index++;
-			}
-			
-			if (index != 0) {
-				// add the last group
-				mainH.addGroup(rowH);
-				mainV.addGroup(rowV);
-			}
-			
-			setHorizontalGroup(mainH);
-			setVerticalGroup(mainV);
+	@Override protected boolean handleEvent(Event evt) {
+		groupButton.handleHover(evt);
+
+		return evt.isMouseEvent();
+	}
+	
+	private class QuickbarGroupSlotButton extends QuickbarSlotButton {
+		public QuickbarGroupSlotButton(int index) {
+			super(index);
+			setTheme("quickbarslotbutton");
 		}
+		
+		@Override protected boolean handleEvent(Event evt) {
+			groupButton.handleHover(evt);
+			
+			return super.handleEvent(evt);
+		}
+		
 	}
 }

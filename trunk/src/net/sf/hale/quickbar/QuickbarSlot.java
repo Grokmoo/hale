@@ -153,6 +153,13 @@ public abstract class QuickbarSlot implements Saveable {
 	public abstract void createRightClickMenu(QuickbarSlotButton parent);
 	
 	/**
+	 * Shows the details window for this slot - either an ability or item details
+	 * @param parent
+	 */
+	
+	public abstract void showExamineWindow(QuickbarSlotButton parent);
+	
+	/**
 	 * Returns a String that is used to save this quickbar slot to a character file
 	 * @return the String used to save the quickbar slot
 	 */

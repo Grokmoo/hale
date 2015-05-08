@@ -37,6 +37,9 @@ public class QuickbarGroupButton extends Button {
 	private final QuickbarGroup group;
 	private Icon icon;
 	
+	private QuickbarGroupPopup popup;
+	private boolean isHovering;
+	
 	/**
 	 * Creates a new button for the specified group
 	 * @param viewer
@@ -53,20 +56,44 @@ public class QuickbarGroupButton extends Button {
 		super.layout();
 	}
 	
-	@Override public boolean handleEvent(Event evt) {
-		if (Game.interfaceLocker.locked()) return super.handleEvent(evt);
-		
-		switch (evt.getType()) {
-		case MOUSE_DRAGGED:
-		case MOUSE_BTNUP:
-			if (!isMouseInside(evt)) break;
-			switch (evt.getMouseButton()) {
-			case Event.MOUSE_LBUTTON:
-				QuickbarGroupPopup popup = new QuickbarGroupPopup(Game.mainViewer, viewer, this);
-				popup.openPopup();
-				break;
+	/**
+	 * Handle the specified event to check for hover.  the hover over popup
+	 * should pass its events to this
+	 * @param evt
+	 */
+	
+	protected void handleHover(Event evt) {
+		if (evt.isMouseEvent()) {
+			boolean hover = (evt.getType() != Event.Type.MOUSE_EXITED) &&
+			(isMouseInside(evt)  || popup.isInside(evt.getMouseX(), evt.getMouseY()) );
+			
+			if (hover && !isHovering) {
+				startHover();
+			} else if (!hover && isHovering) {
+				endHover();
 			}
-		default:
+		}
+	}
+	
+	private void startHover() {
+		popup = new QuickbarGroupPopup(viewer, this);
+		viewer.setHoverPopup(popup);
+		isHovering = true;
+	}
+	
+	private void endHover() {
+		if (popup != null) {
+			viewer.setHoverPopup(null);
+		}
+		
+		isHovering = false;
+	}
+	
+	@Override public boolean handleEvent(Event evt) {
+		//if (Game.interfaceLocker.locked()) return super.handleEvent(evt);
+		
+		if (isEnabled()) {
+			handleHover(evt);
 		}
 		
 		return super.handleEvent(evt);

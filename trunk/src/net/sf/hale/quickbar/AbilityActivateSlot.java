@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import de.matthiasmann.twl.Button;
-
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilityActivateCallback;
@@ -109,6 +108,12 @@ public class AbilityActivateSlot extends QuickbarSlot {
 		} else if (slot.canDeactivate()) {
 			new AbilityActivateCallback(slot, ScriptFunctionType.onDeactivate).run();
 		}
+	}
+	
+	@Override public void showExamineWindow(QuickbarSlotButton button) {
+		AbilityExamineCallback cb = new AbilityExamineCallback(Game.ruleset.getAbility(abilityID), button, parent);
+		cb.setWindowCenter(button.getX(), button.getY());
+		cb.run();
 	}
 	
 	@Override public void createRightClickMenu(QuickbarSlotButton button) {

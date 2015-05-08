@@ -95,6 +95,10 @@ public class ItemUseSlot extends QuickbarSlot implements ItemList.Listener{
 		}
 	}
 	
+	@Override public void showExamineWindow(QuickbarSlotButton button) {
+		item.getExamineDetailsCallback(button.getX(), button.getY()).run();
+	}
+	
 	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
 		menu.addMenuLevel(item.getTemplate().getName());
