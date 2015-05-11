@@ -19,7 +19,6 @@
 
 package net.sf.hale.quickbar;
 
-import net.sf.hale.Game;
 import net.sf.hale.icon.Icon;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.Color;
@@ -83,7 +82,8 @@ public class QuickbarGroupButton extends Button {
 	
 	private void endHover() {
 		if (popup != null) {
-			viewer.setHoverPopup(null);
+			viewer.removeHoverPopup(popup);
+			//popup = null;
 		}
 		
 		isHovering = false;

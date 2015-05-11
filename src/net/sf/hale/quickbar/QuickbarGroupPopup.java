@@ -60,7 +60,7 @@ public class QuickbarGroupPopup extends Widget {
 			slotButton.setDisabledExceptActivate(true);
 			slotButton.addCallback(new Runnable() {
 				@Override public void run() {
-					QuickbarGroupPopup.this.viewer.setHoverPopup(null);
+					QuickbarGroupPopup.this.viewer.removeHoverPopup(QuickbarGroupPopup.this);
 				}
 			});
 			add(slotButton);
