@@ -193,4 +193,17 @@ public class QuickbarViewer extends DialogLayout {
 			Game.mainViewer.add(popup);
 		}
 	}
+	
+	/**
+	 * removes the specified hover if it is the current hover.  does not remove
+	 * the existing hover if it is not the passed in widget
+	 * @param popup
+	 */
+	
+	public void removeHoverPopup(Widget popup) {
+		if (this.hover == popup) {
+			Game.mainViewer.removeChild(this.hover);
+			this.hover = null;
+		}
+	}
 }
