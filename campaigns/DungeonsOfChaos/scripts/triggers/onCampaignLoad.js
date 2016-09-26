@@ -19,7 +19,6 @@ function onAreaLoadFirstTime(game, area) {
         quickbar.clear();
         
         partyMember.abilities.fillEmptySlots();
-        quickbar.addAbilitiesToEmptySlots();
         
         var role = partyMember.roles.getBaseRole().getID();
         var inv = partyMember.inventory;
