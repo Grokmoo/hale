@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.lwjgl.opengl.GL11;
+
 import de.matthiasmann.twl.AnimationState;
 import net.sf.hale.Game;
 import net.sf.hale.area.Area;

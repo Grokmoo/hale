@@ -207,8 +207,8 @@ public class MainMenu extends DesktopArea implements LoadGamePopup.Callback {
         backgroundSprite = SpriteManager.getSpriteAnyExtension("mainmenu");
         backgroundSpriteOffset = new Point();
         if (backgroundSprite != null) {
-        	backgroundSpriteOffset.x = (Game.displayMode.getWidth() - backgroundSprite.getWidth()) / 2;
-        	backgroundSpriteOffset.y = (Game.displayMode.getHeight() - backgroundSprite.getHeight()) / 2;
+        	backgroundSpriteOffset.x = (Game.config.getResolutionX() - backgroundSprite.getWidth()) / 2;
+        	backgroundSpriteOffset.y = (Game.config.getResolutionY() - backgroundSprite.getHeight()) / 2;
         }
         
         // load last open campaign from file if it exists

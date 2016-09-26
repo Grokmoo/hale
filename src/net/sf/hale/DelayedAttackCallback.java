@@ -144,7 +144,7 @@ public class DelayedAttackCallback extends Thread{
 		}
 		
 		// other creatures get a chance to spot a hiding creature when it attacks
-		ScriptInterface.performSearchChecksForCreature(attacker, Game.ruleset.getValue("HideAttackPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(attacker, Game.ruleset.getValue("HideAttackPenalty"));
 		
 		Game.mainViewer.updateEntity(attacker);
 		Game.mainViewer.updateEntity(defender);

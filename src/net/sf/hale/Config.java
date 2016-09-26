@@ -34,11 +34,8 @@ import java.util.Map;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
 
 import de.matthiasmann.twl.Event;
-import de.matthiasmann.twl.renderer.lwjgl.LWJGLRenderer;
 import de.matthiasmann.twl.theme.ThemeManager;
 
 import net.sf.hale.resource.URLResourceStreamHandler;
@@ -58,10 +55,11 @@ import net.sf.hale.util.SimpleJSONParser;
 
 public class Config {
 	/** The config file version.  Used to know if a config file is out of date and should be replaced.  Shouldn't be used anywhere else **/
-	private static final int Version = 1;
+	public static final int Version = 1;
 	
 	private int resolutionX, resolutionY;
 	private final boolean fullscreen;
+	private boolean scale2x;
 	private final boolean showFPS, capFPS;
 	private final boolean combatAutoScroll;
 	private final int toolTipDelay;
@@ -109,18 +107,32 @@ public class Config {
 	public int getCombatDelay() { return combatDelay; }
 	
 	/**
-	 * Returns the horizontal display resolution set in the config file
-	 * @return the horizontal display resolution set in the config file
+	 * Returns the horizontal display resolution, independant of any scaling factor
+	 * @return the horizontal display resolution
 	 */
 	
-	public int getResolutionX() { return resolutionX; }
+	public int getUnscaledResolutionX() { return resolutionX; }
 	
 	/**
-	 * Returns the vertical display resolution set in the config file
+	 * Returns the vertical display resolution, independant of any scaling factor
 	 * @return the vertical display resolution
 	 */
 	
-	public int getResolutionY() { return resolutionY; }
+	public int getUnscaledResolutionY() { return resolutionY; }
+	
+	/**
+	 * Returns the horizontal display resolution set in the config file, divided by the scaling factor
+	 * @return the horizontal display resolution set in the config file, taking into account scaling factor
+	 */
+	
+	public int getResolutionX() { return resolutionX / getScaleFactor(); }
+	
+	/**
+	 * Returns the vertical display resolution set in the config file, divided by the scaling factor
+	 * @return the vertical display resolution, taking into account the scaling factor
+	 */
+	
+	public int getResolutionY() { return resolutionY / getScaleFactor(); }
 	
 	/**
 	 * Returns true if the view should automatically scroll to show combat actions such as movement
@@ -189,6 +201,20 @@ public class Config {
 	public String getVersionID() { return versionID; }
 	
 	/**
+	 * Returns whether the entire display should be scaled by a factor of two
+	 * @return whether 2x scaling is on
+	 */
+	
+	public boolean scale2x() { return scale2x; }
+	
+	/**
+	 * Returns the display scale factor.  1 if not scaling, 2 if scale2x is enabled
+	 * @return the display scale factor
+	 */
+	
+	public int getScaleFactor() { return scale2x ? 2 : 1; }
+	
+	/**
 	 * Returns the integer keyboard code associated with the given action
 	 * @param actionName
 	 * @return the integer key code, or -1 if no key is associated with the action
@@ -243,6 +269,7 @@ public class Config {
 		resolutionY = iter.next().getInt(600);
 		
 		fullscreen = parser.get("Fullscreen", false);
+		scale2x = parser.get("Scale2X", false);
 		
 		SimpleJSONArray edResArray = parser.getArray("EditorResolution");
 		iter = edResArray.iterator();
@@ -298,8 +325,10 @@ public class Config {
 		
 		SimpleJSONParser parser = new SimpleJSONParser(configFile);
 		
-		if (parser.get("ConfigVersion", 0) != Config.Version) {
-			Logger.appendToWarningLog("Removing existing config file as version does not match " + Config.Version);
+		int fileVersion = parser.get("ConfigVersion", 0);
+		
+		if (fileVersion != Config.Version) {
+			Logger.appendToWarningLog("Removing existing config file as version " + fileVersion + " does not match " + Config.Version);
 			configFile.delete();
 			return false;
 		}
@@ -364,11 +393,15 @@ public class Config {
 	 * 
 	 * The returned List will be sorted by Display Resolution.
 	 * 
+	 * @param scale2x whether we are scaling by 2x.  this limits resolutions based on the 2x scale factor
+	 * 
 	 * @return a List of all usable DisplayModes
 	 * @throws LWJGLException
 	 */
 	
-	public static List<DisplayMode> getUsableDisplayModes() throws LWJGLException {
+	public static List<DisplayMode> getUsableDisplayModes(boolean scale2x) throws LWJGLException {
+		int scaleFactor = scale2x ? 2 : 1;
+		
 		DisplayMode desktop = Display.getDesktopDisplayMode();
 		
 		DisplayMode[] allModes = Display.getAvailableDisplayModes();
@@ -381,7 +414,7 @@ public class Config {
 			
 			if (!mode.isFullscreenCapable()) continue;
 			
-			if (mode.getWidth() < 800 || mode.getHeight() < 600) continue;
+			if (mode.getWidth() < 800 * scaleFactor || mode.getHeight() < 600 * scaleFactor) continue;
 			
 			// we need to verify that a mode with the same width and height has not
 			// already been added to the list, so we don't add what will look like the
@@ -426,11 +459,12 @@ public class Config {
 	 * such DisplayMode was found.
 	 */
 	
-	public static int getMatchingDisplayMode(int resX, int resY) {
-		for (int i = 0; i < Game.allDisplayModes.size(); i++) {
-			DisplayMode mode = Game.allDisplayModes.get(i);
-
+	public static int getMatchingDisplayMode(boolean scale2x, int resX, int resY) {
+		int i = 0;
+		for (DisplayMode mode : (scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes)) {
 			if (mode.getWidth() == resX && mode.getHeight() == resY) return i;
+			
+			i++;
 		}
 
 		return -1;
@@ -442,13 +476,12 @@ public class Config {
 	 * 
 	 * This method then sets up the OpenGL context for 2D drawing, and sets up TWL using
 	 * the theme file at gui/simple.xml.
+	 * @return the displayMode that was created
 	 */
 	
-	public static void createGameDisplay() {
-		if ( !createDisplay(Game.config.getResolutionX(), Game.config.getResolutionY()) ) {
-			Game.config.resolutionX = 800;
-			Game.config.resolutionY = 600;
-		}
+	public static DisplayMode createGameDisplay() {
+		return createDisplay(Game.config.scale2x(), Game.config.getResolutionX() * Game.config.getScaleFactor(),
+				Game.config.getResolutionY() * Game.config.getScaleFactor());
 	}
 	
 	/**
@@ -459,57 +492,49 @@ public class Config {
 	 * Once the DisplayMode has been set, the OpenGL context is set up for 2D drawing
 	 * and the TWL Theme file at gui/simple.xml is loaded.
 	 * 
+	 * @param scale2x whether the display is scaled by 2x
 	 * @param resX the horizontal resolution of the Display to create
 	 * @param resY the vertical resolution of the Display to create
 	 * 
-	 * @return true if the requested display mode was set, false if the display mode was not
-	 * able to set and the method fell back to 800x600
+	 * @return the displayMode that was set
 	 */
 	
-	private static boolean createDisplay(int resX, int resY) {
-		boolean returnValue = false;
+	private static DisplayMode createDisplay(boolean scale2x, int resX, int resY) {
+		DisplayMode mode = null;
 		
 		try {
-			int index = getMatchingDisplayMode(resX, resY);
+			int index = getMatchingDisplayMode(scale2x, resX, resY);
 			if (index == -1) {
-				Logger.appendToErrorLog("No display mode available with configuration: " + resX + "x" + resY + ".  Falling back to 800x600.");
+				Logger.appendToErrorLog("No display mode available with configuration: " + resX + "x" + resY + ".  Falling back to 800x600 with no scaling.");
 				
-				index = getMatchingDisplayMode(800, 600);
+				scale2x = false;
+				index = getMatchingDisplayMode(scale2x, 800, 600);
+				Game.config.resolutionX = 800;
+				Game.config.resolutionY = 600;
+				Game.config.scale2x = false;
 				
 				if (index == -1) {
 					Logger.appendToErrorLog("Unable to find display mode for fallback 800x600 display.  Exiting.");
 					System.exit(1);
 				}
-			} else {
-				returnValue = true;
 			}
 			
-			Game.displayMode = Game.allDisplayModes.get(index);
+			if (scale2x) {
+				mode = Game.all2xUsableDisplayModes.get(index);
+			} else {
+				mode = Game.allDisplayModes.get(index);
+			}
 			
-			Display.setDisplayMode(Game.displayMode);
+			Display.setDisplayMode(mode);
 			Display.setFullscreen(Game.config.getFullscreen());
 			Display.create();
 			
-			Game.renderer = new LWJGLRenderer();
+			Game.renderer = new HaleLWJGLRenderer();
 			
 		} catch (LWJGLException e) {
 			Logger.appendToErrorLog("Error creating display.", e);
 			System.exit(0);
 		}
-		
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Game.config.getResolutionX(), Game.config.getResolutionY(), 0, 0, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glEnable(GL14.GL_COLOR_SUM);
-		
-//		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-//		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-		
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_FASTEST);
 		
 		URL theme = null;
 		try {
@@ -524,6 +549,6 @@ public class Config {
 			Logger.appendToErrorLog("Error creating theme manager", e);
 		}
 		
-		return returnValue;
+		return mode;
 	}
 }

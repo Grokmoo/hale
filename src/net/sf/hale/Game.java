@@ -181,11 +181,7 @@ public class Game {
 	
 	public static List<DisplayMode> allDisplayModes;
 	
-	/**
-	 * The currently selected screen resolution.
-	 */
-	
-	public static DisplayMode displayMode;
+	public static List<DisplayMode> all2xUsableDisplayModes;
 	
 	/**
 	 * The primary low level renderer for TWL.
@@ -350,7 +346,7 @@ public class Game {
 		
 		Game.timer = new GameTimer();
 		Game.interfaceLocker = new InterfaceLocker();
-		ScriptInterface.ai = new AIScriptInterface();
+		Game.scriptInterface.ai = new AIScriptInterface();
 		
 		Display.setTitle("Hale");
 		setDisplayIcon();
@@ -358,7 +354,8 @@ public class Game {
 		textureLoader = new AsyncTextureLoader();
 		
 		try {
-			allDisplayModes = Config.getUsableDisplayModes();
+			allDisplayModes = Config.getUsableDisplayModes(false);
+			all2xUsableDisplayModes = Config.getUsableDisplayModes(true);
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error registering display modes.", e);
 		}

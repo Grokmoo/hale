@@ -87,8 +87,8 @@ public class LoadingWaitPopup extends PopupWindow {
 		this.bgSprite = sprite;
 		bgSpriteOffset = new Point();
 		if (bgSprite != null) {
-			bgSpriteOffset.x = (Game.displayMode.getWidth() - bgSprite.getWidth()) / 2;
-			bgSpriteOffset.y = (Game.displayMode.getHeight() - bgSprite.getHeight()) / 2;
+			bgSpriteOffset.x = (Game.config.getResolutionX() - bgSprite.getWidth()) / 2;
+			bgSpriteOffset.y = (Game.config.getResolutionY() - bgSprite.getHeight()) / 2;
 		}
 	}
 	
@@ -135,11 +135,11 @@ public class LoadingWaitPopup extends PopupWindow {
 		}
 		
 		@Override public int getPreferredWidth() {
-			return Game.displayMode.getWidth();
+			return Game.config.getResolutionX();
 		}
 		
 		@Override public int getPreferredHeight() {
-			return Game.displayMode.getHeight();
+			return Game.config.getResolutionY();
 		}
 	}
 	

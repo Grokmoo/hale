@@ -323,6 +323,7 @@ public class MainViewer extends DesktopArea {
 			}
 			
 			Display.update(false);
+			
             GL11.glGetError();
             Display.sync(60);
             Display.processMessages();

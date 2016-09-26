@@ -24,7 +24,6 @@ import java.util.List;
 import de.matthiasmann.twl.Color;
 
 import net.sf.hale.Game;
-import net.sf.hale.ScriptInterface;
 import net.sf.hale.bonus.Bonus;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.util.SimpleJSONObject;
@@ -103,7 +102,7 @@ public class Spell extends Ability {
 	@Override public void activate(Creature parent) {
 		super.activate(parent);
 		
-		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideCastSpellPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideCastSpellPenalty"));
 	}
 	
 	@Override public int getCooldown(Creature parent) {

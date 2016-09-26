@@ -208,11 +208,11 @@ public class CampaignConclusionPopup extends PopupWindow {
 		}
 		
 		@Override public int getPreferredWidth() {
-			return Game.displayMode.getWidth();
+			return Game.config.getResolutionX();
 		}
 		
 		@Override public int getPreferredHeight() {
-			return Game.displayMode.getHeight();
+			return Game.config.getResolutionY();
 		}
 	}
 	

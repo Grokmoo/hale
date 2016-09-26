@@ -21,7 +21,6 @@ package net.sf.hale.entity;
 
 import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
-import net.sf.hale.ScriptInterface;
 import net.sf.hale.ability.ScriptFunctionType;
 import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Bonus;
@@ -114,7 +113,7 @@ public class Trap extends Item {
 		int check = parent.skills.getCheck("Traps", difficulty);
 		
 		// other creatures get a chance to spot a hiding creature when it places a trap
-		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HidePlaceTrapPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HidePlaceTrapPenalty"));
 		
 		if (check >= difficulty) {
 			// the player character can see their own traps
@@ -157,7 +156,7 @@ public class Trap extends Item {
 		int check = parent.skills.getCheck("Traps", difficulty);
 		
 		// other creatures get a chance to spot a hiding creature when it disarms a trap
-		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideDisarmTrapPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideDisarmTrapPenalty"));
 		
 		if (check >= difficulty) {
 			Game.curCampaign.curArea.removeEntity(this);
@@ -185,7 +184,7 @@ public class Trap extends Item {
 		int check = parent.skills.getCheck("Traps", difficulty);
 		
 		// other creatures get a chance to spot a hiding creature when it recovers a trap
-		ScriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideRecoverTrapPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(parent, Game.ruleset.getValue("HideRecoverTrapPenalty"));
 		
 		if (check >= difficulty) {
 			Game.curCampaign.curArea.removeEntity(this);
@@ -253,7 +252,7 @@ public class Trap extends Item {
 		}
 		
 		// other creatures get a chance to spot a hiding creature when it springs a trap
-		ScriptInterface.performSearchChecksForCreature(target, Game.ruleset.getValue("HideSpringTrapPenalty"));
+		Game.scriptInterface.performSearchChecksForCreature(target, Game.ruleset.getValue("HideSpringTrapPenalty"));
 		
 		if ( !target.stats.getReflexResistanceCheck(modifyValueByQuality(template.getReflexDifficulty())) ) {
 			if (template.hasScript())

@@ -382,7 +382,7 @@ public class Encounter implements Iterable<Creature> {
 		aiActive = false;
 		knownHostiles.clear();
 		
-		if ( (template.randomizesCreatures() && ScriptInterface.SpawnRandomEncounters) ||
+		if ( (template.randomizesCreatures() && Game.scriptInterface.SpawnRandomEncounters) ||
 				!template.randomizesCreatures()) {
 			
 			Map<PointImmutable, NPC> spawnedCreatures = template.spawnCreatures(location);

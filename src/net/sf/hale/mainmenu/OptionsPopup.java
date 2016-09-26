@@ -80,8 +80,8 @@ public class OptionsPopup extends PopupWindow {
 	 * @param combatDelay combat delay in milliseconds
 	 */
 	
-	private void writeConfigToFile(int resX, int resY, boolean fullscreen, int tooltipDelay,
-			int combatDelay, boolean showFPS, boolean combatAutoScroll,
+	private void writeConfigToFile(int resX, int resY, boolean fullscreen, boolean scale2x,
+			int tooltipDelay, int combatDelay, boolean showFPS, boolean combatAutoScroll,
 			Map<String, String> keyBindings) throws IOException {
 		JSONOrderedObject data = new JSONOrderedObject();
 		
@@ -92,7 +92,9 @@ public class OptionsPopup extends PopupWindow {
 		resOut[0] = resX;
 		resOut[1] = resY;
 		data.put("Resolution", resOut);
+		data.put("ConfigVersion", Config.Version);
 		data.put("Fullscreen", fullscreen);
+		data.put("Scale2X", scale2x);
 		data.put("ShowFPS", showFPS);
 		data.put("CapFPS", Game.config.capFPS());
 		data.put("CombatAutoScroll", combatAutoScroll);
@@ -121,6 +123,7 @@ public class OptionsPopup extends PopupWindow {
 		private Button accept, cancel, reset;
 		
 		private final ToggleButton fullscreen;
+		private final ToggleButton scale2x;
 		private final ComboBox<String> modesBox;
 		private final SimpleChangableListModel<String> modesModel;
 		private final Scrollbar tooltipDelay, combatSpeed;
@@ -157,6 +160,15 @@ public class OptionsPopup extends PopupWindow {
 			fullscreen.setTheme("fullscreentoggle");
 			
 			addHorizontalWidgets(modesTitle, modesBox, fullscreen);
+			
+			scale2x = new ToggleButton();
+			scale2x.addCallback(new Runnable() {
+				public void run() {
+					repopulateDisplayModes(Game.config, scale2x.isActive());
+				}
+			});
+			scale2x.setTheme("scale2xtoggle");
+			addHorizontalWidgets(scale2x);
 			
 			tooltipTitle = new Label();
 			tooltipTitle.setTheme("tooltiplabel");
@@ -289,8 +301,16 @@ public class OptionsPopup extends PopupWindow {
 			
 			boolean combatAutoScroll = this.autoscrollToggle.isActive();
 			
-			DisplayMode mode = Game.allDisplayModes.get(this.modesBox.getSelected());
 			boolean fullscreen = this.fullscreen.isActive();
+			
+			boolean scale2x = this.scale2x.isActive();
+			
+			DisplayMode mode;
+			if (scale2x) {
+				mode = Game.all2xUsableDisplayModes.get(this.modesBox.getSelected());
+			} else {
+				mode = Game.allDisplayModes.get(this.modesBox.getSelected());
+			}
 			
 			// get tooltip delay in milliseconds
 			int tooltipDelay = this.tooltipDelay.getValue() * 100;
@@ -299,14 +319,14 @@ public class OptionsPopup extends PopupWindow {
 			int combatSpeed = (6 - this.combatSpeed.getValue()) * 50;
 			
 			try {
-				writeConfigToFile(mode.getWidth(), mode.getHeight(), fullscreen, tooltipDelay,
+				writeConfigToFile(mode.getWidth(), mode.getHeight(), fullscreen, scale2x, tooltipDelay,
 						combatSpeed, showFPS, combatAutoScroll, keyBindings);
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error writing configuration file", e);
 			}
 			
 			if (mode.getWidth() == Game.config.getResolutionX() && mode.getHeight() == Game.config.getResolutionY() &&
-					fullscreen == Game.config.getFullscreen()) {
+					fullscreen == Game.config.getFullscreen() && scale2x == Game.config.scale2x()) {
 				
 				Game.config = new Config(Game.getConfigBaseDirectory() + "config.json");
 			} else {
@@ -315,20 +335,25 @@ public class OptionsPopup extends PopupWindow {
 			}
 		}
 		
+		private void repopulateDisplayModes(Config config, boolean scale2x) {
+			modesModel.clear();
+			for ( DisplayMode mode : (scale2x ? Game.all2xUsableDisplayModes : Game.allDisplayModes) ) {
+				modesModel.addElement(mode.getWidth() + " x " + mode.getHeight());
+			}
+			
+			int index = Config.getMatchingDisplayMode(scale2x, config.getUnscaledResolutionX(), config.getUnscaledResolutionY());
+			modesBox.setSelected(index);
+		}
+		
 		private void initializeWidgetsToConfig(Config config) {
 			fullscreen.setActive(config.getFullscreen());
+			scale2x.setActive(config.scale2x());
 			tooltipDelay.setValue(config.getTooltipDelay() / 100);
 			combatSpeed.setValue(6 - (config.getCombatDelay() / 50));
 			fpsCounter.setActive(config.showFPS());
 			autoscrollToggle.setActive(config.autoScrollDuringCombat());
 			
-			modesModel.clear();
-			for (DisplayMode mode : Game.allDisplayModes) {
-				modesModel.addElement(mode.getWidth() + " x " + mode.getHeight());
-			}
-			
-			int index = Config.getMatchingDisplayMode(config.getResolutionX(), config.getResolutionY());
-			modesBox.setSelected(index);
+			repopulateDisplayModes(config, config.scale2x());
 			
 			keyBindingsContent.initializeWidgetsToConfig(config);
 			

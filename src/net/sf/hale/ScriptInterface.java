@@ -95,19 +95,15 @@ public class ScriptInterface implements HasScriptState {
 	 * spawn, which makes traveling through areas much quicker
 	 */
 	
-	public static boolean SpawnRandomEncounters = true;
+	public boolean SpawnRandomEncounters = true;
 	
-	public static AIScriptInterface ai;
-	
-	public static void setEncounterSpawningEnabled(boolean enable) {
-		ScriptInterface.SpawnRandomEncounters = enable;
-	}
+	public AIScriptInterface ai;
 	
 	/**
 	 * Writes the current content of the messages box on the bottom right of the screen to a file
 	 */
 	
-	public static void writeMessageLog() {
+	public void writeMessageLog() {
 		try {
 			FileUtil.writeStringToFile(new File("message.html"), Game.mainViewer.getMessageBoxContents());
 		} catch (IOException e) {
@@ -115,15 +111,15 @@ public class ScriptInterface implements HasScriptState {
 		}
 	}
 	
-	public static void addMessage(String text) {
+	public void addMessage(String text) {
 		Game.mainViewer.addMessage(text);
 	}
 	
-	public static void addMessage(String font, String text) {
+	public void addMessage(String font, String text) {
 		Game.mainViewer.addMessage(font, text);
 	}
 	
-	public static void addEncounterToArea(String encounterID, int x, int y) {
+	public void addEncounterToArea(String encounterID, int x, int y) {
 		Encounter encounter = Game.curCampaign.getEncounter(encounterID, new Location(Game.curCampaign.curArea, x, y));
 		encounter.checkSpawnCreatures();
 		
@@ -132,12 +128,12 @@ public class ScriptInterface implements HasScriptState {
 		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 	
-	public static void addItemToArea(Item item, Location location) {
+	public void addItemToArea(Item item, Location location) {
 		item.setLocation(location);
 		Game.curCampaign.curArea.addItem(item);
 	}
 	
-	public static boolean rangedTouchAttack(Creature attacker, Creature defender) {
+	public boolean rangedTouchAttack(Creature attacker, Creature defender) {
 		boolean success = false;
 		try {
 			DelayedAttackCallback cb = Game.areaListener.getCombatRunner().creatureTouchAttack(attacker, defender, true);
@@ -159,7 +155,7 @@ public class ScriptInterface implements HasScriptState {
 		return success;
 	}
 	
-	public static boolean meleeTouchAttack(Creature attacker, Creature defender) {
+	public boolean meleeTouchAttack(Creature attacker, Creature defender) {
 		boolean result = false;
 		
 		try {
@@ -192,7 +188,7 @@ public class ScriptInterface implements HasScriptState {
 	 * @return true if the attack was completed, false if it did not complete for any reason
 	 */
 	
-	public static boolean singleAttackAnimate(Creature attacker, Creature target) {
+	public boolean singleAttackAnimate(Creature attacker, Creature target) {
 		boolean result = false;
 
 		try {
@@ -217,7 +213,7 @@ public class ScriptInterface implements HasScriptState {
 		return result;
 	}
 	
-	public static Attack getAttack(Creature attacker, Creature defender, String slot) {
+	public Attack getAttack(Creature attacker, Creature defender, String slot) {
 		Attack attack = attacker.performSingleAttack(defender, Inventory.Slot.valueOf(slot));
 		attack.computeFlankingBonus(Game.curCampaign.curArea.getEntities());
 		attack.computeIsHit();
@@ -233,7 +229,7 @@ public class ScriptInterface implements HasScriptState {
 	 * @return the newly created attack
 	 */
 	
-	public static Attack getMainHandAttack(Creature attacker, Creature defender) {
+	public Attack getMainHandAttack(Creature attacker, Creature defender) {
 		return getAttack(attacker, defender, Inventory.Slot.MainHand.toString());
 	}
 	
@@ -245,19 +241,19 @@ public class ScriptInterface implements HasScriptState {
 	 * @return the newly created attack
 	 */
 	
-	public static Attack getOffHandAttack(Creature attacker, Creature defender) {
+	public Attack getOffHandAttack(Creature attacker, Creature defender) {
 		return getAttack(attacker, defender, Inventory.Slot.OffHand.toString());
 	}
 	
-	public static void singleAttack(Creature attacker, Point position) {
+	public void singleAttack(Creature attacker, Point position) {
 		singleAttack(attacker, Game.curCampaign.curArea.getCreatureAtGridPoint(position));
 	}
 	
-	public static void singleAttack(Creature attacker, Creature defender) {
+	public void singleAttack(Creature attacker, Creature defender) {
 		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.MainHand);
 	}
 	
-	public static void singleAttack(Creature attacker, Creature defender, String slot) {
+	public void singleAttack(Creature attacker, Creature defender, String slot) {
 		Game.areaListener.getCombatRunner().creatureSingleAttack(attacker, defender, Inventory.Slot.valueOf(slot));
 	}
 	
@@ -271,7 +267,7 @@ public class ScriptInterface implements HasScriptState {
 	 * @return whether the attack hit
 	 */
 	
-	public static boolean standardAttack(Creature attacker, Creature defender) {
+	public boolean standardAttack(Creature attacker, Creature defender) {
 		boolean result = false;
 		
 		try {
@@ -314,7 +310,7 @@ public class ScriptInterface implements HasScriptState {
 		return result;
 	}
 	
-	public static boolean creatureCanTouchTarget(Creature creature, Creature target) {
+	public boolean creatureCanTouchTarget(Creature creature, Creature target) {
 		if (target == null || creature == null) return false;
 		
 		if (creature == target) return true;
@@ -322,7 +318,7 @@ public class ScriptInterface implements HasScriptState {
 		return creature.getLocation().getDistance(target) <= 1;
 	}
 	
-	public static Creature createSummon(String creatureID, Creature parent, int duration) {
+	public Creature createSummon(String creatureID, Creature parent, int duration) {
 		NPC creature = EntityManager.getNPC(creatureID);
 		creature.setFaction(parent.getFaction());
 		
@@ -339,7 +335,7 @@ public class ScriptInterface implements HasScriptState {
 		return creature;
 	}
 	
-	public static void finishSummon(NPC creature, Location location) {
+	public void finishSummon(NPC creature, Location location) {
 		creature.resetTime();
 		
 		if (location.isPassable() && location.getCreature() == null) {
@@ -355,7 +351,7 @@ public class ScriptInterface implements HasScriptState {
 		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 	
-	public static void finishSummon(NPC creature, Point position) {
+	public void finishSummon(NPC creature, Point position) {
 		finishSummon(creature, new Location(Game.curCampaign.curArea, position));
 	}
 	
@@ -365,7 +361,7 @@ public class ScriptInterface implements HasScriptState {
 	 * @param hidePenalty
 	 */
 	
-	public static void performSearchChecksForCreature(Creature target, int hidePenalty) {
+	public void performSearchChecksForCreature(Creature target, int hidePenalty) {
 		// only search if this creature is hidden
 		if (!target.stats.isHidden()) return;
 		
@@ -384,7 +380,7 @@ public class ScriptInterface implements HasScriptState {
 		}
 	}
 	
-	public static boolean creatureCanAttackTarget(Creature creature, Creature target) {
+	public boolean creatureCanAttackTarget(Creature creature, Creature target) {
 		if (target == null || creature == null) return false;
 		
 		if (creature == target) return false;
@@ -394,20 +390,20 @@ public class ScriptInterface implements HasScriptState {
 		return creature.canAttack(target.getLocation());
 	}
 	
-	public static Currency getPartyCurrency() {
+	public Currency getPartyCurrency() {
 		return Game.curCampaign.partyCurrency;
 	}
 	
-	public static Party getParty() {
+	public Party getParty() {
 		return Game.curCampaign.party;
 	}
 	
-	public static void moveCreature(Creature c, int x, int y) {
+	public void moveCreature(Creature c, int x, int y) {
 		c.setLocation(new Location(c.getLocation().getArea(), x, y));
 		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 	
-	public static void showMerchant(String merchantName) {
+	public void showMerchant(String merchantName) {
 		Merchant merchant = Game.curCampaign.getMerchant(merchantName);
 		if (merchant == null) {
 			Logger.appendToErrorLog("Error locating merchant: " + merchantName);
@@ -418,11 +414,11 @@ public class ScriptInterface implements HasScriptState {
 		Game.mainViewer.merchantWindow.setVisible(true);
 	}
 	
-	public static boolean hasQuestEntry(String title) {
+	public boolean hasQuestEntry(String title) {
 		return Game.curCampaign.questEntries.hasEntry(title);
 	}
 	
-	public static QuestEntry getQuestEntry(String title) {
+	public QuestEntry getQuestEntry(String title) {
 		// see if an entry with this title has already been created
 		if (Game.curCampaign.questEntries.hasEntry(title))
 			return Game.curCampaign.questEntries.getEntry(title);
@@ -434,31 +430,31 @@ public class ScriptInterface implements HasScriptState {
 		return entry;
 	}
 	
-	public static void addPartyXP(int xp) {
+	public void addPartyXP(int xp) {
 		XP.addPartyXP(xp);
 	}
 	
-	public static void runExternalScript(String scriptLocation, String function) {
+	public void runExternalScript(String scriptLocation, String function) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
 		scriptable.executeFunction(function);
 	}
 	
-	public static void runExternalScript(String scriptLocation, String function, Object arg) {
+	public void runExternalScript(String scriptLocation, String function, Object arg) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
 		scriptable.executeFunction(function, arg);
 	}
 	
-	public static void runExternalScript(String scriptLocation, String function, Object[] args) {
+	public void runExternalScript(String scriptLocation, String function, Object[] args) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
 		scriptable.executeFunction(function, args);
 	}
 	
-	public static void runExternalScriptWait(String scriptLocation, String function, float seconds) {
+	public void runExternalScriptWait(String scriptLocation, String function, float seconds) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
@@ -467,7 +463,7 @@ public class ScriptInterface implements HasScriptState {
 		cb.start();
 	}
 	
-	public static void runExternalScriptWait(String scriptLocation, String function, float seconds, Object arg) {
+	public void runExternalScriptWait(String scriptLocation, String function, float seconds, Object arg) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
@@ -477,7 +473,7 @@ public class ScriptInterface implements HasScriptState {
 		cb.start();
 	}
 	
-	public static void runExternalScriptWait(String scriptLocation, String function, float seconds, Object[] arg) {
+	public void runExternalScriptWait(String scriptLocation, String function, float seconds, Object[] arg) {
 		String script = ResourceManager.getScriptResourceAsString(scriptLocation);
 		
 		Scriptable scriptable = new Scriptable(script, scriptLocation, false);
@@ -491,7 +487,7 @@ public class ScriptInterface implements HasScriptState {
 	 * Reveals all world map locations in the current campaign to the player
 	 */
 	
-	public static void revealAllWorldMapLocations() {
+	public void revealAllWorldMapLocations() {
 		for (WorldMapLocation location : Game.curCampaign.worldMapLocations) {
 			if (!location.isRevealed()) {
 				location.setRevealed(true);
@@ -501,7 +497,7 @@ public class ScriptInterface implements HasScriptState {
 		Game.mainViewer.addMessage("link", "A new location has been added to your world map.");
 	}
 	
-	public static void revealWorldMapLocation(String ref) {
+	public void revealWorldMapLocation(String ref) {
 		WorldMapLocation location = Game.curCampaign.getWorldMapLocation(ref);
 		
 		if (location != null) {
@@ -514,7 +510,7 @@ public class ScriptInterface implements HasScriptState {
 		}
 	}
 	
-	public static void activateTransition(String ref) {
+	public void activateTransition(String ref) {
 		Transition transition = Game.curCampaign.getAreaTransition(ref);
 		
 		if (transition == null) {
@@ -524,63 +520,63 @@ public class ScriptInterface implements HasScriptState {
 		}
 	}
 	
-	public static CircleTargeter createCircleTargeter(Creature parent, Scriptable scriptable) {
+	public CircleTargeter createCircleTargeter(Creature parent, Scriptable scriptable) {
 		return new CircleTargeter(parent, scriptable, null);
 	}
 	
-	public static ListTargeter createListTargeter(Creature parent, Scriptable scriptable) {
+	public ListTargeter createListTargeter(Creature parent, Scriptable scriptable) {
 		return new ListTargeter(parent, scriptable, null);
 	}
 	
-	public static LineTargeter createLineTargeter(Creature parent, Scriptable scriptable) {
+	public LineTargeter createLineTargeter(Creature parent, Scriptable scriptable) {
 		return new LineTargeter(parent, scriptable, null);
 	}
 	
-	public static ConeTargeter createConeTargeter(Creature parent, Scriptable scriptable) {
+	public ConeTargeter createConeTargeter(Creature parent, Scriptable scriptable) {
 		return new ConeTargeter(parent, scriptable, null);
 	}
 	
-	public static CircleTargeter createCircleTargeter(AbilitySlot slot) {
+	public CircleTargeter createCircleTargeter(AbilitySlot slot) {
 		return new CircleTargeter(slot.getParent(), slot.getAbility(), slot);
 	}
 	
-	public static ListTargeter createListTargeter(AbilitySlot slot) {
+	public ListTargeter createListTargeter(AbilitySlot slot) {
 		return new ListTargeter(slot.getParent(), slot.getAbility(), slot);
 	}
 	
-	public static LineTargeter createLineTargeter(AbilitySlot slot) {
+	public LineTargeter createLineTargeter(AbilitySlot slot) {
 		return new LineTargeter(slot.getParent(), slot.getAbility(), slot);
 	}
 	
-	public static ConeTargeter createConeTargeter(AbilitySlot slot) {
+	public ConeTargeter createConeTargeter(AbilitySlot slot) {
 		return new ConeTargeter(slot.getParent(), slot.getAbility(), slot);
 	}
 	
-	public static AbilityActivateCallback createButtonCallback(AbilitySlot slot, String function) {
+	public AbilityActivateCallback createButtonCallback(AbilitySlot slot, String function) {
 		AbilityActivateCallback callback = new AbilityActivateCallback(slot, function);
 		return callback;
 	}
 	
-	public static void addMenuButton(String label, AbilityActivateCallback callback) {
+	public void addMenuButton(String label, AbilityActivateCallback callback) {
 		Button button = new Button(label);
 		button.addCallback(callback);
 		
 		Game.mainViewer.getMenu().addButton(button);
 	}
 	
-	public static void showMenu() {
+	public void showMenu() {
 		Game.mainViewer.getMenu().show();
 	}
 	
-	public static boolean addMenuLevel(String title) {
+	public boolean addMenuLevel(String title) {
 		return Game.mainViewer.getMenu().addMenuLevel(title);
 	}
 	
-	public static void hideOpenWindows() {
+	public void hideOpenWindows() {
 		Game.mainViewer.closeAllWindows();
 	}
 	
-	public static void startConversation(Entity parent, Entity target, String convoScriptID) {
+	public void startConversation(Entity parent, Entity target, String convoScriptID) {
 		String scriptContents = ResourceManager.getScriptResourceAsString(convoScriptID);
 		Scriptable script = new Scriptable(scriptContents, convoScriptID, false);
 		
@@ -588,7 +584,7 @@ public class ScriptInterface implements HasScriptState {
 		popup.startConversation();
 	}
 	
-	public static void showCutscene(String id) {
+	public void showCutscene(String id) {
 		Cutscene cutscene = Game.ruleset.getCutscene(id);
 		if (cutscene == null) {
 			Logger.appendToWarningLog("Cutscene " + id + " not found");
@@ -599,7 +595,7 @@ public class ScriptInterface implements HasScriptState {
 		Game.mainViewer.showPopup(popup);
 	}
 	
-	public static HTMLPopup createHTMLPopup(String resource) {
+	public HTMLPopup createHTMLPopup(String resource) {
 		try {
 			HTMLPopup popup = new HTMLPopup(resource);
 		
@@ -611,20 +607,20 @@ public class ScriptInterface implements HasScriptState {
 		return null;
 	}
 	
-	public static CombatRunner combatRunner() { return Game.areaListener.getCombatRunner(); }
+	public CombatRunner combatRunner() { return Game.areaListener.getCombatRunner(); }
 	
-	public static Campaign campaign() { return Game.curCampaign; }
+	public Campaign campaign() { return Game.curCampaign; }
 	
-	public static Ruleset ruleset() { return Game.ruleset; }
-	public static Area currentArea() { return Game.curCampaign.curArea; }
+	public Ruleset ruleset() { return Game.ruleset; }
+	public Area currentArea() { return Game.curCampaign.curArea; }
 	
-	public static Area getArea(String id) { return Game.curCampaign.getArea(id); }
+	public Area getArea(String id) { return Game.curCampaign.getArea(id); }
 	
-	public static Dice dice() { return Game.dice; }
+	public Dice dice() { return Game.dice; }
 	
-	public static Date date() { return Game.curCampaign.getDate(); }
+	public Date date() { return Game.curCampaign.getDate(); }
 	
-	public static boolean isInCombatMode() { return Game.isInTurnMode(); }
+	public boolean isInCombatMode() { return Game.isInTurnMode(); }
 	
 	public void sleepStandardDelay(int multiple) {
 		try {

@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.hale.AIScriptInterface;
 import net.sf.hale.Game;
 import net.sf.hale.ability.AreaEffectList;
 import net.sf.hale.ability.Aura;
@@ -1008,7 +1007,7 @@ public class Area implements EffectTarget, Saveable {
 			} else {
 				// if there are no more explicit transition locations, just add the creature
 				// wherever there is a nearby space
-				Point point = AIScriptInterface.findClosestEmptyTile(lastCreature.getLocation().toPoint(), 3);
+				Point point = Game.scriptInterface.ai.findClosestEmptyTile(lastCreature.getLocation().toPoint(), 3);
 				
 				if (point != null)
 					creature.setLocation(new Location(this, point.x, point.y));

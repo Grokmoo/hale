@@ -92,7 +92,6 @@ public class AbilityDetailsWindow extends GameSubWindow {
 		sb.append("</div>");
 		
 		ability.appendUpgradesDescription(sb, parent);
-		
 		textAreaModel.setHtml(sb.toString());
 	}
 	

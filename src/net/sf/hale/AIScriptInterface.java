@@ -54,7 +54,7 @@ public class AIScriptInterface {
 	 * @return the path to the specified position
 	 */
 	
-	public static Path getMovementPath(Creature parent, int x, int y) {
+	public Path getMovementPath(Creature parent, int x, int y) {
 		Move move = new Move();
 		
 		if (!move.canMove(parent, parent.getLocation().getInSameArea(x, y), 0)) return null;
@@ -69,7 +69,7 @@ public class AIScriptInterface {
 	 * @return the path to the specified position
 	 */
 	
-	public static Path getMovementPath(Creature parent, Location location) {
+	public Path getMovementPath(Creature parent, Location location) {
 		Move move = new Move();
 		
 		if (!move.canMove(parent, location, 0)) return null;
@@ -95,7 +95,7 @@ public class AIScriptInterface {
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, int x, int y, int distanceAway) {
+	public boolean moveTowards(Creature parent, int x, int y, int distanceAway) {
 		return moveTowards(parent, new Location(parent.getLocation().getArea(), x, y), distanceAway, true);
 	}
 	
@@ -114,7 +114,7 @@ public class AIScriptInterface {
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, int x, int y, int distanceAway, boolean provokeAoOs) {
+	public boolean moveTowards(Creature parent, int x, int y, int distanceAway, boolean provokeAoOs) {
 		return moveTowards(parent, new Location(parent.getLocation().getArea(), x, y), distanceAway, provokeAoOs);
 	}
 	
@@ -133,7 +133,7 @@ public class AIScriptInterface {
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, Location location, int distanceAway, boolean provokeAoOs) {
+	public boolean moveTowards(Creature parent, Location location, int distanceAway, boolean provokeAoOs) {
 		Move move = new Move();
 		move.setTruncatePath(false);
 		
@@ -180,7 +180,7 @@ public class AIScriptInterface {
 	 * @return true if the parent moved, false otherwise
 	 */
 	
-	public static boolean moveTowards(Creature parent, Location location, int distanceAway) {
+	public boolean moveTowards(Creature parent, Location location, int distanceAway) {
 		return moveTowards(parent, location, distanceAway, true);
 	}
 	
@@ -199,7 +199,7 @@ public class AIScriptInterface {
 	 * search radius
 	 */
 	
-	public static Point findClosestEmptyTile(Point center, int maxRadius) {
+	public Point findClosestEmptyTile(Point center, int maxRadius) {
 		if (checkEmpty(center)) return center;
 		
 		for (int r = 1; r <= maxRadius; r++) {
@@ -212,7 +212,7 @@ public class AIScriptInterface {
 		return null;
 	}
 	
-	private static boolean checkEmpty(Point grid) {
+	private boolean checkEmpty(Point grid) {
 		if (!Game.curCampaign.curArea.isPassable(grid.x, grid.y)) return false;
 
 		return (Game.curCampaign.curArea.getCreatureAtGridPoint(grid) == null);
@@ -229,7 +229,7 @@ public class AIScriptInterface {
 	 * @param parent the creature to provoke attacks against
 	 */
 	
-	public static void provokeAttacksOfOpportunity(Creature parent) {
+	public void provokeAttacksOfOpportunity(Creature parent) {
 		Game.areaListener.getCombatRunner().provokeAttacksOfOpportunity(parent, null);
 	}
 	
@@ -246,7 +246,7 @@ public class AIScriptInterface {
 	 * if no visible creature meeting the relationship criterion is found.
 	 */
 	
-	public static Creature findCreatureWithMostDamage(Creature parent, String relationship) {
+	public Creature findCreatureWithMostDamage(Creature parent, String relationship) {
 		List<Creature> creatures = getLiveVisibleCreatures(parent, relationship);
 		
 		int bestDamage = Integer.MIN_VALUE;
@@ -277,7 +277,7 @@ public class AIScriptInterface {
 	 * if no visible creature meeting the relationship criterion is found.
 	 */
 	
-	public static Creature findCreatureWithMostMaxHP(Creature parent, String relationship) {
+	public Creature findCreatureWithMostMaxHP(Creature parent, String relationship) {
 		List<Creature> creatures = getLiveVisibleCreatures(parent, relationship);
 		
 		int bestMaxHP = 0;
@@ -302,7 +302,7 @@ public class AIScriptInterface {
 	 * @return the nearest creature to the parent
 	 */
 	
-	public static Creature findNearestCreature(Creature parent, String relationship) {
+	public Creature findNearestCreature(Creature parent, String relationship) {
 		// list of creatures tied for closest
 		List<Creature> closest = new ArrayList<Creature>();
 
@@ -338,7 +338,7 @@ public class AIScriptInterface {
 	 * @return the set of potentially attackable creatures
 	 */
 	
-	public static AITargetSet getPotentialAttackTargets(Creature parent) {
+	public  AITargetSet getPotentialAttackTargets(Creature parent) {
 		List<Creature> creatures = getLiveVisibleCreatures(parent, Faction.Relationship.Hostile.toString());
 		
 		return new AITargetSet(parent, creatures);
@@ -353,7 +353,7 @@ public class AIScriptInterface {
 	 * parent needing to move.
 	 */
 	
-	public static List<Creature> getAttackableCreatures(Creature parent) {
+	public List<Creature> getAttackableCreatures(Creature parent) {
 		ArrayList<Creature> attackable = new ArrayList<Creature>();
 		
 		List<Creature> creatures;
@@ -389,7 +389,7 @@ public class AIScriptInterface {
 	 * (as is the case for scroll casters).
 	 */
 	
-	public static List<Creature> getTouchableCreatures(Creature parent, String relationship) {
+	public List<Creature> getTouchableCreatures(Creature parent, String relationship) {
 		ArrayList<Creature> creatures = new ArrayList<Creature>();
 		
 		Faction activeFaction = parent.getFaction();
@@ -432,7 +432,7 @@ public class AIScriptInterface {
 	 * @return the list of all creatures visible to parent meeting the specified constraints.
 	 */
 	
-	public static List<Creature> getVisibleCreaturesWithinRange(Creature parent, String relationship, int range) {
+	public List<Creature> getVisibleCreaturesWithinRange(Creature parent, String relationship, int range) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
@@ -463,7 +463,7 @@ public class AIScriptInterface {
 	 * constraint.
 	 */
 	
-	public static List<Creature> getAllCreaturesWithinRange(Creature parent, String relationship, int range) {
+	public List<Creature> getAllCreaturesWithinRange(Creature parent, String relationship, int range) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
@@ -493,7 +493,7 @@ public class AIScriptInterface {
 	 * @return the list of all creatures visible to parent meeting the specified constraints.
 	 */
 	
-	public static List<Creature> getLiveVisibleCreatures(Creature parent, String relationship) {
+	public List<Creature> getLiveVisibleCreatures(Creature parent, String relationship) {
 		Faction.Relationship rel = null;
 		if (relationship != null) rel = Faction.Relationship.valueOf(relationship);
 		
@@ -517,11 +517,11 @@ public class AIScriptInterface {
 		return creatures;
 	}
 	
-	public static void sortCreatureListClosestFirst(Creature parent, List<Creature> creatures) {
+	public void sortCreatureListClosestFirst(Creature parent, List<Creature> creatures) {
 		Collections.sort(creatures, new CreatureSorter(parent));
 	}
 	
-	private static class CreatureSorter implements Comparator<Creature> {
+	private class CreatureSorter implements Comparator<Creature> {
 		private Creature parent;
 		
 		private CreatureSorter(Creature parent) {

@@ -174,7 +174,7 @@ public class PortraitSelector extends PopupWindow {
 		}
 		
 		@Override public int getPreferredHeight() {
-			return Math.min(Game.displayMode.getHeight(), portraitPane.getPreferredHeight() + title.getPreferredHeight() +
+			return Math.min(Game.config.getResolutionY(), portraitPane.getPreferredHeight() + title.getPreferredHeight() +
 					accept.getPreferredHeight() + buttonGap + getBorderVertical());
 		}
 	}

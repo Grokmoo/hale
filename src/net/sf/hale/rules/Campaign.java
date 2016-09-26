@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.hale.AIScriptInterface;
 import net.sf.hale.Game;
 import net.sf.hale.Party;
 import net.sf.hale.ScriptState;
@@ -527,7 +526,7 @@ public class Campaign {
 			} else {
 				// if there are no more explicit transition locations, just add the creature
 				// wherever there is a nearby space
-				Point newPosition = AIScriptInterface.findClosestEmptyTile(mainMover.getLocation().toPoint(), 3);
+				Point newPosition = Game.scriptInterface.ai.findClosestEmptyTile(mainMover.getLocation().toPoint(), 3);
 				
 				if (newPosition == null) {
 					Logger.appendToErrorLog("Unable to find transition space for " + current.getName() +

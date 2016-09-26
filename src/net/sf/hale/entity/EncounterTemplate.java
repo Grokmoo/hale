@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.hale.Game;
-import net.sf.hale.ScriptInterface;
 import net.sf.hale.rules.Faction;
 import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Point;
@@ -224,7 +223,7 @@ public class EncounterTemplate {
 	public Map<PointImmutable, NPC> spawnCreatures(Location location) {
 		Map<PointImmutable, NPC> spawnedCreatures = new HashMap<PointImmutable, NPC>();
 		
-		if (randomizesCreatures() && ScriptInterface.SpawnRandomEncounters) {
+		if (randomizesCreatures() && Game.scriptInterface.SpawnRandomEncounters) {
 			// spawn random unless it has been disabled
 			int numToSpawn = Game.dice.rand(minRandomCreatures, maxRandomCreatures);
 			

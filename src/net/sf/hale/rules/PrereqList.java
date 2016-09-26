@@ -304,14 +304,14 @@ public class PrereqList {
 		for (String s : weaponProficiencyPrereqs) {
 			appendMetOrNotMet(c, c != null && meetsWeaponProficiencyPrereq(c, s), sb);
 			
-			sb.append("<p>Weapon Proficiency: ");
+			sb.append("Weapon Proficiency: ");
 			sb.append("<span style=\"font-family: red;\">").append(s).append("</span></td></tr>");
 		}
 		
 		for (String s : armorProficiencyPrereqs) {
 			appendMetOrNotMet(c, c != null && meetsArmorProficiencyPrereq(c, s), sb);
 			
-			sb.append("<p>Armor Proficiency: ");
+			sb.append("Armor Proficiency: ");
 			sb.append("<span style=\"font-family: green;\">").append(s).append("</span></td></tr>");
 		}
 		

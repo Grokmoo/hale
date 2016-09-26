@@ -150,7 +150,7 @@ public class CutscenePopup extends PopupWindow {
 			super.layout();
 			
 			int centerX = getInnerX() + getInnerWidth() / 2;
-			
+
 			continueLabel.setPosition(centerX - continueLabel.getPreferredWidth() / 2,
 					bgBottom - continueLabel.getPreferredHeight() / 2 - continueOffset);
 			
@@ -167,11 +167,11 @@ public class CutscenePopup extends PopupWindow {
 			bgSprite = SpriteManager.getSpriteAnyExtension(frame.getBGImage());
 			bgSpriteOffset = new Point();
 			if (bgSprite != null) {
-				bgSpriteOffset.x = (Game.displayMode.getWidth() - bgSprite.getWidth()) / 2;
-				bgSpriteOffset.y = (Game.displayMode.getHeight() - bgSprite.getHeight()) / 2;
+				bgSpriteOffset.x = (Game.config.getResolutionX() - bgSprite.getWidth()) / 2;
+				bgSpriteOffset.y = (Game.config.getResolutionY() - bgSprite.getHeight()) / 2;
 				bgBottom = bgSpriteOffset.y + bgSprite.getHeight();
 			} else {
-				bgBottom = Game.displayMode.getHeight();
+				bgBottom = Game.config.getResolutionY();
 			}
 			
 			textAreaWidth = frame.getTextAreaWidth();
@@ -194,11 +194,11 @@ public class CutscenePopup extends PopupWindow {
 		}
 		
 		@Override public int getPreferredWidth() {
-			return Game.displayMode.getWidth();
+			return Game.config.getResolutionX();
 		}
 		
 		@Override public int getPreferredHeight() {
-			return Game.displayMode.getHeight();
+			return Game.config.getResolutionY();
 		}
 		
 		@Override public boolean handleEvent(Event evt) {
