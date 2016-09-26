@@ -305,6 +305,11 @@
 				<param name="text"><string>Fullscreen</string></param>
 			</theme>
 			
+			<theme name="scale2xtoggle" ref="radiobutton">
+			    <param name="text"><string>Scale Display 2X</string></param>
+				<param name="tooltip"><string>Whether to scale the entire display by a factor of 2.  This is useful for high DPI or high resolution screens.</string></param>
+			</theme>
+			
 			<theme name="tooltiplabel" ref="labelblack">
 				<param name="text"><string>Tooltip Delay</string></param>
 				<param name="minWidth"><int>95</int></param>
