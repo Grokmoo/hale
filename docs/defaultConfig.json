@@ -4,6 +4,7 @@
   ],
   "ConfigVersion" : 1,
   "Fullscreen" : false,
+  "Scale2X" : false,
   "ShowFPS" : false,
   "CapFPS" : true,
   "CombatAutoScroll" : true,
