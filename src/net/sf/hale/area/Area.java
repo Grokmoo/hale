@@ -925,6 +925,18 @@ public class Area implements EffectTarget, Saveable {
 		return isVisible(p.x, p.y);
 	}
 	
+	/**
+	 * Debugging method to set all tiles explored
+	 */
+	
+	public void setAllTilesExplored() {
+		for (int i = 0; i < explored.length; i++) {
+			for (int j = 0; j < explored[i].length; j++) {
+				explored[i][j] = true;
+			}
+		}
+	}
+	
 	public final boolean isVisible(int x, int y) {
 		if (x < 0 || x >= width || y < 0 || y >= height) return false;
 		
