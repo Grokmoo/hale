@@ -20,10 +20,7 @@
 package net.sf.hale.ability;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.matthiasmann.twl.Color;
 
@@ -146,7 +143,7 @@ public class Ability extends Scriptable {
 	private final int aiPriority;
 	
 	private final String description;
-	private Map<String, AbilityUpgrade> upgrades;
+	private List<AbilityUpgrade> upgrades;
 	
 	private final String quickbarGroup;
 	
@@ -245,12 +242,12 @@ public class Ability extends Scriptable {
 		
 		this.description = map.get("description", null);
 		
-		upgrades = new LinkedHashMap<String, AbilityUpgrade>();
+		upgrades = new ArrayList<AbilityUpgrade>();
 		for (SimpleJSONArrayEntry entry : map.getArray("upgrades")) {
 			SimpleJSONObject entryObj = entry.getObject();
 			
 			AbilityUpgrade upgrade = new AbilityUpgrade(entryObj);
-			upgrades.put(upgrade.id, upgrade);
+			upgrades.add(upgrade);
 		}
 		
 		if (map.containsKey("canActivateOutsideCombat")) {
@@ -394,9 +391,9 @@ public class Ability extends Scriptable {
 		
 		if (parent == null) return this.spellLevel;
 		
-		for (String abilityID : upgrades.keySet()) {
-			if (parent.abilities.has(abilityID)) {
-				level = Math.max(level, Game.ruleset.getAbility(abilityID).spellLevel);
+		for (AbilityUpgrade upgrade : upgrades) {
+			if (parent.abilities.has(upgrade.id)) {
+				level = Math.max(level, Game.ruleset.getAbility(upgrade.id).spellLevel);
 			}
 		}
 		
@@ -548,7 +545,8 @@ public class Ability extends Scriptable {
 	public RangeType getUpgradedRangeType(Creature parent) {
 		RangeType rangeType = this.rangeType;
 		
-		for (String abilityID : upgrades.keySet()) {
+		for (AbilityUpgrade upgrade : upgrades) {
+			String abilityID = upgrade.id;
 			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				
@@ -582,7 +580,8 @@ public class Ability extends Scriptable {
 	public GroupType getUpgradedGroupType(Creature parent) {
 		GroupType groupType = this.groupType;
 		
-		for (String abilityID : upgrades.keySet()) {
+		for (AbilityUpgrade upgrade : upgrades) {
+			String abilityID = upgrade.id;
 			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				
@@ -622,7 +621,8 @@ public class Ability extends Scriptable {
 	public int getUpgradedAIPower(Creature parent) {
 		int aiPower = this.aiPower;
 		
-		for (String abilityID : upgrades.keySet()) {
+		for (AbilityUpgrade upgrade : upgrades) {
+			String abilityID = upgrade.id;
 			if (parent.abilities.has(abilityID)) {
 				Ability ability = Game.ruleset.getAbility(abilityID);
 				aiPower = Math.max(aiPower, ability.getAIPower());
@@ -671,17 +671,27 @@ public class Ability extends Scriptable {
 		return prereqs.meetsPrereqs(parent);
 	}
 	
-	private void appendUpgradesList(StringBuilder sb, Creature parent) {
+	private void appendUpgradesList(StringBuilder sb, Creature parent, boolean upgraded) {
 		if (parent == null) return;
 		
+		if (upgraded) {
+			sb.append("<div style=\"font-family: medium;\">");
+			sb.append("Base Ability ");
+			sb.append("<span style=\"font-family: medium-red\">");
+			sb.append(this.getName());
+			sb.append("</span>");
+			sb.append("</div>");
+		}
+		
 		int upgradesCount = 0;
-		for (String abilityID : upgrades.keySet()) {
+		for (AbilityUpgrade upgrade : upgrades) {
+			String abilityID = upgrade.id;
 			Ability ability = Game.ruleset.getAbility(abilityID);
 
 			if (parent.abilities.has(ability)) {
 				if (upgradesCount == 0) {
 					sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">");
-					sb.append("Upgraded with ");
+					sb.append("Upgrades ");
 					upgradesCount++;
 				} else {
 					sb.append(", ");
@@ -704,16 +714,18 @@ public class Ability extends Scriptable {
 	 * 
 	 * @param sb the StringBuilder to append to
 	 * @param parent the owner of this ability
+	 * @param upgrade true if we are looking at the details of the upgraded version, false
+	 * for the base version
 	 */
 	
-	public void appendDetails(StringBuilder sb, Creature parent) {
+	public void appendDetails(StringBuilder sb, Creature parent, boolean upgrade) {
 		// whether the ability is active or passive
 		sb.append("<div style=\"font-family: medium; margin-bottom: 1em;\">");
 		appendBaseType(sb);
 		sb.append("</div>");
 		
 		// append section on upgrades if this ability has any
-		appendUpgradesList(sb, parent);
+		appendUpgradesList(sb, parent, upgrade);
 		
 		// create table with slot type, AP cost, and cooldown
 		sb.append("<table style=\"font-family: medium; vertical-align: middle;\">");
@@ -746,9 +758,11 @@ public class Ability extends Scriptable {
 		
 		List<String> upgradesToShow = new ArrayList<String>();
 		
-		for (String abilityID : upgrades.keySet()) {
-			if (parent.abilities.has(abilityID))
-				upgradesToShow.add(upgrades.get(abilityID).description);
+		for (AbilityUpgrade upgrade : upgrades) {
+			String abilityID = upgrade.id;
+			if (parent.abilities.has(abilityID)) {
+				upgradesToShow.add(upgrade.description);
+			}
 		}
 		
 		for (String upgrade : upgradesToShow) {
@@ -756,6 +770,42 @@ public class Ability extends Scriptable {
 			sb.append(upgrade);
 			sb.append("</div>");
 		}
+	}
+	
+	/**
+	 * Returns the name associated with the highest priority upgrade available to the parent
+	 * @param parent
+	 * @return the upgraded name
+	 */
+	
+	public String getUpgradedName(Creature parent) {
+		for (int i = upgrades.size() - 1; i >= 0; i--) {
+			AbilityUpgrade upgrade = upgrades.get(i);
+			
+			if (upgrade.override && parent.abilities.has(upgrade.id)) {
+				return Game.ruleset.getAbility(upgrade.id).name;
+			}
+		}
+		
+		return this.name;
+	}
+	
+	/**
+	 * Returns the icon associated with the highest priority upgrade available to the parent
+	 * @param parent
+	 * @return the upgraded icon
+	 */
+	
+	public Icon getUpgradedIcon(Creature parent) {
+		for (int i = upgrades.size() - 1; i >= 0; i--) {
+			AbilityUpgrade upgrade = upgrades.get(i);
+			
+			if (upgrade.override && parent.abilities.has(upgrade.id)) {
+				return Game.ruleset.getAbility(upgrade.id).icon;
+			}
+		}
+		
+		return this.icon;
 	}
 	
 	@Override public String toString() {

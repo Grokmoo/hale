@@ -42,20 +42,21 @@ public class AbilityDetailsWindow extends GameSubWindow {
 	 * 
 	 * @param ability the Ability to view
 	 * @param parent the owner of the specified ability, or null to specify no owner
+	 * @param upgrade whether to base on the upgraded version (true) of the base version (false)
 	 */
 	
-	public AbilityDetailsWindow(Ability ability, Creature parent) {
-		this.setTitle("Details for " + ability.getName());
+	public AbilityDetailsWindow(Ability ability, Creature parent, boolean upgrade) {
+		this.setTitle( "Details for " + (upgrade ? ability.getUpgradedName(parent) : ability.getName()) );
 		
 		DialogLayout layout = new DialogLayout();
 		layout.setTheme("content");
 		this.add(layout);
 		
 		// set up the widgets for the top row
-		IconViewer iconViewer = new IconViewer(ability.getIcon());
+		IconViewer iconViewer = new IconViewer(upgrade ? ability.getUpgradedIcon(parent) : ability.getIcon());
 		iconViewer.setEventHandlingEnabled(false);
 		
-		Label title = new Label(ability.getName());
+		Label title = new Label(upgrade ? ability.getUpgradedName(parent) : ability.getName());
 		title.setTheme("titlelabel");
 		
 		DialogLayout.Group topV = layout.createParallelGroup(iconViewer, title);
@@ -85,7 +86,7 @@ public class AbilityDetailsWindow extends GameSubWindow {
 		// create the text area contents
 		StringBuilder sb = new StringBuilder();
 		
-		ability.appendDetails(sb, parent);
+		ability.appendDetails(sb, parent, upgrade);
 		
 		sb.append("<div style=\"margin-top: 1em\">");
 		sb.append(ability.getDescription());

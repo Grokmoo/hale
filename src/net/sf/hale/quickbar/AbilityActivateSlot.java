@@ -50,8 +50,6 @@ import net.sf.hale.widgets.RightClickMenu;
 
 public class AbilityActivateSlot extends QuickbarSlot {
 	private final String abilityID;
-	private final Icon abilityIcon;
-	private final String abilityName;
 	private PC parent;
 	
 	@Override public Object save() {
@@ -71,15 +69,17 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	
 	public AbilityActivateSlot(Ability ability, PC parent) {
 		this.abilityID = ability.getID();
-		this.abilityIcon = ability.getIcon();
-		this.abilityName = ability.getName();
 		this.parent = parent;
 	}
 	
 	@Override public Icon getIcon() {
-		return abilityIcon;
+		return parent.abilities.getUpgradedIcon(abilityID);
 	}
 
+	public String getAbilityName() {
+		return parent.abilities.getUpgradedName(abilityID);
+	}
+	
 	@Override public String getLabelText() {
 		AbilitySlot slot = getBestSlot();
 		if (slot != null) return slot.getLabelText();
@@ -118,7 +118,7 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	
 	@Override public void createRightClickMenu(QuickbarSlotButton button) {
 		RightClickMenu menu = Game.mainViewer.getMenu();
-		menu.addMenuLevel(abilityName);
+		menu.addMenuLevel(getAbilityName());
 		
 		Button activate = new Button("Activate");
 		activate.setEnabled(isActivateable());
@@ -163,7 +163,7 @@ public class AbilityActivateSlot extends QuickbarSlot {
 	}
 	
 	@Override public String getTooltipText() {
-		return "Activate " + abilityName;
+		return "Activate " + getAbilityName();
 	}
 	
 	@Override public Icon getSecondaryIcon() { return null; }

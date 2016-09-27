@@ -323,7 +323,7 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		
 		// left click callback
 		@Override public void run() {
-			Widget window = new AbilityDetailsWindow(ability, parent);
+			Widget window = new AbilityDetailsWindow(ability, parent, false);
 			
 			int x = getX() + getWidth() / 2 - window.getWidth() / 2;
 			int y = getY() + getHeight() / 2 - window.getHeight() / 2;

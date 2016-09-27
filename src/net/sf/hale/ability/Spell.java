@@ -375,10 +375,10 @@ public class Spell extends Ability {
 		return 50 + ( parent.stats.getSpellCastingAttribute() - 10 ) * 2 + 3 * parent.stats.getCasterLevel();
 	}
 	
-	@Override public void appendDetails(StringBuilder sb, Creature parent) {
+	@Override public void appendDetails(StringBuilder sb, Creature parent, boolean upgrade) {
 		sb.append("<p><span style=\"font-family: medium-blue\">Spell</span></p>");
 		
-		super.appendDetails(sb, parent);
+		super.appendDetails(sb, parent, upgrade);
 		
 		sb.append("<table style=\"font-family: medium; vertical-align: middle; margin-top: 1em;\">");
 		

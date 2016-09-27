@@ -28,6 +28,7 @@ import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
+import net.sf.hale.icon.Icon;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.ReferenceHandler;
 import net.sf.hale.loading.Saveable;
@@ -1021,6 +1022,32 @@ public class CreatureAbilitySet implements Saveable {
 	
 	public AIAbilitySlotSet createAISet() {
 		return new AIAbilitySlotSet(abilitySlots);
+	}
+	
+	/**
+	 * Returns the name associated with the highest priority upgrade available for this ability
+	 * to the parent creature
+	 * @param abilityID
+	 * @return the upgraded name
+	 */
+	
+	public String getUpgradedName(String abilityID) {
+		Ability ability = Game.ruleset.getAbility(abilityID);
+		
+		return ability.getUpgradedName(this.parent);
+	}
+	
+	/**
+	 * Returns the icon associated with the highest priority upgrade available for this ability to
+	 * the parent creature
+	 * @param abilityID
+	 * @return the upgraded icon
+	 */
+	
+	public Icon getUpgradedIcon(String abilityID) {
+		Ability ability = Game.ruleset.getAbility(abilityID);
+		
+		return ability.getUpgradedIcon(this.parent);
 	}
 	
 	private class AbilityWithActiveCount implements Comparable<AbilityWithActiveCount> {

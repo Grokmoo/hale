@@ -79,7 +79,7 @@ public class AbilityExamineCallback implements Runnable {
 			Game.mainViewer.getMenu().hide();
 		
 		
-		AbilityDetailsWindow window = new AbilityDetailsWindow(ability, owner);
+		AbilityDetailsWindow window = new AbilityDetailsWindow(ability, owner, true);
 		window.setPosition(x - window.getWidth() / 2, y - window.getHeight() / 2);
 		
 		parent.getGUI().getRootPane().add(window);
