@@ -145,6 +145,11 @@
 			<param name="tooltip"><string>Inventory</string></param>
 		</theme>
 		
+		<theme name="messagesbutton" ref="mainpanebutton">
+		    <param name="overlay"><image>messagesicon</image></param>
+			<param name="tooltip"><string>Messages</string></param>
+		</theme>
+		
 		<theme name="mapbutton" ref="mainpanebutton">
 			<param name="overlay"><image>mapicon</image></param>
 			<param name="tooltip"><string>Minimap</string></param>
@@ -192,36 +197,14 @@
 		<param name="emptytooltip"><string>Drag and Drop Items here to use this Slot</string></param>
 	</theme>
 	
-	<theme name="messagebox" ref="-defaults">
-		<param name="defaultHeight"><int>103</int></param>
-		<param name="minHeight"><int>103</int></param>
-		<param name="maxWidth"><int>1000</int></param>
-	
-        <param name=""><image>iconbutton.*</image></param>
-        <param name="border"><border>background.border</border></param>
-		
-        <theme name="scrollpane" ref="scrollpane">
-            <param name="vscrollbarOffset"><dimension>0,20</dimension></param>
-            <param name="scrollbarsAlwaysVisible"><bool>true</bool></param>
-        </theme>
-		
-        <theme name="popoutbutton" ref="button">
-			<param name="text"><string>+</string></param>
-			<param name="tooltip"><string>Show messages window</string></param>
-		</theme>
-    </theme>
-	
 	<theme name="quickbarviewer" ref="dialoglayout">
 		<param name=""><image>iconbuttonblack.*</image></param>
         <param name="border"><border>2</border></param>
 		
-		<param name="buttonGap"><int>0</int></param>
-		<param name="rowGap"><int>2</int></param>
+		<param name="buttonGap"><int>1</int></param>
 		
 		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
-		
-		<theme name="messagebox" ref="messagebox"/>
 	</theme>
 	
 	<theme name="quickbargrouppopup" ref="-defaults">

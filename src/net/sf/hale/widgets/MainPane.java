@@ -60,7 +60,7 @@ public class MainPane extends Widget {
 	public MainPane() {
 		this.setTheme("mainpane");
 		
-		windowButtons = new HotKeyButton[5];
+		windowButtons = new HotKeyButton[6];
 		
 		windowButtons[0] = new HotKeyButton();
 		windowButtons[0].setTheme("menubutton");
@@ -80,6 +80,10 @@ public class MainPane extends Widget {
 		
 		windowButtons[4] = new LogButton();
 		windowButtons[4].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
+		
+		windowButtons[5] = new HotKeyButton();
+		windowButtons[5].setTheme("messagesbutton");
+		windowButtons[5].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
 		
 		for (Button button : windowButtons) {
 			add(button);
@@ -124,19 +128,6 @@ public class MainPane extends Widget {
 		rowGap = themeInfo.getParameter("rowGap", 0);
 	}
 	
-	/**
-	 * Returns the minimum x position of this main pane that is occupied by buttons
-	 */
-	
-	public int getButtonsMinX() {
-		int minX = getInnerRight();
-		for (Button button : windowButtons) {
-			minX -= button.getPreferredWidth();
-		}
-		
-		return minX - getBorderLeft();
-	}
-	
 	@Override protected void layout() {
 		super.layout();
 		
@@ -150,12 +141,15 @@ public class MainPane extends Widget {
 			button.setSize(button.getPreferredWidth(), button.getPreferredHeight());
 		}
 		
-		windowButtons[0].setPosition(stop.getX() - rowGap - windowButtons[0].getWidth(), getInnerY());
-		windowButtons[1].setPosition(stop.getX() - rowGap - windowButtons[0].getWidth(), windowButtons[0].getBottom() + buttonGap);
+		int bWidth = windowButtons[0].getWidth();
 		
-		windowButtons[2].setPosition(windowButtons[0].getX() - buttonGap - windowButtons[1].getWidth(), getInnerY());
-		windowButtons[3].setPosition(windowButtons[2].getX(), windowButtons[2].getBottom() + buttonGap);
-		windowButtons[4].setPosition(windowButtons[2].getX(), windowButtons[3].getBottom() + buttonGap);
+		windowButtons[0].setPosition(stop.getX() - rowGap - bWidth, getInnerY());
+		windowButtons[1].setPosition(windowButtons[0].getX() - buttonGap - bWidth, getInnerY());
+		windowButtons[5].setPosition(windowButtons[1].getX() - buttonGap - bWidth, getInnerY());
+		
+		windowButtons[2].setPosition(stop.getX() - rowGap - bWidth, getInnerY() + windowButtons[0].getHeight() + buttonGap);
+		windowButtons[3].setPosition(windowButtons[2].getX() - buttonGap - bWidth, windowButtons[2].getY());
+		windowButtons[4].setPosition(windowButtons[3].getX() - buttonGap - bWidth, windowButtons[2].getY());
 		
 		
 		endTurn.setSize(endTurn.getPreferredWidth(), endTurn.getPreferredHeight());
@@ -163,7 +157,7 @@ public class MainPane extends Widget {
 		endTurn.setPosition(getInnerRight() - endTurn.getWidth(),
 				getInnerBottom() - endTurn.getHeight());
 		
-		leftForLayout = windowButtons[2].getX();
+		leftForLayout = windowButtons[4].getX();
 	}
 	
 	/**

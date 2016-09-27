@@ -93,6 +93,7 @@
 		<area name="partymovementicon" xywh="160,32,32,32" center="true"/>
 		<area name="singlemovementicon" xywh="192,32,32,32" center="true"/>
 		<area name="stopicon" xywh="224,32,32,32" center="true"/>
+		<area name="messagesicon" xywh="480,0,32,32" center="true"/>
 		
 		<area name="endturnicon" xywh="0,206,75,48" center="true"/>
 		<area name="endturniconhover" xywh="85,206,75,48" center="true"/>

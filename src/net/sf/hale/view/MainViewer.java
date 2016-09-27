@@ -42,7 +42,6 @@ import net.sf.hale.util.Point;
 import net.sf.hale.widgets.EntityMouseover;
 import net.sf.hale.widgets.InitiativeTicker;
 import net.sf.hale.widgets.MainPane;
-import net.sf.hale.widgets.MessageBox;
 import net.sf.hale.widgets.OverHeadFadeAway;
 import net.sf.hale.widgets.PortraitArea;
 import net.sf.hale.widgets.RightClickMenu;
@@ -88,7 +87,6 @@ public class MainViewer extends DesktopArea {
 	public final CraftingWindow craftingWindow;
 	public final ScriptConsole scriptConsole;
 	
-	private final MessageBox messageBox;
 	private final QuickbarViewer quickbarViewer;
 	private final PortraitArea portraitArea;
 	private final InitiativeTicker ticker;
@@ -174,7 +172,6 @@ public class MainViewer extends DesktopArea {
         quickbarViewer = new QuickbarViewer();
 		portraitArea = new PortraitArea();
         ticker = new InitiativeTicker();
-        messageBox = quickbarViewer.getMessageBox();
         
         targeterDescriptionModel = new HTMLTextAreaModel();
         targeterDescription = new TextAreaNoInput(targeterDescriptionModel);
@@ -674,8 +671,6 @@ public class MainViewer extends DesktopArea {
 			
 			mainPane.update();
 			ticker.updateContent();
-
-			messageBox.update();
 			
 			Game.areaListener.getTargeterManager().checkCurrentTargeter();
 			
@@ -703,7 +698,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void addMessage(String text) {
-		messageBox.addMessage("black", text);
+		messagesWindow.addMessage("black", text);
 		
 		updateInterface();
 	}
@@ -716,18 +711,9 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public void addMessage(String font, String text) {
-		messageBox.addMessage(font, text);
+		messagesWindow.addMessage(font, text);
 		
 		updateInterface();
-	}
-	
-	/**
-	 * Returns the text model used by the message box
-	 * @return the text model
-	 */
-	
-	public HTMLTextAreaModel getMessageBoxModel() {
-		return messageBox.getModel();
 	}
 	
 	/**
@@ -737,7 +723,7 @@ public class MainViewer extends DesktopArea {
 	 */
 	
 	public String getMessageBoxContents() {
-		return messageBox.getContents();
+		return messagesWindow.getContents();
 	}
 	
 	/**

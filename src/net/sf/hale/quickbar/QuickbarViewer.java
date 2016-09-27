@@ -25,7 +25,6 @@ import java.util.List;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
-import net.sf.hale.widgets.MessageBox;
 import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
@@ -44,10 +43,8 @@ public class QuickbarViewer extends Widget {
 	
 	private Widget hover;
 	
-	private int buttonGap, rowGap;
+	private int buttonGap;
 	
-	// quickbar viewer holds the message box due to the layout
-	private MessageBox messageBox;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -72,18 +69,6 @@ public class QuickbarViewer extends Widget {
 		}
 		
 		setQuickbar(quickbar);
-		
-		messageBox = new MessageBox();
-		add(messageBox);
-	}
-	
-	/**
-	 * Returns the message box that is being held by this quickbar viewer
-	 * @return the message box
-	 */
-	
-	public MessageBox getMessageBox() {
-		return messageBox;
 	}
 	
 	@Override protected void layout() {
@@ -101,32 +86,20 @@ public class QuickbarViewer extends Widget {
 			
 			curX = b.getRight() + buttonGap;
 		}
-		
-		messageBox.setSize(getRight() - buttons.get(0).getX(), messageBox.getPreferredHeight());
-		messageBox.setPosition(buttons.get(0).getX(), getY());
 	}
 	
 	@Override public int getPreferredInnerWidth() {
-		int width = 0;
-		for (Button b : groupButtons) {
-			width += b.getPreferredWidth() + buttonGap;
-		}
-		for (Button b : buttons) {
-			width += b.getPreferredWidth() + buttonGap;
-		}
-		
-		return width;
+		return groupButtons.get(0).getPreferredWidth() * 12 + 11 * buttonGap;
 	}
 	
 	@Override public int getPreferredInnerHeight() {
-		return groupButtons.get(0).getPreferredHeight() + rowGap + messageBox.getPreferredHeight() - getBorderTop();
+		return groupButtons.get(0).getPreferredHeight() * 3 + 2 * buttonGap;
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
 		
 		buttonGap = themeInfo.getParameter("buttonGap", 0);
-		rowGap = themeInfo.getParameter("rowGap", 0);
 	}
 	
 	/**
