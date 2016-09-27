@@ -55,22 +55,34 @@ public class GridGenerator implements Generator {
 		
 		for (int cellX = 0; cellX < cells.length; cellX++) {
 			for (int cellY = 0; cellY < cells[0].length; cellY++) {
+				
 				if ( (cells[cellX][cellY] & Direction.North.bit) == 0 ) {
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize + 1, cellY * gridSize, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize + 2, cellY * gridSize, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize + 3, cellY * gridSize, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize + 4, cellY * gridSize, (byte)1);
+					for (int i = 0; i < gridSize; i++) {
+						area.getElevationGrid().setElevation(cellX * gridSize + i, cellY * gridSize, (byte)1);
+					}
 				}
 				
 				if ( (cells[cellX][cellY] & Direction.West.bit) == 0 ) {
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 1, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 2, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 3, (byte)1);
-					area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + 4, (byte)1);
+					for (int i = 0; i < gridSize; i++) {
+						area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + i, (byte)1);
+					}
 				}
 			}
+		}
+		
+		// set south and east map edges to unpassable
+		for (int cellX = 0; cellX < area.getWidth(); cellX++) {
+			int cellY = area.getHeight() - 1;
+			
+			area.getElevationGrid().setElevation(cellX, cellY, (byte)1);
+			area.getElevationGrid().setElevation(cellX, cellY - 1, (byte)1);
+		}
+		
+		for (int cellY = 0; cellY < area.getHeight(); cellY++) {
+			int cellX = area.getWidth() - 1;
+			
+			area.getElevationGrid().setElevation(cellX, cellY, (byte)1);
+			area.getElevationGrid().setElevation(cellX - 1, cellY, (byte)1);
 		}
 		
 		// set passability and transparency
