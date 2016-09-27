@@ -354,6 +354,7 @@ public class QuickbarSlotButton extends Button implements DropTarget {
 		
 		if (dragSlotToAdd != null) {
 			quickbar.setSlot(dragSlotToAdd, index);
+			this.setSlot(quickbar.getSlot(index), quickbar);
 			Game.mainViewer.updateInterface();
 		}
 	}
