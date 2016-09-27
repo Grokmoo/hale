@@ -168,6 +168,9 @@ public class OptionsPopup extends PopupWindow {
 				}
 			});
 			scale2x.setTheme("scale2xtoggle");
+			if (!Game.hasUsable2xDisplayMode()) {
+				scale2x.setEnabled(false);
+			}
 			addHorizontalWidgets(scale2x);
 			
 			tooltipTitle = new Label();

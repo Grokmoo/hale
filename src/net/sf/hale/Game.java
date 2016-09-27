@@ -184,6 +184,14 @@ public class Game {
 	public static List<DisplayMode> all2xUsableDisplayModes;
 	
 	/**
+	 * Returns whether there is at least one display mode that is usable with 2x scaling enabled,
+	 * i.e. at least 1600 width, 1200 height
+	 * @return whether there is at least one display mode which is usuable with 2x scaling
+	 */
+	
+	public static boolean hasUsable2xDisplayMode() { return !all2xUsableDisplayModes.isEmpty(); }
+	
+	/**
 	 * The primary low level renderer for TWL.
 	 */
 	

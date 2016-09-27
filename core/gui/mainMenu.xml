@@ -307,7 +307,7 @@
 			
 			<theme name="scale2xtoggle" ref="radiobutton">
 			    <param name="text"><string>Scale Display 2X</string></param>
-				<param name="tooltip"><string>Whether to scale the entire display by a factor of 2.  This is useful for high DPI or high resolution screens.</string></param>
+				<param name="tooltip"><string>Whether to scale the entire display by a factor of 2.  This requires a display resolution with at least 1200 vertical pixels and 1600 horizontal pixels.</string></param>
 			</theme>
 			
 			<theme name="tooltiplabel" ref="labelblack">
