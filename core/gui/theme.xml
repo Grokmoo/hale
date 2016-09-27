@@ -94,9 +94,9 @@
 		<area name="singlemovementicon" xywh="192,32,32,32" center="true"/>
 		<area name="stopicon" xywh="224,32,32,32" center="true"/>
 		
-		<area name="endturnicon" xywh="0,206,85,48" center="true"/>
-		<area name="endturniconhover" xywh="85,206,85,48" center="true"/>
-		<area name="endturniconpressed" xywh="170,206,85,48" center="true"/>
+		<area name="endturnicon" xywh="0,206,75,48" center="true"/>
+		<area name="endturniconhover" xywh="85,206,75,48" center="true"/>
+		<area name="endturniconpressed" xywh="170,206,75,48" center="true"/>
 		
 		<area name="mainhandicon" xywh="0,128,34,34" center="true"/>
 		<area name="offhandicon" xywh="34,128,34,34" center="true"/>

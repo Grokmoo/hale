@@ -51,6 +51,8 @@ public class MainPane extends Widget {
 	private int buttonGap;
 	private int rowGap;
 	
+	private int leftForLayout;
+	
 	/**
 	 * Create a new Widget
 	 */
@@ -65,16 +67,16 @@ public class MainPane extends Widget {
 		windowButtons[0].setHotKeyBinding(new Keybindings.ShowMenu());
 		
 		windowButtons[1] = new HotKeyButton();
-		windowButtons[1].setTheme("characterbutton");
-		windowButtons[1].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
+		windowButtons[1].setTheme("mapbutton");
+		windowButtons[1].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
 		
 		windowButtons[2] = new HotKeyButton();
 		windowButtons[2].setTheme("inventorybutton");
 		windowButtons[2].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		
 		windowButtons[3] = new HotKeyButton();
-		windowButtons[3].setTheme("mapbutton");
-		windowButtons[3].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.miniMapWindow, "MiniMap"));
+		windowButtons[3].setTheme("characterbutton");
+		windowButtons[3].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
 		
 		windowButtons[4] = new LogButton();
 		windowButtons[4].setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));
@@ -99,11 +101,13 @@ public class MainPane extends Widget {
 	}
 	
 	/**
-	 * Returns the end turn button
-	 * @return the end turn button
+	 * Get the x coordinate of the leftmost button in the mainpane
+	 * @return the x coordinate of the leftmost button in the mainpane
 	 */
 	
-	public HotKeyButton getEndTurnButton() { return endTurn; }
+	public int getLeftForLayout() {
+		return leftForLayout;
+	}
 	
 	/**
 	 * Cancels all currently pending movement orders.  Used by the "stop" button
@@ -136,23 +140,30 @@ public class MainPane extends Widget {
 	@Override protected void layout() {
 		super.layout();
 		
-		int lastX = getInnerRight();
-		for (Button button : windowButtons) {
-			button.setSize(button.getPreferredWidth(), button.getPreferredHeight());
-			button.setPosition(lastX - button.getWidth(), getInnerY());
-			lastX = button.getX() - buttonGap;
-		}
-		
 		movementMode.setSize(movementMode.getPreferredWidth(), movementMode.getPreferredHeight());
 		stop.setSize(stop.getPreferredWidth(), stop.getPreferredHeight());
 		
-		movementMode.setPosition(windowButtons[1].getX(), windowButtons[1].getBottom() + rowGap);
-		stop.setPosition(windowButtons[0].getX(), windowButtons[0].getBottom() + rowGap);
+		stop.setPosition(getInnerRight() - stop.getWidth(), getInnerY());
+		movementMode.setPosition(stop.getX(), stop.getBottom() + buttonGap);
+		
+		for (Button button : windowButtons) {
+			button.setSize(button.getPreferredWidth(), button.getPreferredHeight());
+		}
+		
+		windowButtons[0].setPosition(stop.getX() - rowGap - windowButtons[0].getWidth(), getInnerY());
+		windowButtons[1].setPosition(stop.getX() - rowGap - windowButtons[0].getWidth(), windowButtons[0].getBottom() + buttonGap);
+		
+		windowButtons[2].setPosition(windowButtons[0].getX() - buttonGap - windowButtons[1].getWidth(), getInnerY());
+		windowButtons[3].setPosition(windowButtons[2].getX(), windowButtons[2].getBottom() + buttonGap);
+		windowButtons[4].setPosition(windowButtons[2].getX(), windowButtons[3].getBottom() + buttonGap);
+		
 		
 		endTurn.setSize(endTurn.getPreferredWidth(), endTurn.getPreferredHeight());
 		
 		endTurn.setPosition(getInnerRight() - endTurn.getWidth(),
 				getInnerBottom() - endTurn.getHeight());
+		
+		leftForLayout = windowButtons[2].getX();
 	}
 	
 	/**

@@ -20,11 +20,12 @@
 package net.sf.hale.widgets;
 
 
-import de.matthiasmann.twl.Button;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
+import net.sf.hale.Game;
+import net.sf.hale.Keybindings;
 
 /**
  * The widget shown in the main game interface that records a history of
@@ -33,11 +34,10 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
  *
  */
 
-public class MessageBox extends Widget implements Runnable {
+public class MessageBox extends Widget {
 	private volatile boolean cacheDirty;
 	
-	private boolean expanded = false;
-	private final Button expand, contract;
+	private final HotKeyButton popOut;
 	
 	private final TextArea textArea;
 	private final HTMLTextAreaModel textAreaModel;
@@ -58,18 +58,21 @@ public class MessageBox extends Widget implements Runnable {
         content = new StringBuilder();
         add(textPane);
         
-        expand = new Button();
-        expand.setTheme("expandbutton");
-		expand.addCallback(this);
-		add(expand);
-		
-		contract = new Button();
-		contract.setTheme("contractbutton");
-		contract.addCallback(this);
-		contract.setVisible(false);
-		add(contract);
+        popOut = new HotKeyButton();
+        popOut.setTheme("popoutbutton");
+        popOut.setHotKeyBinding(new Keybindings.ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
+        add(popOut);
 		
 		cacheDirty = true;
+	}
+	
+	/**
+	 * Returns the model used in this message box
+	 * @return the model
+	 */
+	
+	public HTMLTextAreaModel getModel() {
+		return textAreaModel;
 	}
 	
 	/**
@@ -81,41 +84,14 @@ public class MessageBox extends Widget implements Runnable {
 		return content.toString();
 	}
 	
-	// expand and contract callback
-	@Override public void run() {
-		expanded = !expanded;
-		
-		expand.setVisible(!expanded);
-		contract.setVisible(expanded);
-		
-		// remove the hover over since the whole widget has just moved
-		if (!expanded) {
-			expand.getModel().setHover(false);
-		} else {
-			contract.getModel().setHover(false);
-		}
-		
-		invalidateLayout();
-	}
-	
-	@Override public int getPreferredHeight() {
-		return expanded ? getMaxHeight() : getMinHeight();
-	}
-	
 	@Override protected void layout() {
 		super.layout();
 		
 		textPane.setPosition(getInnerX(), getInnerY());
 		textPane.setSize(getInnerWidth(), getInnerHeight());
 		
-		int width = Math.max(expand.getPreferredWidth(), contract.getPreferredWidth());
-		int height = Math.max(expand.getPreferredHeight(), contract.getPreferredHeight());
-		
-		expand.setSize(width, height);
-		expand.setPosition(getInnerRight() - expand.getWidth(), getInnerY());
-		
-		contract.setSize(width, height);
-		contract.setPosition(getInnerRight() - contract.getWidth(), getInnerY());
+		popOut.setSize(popOut.getPreferredWidth(), popOut.getPreferredHeight());
+		popOut.setPosition(getInnerRight() - popOut.getWidth(), getInnerY());
 	}
 	
 	/**

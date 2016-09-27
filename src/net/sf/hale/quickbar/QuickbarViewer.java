@@ -25,23 +25,29 @@ import java.util.List;
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
 import net.sf.hale.entity.PC;
-import de.matthiasmann.twl.DialogLayout;
+import net.sf.hale.widgets.MessageBox;
+import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;
 
 /**
- * A widget for viewing an entire Quickbar, with buttons to scroll through
- * all the Quickbar's slots, 10 at a time.
+ * A widget for viewing an entire Quickbar
  * 
  * @author Jared Stephen
  *
  */
 
-public class QuickbarViewer extends DialogLayout {
+public class QuickbarViewer extends Widget {
 	private Quickbar quickbar;
 	private List<QuickbarSlotButton> buttons;
 	private List<QuickbarGroupButton> groupButtons;
 	
 	private Widget hover;
+	
+	private int buttonGap, rowGap;
+	
+	// quickbar viewer holds the message box due to the layout
+	private MessageBox messageBox;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -50,31 +56,77 @@ public class QuickbarViewer extends DialogLayout {
 	 */
 	
 	public QuickbarViewer() {
-		Group mainH = this.createSequentialGroup();
-		Group mainV = this.createParallelGroup();
-		
 		buttons = new ArrayList<QuickbarSlotButton>(Quickbar.ItemSlots);
-		for (int i = 0; i < Quickbar.ItemSlots; i++) {
-			QuickbarSlotButton button = new QuickbarSlotButton(i);
-			buttons.add(button);
-			
-			mainH.addWidget(button);
-			mainV.addWidget(button);
-		}
-		
+
 		groupButtons = new ArrayList<QuickbarGroupButton>();
 		for (QuickbarGroup group : Game.ruleset.getAllQuickbarGroups()) {
 			QuickbarGroupButton button = new QuickbarGroupButton(this, group);
 			groupButtons.add(button);
-			
-			mainH.addWidget(button);
-			mainV.addWidget(button);
+			add(button);
 		}
 		
-		this.setHorizontalGroup(mainH);
-		this.setVerticalGroup(mainV);
+		for (int i = 0; i < Quickbar.ItemSlots; i++) {
+			QuickbarSlotButton button = new QuickbarSlotButton(i);
+			buttons.add(button);
+			add(button);
+		}
 		
 		setQuickbar(quickbar);
+		
+		messageBox = new MessageBox();
+		add(messageBox);
+	}
+	
+	/**
+	 * Returns the message box that is being held by this quickbar viewer
+	 * @return the message box
+	 */
+	
+	public MessageBox getMessageBox() {
+		return messageBox;
+	}
+	
+	@Override protected void layout() {
+		int curX = getInnerX();
+		for (Button b : groupButtons) {
+			b.setSize(b.getPreferredWidth(), b.getPreferredHeight());
+			b.setPosition(curX, getInnerBottom() - b.getHeight());
+			
+			curX = b.getRight() + buttonGap;
+		}
+		
+		for (Button b : buttons) {
+			b.setSize(b.getPreferredWidth(), b.getPreferredHeight());
+			b.setPosition(curX, getInnerBottom() - b.getHeight());
+			
+			curX = b.getRight() + buttonGap;
+		}
+		
+		messageBox.setSize(getRight() - buttons.get(0).getX(), messageBox.getPreferredHeight());
+		messageBox.setPosition(buttons.get(0).getX(), getY());
+	}
+	
+	@Override public int getPreferredInnerWidth() {
+		int width = 0;
+		for (Button b : groupButtons) {
+			width += b.getPreferredWidth() + buttonGap;
+		}
+		for (Button b : buttons) {
+			width += b.getPreferredWidth() + buttonGap;
+		}
+		
+		return width;
+	}
+	
+	@Override public int getPreferredInnerHeight() {
+		return groupButtons.get(0).getPreferredHeight() + rowGap + messageBox.getPreferredHeight() - getBorderTop();
+	}
+	
+	@Override protected void applyTheme(ThemeInfo themeInfo) {
+		super.applyTheme(themeInfo);
+		
+		buttonGap = themeInfo.getParameter("buttonGap", 0);
+		rowGap = themeInfo.getParameter("rowGap", 0);
 	}
 	
 	/**

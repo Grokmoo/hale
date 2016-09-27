@@ -54,6 +54,7 @@ public class Keybindings {
 		// create the list of all bindings
 		List<Binding> bindings = new ArrayList<Binding>();
 		
+		bindings.add(new ToggleWindow(Game.mainViewer.messagesWindow, "MessagesWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.characterWindow, "CharacterWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.inventoryWindow, "InventoryWindow"));
 		bindings.add(new ToggleWindow(Game.mainViewer.logWindow, "LogWindow"));

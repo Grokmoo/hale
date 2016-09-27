@@ -81,6 +81,7 @@ public class MainViewer extends DesktopArea {
 	public final InventoryWindow inventoryWindow;
 	public final MiniMapWindow miniMapWindow;
 	public final LogWindow logWindow;
+	public final MessagesWindow messagesWindow;
 	
 	public final ContainerWindow containerWindow;
 	public final MerchantWindow merchantWindow;
@@ -132,6 +133,9 @@ public class MainViewer extends DesktopArea {
         gui.applyTheme(Game.themeManager);
         gui.setTooltipDelay(Game.config.getTooltipDelay());
         
+        messagesWindow = new MessagesWindow();
+        messagesWindow.setVisible(false);
+        
 		characterWindow = new CharacterWindow();
         characterWindow.setVisible(false);
         
@@ -170,7 +174,7 @@ public class MainViewer extends DesktopArea {
         quickbarViewer = new QuickbarViewer();
 		portraitArea = new PortraitArea();
         ticker = new InitiativeTicker();
-        messageBox = new MessageBox();
+        messageBox = quickbarViewer.getMessageBox();
         
         targeterDescriptionModel = new HTMLTextAreaModel();
         targeterDescription = new TextAreaNoInput(targeterDescriptionModel);
@@ -192,11 +196,11 @@ public class MainViewer extends DesktopArea {
 		this.add(portraitArea);
 		this.add(ticker);
         this.add(mouseOver);
-		this.add(messageBox);
 		this.add(targeterDescription);
 		
 		this.add(characterWindow);
         this.add(inventoryWindow);
+        this.add(messagesWindow);
         this.add(containerWindow);
         this.add(craftingWindow);
         this.add(miniMapWindow);
@@ -496,6 +500,7 @@ public class MainViewer extends DesktopArea {
 		containerWindow.setVisible(false);
 		characterWindow.setVisible(false);
 		inventoryWindow.setVisible(false);
+		messagesWindow.setVisible(false);
 		merchantWindow.setVisible(false);
 		miniMapWindow.setVisible(false);
 		logWindow.setVisible(false);
@@ -649,6 +654,7 @@ public class MainViewer extends DesktopArea {
 			
 			this.updateInterface = false;
 			
+			messagesWindow.updateContent();
 			characterWindow.updateContent(Game.curCampaign.party.getSelected());
 			inventoryWindow.updateContent(Game.curCampaign.party.getSelected());
 			merchantWindow.updateContent(Game.curCampaign.party.getSelected());
@@ -716,6 +722,15 @@ public class MainViewer extends DesktopArea {
 	}
 	
 	/**
+	 * Returns the text model used by the message box
+	 * @return the text model
+	 */
+	
+	public HTMLTextAreaModel getMessageBoxModel() {
+		return messageBox.getModel();
+	}
+	
+	/**
 	 * Gets the complete contents of the message box as a string.  Occasionally useful
 	 * for debugging purposes
 	 * @return the message box contents
@@ -758,21 +773,9 @@ public class MainViewer extends DesktopArea {
 		
 		quickbarViewer.setSize(quickbarViewer.getPreferredWidth(), quickbarViewer.getPreferredHeight());
 		
-		int maxQuickbarX = mainPane.getEndTurnButton().getX() - quickbarViewer.getWidth() - mainPane.getBorderLeft();
+		int maxQuickbarX = mainPane.getLeftForLayout() - quickbarViewer.getWidth() - mainPane.getBorderLeft();
 		quickbarViewer.setPosition(Math.min(centerX - quickbarViewer.getWidth() / 2, maxQuickbarX),
 				getInnerBottom() - quickbarViewer.getHeight());
-		
-		int messageBoxWidthA = mainPane.getButtonsMinX() - mainPane.getInnerX();
-		int messageBoxWidthB = messageBox.getMaxWidth();
-		
-		if (messageBoxWidthA > messageBoxWidthB) {
-			messageBox.setSize(messageBoxWidthB, messageBox.getPreferredHeight());
-			int availableWidth = messageBoxWidthA - messageBoxWidthB;
-			messageBox.setPosition(mainPane.getInnerX() + availableWidth / 2, quickbarViewer.getY() - messageBox.getHeight());
-		} else {
-			messageBox.setSize(messageBoxWidthA, messageBox.getPreferredHeight());
-			messageBox.setPosition(mainPane.getInnerX(), quickbarViewer.getY() - messageBox.getHeight());	
-		}
         
         ticker.setPosition(getInnerX(), getInnerY());
         

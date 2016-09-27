@@ -121,7 +121,7 @@
 			<param name="overlay"><image>transparent</image></param>
 			
 			<param name="font"><font>large</font></param>
-			<param name="minWidth"><int>85</int></param>
+			<param name="minWidth"><int>75</int></param>
 			<param name="minHeight"><int>48</int></param>
 		</theme>
 		
@@ -192,24 +192,9 @@
 		<param name="emptytooltip"><string>Drag and Drop Items here to use this Slot</string></param>
 	</theme>
 	
-	<theme name="quickbarviewer" ref="dialoglayout">
-		<param name=""><image>iconbuttonblack.*</image></param>
-        <param name="border"><border>2</border></param>
-		
-		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
-		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
-	</theme>
-	
-	<theme name="quickbargrouppopup" ref="-defaults">
-		<param name=""><image>iconbuttonblack.*</image></param>
-		<param name="border"><border>2</border></param>
-		
-		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
-	</theme>
-	
 	<theme name="messagebox" ref="-defaults">
-		<param name="minHeight"><int>105</int></param>
-		<param name="maxHeight"><int>300</int></param>
+		<param name="defaultHeight"><int>103</int></param>
+		<param name="minHeight"><int>103</int></param>
 		<param name="maxWidth"><int>1000</int></param>
 	
         <param name=""><image>iconbutton.*</image></param>
@@ -220,16 +205,31 @@
             <param name="scrollbarsAlwaysVisible"><bool>true</bool></param>
         </theme>
 		
-        <theme name="expandbutton" ref="button">
+        <theme name="popoutbutton" ref="button">
 			<param name="text"><string>+</string></param>
-			<param name="tooltip"><string>Expand the message area</string></param>
-		</theme>
-		
-		<theme name="contractbutton" ref="button">
-			<param name="text"><string>-</string></param>
-			<param name="tooltip"><string>Contract the message area</string></param>
+			<param name="tooltip"><string>Show messages window</string></param>
 		</theme>
     </theme>
+	
+	<theme name="quickbarviewer" ref="dialoglayout">
+		<param name=""><image>iconbuttonblack.*</image></param>
+        <param name="border"><border>2</border></param>
+		
+		<param name="buttonGap"><int>0</int></param>
+		<param name="rowGap"><int>2</int></param>
+		
+		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
+		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
+		
+		<theme name="messagebox" ref="messagebox"/>
+	</theme>
+	
+	<theme name="quickbargrouppopup" ref="-defaults">
+		<param name=""><image>iconbuttonblack.*</image></param>
+		<param name="border"><border>2</border></param>
+		
+		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
+	</theme>
 	
 	<theme name="initiativeticker" ref="-defaults">
 		<param name="minViewerGap"><int>0</int></param>
@@ -366,6 +366,15 @@
 				</theme>
 			</theme>
 		</theme>
+	</theme>
+	
+	<theme name="messageswindow" ref="gamesubwindow">
+	    <param name="defaultWidth"><int>600</int></param>
+		<param name="defaultHeight"><int>400</int></param>
+		<param name="minWidth"><int>250</int></param>
+		<param name="minHeight"><int>300</int></param>
+		
+		<theme name="messagespane" ref="scrollpane"/>
 	</theme>
 	
 	<theme name="characterwindow" ref="gamesubwindow">
