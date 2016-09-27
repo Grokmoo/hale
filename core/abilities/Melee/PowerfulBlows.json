@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/powerfulBlows"
   },
-  "description" : {
-    "base" : "When using Forceful Blows mode, you can now select a damage bonus of up to 80 for a corresponding attack penalty of up to 40."
-  },
+  "description" : "When using Forceful Blows mode, you can now select a damage bonus of up to 80 for a corresponding attack penalty of up to 40.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

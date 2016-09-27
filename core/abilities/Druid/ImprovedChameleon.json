@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/improvedChameleon"
   },
-  "description" : {
-    "base" : "Your Chameleon ability is improved.  Now, all targets gain a 15 + 1 per caster level bonus to personal concealment."
-  },
+  "description" : "Your Chameleon ability is improved.  Now, all targets gain a 15 + 1 per caster level bonus to personal concealment.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

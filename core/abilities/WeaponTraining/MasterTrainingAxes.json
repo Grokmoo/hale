@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterAxes"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with handaxes, battleaxes, waraxes, and greataxes."
-  },
+  "description" : "You do an additional 1x damage on critical hits with handaxes, battleaxes, waraxes, and greataxes.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

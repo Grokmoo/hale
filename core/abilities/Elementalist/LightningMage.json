@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/lightningMage"
   },
-  "description" : {
-    "base" : "You have trained in the use of lightning magic, gaining a 20% bonus to all electrical damage from spells."
-  },
+  "description" : "You have trained in the use of lightning magic, gaining a 20% bonus to all electrical damage from spells.",
   "isActivateable" : false
 }

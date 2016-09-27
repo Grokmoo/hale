@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/warShield"
   },
-  "description" : {
-    "base" : "Your Shield ability now provides an Defense bonus of 15 plus 1 per caster level plus 4 per War Wizard level."
-  },
+  "description" : "Your Shield ability now provides an Defense bonus of 15 plus 1 per caster level plus 4 per War Wizard level.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/proficiencyMediumArmor"
   },
-  "description" : {
-    "base" : "You are able to use medium armor, such as mail or scale."
-  },
+  "description" : "You are able to use medium armor, such as mail or scale.",
   "isActivateable" : false,
   "prereqs" : {
     "armor" : [

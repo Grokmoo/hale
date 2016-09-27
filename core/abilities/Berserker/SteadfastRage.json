@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/steadfastRage"
   },
-  "description" : {
-    "base" : "You no longer suffer the effects of exhaustion after your Rage."
-  },
+  "description" : "You no longer suffer the effects of exhaustion after your Rage.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40

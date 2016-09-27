@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/strongSoul"
   },
-  "description" : {
-    "base" : "You are strong of mind and will, gaining a +10 bonus on all Mental Resistance checks."
-  },
+  "description" : "You are strong of mind and will, gaining a +10 bonus on all Mental Resistance checks.",
   "prereqs" : {
     "stats" : [
       {

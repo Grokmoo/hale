@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/fastActions"
   },
-  "description" : {
-    "base" : "Everything you do is a bit faster than those around you. You gain 5 additional Action Points each round."
-  },
+  "description" : "Everything you do is a bit faster than those around you. You gain 5 additional Action Points each round.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

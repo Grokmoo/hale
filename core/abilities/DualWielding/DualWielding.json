@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/dualWielding"
   },
-  "description" : {
-    "base" : "You are able to use two one handed or light weapons at once, albeit at a substantial penalty to attack and damage.  The attack penalty is less if you use a light weapon such as a short sword of handaxe in the off hand."
-  },
+  "description" : "You are able to use two one handed or light weapons at once, albeit at a substantial penalty to attack and damage.  The attack penalty is less if you use a light weapon such as a short sword of handaxe in the off hand.",
   "isActivateable" : false
 }

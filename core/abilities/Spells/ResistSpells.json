@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/resistSpells"
   },
-  "description" : {
-    "base" : "Your Absorb Energy spell is upgraded.  The targeted creature gains spell resistance of 15 plus 1 per caster level, in addition to the energy damage reduction.  Spell resistance reduces the damage and duration of hostile spells."
-  },
+  "description" : "Your Absorb Energy spell is upgraded.  The targeted creature gains spell resistance of 15 plus 1 per caster level, in addition to the energy damage reduction.  Spell resistance reduces the damage and duration of hostile spells.",
   "isActivateable" : false,
   "ai" : {
     "power" : 25,

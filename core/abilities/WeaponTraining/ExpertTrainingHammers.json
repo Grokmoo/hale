@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/expertHammers"
   },
-  "description" : {
-    "base" : "You gain an additional +5 chance to inflict critical hits with light hammers, warhammers, and mauls."
-  },
+  "description" : "You gain an additional +5 chance to inflict critical hits with light hammers, warhammers, and mauls.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

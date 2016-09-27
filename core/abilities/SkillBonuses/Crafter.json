@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/crafter"
   },
-  "description" : {
-    "base" : "You have a talent for creating useful crafts.  You gain a +10 bonus to Craft Weapons and Craft Armor."
-  },
+  "description" : "You have a talent for creating useful crafts.  You gain a +10 bonus to Craft Weapons and Craft Armor.",
   "isActivateable" : false
 }

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/nimbleFingers"
   },
-  "description" : {
-    "base" : "You are very good at dealing with delicate mechanical systems. You gain +10 to all Locks and Traps checks."
-  },
+  "description" : "You are very good at dealing with delicate mechanical systems. You gain +10 to all Locks and Traps checks.",
   "prereqs" : {
     "roles" : [
       {

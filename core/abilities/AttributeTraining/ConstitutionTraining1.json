@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainConstitution1"
   },
-  "description" : {
-    "base" : "You gain a permanent +1 bonus to Constitution."
-  },
+  "description" : "You gain a permanent +1 bonus to Constitution.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

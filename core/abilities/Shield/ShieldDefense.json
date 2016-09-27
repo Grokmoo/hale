@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/shieldDefense"
   },
-  "description" : {
-    "base" : "You gain an additional 20% to Defense from Shields and Tower Shields."
-  },
+  "description" : "You gain an additional 20% to Defense from Shields and Tower Shields.",
   "isActivateable" : false
 }

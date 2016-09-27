@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/absorbBlows"
   },
-  "description" : {
-    "base" : "Your exceptionally tough physique allows you to shrug off the first 2 points of damage from all physical attacks."
-  },
+  "description" : "Your exceptionally tough physique allows you to shrug off the first 2 points of damage from all physical attacks.",
   "prereqs" : {
     "abilities" : [
       "ToughBody"

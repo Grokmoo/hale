@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/deadlyInitiative"
   },
-  "description" : {
-    "base" : "You gain a substantial +40 bonus to initiative, making you far more likely to get the drop on enemies and take your turn first in combat."
-  },
+  "description" : "You gain a substantial +40 bonus to initiative, making you far more likely to get the drop on enemies and take your turn first in combat.",
   "prereqs" : {
     "abilities" : [
       "CombatReady", "DexterityTraining1"

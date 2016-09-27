@@ -10,13 +10,17 @@
   "icon" : {
     "sprite" : "icons/chameleon"
   },
-  "description" : {
-    "base" : "A single touched target blends into their surroundings, gaining 15 percent plus 1 percent per two caster levels concealment for 5 to 10 rounds.",
-    "upgrades" : {
-      "ImprovedChameleon" : "With Improved Chameleon, your Chameleon spell now confers 15 plus 1 percent per caster level concealment.",
-      "MassChameleon" : "With Mass Chameleon, your Chameleon spell now affects all friendly targets within 3 hexes of the caster."
+  "description" : "A single touched target blends into their surroundings, gaining 15 percent plus 1 percent per two caster levels concealment for 5 to 10 rounds.",
+  "upgrades" : [
+    { "ability" : "ImprovedChameleon",
+      "description" : "With Improved Chameleon, your Chameleon spell now confers 15 plus 1 percent per caster level concealment.",
+      "override" : true
+    },
+    { "ability" : "MassChameleon",
+      "description" : "With Mass Chameleon, your Chameleon spell now affects all friendly targets within 3 hexes of the caster."
+      "override" : true
     }
-  },
+  ],
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "Alteration",

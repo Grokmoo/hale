@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyHammers"
   },
-  "description" : {
-    "base" : "You are able to use hammers in combat.  This includes light hammers, warhammers, and the two handed maul."
-  },
+  "description" : "You are able to use hammers in combat.  This includes light hammers, warhammers, and the two handed maul.",
   "isActivateable" : false
 }

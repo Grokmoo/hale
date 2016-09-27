@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/improvedRage"
   },
-  "description" : {
-    "base" : "Your Rage ability becomes more powerful.  Your bonus to Strength increases to +6.  Furthermore, your Rage lasts for an additional 2 rounds."
-  },
+  "description" : "Your Rage ability becomes more powerful.  Your bonus to Strength increases to +6.  Furthermore, your Rage lasts for an additional 2 rounds.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30

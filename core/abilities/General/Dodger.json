@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/dodger"
   },
-  "description" : {
-    "base" : "You are skilled at dodging blows in combat, gaining a +10 bonus to Defense."
-  },
+  "description" : "You are skilled at dodging blows in combat, gaining a +10 bonus to Defense.",
   "prereqs" : {
     "abilities" : [
       "LightningReflexes"

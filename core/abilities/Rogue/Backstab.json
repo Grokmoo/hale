@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/backstab"
   },
-  "description" : {
-    "base" : "When hiding or attacking a helpless or immobilized opponent, you gain a bonus to attack and a large bonus to damage with melee weapons.  These bonuses improve as you increase your Rogue level.  Note that creatures immune to Critical Hits are also immune to Backstab."
-  },
+  "description" : "When hiding or attacking a helpless or immobilized opponent, you gain a bonus to attack and a large bonus to damage with melee weapons.  These bonuses improve as you increase your Rogue level.  Note that creatures immune to Critical Hits are also immune to Backstab.",
   "isActivateable" : false,
   "prereqs" : {
     "roles" : [

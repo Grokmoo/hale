@@ -5,7 +5,5 @@
   "icon" : {
     "sprite" : "icons/fastStep"
   },
-  "description" : {
-    "base" : "You are able to move very quickly over a variety of terrain, gaining a +20 bonus to movement at all times."
-  }
+  "description" : "You are able to move very quickly over a variety of terrain, gaining a +20 bonus to movement at all times.",
 }

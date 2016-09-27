@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/advTrainAxes"
   },
-  "description" : {
-    "base" : "You gain an additional +15 to damage with handaxes, battleaxes, waraxes, and greataxes."
-  },
+  "description" : "You gain an additional +15 to damage with handaxes, battleaxes, waraxes, and greataxes.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

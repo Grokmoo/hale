@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "Some creatures are naturally resistant to blunt weapons."
-  },
+  "description" : "Some creatures are naturally resistant to blunt weapons.",
   "isActivateable" : false
 }

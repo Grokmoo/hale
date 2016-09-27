@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massCure"
   },
-  "description" : {
-    "base" : "Mass cure upgrades your Cure spell.  All allies within 4 hexes of the caster are now healed."
-  },
+  "description" : "Mass cure upgrades your Cure spell.  All allies within 4 hexes of the caster are now healed.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

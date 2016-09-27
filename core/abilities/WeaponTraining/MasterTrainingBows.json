@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterBows"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with shortbows and longbows."
-  },
+  "description" : "You do an additional 1x damage on critical hits with shortbows and longbows.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

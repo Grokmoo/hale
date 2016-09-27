@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterSmallSwords"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with daggers and short swords."
-  },
+  "description" : "You do an additional 1x damage on critical hits with daggers and short swords.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

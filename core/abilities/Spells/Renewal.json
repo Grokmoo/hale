@@ -10,13 +10,13 @@
   "icon" : {
     "sprite" : "icons/renewal"
   },
-  "description" : {
-    "base" : "All allies within three hexes of the caster have their abilities restored.  Up to 2 points plus 1 point per 2 caster levels of temporary or permanent attribute penalties are removed.  The number of points negated is a total per target across all Attributes.  Temporary penalties are negated first.",
-    "upgrades" : {
-      "RestoreMorale" : "With Restore Morale, Renewal now also negates the effects of spells which penalize Attack, Attack Cost, Defense, Armor Penalty, Skill Checks, Resistances, and Spell Failure.  Up to 5 points plus 1 point per 2 caster levels of penalties in each category are negated.",
-      "RemoveParalysis" : "With Remove Paralysis, all effects causing immobilization or helplessness, including sleep and paralysis, are immediately removed from all targets"
-    }
-  },
+  "description" : "All allies within three hexes of the caster have their abilities restored.  Up to 2 points plus 1 point per 2 caster levels of temporary or permanent attribute penalties are removed.  The number of points negated is a total per target across all Attributes.  Temporary penalties are negated first.",
+  "upgrades" : [
+    { "ability" : "RestoreMorale",
+      "description" : "With Restore Morale, Renewal now also negates the effects of spells which penalize Attack, Attack Cost, Defense, Armor Penalty, Skill Checks, Resistances, and Spell Failure.  Up to 5 points plus 1 point per 2 caster levels of penalties in each category are negated."},
+    { "ability" : "RemoveParalysis",
+      "description" :  "With Remove Paralysis, all effects causing immobilization or helplessness, including sleep and paralysis, are immediately removed from all targets"}
+  ],
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "Restoration",

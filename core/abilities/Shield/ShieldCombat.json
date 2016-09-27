@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/shieldCombat"
   },
-  "description" : {
-    "base" : "The Attack Penalty you suffer from the use of Heavy Shields and Tower Shields is reduced by up to 10 points.  This will not reduce the total penalty to less than 0."
-  },
+  "description" : "The Attack Penalty you suffer from the use of Heavy Shields and Tower Shields is reduced by up to 10 points.  This will not reduce the total penalty to less than 0.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

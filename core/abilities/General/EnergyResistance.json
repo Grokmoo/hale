@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/energyResistance"
   },
-  "description" : {
-    "base" : "Your exceptionally strong mind gives you a resistance to energy effects.  You can shrug off the first 2 points of Fire, Electrical, Cold, and Acid damage from all attacks."
-  },
+  "description" : "Your exceptionally strong mind gives you a resistance to energy effects.  You can shrug off the first 2 points of Fire, Electrical, Cold, and Acid damage from all attacks.",
   "prereqs" : {
     "abilities" : [
       "StrongSoul"

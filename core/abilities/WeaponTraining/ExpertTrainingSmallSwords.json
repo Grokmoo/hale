@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/expertSmallSwords"
   },
-  "description" : {
-    "base" : "You gain an additional +5 chance to inflict critical hits with daggers and short swords."
-  },
+  "description" : "You gain an additional +5 chance to inflict critical hits with daggers and short swords.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

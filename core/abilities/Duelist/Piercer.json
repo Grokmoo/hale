@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/piercer"
   },
-  "description" : {
-    "base" : "You gain a permanent 10 percent damage bonus with all Piercing weapons."
-  },
+  "description" : "You gain a permanent 10 percent damage bonus with all Piercing weapons.",
   "isActivateable" : false,
   "prereqs" : {
     "roles" : [

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainWisdom1"
   },
-  "description" : {
-    "base" : "You gain a permanent +1 bonus to Wisdom."
-  },
+  "description" : "You gain a permanent +1 bonus to Wisdom.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

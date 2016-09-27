@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/flamingWeapon"
   },
-  "description" : {
-    "base" : "Your Improve Weapon spell becomes more powerful.  Now the targeted weapon becomes enhanced with magical flames.  These flames do not harm the weapon or wielder, but every hit from the weapon does an additional 1 to 4 plus 1 per 4 caster levels of fire damage."
-  },
+  "description" : "Your Improve Weapon spell becomes more powerful.  Now the targeted weapon becomes enhanced with magical flames.  These flames do not harm the weapon or wielder, but every hit from the weapon does an additional 1 to 4 plus 1 per 4 caster levels of fire damage.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

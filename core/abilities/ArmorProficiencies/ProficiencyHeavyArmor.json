@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/proficiencyHeavyArmor"
   },
-  "description" : {
-    "base" : "You are able to use heavy armor, such as plate."
-  },
+  "description" : "You are able to use heavy armor, such as plate.",
   "isActivateable" : false,
   "prereqs" : {
     "armor" : [

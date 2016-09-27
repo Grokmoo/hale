@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/greaterFocus"
   },
-  "description" : {
-    "base" : "Your Ranger level is treated as double its actual value for purposes of computing your Ranged Focus."
-  },
+  "description" : "Your Ranger level is treated as double its actual value for purposes of computing your Ranged Focus.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40

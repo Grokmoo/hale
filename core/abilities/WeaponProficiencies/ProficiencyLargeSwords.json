@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyLargeSwords"
   },
-  "description" : {
-    "base" : "You are able to use longswords and two handed greatswords in combat."
-  },
+  "description" : "You are able to use longswords and two handed greatswords in combat.",
   "isActivateable" : false
 }

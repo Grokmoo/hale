@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/enchanter"
   },
-  "description" : {
-    "base" : "You have a talent for creating powerful enchanted items.  You gain a +15 bonus to Enchanting."
-  },
+  "description" : "You have a talent for creating powerful enchanted items.  You gain a +15 bonus to Enchanting.",
   "isActivateable" : false,
   "prereqs" : {
     "roles" : [

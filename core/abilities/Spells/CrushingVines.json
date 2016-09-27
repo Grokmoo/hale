@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/crushingVines"
   },
-  "description" : {
-    "base" : "Crushing Vines upgrades your Tanglefoot spell.  Each round, hostile creatures in the area of effect have a 50% chance of needing a physical resistance check or becoming immobilized for one round and taking 1 to 6 blunt damage."
-  },
+  "description" : "Crushing Vines upgrades your Tanglefoot spell.  Each round, hostile creatures in the area of effect have a 50% chance of needing a physical resistance check or becoming immobilized for one round and taking 1 to 6 blunt damage.",
   "isActivateable" : false,
   "ai" : {
     "power" : 10,

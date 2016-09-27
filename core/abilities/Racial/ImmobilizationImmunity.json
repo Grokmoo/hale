@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/criticalHitImmunity"
   },
-  "description" : {
-    "base" : "This creature is immune to effects causing immobilization or helplessness."
-  },
+  "description" : "This creature is immune to effects causing immobilization or helplessness.",
   "isActivateable" : false
 }

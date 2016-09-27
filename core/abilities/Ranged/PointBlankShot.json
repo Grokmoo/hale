@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/pointBlankShot"
   },
-  "description" : {
-    "base" : "You no longer suffer attacks of opportunity from firing a ranged weapon in melee combat."
-  },
+  "description" : "You no longer suffer attacks of opportunity from firing a ranged weapon in melee combat.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/blindFighting"
   },
-  "description" : {
-    "base" : "You gain a bonus to fighting against enemies affected by concealment.  You ignore up to 40 points of any target's personal concealment in combat."
-  },
+  "description" : "You gain a bonus to fighting against enemies affected by concealment.  You ignore up to 40 points of any target's personal concealment in combat.",
   "isActivateable" : false,
   "isMode" : false,
   "isCancelable" : false,

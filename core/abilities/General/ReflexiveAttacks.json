@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/reflexiveAttacks"
   },
-  "description" : {
-    "base" : "You gain an additional 2 possible Attacks of Opportunity each round.  You still can only gain one attack per opportunity."
-  },
+  "description" : "You gain an additional 2 possible Attacks of Opportunity each round.  You still can only gain one attack per opportunity.",
   "isActivateable" : false
 }

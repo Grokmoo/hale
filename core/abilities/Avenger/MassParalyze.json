@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massParalyze"
   },
-  "description" : {
-    "base" : "Mass Paralyze further upgrades your Slow ability.  The spell now affects all hostile targets up to 4 hexes away."
-  },
+  "description" : "Mass Paralyze further upgrades your Slow ability.  The spell now affects all hostile targets up to 4 hexes away.",
   "isActivateable" : false,
   "ai" : {
     "power" : 50,

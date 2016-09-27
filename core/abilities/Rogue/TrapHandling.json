@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/trapHandling"
   },
-  "description" : {
-    "base" : "You are able to place, disarm, and recover traps using your Traps skill."
-  },
+  "description" : "You are able to place, disarm, and recover traps using your Traps skill.",
   "isActivateable" : false
 }

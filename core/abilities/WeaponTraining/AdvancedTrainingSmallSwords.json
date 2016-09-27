@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/advTrainSmallSwords"
   },
-  "description" : {
-    "base" : "You gain an additional +15 to damage with daggers and short swords."
-  },
+  "description" : "You gain an additional +15 to damage with daggers and short swords.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/dualWielding"
   },
-  "description" : {
-    "base" : "Ambidextrous creatures can use either hand nearly as easily as the other for any task.  They can use a weapon in their off hand with nearly no penalties."
-  },
+  "description" : "Ambidextrous creatures can use either hand nearly as easily as the other for any task.  They can use a weapon in their off hand with nearly no penalties.",
   "isActivateable" : false
 }

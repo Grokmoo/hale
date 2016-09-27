@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massRegeneration"
   },
-  "description" : {
-    "base" : "Mass Regeneration upgrades your Regeneration spell.  All allies within 4 hexes of the caster are now affected."
-  },
+  "description" : "Mass Regeneration upgrades your Regeneration spell.  All allies within 4 hexes of the caster are now affected.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

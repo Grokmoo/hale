@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/rapidShot"
   },
-  "description" : {
-    "base" : "You fire shots from Bows (but not crossbows) and Slings rapidly, but with decreased accuracy.  While this mode is active, you gain a 15% attack speed bonus but a -20 attack penalty with those weapons."
-  },
+  "description" : "You fire shots from Bows (but not crossbows) and Slings rapidly, but with decreased accuracy.  While this mode is active, you gain a 15% attack speed bonus but a -20 attack penalty with those weapons.",,
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "OtherAbility",

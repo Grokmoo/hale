@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massChameleon"
   },
-  "description" : {
-    "base" : "Mass Chameleon upgrades Chameleon, causing your spell to now affect all friendly targets within 3 hexes of the caster."
-  },
+  "description" : "Mass Chameleon upgrades Chameleon, causing your spell to now affect all friendly targets within 3 hexes of the caster.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

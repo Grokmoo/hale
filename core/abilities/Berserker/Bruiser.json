@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/bruiser"
   },
-  "description" : {
-    "base" : "You hit harder than others, gaining a permanent +15 bonus to damage with melee weapons (except light melee weapons)."
-  },
+  "description" : "You hit harder than others, gaining a permanent +15 bonus to damage with melee weapons (except light melee weapons).",
   "prereqs" : {
     "abilities" : [
       "StrengthTraining1"

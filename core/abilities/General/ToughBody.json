@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/toughBody"
   },
-  "description" : {
-    "base" : "You are strong of heart and body, gaining a +10 bonus on all Physical Resistance checks."
-  },
+  "description" : "You are strong of heart and body, gaining a +10 bonus on all Physical Resistance checks.",
   "prereqs" : {
     "stats" : [
       {

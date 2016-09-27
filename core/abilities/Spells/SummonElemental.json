@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/summonElemental"
   },
-  "description" : {
-    "base" : "Summon Elemental upgrades your Summon spell.  In addition to your previous choices, you may now summon a powerful elemental spirit from the plane of Fire, Water, Air, or Earth."
-  },
+  "description" : "Summon Elemental upgrades your Summon spell.  In addition to your previous choices, you may now summon a powerful elemental spirit from the plane of Fire, Water, Air, or Earth.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

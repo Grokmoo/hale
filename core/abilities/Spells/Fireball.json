@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/fireball"
   },
-  "description" : {
-    "base" : "Fireball upgrades your Firebolt spell, causing it to do 6 to 12 plus one per caster level damage to all targets within a 4 hex radius."
-  },
+  "description" : "Fireball upgrades your Firebolt spell, causing it to do 6 to 12 plus one per caster level damage to all targets within a 4 hex radius.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

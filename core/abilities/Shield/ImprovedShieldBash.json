@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/improvedShieldBash"
   },
-  "description" : {
-    "base" : "Your shield bash is much improved.  You gain a +10 bonus to attack on your shield bash attempt, and if successful the physical resistance check is more difficult.  Finally, your shield bash now stuns opponents for 3 rounds instead of 2."
-  },
+  "description" : "Your shield bash is much improved.  You gain a +10 bonus to attack on your shield bash attempt, and if successful the physical resistance check is more difficult.  Finally, your shield bash now stuns opponents for 3 rounds instead of 2.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

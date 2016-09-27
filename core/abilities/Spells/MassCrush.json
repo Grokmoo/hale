@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massCrush"
   },
-  "description" : {
-    "base" : "Mass Crush upgrades your Crush spell, causing it to affect all hostile targets within 3 hexes of the caster.  Note that this spell does not damage friendly targets."
-  },
+  "description" : "Mass Crush upgrades your Crush spell, causing it to affect all hostile targets within 3 hexes of the caster.  Note that this spell does not damage friendly targets.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

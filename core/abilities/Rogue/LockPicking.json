@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/lockPicking"
   },
-  "description" : {
-    "base" : "You are able to pick locks using your Locks skill."
-  },
+  "description" : "You are able to pick locks using your Locks skill.",
   "isActivateable" : false
 }

@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/parry"
   },
-  "description" : {
-    "base" : "You actively block and frustrate your Duel target's attacks.  As long as you remain adjacent to the target, it suffers a 10 plus 2 times Duelist level penalty to all attacks against any target."
-  },
+  "description" : "You actively block and frustrate your Duel target's attacks.  As long as you remain adjacent to the target, it suffers a 10 plus 2 times Duelist level penalty to all attacks against any target.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30

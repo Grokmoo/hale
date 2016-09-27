@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/elementalMastery"
   },
-  "description" : {
-    "base" : "Your proficiency with Fire, Ice, and Lightning spells increases.  Your damage bonuses when casting those types of spells further increases to a total of 40%."
-  },
+  "description" : "Your proficiency with Fire, Ice, and Lightning spells increases.  Your damage bonuses when casting those types of spells further increases to a total of 40%.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyShields"
   },
-  "description" : {
-    "base" : "You are able to use basic shields."
-  },
+  "description" : "You are able to use basic shields.",
   "isActivateable" : false
 }

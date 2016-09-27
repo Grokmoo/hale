@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyBows"
   },
-  "description" : {
-    "base" : "You are able to use shortbows and longbows in combat."
-  },
+  "description" : "You are able to use shortbows and longbows in combat.",
   "isActivateable" : false
 }

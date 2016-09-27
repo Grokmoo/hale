@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/defensiveFighting"
   },
-  "description" : {
-    "base" : "You enter into a defensive stance, increasing your AC but lowering your attack.  You can select an AC Bonus of 5, 10, 15, or 20 for a corresponding Attack Penalty of 5, 10, 15, or 20."
-  },
+  "description" : "You enter into a defensive stance, increasing your AC but lowering your attack.  You can select an AC Bonus of 5, 10, 15, or 20 for a corresponding Attack Penalty of 5, 10, 15, or 20.",
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "OtherAbility",

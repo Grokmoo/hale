@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/fireMage"
   },
-  "description" : {
-    "base" : "You have trained in the use of fire magic, gaining a 20% bonus to all fire damage from spells."
-  },
+  "description" : "You have trained in the use of fire magic, gaining a 20% bonus to all fire damage from spells.",
   "isActivateable" : false
 }

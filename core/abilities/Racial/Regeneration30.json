@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "This creature regenerates 30 hit points per round."
-  },
+  "description" : "This creature regenerates 30 hit points per round.",
   "isActivateable" : false
 }

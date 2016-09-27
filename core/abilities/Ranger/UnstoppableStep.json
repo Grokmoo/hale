@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/unstoppableStep"
   },
-  "description" : {
-    "base" : "You are able to move unhindered in all kinds of situations, becoming immune to all effects causing immobilization, including paralysis and stun effects.  In addition, you are unaffected by effects hindering movement, such as caused by a Tanglefoot spell."
-  },
+  "description" : "You are able to move unhindered in all kinds of situations, becoming immune to all effects causing immobilization, including paralysis and stun effects.  In addition, you are unaffected by effects hindering movement, such as caused by a Tanglefoot spell.",
   "prereqs" : {
     "abilities" : [
       "FastStep"

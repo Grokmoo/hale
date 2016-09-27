@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/deadlyDuel"
   },
-  "description" : {
-    "base" : "You gain a damage bonus equal to your Duelist level against your Duel target."
-  },
+  "description" : "You gain a damage bonus equal to your Duelist level against your Duel target.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30

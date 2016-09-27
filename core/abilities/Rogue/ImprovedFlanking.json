@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/improvedFlanking"
   },
-  "description" : {
-    "base" : "You no longer need to be directly opposite an ally to gain flanking bonuses against an opponent.  This includes flanking for the purposes of inflicting a backstab."
-  },
+  "description" : "You no longer need to be directly opposite an ally to gain flanking bonuses against an opponent.  This includes flanking for the purposes of inflicting a backstab.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/lingeringPoison"
   },
-  "description" : {
-    "base" : "Your poison ability now lasts for up to 8 rounds on your weapon.  The effects of the poison on your target last for 3 rounds instead of 2."
-  },
+  "description" : "Your poison ability now lasts for up to 8 rounds on your weapon.  The effects of the poison on your target last for 3 rounds instead of 2.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30

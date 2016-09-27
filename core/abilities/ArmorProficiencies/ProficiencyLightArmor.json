@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyLightArmor"
   },
-  "description" : {
-    "base" : "You are able to use light armor, such as leather and hardened leather."
-  },
+  "description" : "You are able to use light armor, such as leather and hardened leather.",
   "isActivateable" : false
 }

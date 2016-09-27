@@ -10,12 +10,12 @@
   "icon" : {
     "sprite" : "icons/storm"
   },
-  "description" : {
-    "base" : "The caster selects a circular area of radius 3 hexes.  A powerful storm of magical ice envelopes the area for 3 to 6 rounds.  Each round, all creatures in the area of effect take 1 to 6 plus one per three caster levels cold damage.",
-    "upgrades" : {
-      "LightningStorm" : "With Lightning Storm, each creature within the effect of a Storm spell has a 33% chance each round to be struck with a bolt of lightning, doing 1 to 10 plus one per caster level damage."
-    }
-  },
+  "description" : "The caster selects a circular area of radius 3 hexes.  A powerful storm of magical ice envelopes the area for 3 to 6 rounds.  Each round, all creatures in the area of effect take 1 to 6 plus one per three caster levels cold damage.",
+  "upgrades" : [
+    { "ability" : "LightningStorm",
+      "description" : "With Lightning Storm, each creature within the effect of a Storm spell has a 33% chance each round to be struck with a bolt of lightning, doing 1 to 10 plus one per caster level damage.",
+      "override" : true }
+  ],
   "isActivateable" : true,
   "quickbarGroup" : "Evocation",
   "isFixed" : true,

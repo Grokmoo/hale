@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/fastSpellRecovery2"
   },
-  "description" : {
-    "base" : "You can cast spells more often than other spell casters.  Cooldowns for all of your spells are reduced by a further round for a total of 2 rounds."
-  },
+  "description" : "You can cast spells more often than other spell casters.  Cooldowns for all of your spells are reduced by a further round for a total of 2 rounds.",
   "prereqs" : {
     "abilities" : [
       "FastSpellRecovery1"

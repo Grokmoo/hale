@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/animalPower"
   },
-  "description" : {
-    "base" : "Animal Power improves your Enhance Attributes spell.  The target gains a bonus of 1 plus 1 point per 4 caster levels to Strength, Dexterity, and Constitution."
-  },
+  "description" : "Animal Power improves your Enhance Attributes spell.  The target gains a bonus of 1 plus 1 point per 4 caster levels to Strength, Dexterity, and Constitution.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

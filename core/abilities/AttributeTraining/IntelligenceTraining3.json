@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainIntelligence3"
   },
-  "description" : {
-    "base" : "You gain an additional permanent +1 bonus to Intelligence."
-  },
+  "description" : "You gain an additional permanent +1 bonus to Intelligence.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

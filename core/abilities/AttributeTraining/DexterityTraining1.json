@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainDexterity1"
   },
-  "description" : {
-    "base" : "You gain a permanent +1 bonus to Dexterity."
-  },
+  "description" : "You gain a permanent +1 bonus to Dexterity.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

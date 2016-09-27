@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/iceMage"
   },
-  "description" : {
-    "base" : "You have trained in the use of ice magic, gaining a 20% bonus to all cold damage from spells."
-  },
+  "description" : "You have trained in the use of ice magic, gaining a 20% bonus to all cold damage from spells.",
   "isActivateable" : false
 }

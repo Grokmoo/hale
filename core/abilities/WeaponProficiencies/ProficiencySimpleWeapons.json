@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencySimpleWeapons"
   },
-  "description" : {
-    "base" : "You are able to use the simplest of weapons in combat.  This includes slings, clubs, quarterstaffs, and crossbows."
-  },
+  "description" : "You are able to use the simplest of weapons in combat.  This includes slings, clubs, quarterstaffs, and crossbows.",
   "isActivateable" : false
 }

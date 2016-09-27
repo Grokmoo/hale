@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/sleep"
   },
-  "description" : {
-    "base" : "Sleep upgrades your Slow spell.  The target now falls asleep if it fails its mental resistance check.  Taking even a single point of damage immediately wakes the sleeping creature."
-  },
+  "description" : "Sleep upgrades your Slow spell.  The target now falls asleep if it fails its mental resistance check.  Taking even a single point of damage immediately wakes the sleeping creature.",
   "isActivateable" : false,
   "ai" : {
     "power" : 20,

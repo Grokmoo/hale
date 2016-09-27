@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterSpears"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with javelins, short spears, and long spears."
-  },
+  "description": "You do an additional 1x damage on critical hits with javelins, short spears, and long spears.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

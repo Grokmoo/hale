@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/cripplingBackstab"
   },
-  "description" : {
-    "base" : "Your backstabs can now cripple your opponent.  Targets of a successful backstab must succeed at a physical resistance check or suffer a -1 penalty to Strength and Dexterity for 3 rounds."
-  },
+  "description" : "Your backstabs can now cripple your opponent.  Targets of a successful backstab must succeed at a physical resistance check or suffer a -1 penalty to Strength and Dexterity for 3 rounds.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

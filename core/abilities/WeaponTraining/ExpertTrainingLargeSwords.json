@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/expertLargeSwords"
   },
-  "description" : {
-    "base" : "You gain an additional +5 chance to inflict critical hits with longswords, bastard swords, and great swords."
-  },
+  "description" : "You gain an additional +5 chance to inflict critical hits with longswords, bastard swords, and great swords.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

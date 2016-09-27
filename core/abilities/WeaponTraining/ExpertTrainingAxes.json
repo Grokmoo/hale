@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/expertAxes"
   },
-  "description" : {
-    "base" : "You gain an additional +5 chance to inflict critical hits with handaxes, battleaxes, waraxes, and greataxes."
-  },
+  "description" : "You gain an additional +5 chance to inflict critical hits with handaxes, battleaxes, waraxes, and greataxes.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

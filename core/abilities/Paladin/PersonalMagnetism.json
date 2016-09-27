@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/personalMagnetism"
   },
-  "description" : {
-    "base" : "Your bonus to Charisma is treated as double its actual value for the purposes of all Paladin abilities."
-  },
+  "description" : "Your bonus to Charisma is treated as double its actual value for the purposes of all Paladin abilities.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

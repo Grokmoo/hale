@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/lightningReflexes"
   },
-  "description" : {
-    "base" : "You have finely honed your reflexes, gaining a +10 bonus on all Reflex Resistance checks."
-  },
+  "description" : "You have finely honed your reflexes, gaining a +10 bonus on all Reflex Resistance checks.",
   "prereqs" : {
     "stats" : [
       {

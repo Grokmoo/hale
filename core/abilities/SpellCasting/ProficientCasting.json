@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/proficientCasting"
   },
-  "description" : {
-    "base" : "You have focused on the motions and sounds of spell casting. You gain a 5% bonus against spell failure on all spell casting attempts.  This stacks with bonuses from other sources such as Armor Casting."
-  },
+  "description" : "You have focused on the motions and sounds of spell casting. You gain a 5% bonus against spell failure on all spell casting attempts.  This stacks with bonuses from other sources such as Armor Casting.",
   "prereqs" : {
     "stats" : [
       {

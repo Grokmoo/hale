@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/elementalDefense"
   },
-  "description" : {
-    "base" : "You have worked with elemental magic so much that you have gained a natural immunity to it.  You gain a 25% Damage Immunity to Fire, Cold, and Electrical damage."
-  },
+  "description" : "You have worked with elemental magic so much that you have gained a natural immunity to it.  You gain a 25% Damage Immunity to Fire, Cold, and Electrical damage.",
   "isActivateable" : false,
   "prereqs" : {
     "roles" : [

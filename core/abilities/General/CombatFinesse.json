@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/combatFinesse"
   },
-  "description" : {
-    "base" : "You gain a +10 bonus to all attacks in combat."
-  },
+  "description" : "You gain a +10 bonus to all attacks in combat.",
   "prereqs" : {
     "abilities" : [
       "CombatReady", "BlindFighting"

@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/defensiveFocus"
   },
-  "description" : {
-    "base" : "Your Ranged Focus ability is upgraded.  Now, you also gain a bonus to Defense of 10 plus your Ranger level while in your Focus."
-  },
+  "description" : "Your Ranged Focus ability is upgraded.  Now, you also gain a bonus to Defense of 10 plus your Ranger level while in your Focus.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30

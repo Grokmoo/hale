@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/longshot"
   },
-  "description" : {
-    "base" : "The range penalty you suffer from all ranged weapons when attacking is decreased by 40%."
-  },
+  "description" : "The range penalty you suffer from all ranged weapons when attacking is decreased by 40%.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

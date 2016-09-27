@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/dualWieldMastery"
   },
-  "description" : {
-    "base" : "You gain an additional +10 bonus to attack and a +1 damage bonus per point of Strength above 10 while Dual Wielding."
-  },
+  "description" : "You gain an additional +10 bonus to attack and a +1 damage bonus per point of Strength above 10 while Dual Wielding.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

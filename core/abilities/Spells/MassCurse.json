@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/massCurse"
   },
-  "description" : {
-    "base" : "Mass Curse upgrades Curse, causing it to now affect all hostiles within 4 hexes.  Note that there is no resistance check for this spell, meaning it is guaranteed to affect all targets."
-  },
+  "description" : "Mass Curse upgrades Curse, causing it to now affect all hostiles within 4 hexes.  Note that there is no resistance check for this spell, meaning it is guaranteed to affect all targets.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

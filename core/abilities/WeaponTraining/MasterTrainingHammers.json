@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterHammers"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with light hammers, warhammers, and mauls."
-  },
+  "description" : "You do an additional 1x damage on critical hits with light hammers, warhammers, and mauls.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

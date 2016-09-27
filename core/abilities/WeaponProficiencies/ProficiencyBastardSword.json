@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/proficiencyBastardSword"
   },
-  "description" : {
-    "base" : "You are able to use the bastard sword in combat.  The bastard sword is larger and more powerful than other one handed swords."
-  },
+  "description" : "You are able to use the bastard sword in combat.  The bastard sword is larger and more powerful than other one handed swords.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

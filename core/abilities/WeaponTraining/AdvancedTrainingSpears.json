@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/advTrainSpears"
   },
-  "description" : {
-    "base" : "You gain an additional +15 to damage with javelins, short spears, and long spears."
-  },
+  "description" : "You gain an additional +15 to damage with javelins, short spears, and long spears.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

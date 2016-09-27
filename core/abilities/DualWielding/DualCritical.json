@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/dualCritical"
   },
-  "description" : {
-    "base" : "Now, when you use your Dual Strike ability, you are almost guaranteed a critical hit, with a +90 bonus to Critical Chance.  When you do land a critical hit, you also gain a +1 bonus to your Critical Multiplier."
-  },
+  "description" : "Now, when you use your Dual Strike ability, you are almost guaranteed a critical hit, with a +90 bonus to Critical Chance.  When you do land a critical hit, you also gain a +1 bonus to your Critical Multiplier.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

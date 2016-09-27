@@ -5,7 +5,5 @@
   "icon" : {
     "sprite" : "icons/combatReady"
   },
-  "description" : {
-    "base" : "You are always ready for action, gaining a +20 bonus to Initiative.  This makes your turn more likely to come up first in combat."
-  }
+  "description" : "You are always ready for action, gaining a +20 bonus to Initiative.  This makes your turn more likely to come up first in combat."
 }

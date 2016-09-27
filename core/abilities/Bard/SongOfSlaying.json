@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/songOfSlaying"
   },
-  "description" : {
-    "base" : "The Song of Slaying affects all allies within 8 hexes of the Bard.  Affected creatures gain a bonus of 20 plus four times Bard level plus 4 per point of Charisma above 10 to Damage and half that to Spell Damage."
-  },
+  "description" : "The Song of Slaying affects all allies within 8 hexes of the Bard.  Affected creatures gain a bonus of 20 plus four times Bard level plus 4 per point of Charisma above 10 to Damage and half that to Spell Damage.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40

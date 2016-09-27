@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/proficiencyWaraxe"
   },
-  "description" : {
-    "base" : "You are able to use the waraxe in combat.  The waraxe is larger and more powerful than other one handed axes."
-  },
+  "description" : "You are able to use the waraxe in combat.  The waraxe is larger and more powerful than other one handed axes.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

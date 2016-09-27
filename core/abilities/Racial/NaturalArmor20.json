@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "Many creatures have naturally tough skin or are otherwise more difficult to hit and damage. +20 to Natural Armor"
-  },
+  "description" : "Many creatures have naturally tough skin or are otherwise more difficult to hit and damage. +20 to Natural Armor",
   "isActivateable" : false
 }

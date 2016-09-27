@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/multiDuel"
   },
-  "description" : {
-    "base" : "You are now able to select two Duel targets instead of one."
-  },
+  "description" : "You are now able to select two Duel targets instead of one.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40

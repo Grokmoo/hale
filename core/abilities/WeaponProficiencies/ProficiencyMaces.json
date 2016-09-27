@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyMaces"
   },
-  "description" : {
-    "base" : "You are able to use maces and morningstars in combat."
-  },
+  "description" : "You are able to use maces and morningstars in combat.",
   "isActivateable" : false
 }

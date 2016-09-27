@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/expertBows"
   },
-  "description" : {
-    "base" : "You gain an additional +5 chance to inflict critical hits with shortbows and longbows."
-  },
+  "description" : "You gain an additional +5 chance to inflict critical hits with shortbows and longbows.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencyAxes"
   },
-  "description" : {
-    "base" : "You are able to use most axes in combat.  This includes handaxes, battleaxes, and two handed greataxes."
-  },
+  "description" : "You are able to use most axes in combat.  This includes handaxes, battleaxes, and two handed greataxes.",
   "isActivateable" : false
 }

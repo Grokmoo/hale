@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/resistance"
   },
-  "description" : {
-    "base" : "Resistance upgrades your Divine Luck ability.  All affected targets now gain a bonus of 10 plus caster level to Physical, Mental, and Reflex resistance checks."
-  },
+  "description" : "Resistance upgrades your Divine Luck ability.  All affected targets now gain a bonus of 10 plus caster level to Physical, Mental, and Reflex resistance checks.",
   "isActivateable" : false,
   "ai" : {
     "power" : 20,

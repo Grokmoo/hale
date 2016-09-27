@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencySpears"
   },
-  "description" : {
-    "base" : "You are able to use javelins, short spears and long spears in combat."
-  },
+  "description" : "You are able to use javelins, short spears and long spears in combat.",
   "isActivateable" : false
 }

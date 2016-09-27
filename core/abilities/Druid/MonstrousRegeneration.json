@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/monstrousRegeneration"
   },
-  "description" : {
-    "base" : "Your Regeneration ability is considerably improved.  Affected creatures now regenerate health so quickly as to come back from the brink of death in just seconds.  The number of hit points healed in total is increased to six to twelve per caster level."
-  },
+  "description" : "Your Regeneration ability is considerably improved.  Affected creatures now regenerate health so quickly as to come back from the brink of death in just seconds.  The number of hit points healed in total is increased to six to twelve per caster level.",
   "isActivateable" : false,
   "ai" : {
     "power" : 50,

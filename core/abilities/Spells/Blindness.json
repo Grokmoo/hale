@@ -10,9 +10,7 @@
   "icon" : {
     "sprite" : "icons/blindness"
   },
-  "description" : {
-    "base" : "A targeted creature up to 4 hexes away must succeed at a Physical Resistance check or become blind for 2 to 4 rounds.  The affected creature suffers a 100% concealment penalty for all of its attacks and most spell casting."
-  },
+  "description" : "A targeted creature up to 4 hexes away must succeed at a Physical Resistance check or become blind for 2 to 4 rounds.  The affected creature suffers a 100% concealment penalty for all of its attacks and most spell casting.",
   "isActivateable" : true,
   "quickbarGroup" : "Alteration",
   "isFixed" : true,

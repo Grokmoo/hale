@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/advTrainHammers"
   },
-  "description" : {
-    "base" : "You gain an additional +15 to damage with light hammers, warhammers, and mauls."
-  },
+  "description" : "You gain an additional +15 to damage with light hammers, warhammers, and mauls.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/drain"
   },
-  "description" : {
-    "base" : "Drain upgrades your Curse spell further.  Every point of Dexterity and Constitution drained from a target with Enfeeble is added back to you for the duration of the spell.  With Mass Curse, this spell bolsters up to one ally within range of the spell per hostile affected."
-  },
+  "description" : "Drain upgrades your Curse spell further.  Every point of Dexterity and Constitution drained from a target with Enfeeble is added back to you for the duration of the spell.  With Mass Curse, this spell bolsters up to one ally within range of the spell per hostile affected.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

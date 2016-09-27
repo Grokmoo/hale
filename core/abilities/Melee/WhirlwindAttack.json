@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/whirlwindAttack"
   },
-  "description" : {
-    "base" : "As a standard attack action, you launch into a spinning whirlwind, attacking all enemies adjacent to you.  Each attack is made at a -10 attack penalty.  This ability can only be used with a melee weapon."
-  },
+  "description" : "As a standard attack action, you launch into a spinning whirlwind, attacking all enemies adjacent to you.  Each attack is made at a -10 attack penalty.  This ability can only be used with a melee weapon.",
   "isActivateable" : true,
   "quickbarGroup" : "OtherAbility",
   "isFixed" : true,

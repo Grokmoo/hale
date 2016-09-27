@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainStrength1"
   },
-  "description" : {
-    "base" : "You gain a permanent +1 bonus to Strength."
-  },
+  "description" : "You gain a permanent +1 bonus to Strength.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

@@ -5,12 +5,11 @@
   "icon" : {
     "sprite" : "icons/hide"
   },
-  "description" : {
-    "base" : "You are able to hide from enemies, using stealth to sneak around them or perform a surprise attack.",
-    "upgrades" : {
-      "HideInPlainSight" : "With Hide in Plain Sight, you no longer suffer a penalty to Hide attempts while in plain view of hostiles."
-    }
-  },
+  "description" : "You are able to hide from enemies, using stealth to sneak around them or perform a surprise attack.",
+  "upgrades" : [
+      { "ability" : "HideInPlainSight",
+        "description" : "With Hide in Plain Sight, you no longer suffer a penalty to Hide attempts while in plain view of hostiles."}
+  ],
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "OtherAbility",

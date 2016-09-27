@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "Some creatures are naturally highly resistant to physical damage."
-  },
+  "description" : "Some creatures are naturally highly resistant to physical damage.",
   "isActivateable" : false
 }

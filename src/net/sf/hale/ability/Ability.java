@@ -21,6 +21,7 @@ package net.sf.hale.ability;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.ResourceManager;
 import net.sf.hale.rules.PrereqList;
 import net.sf.hale.util.Logger;
+import net.sf.hale.util.SimpleJSONArrayEntry;
 import net.sf.hale.util.SimpleJSONObject;
 import net.sf.hale.util.SimpleJSONParser;
 
@@ -144,7 +146,7 @@ public class Ability extends Scriptable {
 	private final int aiPriority;
 	
 	private final String description;
-	private Map<String, String> upgrades;
+	private Map<String, AbilityUpgrade> upgrades;
 	
 	private final String quickbarGroup;
 	
@@ -241,16 +243,14 @@ public class Ability extends Scriptable {
 			icon = IconFactory.emptyIcon;
 		}
 		
-		SimpleJSONObject descriptionIn = map.getObject("description");
-		this.description = descriptionIn.get("base", null);
+		this.description = map.get("description", null);
 		
-		upgrades = new HashMap<String, String>();
-		if (descriptionIn.containsKey("upgrades")) {
-			SimpleJSONObject upgradesIn = descriptionIn.getObject("upgrades");
+		upgrades = new LinkedHashMap<String, AbilityUpgrade>();
+		for (SimpleJSONArrayEntry entry : map.getArray("upgrades")) {
+			SimpleJSONObject entryObj = entry.getObject();
 			
-			for (String key : upgradesIn.keySet()) {
-				upgrades.put(key, upgradesIn.get(key, null));
-			}
+			AbilityUpgrade upgrade = new AbilityUpgrade(entryObj);
+			upgrades.put(upgrade.id, upgrade);
 		}
 		
 		if (map.containsKey("canActivateOutsideCombat")) {
@@ -748,7 +748,7 @@ public class Ability extends Scriptable {
 		
 		for (String abilityID : upgrades.keySet()) {
 			if (parent.abilities.has(abilityID))
-				upgradesToShow.add(upgrades.get(abilityID));
+				upgradesToShow.add(upgrades.get(abilityID).description);
 		}
 		
 		for (String upgrade : upgradesToShow) {
@@ -795,4 +795,17 @@ public class Ability extends Scriptable {
 	 */
 	
 	public void setSpellDuration(Effect effect, Creature parent) { }
+	
+	private class AbilityUpgrade {
+		private final String id;
+		private final String description;
+		private final boolean override;
+		
+		private AbilityUpgrade(SimpleJSONObject data) {
+			id = data.get("ability", null);
+			description = data.get("description", null);
+			override = data.get("override", false);
+			
+		}
+	}
 }

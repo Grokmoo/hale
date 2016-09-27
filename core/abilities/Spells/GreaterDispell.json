@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/greaterDispell"
   },
-  "description" : {
-    "base" : "Greater Dispell upgrades your Dispell ability, making your dispell attempts more likely to succeed and increasing the number of abilities you can attempt to dispell up to five."
-  },
+  "description" : "Greater Dispell upgrades your Dispell ability, making your dispell attempts more likely to succeed and increasing the number of abilities you can attempt to dispell up to five.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

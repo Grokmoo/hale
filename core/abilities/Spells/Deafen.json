@@ -10,12 +10,13 @@
   "icon" : {
     "sprite" : "icons/deafen"
   },
-  "description" : {
-    "base" : "The caster selects a circular area of radius 3 hexes up to 10 hexes away.  All creatures must succeed at a Physical Resistance check or become deafened for 3 to 5 rounds.  Deafened creatures suffer a -20 penalty to Search checks, a -50 penalty to Speech checks, a -10 attack penalty, and an additional 30% spell failure when casting spells with a verbal component.",
-    "upgrades" : {
-      "Silence" : "With Silence, your Deafen spell now also creates a zone of magical silence in the targeted area.  Within that zone, no spell with a verbal component can be successfully cast for three rounds."
+  "description" : "The caster selects a circular area of radius 3 hexes up to 10 hexes away.  All creatures must succeed at a Physical Resistance check or become deafened for 3 to 5 rounds.  Deafened creatures suffer a -20 penalty to Search checks, a -50 penalty to Speech checks, a -10 attack penalty, and an additional 30% spell failure when casting spells with a verbal component.",
+  "upgrades" : [
+    { "ability" : "Silence",
+      "description" : "With Silence, your Deafen spell now also creates a zone of magical silence in the targeted area.  Within that zone, no spell with a verbal component can be successfully cast for three rounds.",
+      "override" : true
     }
-  },
+  ],
   "isActivateable" : true,
   "quickbarGroup" : "Alteration",
   "isFixed" : true,

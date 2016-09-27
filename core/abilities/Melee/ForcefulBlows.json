@@ -5,12 +5,12 @@
   "icon" : {
     "sprite" : "icons/forcefulBlows"
   },
-  "description" : {
-    "base" : "You enter an aggressive stance, launching more damaging blows with one handed and two handed melee weapons at the expense of accuracy.  You can select a damage bonus of 10, 20, 30, or 40 for a corresponding attack penalty of 5, 10, 15, or 20.",
-    "upgrades" : {
-      "PowerfulBlows" : "With Powerful Blows, you can now select a damage bonus of up to 80 for a corresponding attack penalty of up to 40."
-    }
-  },
+  "description" : "You enter an aggressive stance, launching more damaging blows with one handed and two handed melee weapons at the expense of accuracy.  You can select a damage bonus of 10, 20, 30, or 40 for a corresponding attack penalty of 5, 10, 15, or 20.",
+  "upgrades" : [
+    { "ability" : "PowerfulBlows",
+      "description" : "With Powerful Blows, you can now select a damage bonus of up to 80 for a corresponding attack penalty of up to 40.",
+	  "override" : true}
+  ],
   "isActivateable" : true,
   "quickbarGroup" : "OtherAbility",
   "isFixed" : true,

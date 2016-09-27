@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "This creature's thick skin is like armor, absorbing 15 points of all physical damage."
-  },
+  "description" : "This creature's thick skin is like armor, absorbing 15 points of all physical damage.",
   "isActivateable" : false
 }

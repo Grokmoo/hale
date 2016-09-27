@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "Some creatures are naturally highly resistant to electricity."
-  },
+  "description" : "Some creatures are naturally highly resistant to electricity.",
   "isActivateable" : false
 }

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/loadBearer"
   },
-  "description" : {
-    "base" : "You can carry more gear than you could otherwise.  Your carrying weight limit is increased by 30 kg."
-  },
+  "description" : "You can carry more gear than you could otherwise.  Your carrying weight limit is increased by 30 kg.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

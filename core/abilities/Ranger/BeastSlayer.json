@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/beastSlayer"
   },
-  "description" : {
-    "base" : "You become even better in fighting against beasts.  You gain a total of a +20 bonus to Attack, +20 bonus to Defense, and a +40 bonus to Damage when in combat with beast or animal enemy racial types.  This includes many common enemies such as Orcs and Goblins."
-  },
+  "description" : "You become even better in fighting against beasts.  You gain a total of a +20 bonus to Attack, +20 bonus to Defense, and a +40 bonus to Damage when in combat with beast or animal enemy racial types.  This includes many common enemies such as Orcs and Goblins.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

@@ -2,9 +2,7 @@
   "externalScript" : "abilities/grimbokRoar",
   "name" : "Grimbok Roar",
   "type" : "Racial Abilities",
-  "description" : {
-    "base" : "The Grimbok lets out an Earth shattering roar, affecting creatures in a circular area of 4 hexes around the creature.  All creatures in the area of effect must succeed at a Physical Resistance check or become deafened for 3 to 5 rounds."
-  },
+  "description" : "The Grimbok lets out an Earth shattering roar, affecting creatures in a circular area of 4 hexes around the creature.  All creatures in the area of effect must succeed at a Physical Resistance check or become deafened for 3 to 5 rounds.",
   "isActivateable" : true,
   "isFixed" : true,
   "cooldown" : 5,

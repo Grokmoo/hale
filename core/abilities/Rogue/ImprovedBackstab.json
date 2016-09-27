@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/improvedBackstab"
   },
-  "description" : {
-    "base" : "You can now perform backstab attacks merely by flanking an opponent."
-  },
+  "description" : "You can now perform backstab attacks merely by flanking an opponent.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

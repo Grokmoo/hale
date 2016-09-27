@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/criticalStrike"
   },
-  "description" : {
-    "base" : "You gain a 3 percent greater chance to inflict critical hits with many one handed slashing and piercing weapons, including Daggers, Short Swords, Longswords, Handaxes, Battleaxes, Short Spears, Bastard Swords, and Waraxes."
-  },
+  "description" : "You gain a 3 percent greater chance to inflict critical hits with many one handed slashing and piercing weapons, including Daggers, Short Swords, Longswords, Handaxes, Battleaxes, Short Spears, Bastard Swords, and Waraxes.",
   "isActivateable" : false,
   "prereqs" : {
     "roles" : [

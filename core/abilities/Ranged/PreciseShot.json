@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/preciseShot"
   },
-  "description" : {
-    "base" : "You are much better able to deal with firing into melee combat, around cover, or through concealment.  You ignore up to 30 points of target concealment with ranged weapons."
-  },
+  "description" : "You are much better able to deal with firing into melee combat, around cover, or through concealment.  You ignore up to 30 points of target concealment with ranged weapons.",
   "isActivateable" : false
 }

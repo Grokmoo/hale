@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/paralyze"
   },
-  "description" : {
-    "base" : "Paralyze further upgrades your Slow ability.  Upon failing its mental resistance check, the target creature becomes paralyzed for the duration of the spell."
-  },
+  "description" : "Paralyze further upgrades your Slow ability.  Upon failing its mental resistance check, the target creature becomes paralyzed for the duration of the spell.",
   "isActivateable" : false,
   "ai" : {
     "power" : 30,

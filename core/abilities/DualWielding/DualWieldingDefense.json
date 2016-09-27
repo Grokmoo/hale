@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/dualWieldingDefense"
   },
-  "description" : {
-    "base" : "You have trained in the use of your off hand weapon as a shield.  You gain a +10 bonus to Defense while dual wielding."
-  },
+  "description" : "You have trained in the use of your off hand weapon as a shield.  You gain a +10 bonus to Defense while dual wielding.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

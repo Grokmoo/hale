@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/masterMaces"
   },
-  "description" : {
-    "base" : "You do an additional 1x damage on critical hits with maces, morningstars, and flails."
-  },
+  "description" : "You do an additional 1x damage on critical hits with maces, morningstars, and flails.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

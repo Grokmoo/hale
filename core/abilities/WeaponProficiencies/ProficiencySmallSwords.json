@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/proficiencySmallSwords"
   },
-  "description" : {
-    "base" : "You are able to use short swords and daggers in combat."
-  },
+  "description" : "You are able to use short swords and daggers in combat.",
   "isActivateable" : false
 }

@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/trainCharisma1"
   },
-  "description" : {
-    "base" : "You gain a permanent +1 bonus to Charisma."
-  },
+  "description" : "You gain a permanent +1 bonus to Charisma.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

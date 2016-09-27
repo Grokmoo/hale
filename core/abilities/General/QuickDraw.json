@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/quickDraw"
   },
-  "description" : {
-    "base" : "You are exceptionally fast at switching weapons in combat.  Equipping and unequipping weapons and shields takes you 60% fewer action points."
-  },
+  "description" : "You are exceptionally fast at switching weapons in combat.  Equipping and unequipping weapons and shields takes you 60% fewer action points.",
   "isActivateable" : false,
   "prereqs" : {
     "stats" : [

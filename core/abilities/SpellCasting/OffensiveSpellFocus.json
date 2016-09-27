@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/offensiveSpellFocus"
   },
-  "description" : {
-    "base" : "You have focused on the casting of destructive magic.  All of your spells do an additional 10% damage."
-  },
+  "description" : "You have focused on the casting of destructive magic.  All of your spells do an additional 10% damage.",
   "prereqs" : {
     "abilities" : [
       "IntenseCasting"

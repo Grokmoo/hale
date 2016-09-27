@@ -5,7 +5,5 @@
   "icon" : {
     "sprite" : "icons/smoothTalker"
   },
-  "description" : {
-    "base" : "You can talk your way into and out of a variety of situations.  You gain +15 on all Speech checks."
-  }
+  "description" : "You can talk your way into and out of a variety of situations.  You gain +15 on all Speech checks."
 }

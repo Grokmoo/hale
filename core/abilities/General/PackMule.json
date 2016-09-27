@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/packMule"
   },
-  "description" : {
-    "base" : "Your carrying weight limit is increased by a further 30 kg."
-  },
+  "description" : "Your carrying weight limit is increased by a further 30 kg.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

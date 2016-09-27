@@ -5,9 +5,7 @@
   "icon" : {
     "sprite" : "icons/meleeCasting"
   },
-  "description" : {
-    "base" : "You are good at dodging blows without interrupting your spell casting concentration.  You gain a 30% bonus to your Spell Failure chance when being threatened by one or more hostiles with melee weapons.  This ability cannot reduce your spell failure from melee combat to less than 0.  It stacks with any bonuses due to your concealment."
-  },
+  "description" : "You are good at dodging blows without interrupting your spell casting concentration.  You gain a 30% bonus to your Spell Failure chance when being threatened by one or more hostiles with melee weapons.  This ability cannot reduce your spell failure from melee combat to less than 0.  It stacks with any bonuses due to your concealment.",
   "prereqs" : {
     "stats" : [
       {

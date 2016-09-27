@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/devastatingShot"
   },
-  "description" : {
-    "base" : "Your Crippling Shot is now made with a +40 Attack bonus and a +160 Damage bonus."
-  },
+  "description" : "Your Crippling Shot is now made with a +40 Attack bonus and a +160 Damage bonus.",
   "isActivateable" : false,
   "ai" : {
     "power" : 40,

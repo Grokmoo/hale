@@ -5,8 +5,6 @@
   "icon" : {
     "sprite" : "icons/naturalArmor"
   },
-  "description" : {
-    "base" : "Some creatures are naturally highly resistant to cold."
-  },
+  "description" : "Some creatures are naturally highly resistant to cold.",
   "isActivateable" : false
 }

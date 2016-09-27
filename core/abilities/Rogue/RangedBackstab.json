@@ -4,9 +4,7 @@
   "icon" : {
     "sprite" : "icons/rangedBackstab"
   },
-  "description" : {
-    "base" : "You can now perform backstabs with ranged weapons, as long as you are within 3 hexes of your target."
-  },
+  "description" : "You can now perform backstabs with ranged weapons, as long as you are within 3 hexes of your target.",
   "isActivateable" : false,
   "prereqs" : {
     "abilities" : [

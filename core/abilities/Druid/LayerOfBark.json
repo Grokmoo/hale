@@ -10,9 +10,7 @@
   "icon" : {
     "sprite" : "icons/layerOfBark"
   },
-  "description" : {
-    "base" : "The caster becomes enveloped in magically enchanced bark.  The bark absorbs 75% of all Physical damage on the target for 1 round plus one round per 4 caster levels.  However, the target also suffers a 25% increased vulnerability to fire."
-  },
+  "description" : "The caster becomes enveloped in magically enchanced bark.  The bark absorbs 75% of all Physical damage on the target for 1 round plus one round per 4 caster levels.  However, the target also suffers a 25% increased vulnerability to fire.",
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "Alteration",

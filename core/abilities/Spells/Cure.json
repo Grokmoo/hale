@@ -10,12 +10,13 @@
   "icon" : {
     "sprite" : "icons/cure"
   },
-  "description" : {
-    "base" : "A targeted friendly creature is touched by the caster and healed for 5 hit points plus one to four hit points per caster level.",
-    "upgrades" : {
-      "MassCure" : "With Mass Cure, you now all heal all allies within 4 hexes."
-    }
-  },
+  "description" : "A targeted friendly creature is touched by the caster and healed for 5 hit points plus one to four hit points per caster level.",
+  "upgrades" : [
+    { "ability" : "MassCure",
+	  "description" : "With Mass Cure, you now all heal all allies within 4 hexes.",
+	  "override" : true
+	}
+  ],
   "canActivateOutsideCombat" : true,
   "isActivateable" : true,
   "quickbarGroup" : "Restoration",

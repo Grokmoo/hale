@@ -5,7 +5,5 @@
   "icon" : {
     "sprite" : "icons/selfSufficient"
   },
-  "description" : {
-    "base" : "You are able to survive better than most in nature, and know your way around various species of plants.  You gain +15 on Alchemy checks."
-  }
+  "description" : "You are able to survive better than most in nature, and know your way around various species of plants.  You gain +15 on Alchemy checks."
 }
