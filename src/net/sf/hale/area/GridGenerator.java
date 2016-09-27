@@ -66,6 +66,11 @@ public class GridGenerator implements Generator {
 					for (int i = 0; i < gridSize; i++) {
 						area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + i, (byte)1);
 					}
+					
+					if (cellY * gridSize + gridSize < area.getHeight()) {
+						area.getElevationGrid().setElevation(cellX * gridSize, cellY * gridSize + gridSize, (byte)1);
+					}
+					
 				}
 			}
 		}
@@ -116,6 +121,16 @@ public class GridGenerator implements Generator {
 
 						area.getTileGrid().addTile(borderTile.getID(), borderTile.getLayerID(), bP.x, bP.y);
 					}
+					
+					if (elevation.getImpassable() != null) {
+						Point impass = elevation.getImpassable().getRelativePoint(p);
+						
+						if (area.isValidPoint(impass)) {
+							area.getPassability()[impass.x][impass.y] = false;
+						}
+						
+					}
+					
 				}
 			}
 		}

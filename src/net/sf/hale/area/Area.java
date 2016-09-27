@@ -642,6 +642,20 @@ public class Area implements EffectTarget, Saveable {
 	}
 	
 	/**
+	 * Returns true if this point is inside the bounds of this area, false otherwise
+	 * @param p the point to test
+	 * @return whether the point is valid for this area
+	 */
+	
+	public boolean isValidPoint(Point p) {
+		if (p.x < 0 || p.y < 0) return false;
+		
+		if (p.x >= this.width || p.y >= this.height) return false;
+		
+		return true;
+	}
+	
+	/**
 	 * Gets the AreaUtil for this area.  If the AreaUtil does not exist, it is created
 	 * @return the AreaUtil for this area
 	 */

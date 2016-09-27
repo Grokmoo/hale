@@ -38,6 +38,7 @@ public class QuickbarGroupButton extends Button {
 	
 	private QuickbarGroupPopup popup;
 	private boolean isHovering;
+	private boolean isClicked;
 	
 	/**
 	 * Creates a new button for the specified group
@@ -83,15 +84,12 @@ public class QuickbarGroupButton extends Button {
 	private void endHover() {
 		if (popup != null) {
 			viewer.removeHoverPopup(popup);
-			//popup = null;
 		}
 		
 		isHovering = false;
 	}
 	
 	@Override public boolean handleEvent(Event evt) {
-		//if (Game.interfaceLocker.locked()) return super.handleEvent(evt);
-		
 		if (isEnabled()) {
 			handleHover(evt);
 		}
