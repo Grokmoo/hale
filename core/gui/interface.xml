@@ -200,7 +200,6 @@
 		<param name="groupGap"><int>5</int></param>
 		
 		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
-		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
 	</theme>
 	
 	<theme name="initiativeticker" ref="-defaults">
