@@ -20,7 +20,9 @@
 package net.sf.hale.quickbar;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.Ability;
@@ -38,13 +40,13 @@ import de.matthiasmann.twl.Widget;
 
 public class QuickbarViewer extends Widget {
 	private Quickbar quickbar;
-	private List<QuickbarSlotButton> buttons;
-	private List<QuickbarGroupButton> groupButtons;
+	private List<QuickbarSlotButton> itemButtons;
+	private Map<QuickbarGroup, List<QuickbarSlotButton>> abilityButtons;
 	
-	private Widget hover;
+	private int buttonGap, groupGap;
 	
-	private int buttonGap;
-	
+	private static final int Rows = 3;
+	private static final int Cols = 12;
 	
 	/**
 	 * Create a new QuickbarViewer widget.  The widget
@@ -53,18 +55,16 @@ public class QuickbarViewer extends Widget {
 	 */
 	
 	public QuickbarViewer() {
-		buttons = new ArrayList<QuickbarSlotButton>(Quickbar.ItemSlots);
+		itemButtons = new ArrayList<QuickbarSlotButton>(Quickbar.ItemSlots);
 
-		groupButtons = new ArrayList<QuickbarGroupButton>();
+		abilityButtons = new LinkedHashMap<QuickbarGroup, List<QuickbarSlotButton>>();
 		for (QuickbarGroup group : Game.ruleset.getAllQuickbarGroups()) {
-			QuickbarGroupButton button = new QuickbarGroupButton(this, group);
-			groupButtons.add(button);
-			add(button);
+			abilityButtons.put(group, new ArrayList<QuickbarSlotButton>());
 		}
 		
 		for (int i = 0; i < Quickbar.ItemSlots; i++) {
 			QuickbarSlotButton button = new QuickbarSlotButton(i);
-			buttons.add(button);
+			itemButtons.add(button);
 			add(button);
 		}
 		
@@ -72,34 +72,62 @@ public class QuickbarViewer extends Widget {
 	}
 	
 	@Override protected void layout() {
-		int curX = getInnerX();
-		for (Button b : groupButtons) {
+		int row = 0;
+		int col = 0;
+		int groupGapCount = 0;
+
+		for (Button b : itemButtons) {
 			b.setSize(b.getPreferredWidth(), b.getPreferredHeight());
-			b.setPosition(curX, getInnerBottom() - b.getHeight());
+			b.setPosition(getInnerX() + col * (b.getWidth() + buttonGap) + groupGapCount * groupGap,
+					getInnerY() + row * (b.getHeight() + buttonGap));
 			
-			curX = b.getRight() + buttonGap;
+			row++;
+			if (row == Rows) {
+				row = 0;
+				col++;
+			}
 		}
 		
-		for (Button b : buttons) {
-			b.setSize(b.getPreferredWidth(), b.getPreferredHeight());
-			b.setPosition(curX, getInnerBottom() - b.getHeight());
+		groupGapCount++;
+		if (row != 0) {
+			row = 0;
+			col++;
+		}
+		
+		for (QuickbarGroup group : abilityButtons.keySet()) {
+			for (QuickbarSlotButton b : abilityButtons.get(group)) {
+				b.setSize(b.getPreferredWidth(), b.getPreferredHeight());
+				b.setPosition(getInnerX() + col * (b.getWidth() + buttonGap) + groupGapCount * groupGap,
+						getInnerY() + row * (b.getHeight() + buttonGap));
+				
+				row++;
+				if (row == Rows) {
+					row = 0;
+					col++;
+				}
+			}
 			
-			curX = b.getRight() + buttonGap;
+			groupGapCount++;
+			if (row != 0) {
+				row = 0;
+				col++;
+			}
 		}
 	}
 	
 	@Override public int getPreferredInnerWidth() {
-		return groupButtons.get(0).getPreferredWidth() * 12 + 11 * buttonGap;
+		return itemButtons.get(0).getPreferredWidth() * Cols + (Cols - 1) * buttonGap + groupGap * abilityButtons.size();
 	}
 	
 	@Override public int getPreferredInnerHeight() {
-		return groupButtons.get(0).getPreferredHeight() * 3 + 2 * buttonGap;
+		return itemButtons.get(0).getPreferredHeight() * Rows + (Rows - 1) * buttonGap;
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {
 		super.applyTheme(themeInfo);
 		
 		buttonGap = themeInfo.getParameter("buttonGap", 0);
+		groupGap = themeInfo.getParameter("groupGap", 0);
 	}
 	
 	/**
@@ -111,13 +139,13 @@ public class QuickbarViewer extends Widget {
 	public void setQuickbar(Quickbar quickbar) {
 		this.quickbar = quickbar;
 		if (quickbar == null) {
-			for (QuickbarSlotButton button : buttons) {
+			for (QuickbarSlotButton button : itemButtons) {
 				button.setSlot(null, null);
 			}
 		} else {
 			for (int i = 0; i < Quickbar.ItemSlots; i++) {
 				QuickbarSlot slot = quickbar.getSlot(i);
-				buttons.get(i).setSlot(slot, quickbar);
+				itemButtons.get(i).setSlot(slot, quickbar);
 			}
 		}
 	}
@@ -133,7 +161,7 @@ public class QuickbarViewer extends Widget {
 	 */
 	
 	public int findSlotIndexUnderMouse(int x, int y) {
-		for (QuickbarSlotButton button : buttons) {
+		for (QuickbarSlotButton button : itemButtons) {
 			if (button.isInside(x, y))
 				return button.getIndex();
 		}
@@ -151,7 +179,7 @@ public class QuickbarViewer extends Widget {
 	public QuickbarSlotButton getButton(int index) {
 		if (index < 0 || index >= Quickbar.ItemSlots) return null; 
 		
-		return buttons.get(index);
+		return itemButtons.get(index);
 	}
 	
 	/**
@@ -164,7 +192,7 @@ public class QuickbarViewer extends Widget {
 	 */
 	
 	public QuickbarSlotButton getButtonAtViewIndex(int index) {
-		return buttons.get(index);
+		return itemButtons.get(index);
 	}
 	
 	/**
@@ -185,50 +213,32 @@ public class QuickbarViewer extends Widget {
 	 */
 	
 	public void updateContent(PC selected) {
-		if (selected != null && quickbar != selected.quickbar) {
+		if (selected == null) return;
+		
+		if (quickbar != selected.quickbar) {
 			setQuickbar(selected.quickbar);
+		}
+		
+		this.removeAllChildren();
+		for (QuickbarSlotButton itemButton : itemButtons) {
+			this.add(itemButton);
+		}
+		
+		for (QuickbarGroup group : abilityButtons.keySet()) {
+			List<QuickbarSlotButton> buttons = abilityButtons.get(group);
+			buttons.clear();
 			
-			// set enabled status of the group buttons
-			for (QuickbarGroupButton groupButton : groupButtons) {
-				boolean hasAbility = false;
-				for (Ability ability : groupButton.getGroup().getAbilities()) {
-					if (selected.abilities.has(ability)) {
-						hasAbility = true;
-						break;
-					}
-				}
+			// add buttons for relevant abilities
+			for (Ability ability : group.getAbilities()) {
+				if (!selected.abilities.has(ability)) continue;
 				
-				groupButton.setEnabled(hasAbility);
+				QuickbarSlotButton slotButton = new QuickbarSlotButton(-1);
+				slotButton.setSlot(new AbilityActivateSlot(ability, selected), selected.quickbar);
+				slotButton.setShowIndexLabel(false);
+				slotButton.setDisabledExceptActivate(true);
+				buttons.add(slotButton);
+				this.add(slotButton);
 			}
-		}
-	}
-	
-	/**
-	 * Adds the specified widget at the hover over for the quickbar.  removes
-	 * any existing hover over
-	 * @param popup
-	 */
-	
-	public void setHoverPopup(Widget popup) {
-		if (this.hover != null) Game.mainViewer.removeChild(this.hover);
-		
-		this.hover = popup;
-		
-		if (this.hover != null) {
-			Game.mainViewer.add(popup);
-		}
-	}
-	
-	/**
-	 * removes the specified hover if it is the current hover.  does not remove
-	 * the existing hover if it is not the passed in widget
-	 * @param popup
-	 */
-	
-	public void removeHoverPopup(Widget popup) {
-		if (this.hover == popup) {
-			Game.mainViewer.removeChild(this.hover);
-			this.hover = null;
 		}
 	}
 }

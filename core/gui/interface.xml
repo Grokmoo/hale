@@ -197,11 +197,12 @@
 		<param name="emptytooltip"><string>Drag and Drop Items here to use this Slot</string></param>
 	</theme>
 	
-	<theme name="quickbarviewer" ref="dialoglayout">
-		<param name=""><image>iconbuttonblack.*</image></param>
+	<theme name="quickbarviewer" ref="-defaults">
+		
         <param name="border"><border>2</border></param>
 		
 		<param name="buttonGap"><int>1</int></param>
+		<param name="groupGap"><int>5</int></param>
 		
 		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
