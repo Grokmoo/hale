@@ -1,0 +1,19 @@
+<themes>
+    <images file="gothicUI.png" format="RGBA">
+	    <area name="windowbackground-gothic" border="93" xywh="0,0,192,192" splitx="L64,R64" splity="T64,B64"/>
+		
+		<area name="windowclosebutton-normal" xywh="192,0,17,17"/>
+		<area name="windowclosebutton-hover" xywh="192,17,17,17"/>
+		<area name="windowclosebutton-armed" xywh="192,34,17,17"/>
+		
+		<select name="windowclosebutton.background" border="2,2,1,1">
+            <alias ref="windowclosebutton-armed" if="armed"/>
+            <alias ref="windowclosebutton-hover" if="hover"/>
+            <alias ref="windowclosebutton-normal"/>
+        </select>
+		
+		<area name="panebackground-gothic" border="7" xywh="0,192,72,72" splitx="L24,R24" splity="T24,B24"/>
+		
+		<area name="smallbackground-gothic" border="3" xywh="0,264,27,27" splitx="L9,R9" splity="T9,B9"/>
+	</images>
+</themes>
