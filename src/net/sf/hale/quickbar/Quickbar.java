@@ -45,10 +45,7 @@ import net.sf.hale.util.SimpleJSONObject;
 
 public class Quickbar implements Saveable {
 	/** The maximum total number of QuickbarSlots in any one Quickbar */
-	public static final int ItemSlots = 6;
-	
-	/** The number of Quickbar Ability buttons shown on a single row when viewing a QuickbarGroup **/
-	public static final int GroupButtonsPerRow = 3;
+	public static final int ItemSlots = 9;
 	
 	private Map<Integer, QuickbarSlot> slots;
 	private PC parent;
