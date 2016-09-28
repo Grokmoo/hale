@@ -105,28 +105,24 @@
 		<param name="textAlignment"><enum type="alignment">center</enum></param>
     </theme>
 
-    <theme name="iconbuttonred" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderred</image></param>
-        <param name="border"><border>2,2,1,1</border></param>
-		<param name="textAlignment"><enum type="alignment">center</enum></param>
-    </theme>
-
-    <theme name="iconbuttonblack" ref="-defaults" allowWildcard="true">
-        <param name=""><image>iconbuttonblack.*</image></param>
-        <param name="border"><border>2,2,1,1</border></param>
-		<param name="textAlignment"><enum type="alignment">center</enum></param>
-    </theme>
-
     <theme name="iconbutton" ref="-defaults" allowWildcard="true">
         <param name=""><image>iconbutton.*</image></param>
         <param name="border"><border>background.border</border></param>
 		<param name="textAlignment"><enum type="alignment">center</enum></param>
     </theme>
 	
+	<theme name="roundedbutton" ref="-defaults">
+	    <param name=""><image>roundedbutton.*</image></param>
+		<param name="border"><border>background.border</border></param>
+		<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<param name="font"><font>white</font></param>
+	</theme>
+	
     <theme name="button" ref="-defaults" allowWildcard="true">
         <param name=""><image>button.*</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="textAlignment"><enum type="alignment">center</enum></param>
+		<param name="font"><font>white</font></param>
     </theme>
 
     <theme name="togglebutton" ref="button" allowWildcard="true">
@@ -324,7 +320,7 @@
             <param name="minWidth"><int>16</int></param>
         </theme>
         <theme name="valueDisplay" ref="button">
-            <param name=""><image>valueadjuster.display.*</image></param>
+            <param name=""><image>button.*</image></param>
             <param name="textAlignment"><enum type="alignment">center</enum></param>
         </theme>
         <theme name="valueEdit" ref="editfield"/>
@@ -350,11 +346,12 @@
     </theme>
 
     <theme name="textarea" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
+        <param name="background"><image>none</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="fonts"><map>
-           <param name="default"><font>normal</font></param>
+           <param name="default"><font>black</font></param>
            <param name="mono"><font>code</font></param>
+		   <param name="white"><font>white</font></param>
 		   <param name="black"><font>black</font></param>
 		   <param name="red"><font>red</font></param>
 		   <param name="green"><font>green</font></param>
@@ -395,7 +392,7 @@
     </theme>
 	
     <theme name="scrollpane" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
+        <param name="background"><image>textbackground-gothic</image></param>
         <param name="border"><border>background.border</border></param>
         <theme name="textarea" ref="textarea">
             <param name="background"><image>none</image></param>
@@ -598,11 +595,11 @@
 
     <theme name="infodialog" ref="-defaults" allowWildcard="true">
         <param name="background"><image>windowbackground-gothic</image></param>
-        <param name="border"><border>20</border></param>
+        <param name="border"><border>30,18,30,18</border></param>
         <param name="titleAreaTop"><int>2</int></param>
         <param name="titleAreaLeft"><int>30</int></param>
-        <param name="titleAreaRight"><int>700</int></param>
-        <param name="titleAreaBottom"><int>20</int></param>
+        <param name="titleAreaRight"><int>-30</int></param>
+        <param name="titleAreaBottom"><int>25</int></param>
         <param name="hasCloseButton"><bool>true</bool></param>
         <param name="closeButtonX"><int>-22</int></param>
         <param name="closeButtonY"><int>3</int></param>
@@ -616,7 +613,8 @@
         <param name="fadeDurationHide"><int>0</int></param>
         <param name="mouseCursor"><cursor>arrow.*</cursor></param>
         <theme name="title" ref="label">
-            <param name="textAlignment"><enum type="alignment">left</enum></param>
+		    <param name="background"><image>tinybackground-gothic</image></param>
+            <param name="textAlignment"><enum type="alignment">center</enum></param>
             <param name="font"><fontDef filename="fonts/small.fnt" color="white">
                 <fontParam unless="keyboardFocus | hasOpenPopups" color="#d4d0c8"/>
             </fontDef></param>

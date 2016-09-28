@@ -106,7 +106,6 @@
 	
 		<theme name="description" ref="textarea">
 			<param name="minWidth"><int>160</int></param>
-			<param name="background"><image>transparent</image></param>
 		</theme>
 		
 		<theme name="detailsbutton" ref="-defaults">
@@ -183,9 +182,7 @@
 				<param name="border"><border>2</border></param>
 				<param name="background"><image>characterbutton.background</image></param>
 			
-				<theme name="textarea" ref="textarea">
-					<param name="background"><image>transparent</image></param>
-				</theme>
+				<theme name="textarea" ref="textarea"/>
 			</theme>
 			
 			<theme name="deletebutton" ref="-defaults">
@@ -411,9 +408,7 @@
 		<param name="minHeight"><int>50</int></param>
 		
 		<theme name="namelabel" ref="labelbigblack"/>
-                <theme name="namearea" ref="textarea">
-                  <param name="background"><image>transparent</image></param>
-                </theme>
+                <theme name="namearea" ref="textarea"/>
 		
 		<theme name="campaignselector" ref="mainmenubutton"/>
 	</theme>
@@ -525,9 +520,7 @@
 		<param name="border"><border>2</border></param>
 		<param name="deletedisabledtooltip"><string>This party is pregenerated and may not be deleted</string></param>
 	
-		<theme name="textarea" ref="textarea">
-			<param name="background"><image>transparent</image></param>
-		</theme>
+		<theme name="textarea" ref="textarea"/>
 		
 		<theme name="deletebutton" ref="-defaults">
 			<param name="background"><image>deletebutton.background</image></param>
@@ -742,9 +735,7 @@
 					<param name="text"><string>Exit</string></param>
 				</theme>
 				
-				<theme name="textarea" ref="textarea">
-					<param name="background"><image>transparent</image></param>
-				</theme>
+				<theme name="textarea" ref="textarea"/>
 			</theme>
 		</theme>
 	</theme>

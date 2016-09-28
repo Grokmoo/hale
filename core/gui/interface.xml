@@ -5,8 +5,8 @@
 	
 	<theme name="htmlpopup" ref="-defaults">
 		<theme name="content" ref="-defaults">
-			<param name=""><image>iconbuttonblack.*</image></param>
-			<param name="border"><border>5,5,5,5</border></param>
+			<param name=""><image>mediumbackground-gothic.*</image></param>
+			<param name="border"><border>7</border></param>
 			
 			<theme name="closebutton" ref="-defaults">
 				<param name=""><image>hoverbutton.*</image></param>
@@ -36,9 +36,10 @@
 		<param name="maxWidth"><int>1000</int></param>
 	</theme>
 	
-	<theme name="entitymouseover" ref="iconbutton">
-		<param name="border"><border>4</border></param>
-		<theme name="namelabel" ref="labelblack"/>
+	<theme name="entitymouseover" ref="-defaults">
+	    <param name="background"><image>smallbackground-gothic</image></param>
+		<param name="border"><border>7</border></param>
+		<theme name="namelabel" ref="label"/>
 		<theme name="statuslabel" ref="labelred"/>
 	</theme>
 	
@@ -48,20 +49,21 @@
 		</theme>
 	</theme>
 	
-	<theme name="multipleitempopup" ref="iconbuttongrey">
+	<theme name="multipleitempopup" ref="-defaults">
 		<theme name="content" ref="-defaults">
+		    <param name="background"><image>mediumbackground-gothic</image></param>
 			<param name="border"><border>10</border></param>
 			<param name="titleGap"><int>10</int></param>
 			<param name="acceptCancelGap"><int>10</int></param>
 			<param name="valueGap"><int>5</int></param>
 		
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 			
 			<theme name="valueadjuster" ref="valueadjuster">
 				<param name="minWidth"><int>90</int></param>
 			</theme>
 			
-			<theme name="valuelabel" ref="labelblack"/>
+			<theme name="valuelabel" ref="label"/>
 			
 			<theme name="minbutton" ref="button">
 				<param name="text"><string>Min</string></param>
@@ -84,22 +86,26 @@
 		</theme>
 	</theme>
 	
-	<theme name="expandablewidget" ref="iconbutton">
+	<theme name="expandablewidget" ref="-defaults">
+	    <param name="background"><image>textbackground-gothic</image></param>
+		<param name="border"><border>3</border></param>
 		<theme name="description" ref="textarea"/>
-		<theme name="iconviewer" ref="iconbutton"/>
+		<theme name="iconviewer" ref="button"/>
 				
 		<theme name="expandbutton" ref="button">
 			<param name="text"><string>+</string></param>
 			<param name="tooltip"><string>Show Details</string></param>
+			<param name="border"><border>4,2</border></param>
 		</theme>
 		
 		<theme name="contractbutton" ref="button">
 			<param name="text"><string>-</string></param>
 			<param name="tooltip"><string>Hide Details</string></param>
+			<param name="border"><border>4,2</border></param>
 		</theme>
 	</theme>
 	
-	<theme name="mainpanebutton" ref="iconbuttonblack">
+	<theme name="mainpanebutton" ref="button">
 		<param name=""><image>mainpanebutton.*</image></param>
 		<param name="minHeight"><int>38</int></param>
 		<param name="minWidth"><int>38</int></param>
@@ -182,7 +188,7 @@
 		</theme>
     </theme>
 	
-	<theme name="quickbarslotbutton" ref="iconbutton">
+	<theme name="quickbarslotbutton" ref="button">
 		<param name="minWidth"><int>48</int></param>
 		<param name="minHeight"><int>48</int></param>
 			
@@ -193,7 +199,6 @@
 	</theme>
 	
 	<theme name="quickbarviewer" ref="-defaults">
-		
         <param name="border"><border>2</border></param>
 		
 		<param name="buttonGap"><int>1</int></param>
@@ -207,11 +212,10 @@
 		<param name="enabledTooltip"><string>Drag down to delay your turn</string></param>
 		<param name="disabledTooltip"><string>You have already taken an action</string></param>
 	
-		<param name=""><image>iconbuttonblack.*</image></param>
-        <param name="border"><border>2,2,2,2</border></param>
+		<param name="background"><image>tinybackground-gothic</image></param>
 		
 		<theme name="creatureviewer" ref="-defaults">
-			<param name=""><image>tickerbutton.*</image></param>
+			<param name=""><image>roundedbutton.*</image></param>
 		</theme>
 	</theme>
 	
@@ -310,7 +314,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="abilityslotviewer" ref="iconbutton">
+	<theme name="abilityslotviewer" ref="button">
 		<param name="disabledColor"><color>#ff7f7f7f</color></param>
 		<theme name="cooldownlabel" ref="labelgreen"/>
 	</theme>
@@ -323,8 +327,8 @@
 				<theme name="abilitynamelabel" ref="labelblack"/>
 				<theme name="hovermessagelabel" ref="label"/>
 			</theme>
-			<theme name="abilityhoverdetails" ref="iconbutton">
-				<param name="border"><border>4,4,4,4</border></param>
+			<theme name="abilityhoverdetails" ref="button">
+			    <param name="border"><border>4,4,4,4</border></param>
 			</theme>
 		
 			<theme name="abilityselectionlistpane" ref="abilityselectionlistpane">
@@ -375,7 +379,7 @@
 		
 		<theme name="content" ref="dialoglayout">
 			<theme name="titlelabel" ref="labelbigblack"/>
-			<theme name="iconviewer" ref="iconbutton"/>
+			<theme name="iconviewer" ref="-defaults"/>
 			<theme name="scrollpane" ref="scrollpane"/>
 		</theme>
 	</theme>
@@ -418,7 +422,7 @@
 			<param name="tooltip"><string>Show only Usable items (Potions, Scrolls)</string></param>
 		</theme>
 		<theme name="ingredientsfilter" ref="togglebutton">
-			<param name="text"><string>Ingredients</string></param>
+			<param name="text"><string>Crafting</string></param>
 			<param name="tooltip"><string>Show only Ingredients for Recipes</string></param>
 		</theme>
 		<theme name="trapsfilter" ref="togglebutton">
@@ -437,24 +441,24 @@
 	</theme>
 	
 	<theme name="inventorywindow" ref="gamesubwindow">
-		<param name="minWidth"><int>392</int></param>
+		<param name="minWidth"><int>402</int></param>
 		<param name="minHeight"><int>300</int></param>
-		<param name="defaultX"><int>392</int></param>
+		<param name="defaultX"><int>402</int></param>
 		<param name="gridSize"><int>49</int></param>
 		<param name="labelGap"><int>5</int></param>
 		<param name="defaultHeight"><int>450</int></param>
 	
 		<theme name="itemlistviewer" ref="itemlistviewer"/>
 	
-		<theme name="currencylabel" ref="labelblack"/>
-		<theme name="weightlabel" ref="labelblack"/>
+		<theme name="currencylabel" ref="label"/>
+		<theme name="weightlabel" ref="label"/>
 		
 		<theme name="organizebutton" ref="button">
 			<param name="text"><string>Organize</string></param>
 			<param name="tooltip"><string>Re-arrange your inventory by name and item quality</string></param>
 		</theme>
 		
-		<theme name="creatureviewer" ref="iconbutton">
+		<theme name="creatureviewer" ref="roundedbutton">
 			<param name="gridCenterX"><int>3</int></param>
 			<param name="gridCenterY"><int>2</int></param>
 		</theme>
@@ -551,7 +555,8 @@
 		<param name="minHeight"><int>300</int></param>
 		
 		<theme name="content" ref="dialoglayout">
-			<theme name="iconviewer" ref="iconbutton">
+			<theme name="iconviewer" ref="-defaults">
+			    <param name="background"><image>tinybackground-gothic</image></param>
 				<param name="minWidth"><int>48</int></param>
 				<param name="minHeight"><int>48</int></param>
 			</theme>
@@ -603,11 +608,6 @@
 		</theme>
 	</theme>
 	
-	<theme name="craftskilliconbutton" ref="-defaults">
-		<param name=""><image>tabbutton.*</image></param>
-		<param name="border"><border>3</border></param>
-	</theme>
-	
 	<theme name="recipeviewer" ref="expandablewidget">
 		<theme name="iconviewer" ref="expandablewidget.iconviewer">
 			<param name="minWidth"><int>48</int></param>
@@ -623,9 +623,9 @@
 	</theme>
 	
 	<theme name="recipesetviewer" ref="-defaults">
-		<param name="scrollPaneOverlap"><int>2</int></param>
+		<param name="scrollPaneOverlap"><int>0</int></param>
 	
-		<theme name="craftskilliconbutton" ref="craftskilliconbutton"/>
+		<theme name="craftskilliconbutton" ref="togglebutton"/>
 		<theme name="scrollpane" ref="scrollpane">
 			<theme name="content" ref="dialoglayout">
 				<param name="border"><border>2</border></param>
@@ -666,8 +666,6 @@
 		<param name="defaultWidth"><int>392</int></param>
 		<param name="defaultHeight"><int>450</int></param>
 		
-		<theme name="timelabel" ref="labelblack"/>
-		
 		<theme name="content" ref="tabbedpane">
 			<theme name="container" ref="tabbedpane.container">
 				<theme name="recipesetviewer" ref="recipesetviewer"/>
@@ -694,9 +692,7 @@
 		<param name="legendgap"><int>10</int></param>
 	
 		<theme name="mappane" ref="scrollpane">
-			<theme name="content" ref="iconbuttonblack">
-				<param name="overlay"><image>-borderL</image></param>
-			</theme>
+			<theme name="content" ref="-defaults"/>
 		</theme>
 		
 		<theme name="legendbutton" ref="button">
@@ -785,9 +781,7 @@
 					
 						<theme name="iconviewer" ref="itemiconviewer"/>
 						
-						<theme name="textarea" ref="textarea">
-							<param name="background"><image>transparent</image></param>
-						</theme>
+						<theme name="textarea" ref="textarea"/>
 					</theme>
 				</theme>
 			</theme>
@@ -858,9 +852,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="conversationpopup" ref="iconbuttonblack">
-		<param name="border"><border>2,2,2,2</border></param>
-		
+	<theme name="conversationpopup" ref="gamesubwindow">
 		<theme name="content" ref="-defaults">
 			<param name="minWidth"><int>400</int></param>
 			<param name="minHeight"><int>400</int></param>

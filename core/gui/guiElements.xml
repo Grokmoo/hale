@@ -215,36 +215,6 @@
 			<alias ref="-borderJ"/>
 		</select>
 		
-		<select name="itemlistviewercontent.background">
-			<alias ref="-borderD" if="draghover"/>
-			<alias ref="white"/>
-		</select>
-		
-		<select name="tickerbutton.background" border="0,0,0,0">
-			<alias ref="-borderK" if="armed"/>
-			<alias ref="-borderK" if="hover" tint="#888"/>
-			<alias ref="-borderJ" if="selected"/>
-			<alias ref="-borderH" tint="#000"/>
-		</select>
-		
-		<select name="itemiconviewer.background" border="2,2,1,1">
-			<alias ref="-borderE" if="armed"/>
-			<alias ref="-borderH" if="hover + profNotMet" tint="#f00"/>
-			<alias ref="-borderH" if="hover" tint="#888"/>
-			<alias ref="-borderH" if="draghover" tint="#888"/>
-			<alias ref="-borderH" if="profNotMet" tint="#f44"/>
-			<alias ref="-borderH" if="unaffordable" tint="#ccc"/>
-			<alias ref="-borderH"/>
-		</select>
-		
-		<select name="tabbutton.background">
-			<alias ref="-borderC" if="armed"/>
-			<alias ref="-borderN" if="hover + selected" tint="#ccc"/>
-			<alias ref="-borderB" if="hover"/>
-			<alias ref="-borderN" if="selected"/>
-			<alias ref="-borderO" tint="#888"/>
-		</select>
-		
         <select name="iconbutton.background" border="2,2,1,1">
             <alias ref="-borderH" if="disabled" tint="#8fff"/>
             <alias ref="-borderE" if="armed"/>
@@ -259,38 +229,6 @@
             <alias ref="-borderE" if="armed"/>
             <alias ref="-borderI" if="hover"/>
             <alias ref="-borderM" tint="#0c0"/>
-		</select>
-
-        <select name="iconbuttonblack.background" border="2,2,1,1">
-            <alias ref="-borderJ" if="selected" tint="#0000ff"/>
-            <alias ref="-borderJ"/>
-        </select>
-
-        <select name="button.background" border="6,3">
-            <alias ref="-borderB" if="disabled" tint="#8fff"/>
-            <alias ref="-borderE" if="armed"/>
-			<alias ref="-borderD" if="hover"/>
-            <alias ref="-borderB"/>
-        </select>
-		
-		<select name="mainpanebutton.background" border="3">
-			<alias ref="-borderJ" if="disabled" tint="#8fff"/>
-			<animation if="notification + armed" timeSource="notification">
-				<frame ref="-borderF" tint="#f88" duration="400"/>
-				<frame ref="-borderF" tint="#fff" duration="400"/>
-			</animation>
-			<animation if="notification + hover" timeSource="notification">
-				<frame ref="-borderK" tint="#f88" duration="400"/>
-				<frame ref="-borderK" tint="#fff" duration="400"/>
-			</animation>
-			<animation if="notification" timeSource="notification">
-				<frame ref="-borderK" tint="#844" duration="400"/>
-				<frame ref="-borderK" tint="#888" duration="400"/>
-			</animation>
-            <alias ref="-borderF" if="armed"/>
-			<alias ref="-borderS" if="selected"/>
-			<alias ref="-borderK" if="hover"/>
-            <alias ref="-borderJ"/>
 		</select>
 		
 		<select name="endturnbutton.background" border="3">
@@ -322,8 +260,6 @@
 			<alias ref="-borderD" if="hover"/>
 			<alias ref="-borderB"/>
 		</select>
-		
-        <alias name="button.overlay" ref="-selection"/>
 
 		<select name="hoverbutton.background" border="3,3,3,3">
 			<alias ref="-borderB" if="disabled" tint="#8fff"/>
@@ -338,16 +274,6 @@
 			<alias ref="-borderC" if="selected"/>
 			<alias ref="-borderB"/>
 		</select>
-
-        <select name="togglebutton.background" border="6,3">
-            <alias ref="-borderC" if="disabled + selected" tint="#8fff"/>
-            <alias ref="-borderB" if="disabled" tint="#8fff"/>
-            <alias ref="-borderE" if="armed"/>
-            <alias ref="-borderC" if="selected"/>
-			<alias ref="-borderD" if="hover"/>
-            <alias ref="-borderB"/>
-        </select>
-        <alias name="togglebutton.overlay" ref="-selection"/>
 
         <grid name="radiobutton.background" weightsX="0,1" weightsY="1" border="1,14,1,1">
             <select center="true">
@@ -402,14 +328,6 @@
 				<alias ref="white" tint="#0000"/>
 			</grid>
 		</composed>
-		
-        <select name="valueadjuster.display.background">
-            <alias ref="-borderB" if="disabled" tint="#8fff"/>
-            <alias ref="-borderE" if="armed | pressed"/>
-			<alias ref="-borderD" if="hover"/>
-            <alias ref="-borderB"/>
-        </select>
-        <alias name="valueadjuster.display.overlay" ref="-selection"/>
 
 		<alias name="-deleteicon" ref="-iconX" inset="5,5,5,5"/>
 		
@@ -455,8 +373,6 @@
         <alias name="-icon.downbutton" ref="-iconA" inset="5,3,5,4"/>
         <alias name="-icon.leftbutton" ref="-iconE" inset="3,4,4,6"/>
         <alias name="-icon.rightbutton" ref="-iconF" inset="3,4,4,6"/>
-
-        <alias name="scrollbar.thumb.background" ref="valueadjuster.display.background"/>
 
 		<select name="incrementbutton.background">
 			<composed if="disabled">

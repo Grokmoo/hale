@@ -22,7 +22,6 @@ package net.sf.hale.view;
 import net.sf.hale.Game;
 import net.sf.hale.rules.QuestEntry;
 
-import de.matthiasmann.twl.Label;
 import de.matthiasmann.twl.TabbedPane;
 
 /**
@@ -33,7 +32,6 @@ import de.matthiasmann.twl.TabbedPane;
  */
 
 public class LogWindow extends GameSubWindow {
-	private final Label currentTime;
 	private final TabbedPane content;
 	
 	private final TabbedPane.Tab questTab;
@@ -49,10 +47,6 @@ public class LogWindow extends GameSubWindow {
 	public LogWindow() {
 		this.setTitle("Log");
 		
-		currentTime = new Label();
-		currentTime.setTheme("timelabel");
-		add(currentTime);
-		
 		content = new TabbedPane();
 		content.setTheme("content");
 		add(content);
@@ -67,10 +61,7 @@ public class LogWindow extends GameSubWindow {
 	@Override protected void layout() {
 		super.layout();
 		
-		currentTime.setSize(currentTime.getPreferredWidth(), currentTime.getPreferredHeight());
-		currentTime.setPosition(getInnerX(), getInnerY());
-		
-		content.setPosition(getInnerX(), currentTime.getBottom());
+		content.setPosition(getInnerX(), getInnerY());
 		content.setSize(getInnerWidth(), getInnerBottom() - content.getY());
 	}
 	
@@ -90,8 +81,6 @@ public class LogWindow extends GameSubWindow {
 	 */
 	
 	public void updateContent() {
-		currentTime.setText(Game.curCampaign.getDate().monthDayTimeString());
-		
 		recipeViewer.updateContent();
 		questViewer.updateContent();
 		
