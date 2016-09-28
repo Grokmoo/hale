@@ -602,7 +602,7 @@
 		<param name="minHeight"><int>300</int></param>
 		
 		<theme name="content" ref="dialoglayout">
-			<theme name="iconviewer" ref="iconbutton"/>
+			<theme name="iconviewer" ref="-defaults"/>
 			<theme name="titlelabel" ref="labelbigblack"/>
 			<theme name="detailspane" ref="scrollpane"/>
 		</theme>
@@ -744,7 +744,8 @@
 	</theme>
 	
 	<theme name="selectcraftitempopup" ref="-defaults">
-		<theme name="content" ref="iconbuttongrey">
+		<theme name="content" ref="-defaults">
+		    <param name="background"><image>mediumbackground-gothic</image></param>
 			<param name="border"><border>10</border></param>
 			<param name="gap"><int>10</int></param>
 			<param name="maxHeight"><int>500</int></param>
@@ -801,8 +802,9 @@
 	</theme>
 	
 	<theme name="scriptautocompletepopup" ref="-defaults">
-		<theme name="content" ref="iconbuttongrey">
-			<param name="border"><border>2</border></param>
+		<theme name="content" ref="-defaults">
+		    <param name="background"><image>mediumbackground-gothic</image></param>
+			<param name="border"><border>7</border></param>
 			
 			<theme name="textarea" ref="textarea"/>
 			
