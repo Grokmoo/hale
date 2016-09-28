@@ -182,11 +182,6 @@
 		</theme>
     </theme>
 	
-	<theme name="quickbargroupbutton" ref="iconbutton">
-		<param name="minWidth"><int>48</int></param>
-		<param name="minHeight"><int>48</int></param>
-	</theme>
-	
 	<theme name="quickbarslotbutton" ref="iconbutton">
 		<param name="minWidth"><int>48</int></param>
 		<param name="minHeight"><int>48</int></param>
@@ -206,13 +201,6 @@
 		
 		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 		<theme name="quickbargroupbutton" ref="quickbargroupbutton"/>
-	</theme>
-	
-	<theme name="quickbargrouppopup" ref="-defaults">
-		<param name=""><image>iconbuttonblack.*</image></param>
-		<param name="border"><border>2</border></param>
-		
-		<theme name="quickbarslotbutton" ref="quickbarslotbutton"/>
 	</theme>
 	
 	<theme name="initiativeticker" ref="-defaults">
