@@ -112,6 +112,13 @@
         <param name="textAlignment"><enum type="alignment">center</enum></param>
 		<param name="font"><font>white</font></param>
     </theme>
+	
+	<theme name="redbutton" ref="-defaults">
+	    <param name=""><image>redbutton.*</image></param>
+		<param name="border"><border>background.border</border></param>
+        <param name="textAlignment"><enum type="alignment">center</enum></param>
+		<param name="font"><font>white</font></param>
+	</theme>
 
     <theme name="togglebutton" ref="button" allowWildcard="true">
         <param name=""><image>togglebutton.*</image></param>
@@ -130,27 +137,17 @@
 		<param name=""><image>checkbutton.*</image></param>
 		<param name="border"><border>background.border</border></param>
 		<param name="textAlignment"><enum type="alignment">right</enum></param>
+		<param name="font"><font>white</font></param>
 	</theme>
-	
-    <theme name="radiobutton" ref="button" allowWildcard="true">
-        <param name=""><image>radiobutton.*</image></param>
-        <param name="border"><border>background.border</border></param>
-        <param name="textAlignment"><enum type="alignment">left</enum></param>
-    </theme>
 
-    <theme name="radiobuttonwhite" ref="radiobutton" allowWildcard="true">
-        <param name="font"><fontDef filename="fonts/small.fnt" color="white"/></param>
-        <param name="textAlignment"><enum type="alignment">center</enum></param>
-    </theme>
-
-	<theme name="incrementbutton" ref="-defaults">
-		<param name=""><image>incrementbutton.*</image></param>
+	<theme name="incrementbutton" ref="button">
+		<param name="overlay"><image>incrementuparrow</image></param>
 		<param name="minHeight"><int>20</int></param>
 		<param name="minWidth"><int>20</int></param>
 	</theme>
 					
-	<theme name="decrementbutton" ref="-defaults">
-		<param name=""><image>decrementbutton.*</image></param>
+	<theme name="decrementbutton" ref="button">
+		<param name="overlay"><image>incrementdownarrow</image></param>
 		<param name="minHeight"><int>20</int></param>
 		<param name="minWidth"><int>20</int></param>
 	</theme>
@@ -370,7 +367,7 @@
 		   <param name="large-white"><font>large-white</font></param>
         </map></param>
         <param name="images"><map>
-			<param name="ul-bullet"><image>transparent</image></param>
+			<param name="ul-bullet"><image>none</image></param>
         </map></param>
         <param name="classes"><map>
         </map></param>
@@ -450,7 +447,7 @@
         <param name="titleAreaRight"><int>-30</int></param>
         <param name="titleAreaBottom"><int>25</int></param>
         <param name="hasCloseButton"><bool>true</bool></param>
-        <param name="closeButtonX"><int>-22</int></param>
+        <param name="closeButtonX"><int>-28</int></param>
         <param name="closeButtonY"><int>3</int></param>
         <param name="hasResizeHandle"><bool>false</bool></param>
         <param name="resizeHandleX"><int>0</int></param>
@@ -468,10 +465,9 @@
                 <fontParam unless="keyboardFocus | hasOpenPopups" color="#d4d0c8"/>
             </fontDef></param>
         </theme>
-        <theme name="closeButton" ref="button">
-            <param name=""><image>windowclosebutton.*</image></param>
-            <param name="minWidth"><int>19</int></param>
-            <param name="minHeight"><int>19</int></param>
+        <theme name="closeButton" ref="redbutton">
+            <param name="minWidth"><int>25</int></param>
+            <param name="minHeight"><int>25</int></param>
         </theme>
         <theme name="label" ref="label"></theme>
         <theme name="button" ref="button"></theme>
@@ -497,7 +493,7 @@
             <param name="background"><image>-borderA</image></param>
             <param name="border"><border>background.border</border></param>
             <theme name="button" ref="popupmenu-button"/>
-            <theme name="checkbox" ref="radiobutton"/>
+            <theme name="checkbox" ref="checkbutton"/>
             <theme name="submenu" ref="popupmenu-button"/>
             <theme name="spacer" ref="-defaults">
                 <param name="background"><image>popupmenu.separator</image></param>
@@ -509,7 +505,7 @@
 
         <theme name="menubar" ref="dialoglayout">
             <theme name="button" ref="button"/>
-            <theme name="checkbox" ref="radiobutton"/>
+            <theme name="checkbox" ref="checkbutton"/>
             <theme name="submenu" ref="popupmenu-button"/>
         </theme>
     </theme>

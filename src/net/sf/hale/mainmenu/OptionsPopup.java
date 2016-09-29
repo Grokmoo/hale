@@ -171,7 +171,7 @@ public class OptionsPopup extends PopupWindow {
 			if (!Game.hasUsable2xDisplayMode()) {
 				scale2x.setEnabled(false);
 			}
-			addHorizontalWidgets(scale2x);
+			addHorizontalWidgets(scale2x, new Label()); // add label as spacer so scale2x doesn't fill entire width
 			
 			tooltipTitle = new Label();
 			tooltipTitle.setTheme("tooltiplabel");
@@ -193,11 +193,11 @@ public class OptionsPopup extends PopupWindow {
 			
 			fpsCounter = new ToggleButton();
 			fpsCounter.setTheme("fpstoggle");
-			addHorizontalWidgets(fpsCounter);
+			addHorizontalWidgets(fpsCounter, new Label());
 			
 			autoscrollToggle = new ToggleButton();
 			autoscrollToggle.setTheme("autoscrolltoggle");
-			addHorizontalWidgets(autoscrollToggle);
+			addHorizontalWidgets(autoscrollToggle, new Label());
 			
 			mainV.addGap(DialogLayout.LARGE_GAP);
 			

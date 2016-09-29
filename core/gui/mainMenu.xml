@@ -81,7 +81,6 @@
 	<theme name="confirmquitpopup" ref="confirmationpopup"/>
 	
 	<theme name="createcharacterselector" ref="-defaults">
-		<param name=""><image>characterselector.*</image></param>
 		<param name="border"><border>5</border></param>
 		<theme name="newcharacterbutton" ref="largebutton">
 			<param name="text"><string>Create New Character</string></param>
@@ -113,9 +112,7 @@
 			<param name="minHeight"><int>20</int></param>
 		</theme>
 		
-		<theme name="deletebutton" ref="-defaults">
-			<param name="background"><image>deletebutton.background</image></param>
-			
+		<theme name="deletebutton" ref="redbutton">
 			<param name="minWidth"><int>19</int></param>
 			<param name="minHeight"><int>19</int></param>
 		</theme>
@@ -169,9 +166,7 @@
 				<theme name="textarea" ref="textarea"/>
 			</theme>
 			
-			<theme name="deletebutton" ref="-defaults">
-				<param name="background"><image>deletebutton.background</image></param>
-			
+			<theme name="deletebutton" ref="redbutton">
 				<param name="minWidth"><int>19</int></param>
 				<param name="minHeight"><int>19</int></param>
 			</theme>
@@ -274,19 +269,23 @@
 				<param name="minWidth"><int>120</int></param>
 			</theme>
 			
-			<theme name="fpstoggle" ref="radiobutton">
+			<theme name="fpstoggle" ref="checkbutton">
+				<param name="minWidth"><int>180</int></param>
 				<param name="text"><string>Show Frames Per Second</string></param>
 			</theme>
 			
-			<theme name="autoscrolltoggle" ref="radiobutton">
+			<theme name="autoscrolltoggle" ref="checkbutton">
+				<param name="minWidth"><int>300</int></param>
 			    <param name="text"><string>Automatically Scroll to Show Combat Actions</string></param>
 			</theme>
 			
-			<theme name="fullscreentoggle" ref="radiobutton">
+			<theme name="fullscreentoggle" ref="checkbutton">
+				<param name="minWidth"><int>85</int></param>
 				<param name="text"><string>Fullscreen</string></param>
 			</theme>
 			
-			<theme name="scale2xtoggle" ref="radiobutton">
+			<theme name="scale2xtoggle" ref="checkbutton">
+				<param name="minWidth"><int>125</int></param>
 			    <param name="text"><string>Scale Display 2X</string></param>
 				<param name="tooltip"><string>Whether to scale the entire display by a factor of 2.  This requires a display resolution with at least 1200 vertical pixels and 1600 horizontal pixels.</string></param>
 			</theme>
@@ -499,9 +498,7 @@
 	
 		<theme name="textarea" ref="textarea"/>
 		
-		<theme name="deletebutton" ref="-defaults">
-			<param name="background"><image>deletebutton.background</image></param>
-			
+		<theme name="deletebutton" ref="redbutton">
 			<param name="minWidth"><int>19</int></param>
 			<param name="minHeight"><int>19</int></param>
 		</theme>

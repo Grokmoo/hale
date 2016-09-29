@@ -1,16 +1,23 @@
 <themes>
     <images file="gothicUI.png" format="RGBA">
+		<area name="uparrow" xywh="208,12,9,9"/>
+		<area name="downarrow" xywh="208,22,9,9"/>
+	
+		<area name="radiobutton-normal" xywh="207,15,12,12"/>
+		<area name="radiobutton-armed" xywh="220,15,12,12"/>
+		<area name="radiobutton-tick" xywh="235,16,4,4"/>
+		
+		<area name="checkbutton-tick" xywh="223,0,7,7"/>
+	
+		<area name="gradient-gothic" xywh="0,312,128,3"/>
+	
+		<area name="closex" xywh="207,0,11,11" center="true"/>
+	
 	    <area name="windowbackground-gothic" border="30,18,30,18" xywh="0,0,192,192" splitx="L64,R64" splity="T64,B64"/>
 		
-		<area name="windowclosebutton-normal" xywh="192,0,17,17"/>
-		<area name="windowclosebutton-hover" xywh="192,17,17,17"/>
-		<area name="windowclosebutton-armed" xywh="192,34,17,17"/>
-		
-		<select name="windowclosebutton.background" border="2,2,1,1">
-            <alias ref="windowclosebutton-armed" if="armed"/>
-            <alias ref="windowclosebutton-hover" if="hover"/>
-            <alias ref="windowclosebutton-normal"/>
-        </select>
+		<area name="redbutton-normal" xywh="192,0,15,15" border="3" splitx="L5,R5" splity="T5,B5"/>
+		<area name="redbutton-hover" xywh="192,15,15,15" border="3" splitx="L5,R5" splity="T5,B5"/>
+		<area name="redbutton-armed" xywh="192,30,15,15" border="3" splitx="L5,R5" splity="T5,B5"/>
 		
 		<area name="mediumbackground-gothic" border="9" xywh="0,192,72,72" splitx="L24,R24" splity="T24,B24"/>
 		
@@ -26,26 +33,30 @@
 		<area name="roundedbuttonbackground-gothic-normal" border="3" xywh="72,192,24,24" splitx="L8,R8" splity="T8,B8"/>
 		<area name="roundedbuttonbackground-gothic-hover" border="3" xywh="72,216,24,24" splitx="L8,R8" splity="T8,B8"/>
 		
+		<area name="buttonbackground-gothic-normal" border="2" xywh="192,51,15,15" splitx="L5,R5" splity="T5,B5"/>
+		<area name="buttonbackground-gothic-hover" border="2" xywh="192,66,15,15" splitx="L5,R5" splity="T5,B5"/>
+		<area name="buttonbackground-gothic-selected" border="2" xywh="192,81,15,15" splitx="L5,R5" splity="T5,B5"/>
+		
+		<select name="redbutton.background" border="3">
+			<alias ref="redbutton-normal" if="disabled" tint="#5fff"/>
+            <alias ref="redbutton-armed" if="armed"/>
+            <alias ref="redbutton-hover" if="hover"/>
+            <alias ref="redbutton-normal"/>
+        </select>
+		
+		<select name="redbutton.overlay">
+			<alias ref="closex" if="disabled" tint="#5fff"/>
+			<alias ref="closex" if="armed" tint="#888"/>
+			<alias ref="closex" if="hover" tint="#888"/>
+			<alias ref="closex"/>
+		</select>
+		
 		<select name="roundedbutton.background" border="2">
 		    <alias ref="roundedbuttonbackground-gothic-normal" if="disabled" tint="#5fff"/>
 		    <alias ref="roundedbuttonbackground-gothic-normal" if="armed" tint="#888"/>
 			<alias ref="roundedbuttonbackground-gothic-hover" if="hover"/>
 			<alias ref="roundedbuttonbackground-gothic-normal"/>
 		</select>
-		
-		<select name="itemiconviewer.background" border="2">
-			<alias ref="roundedbuttonbackground-gothic-normal" if="armed" tint="#888"/>
-			<alias ref="roundedbuttonbackground-gothic-hover" if="hover + profNotMet" tint="#f44"/>
-			<alias ref="roundedbuttonbackground-gothic-hover" if="hover"/>
-			<alias ref="roundedbuttonbackground-gothic-hover" if="draghover"/>
-			<alias ref="roundedbuttonbackground-gothic-normal" if="profNotMet" tint="#f44"/>
-			<alias ref="roundedbuttonbackground-gothic-normal" if="unaffordable" tint="#ccc"/>
-			<alias ref="roundedbuttonbackground-gothic-normal"/>
-		</select>
-		
-		<area name="buttonbackground-gothic-normal" border="2" xywh="192,51,15,15" splitx="L5,R5" splity="T5,B5"/>
-		<area name="buttonbackground-gothic-hover" border="2" xywh="192,66,15,15" splitx="L5,R5" splity="T5,B5"/>
-		<area name="buttonbackground-gothic-selected" border="2" xywh="192,81,15,15" splitx="L5,R5" splity="T5,B5"/>
 		
 		<select name="button.background" border="3">
 		    <alias ref="buttonbackground-gothic-normal" if="disabled" tint="#5fff"/>
@@ -87,8 +98,6 @@
 		
 		<alias name="scrollbar.thumb.background" ref="valueadjuster.display.background"/>
 		
-		<area name="gradient-gothic" xywh="0,312,128,3"/>
-		
 		<select name="portraitviewer.overlay">
 			<alias ref="tinybackground-red" if="selected"/>
 			<alias ref="tinybackground-transparent"/>
@@ -100,6 +109,49 @@
 			<alias ref="tinybackground-gothic" if="draghover" tint="#333"/>
 			<alias ref="tinybackground-gothic"/>
 		</select>
+		
+		<select name="abilityselectorbutton.background">
+			<alias ref="buttonbackground-gothic-normal" if="alreadyOwned"/>
+            <alias ref="buttonbackground-gothic-normal" if="prereqsNotMet" tint="#5fff"/>
+            <alias ref="buttonbackground-gothic-normal" if="armed" tint="#888"/>
+			<alias ref="buttonbackground-gothic-hover" if="hover"/>
+            <alias ref="buttonbackground-gothic-normal" tint="#0c0"/>
+		</select>
+		
+		<select name="itemiconviewer.background" border="2">
+			<alias ref="roundedbuttonbackground-gothic-normal" if="armed" tint="#888"/>
+			<alias ref="roundedbuttonbackground-gothic-hover" if="hover + profNotMet" tint="#f44"/>
+			<alias ref="roundedbuttonbackground-gothic-hover" if="hover"/>
+			<alias ref="roundedbuttonbackground-gothic-hover" if="draghover"/>
+			<alias ref="roundedbuttonbackground-gothic-normal" if="profNotMet" tint="#f44"/>
+			<alias ref="roundedbuttonbackground-gothic-normal" if="unaffordable" tint="#ccc"/>
+			<alias ref="roundedbuttonbackground-gothic-normal"/>
+		</select>
 
+		<composed name="checkbutton.background" border="4,3">
+			<select>
+				<alias ref="buttonbackground-gothic-normal" if="armed" tint="#888"/>
+				<alias ref="buttonbackground-gothic-hover" if="hover"/>
+				<alias ref="buttonbackground-gothic-normal"/>
+			</select>
+			<grid weightsX="0,1" weightsY="1" inset="2,4,0,0">
+				<select center="true">
+					<composed if="selected + armed">
+						<alias ref="textbackground-gothic" if="armed" tint="#888"/>
+						<alias ref="checkbutton-tick"/>
+					</composed>
+					<composed if="selected">
+						<alias ref="textbackground-gothic"/>
+						<alias ref="checkbutton-tick"/>
+					</composed>
+					<alias ref="textbackground-gothic" if="armed" tint="#888"/>
+					<alias ref="textbackground-gothic"/>
+				</select>
+				<alias ref="none"/>
+			</grid>
+		</composed>
+		
+		<alias name="incrementuparrow" ref="uparrow" inset="7,5,7,6"/>
+		<alias name="incrementdownarrow" ref="downarrow" inset="7,5,7,6"/>
 	</images>
 </themes>

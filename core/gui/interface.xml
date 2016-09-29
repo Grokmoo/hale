@@ -23,7 +23,6 @@
 	</theme>
 	
 	<theme name="targeterdescription" ref="textarea">
-		<param name="background"><image>transparent</image></param>
 		<param name="border"><border>10</border></param>
 	</theme>
 	
@@ -121,7 +120,6 @@
 		<theme name="endturnbutton" ref="button">
 			<param name=""><image>endturnbutton.*</image></param>
 			<param name="tooltip"><string>End the turn of the active character</string></param>
-			<param name="overlay"><image>transparent</image></param>
 			
 			<param name="font"><font>large</font></param>
 			<param name="minWidth"><int>75</int></param>
@@ -802,10 +800,7 @@
 					<param name="defaultGap"><dimension>1,1</dimension></param>
 				
 					<theme name="entryselector" ref="button">
-						<param name="overlay"><image>-selection</image></param>
-					
 						<theme name="textarea" ref="textarea">
-							<param name="background"><image>transparent</image></param>
 							<param name="border"><border>2</border></param>
 						</theme>
 					</theme>
@@ -858,9 +853,7 @@
 					<theme name="responsewidget" ref="button">
 						<param name="border"><border>3</border></param>
 				
-						<theme name="responsearea" ref="textarea">
-							<param name="background"><image>transparent</image></param>
-						</theme>
+						<theme name="responsearea" ref="textarea"/>
 					</theme>
 				</theme>
 			</theme>

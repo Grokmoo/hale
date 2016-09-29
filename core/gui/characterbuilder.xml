@@ -267,12 +267,8 @@
 		<param name="defaultWidth"><int>800</int></param>
 	
 		<theme name="content" ref="dialoglayout">
-			<theme name="paneselectorbutton" ref="-defaults">
-				<param name=""><image>paneselector.*</image></param>
-				<param name="textAlignment">
-					<enum type="alignment">center</enum>
-				</param>
-				<param name="font"><font>large-blue</font></param>
+			<theme name="paneselectorbutton" ref="togglebutton">
+				<param name="font"><font>large-white</font></param>
 				<param name="minWidth"><int>120</int></param>
 				<param name="minHeight"><int>40</int></param>
 			</theme>
