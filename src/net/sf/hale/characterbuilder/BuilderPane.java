@@ -47,7 +47,7 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 	private DialogLayout.Group selectorPaneContentV;
 	private Label pointsLabel;
 	
-	private int titleGap;
+	private int titleGap, paneGap;
 	
 	/**
 	 * Create a BuilderPane with the specified descriptive name.
@@ -103,6 +103,7 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		super.applyTheme(themeInfo);
 		
 		this.titleGap = themeInfo.getParameter("titlegap", 0);
+		this.paneGap = themeInfo.getParameter("panegap", 0);
 	}
 	
 	@Override protected void layout() {
@@ -118,7 +119,7 @@ public abstract class BuilderPane extends AbstractBuilderPane {
 		
 		int selectorPaneWidth = selectorPane.getPreferredWidth();
 		int selectorPaneHeight = Math.min(selectorPane.getPreferredHeight(),
-				getNextButton().getY() - pointsLabel.getBottom() - titleGap);
+				getNextButton().getY() - pointsLabel.getBottom() -  titleGap - paneGap - getAdditionalSelectorPaneHeightLimit());
 		
 		int textPaneX = getInnerX() + Math.max(backNextWidth, selectorPaneWidth);
 		

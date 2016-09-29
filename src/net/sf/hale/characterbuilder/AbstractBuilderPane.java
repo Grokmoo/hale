@@ -76,6 +76,16 @@ public abstract class AbstractBuilderPane extends Widget {
 	}
 	
 	/**
+	 * returns an additional number of pixels that should be removed from the
+	 * overall height of the selector pane.  called during layout
+	 * @return an amount to reomve from the selector pane height
+	 */
+	
+	protected int getAdditionalSelectorPaneHeightLimit() {
+		return 0;
+	}
+	
+	/**
 	 * Returns the back button used to go to the previous active pane
 	 * @return the back button
 	 */

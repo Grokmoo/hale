@@ -2,15 +2,15 @@
   "name" : "Mage",
   "subLists" : {
     "Evocation" : {
-      "x" : 0.5,
+      "x" : 0.0,
       "y" : 0.5
     },
     "Alteration" : {
-      "x" : 0.5,
+      "x" : 0.0,
       "y" : 6.0
     },
     "Conjuration" : {
-      "x" : 0.5,
+      "x" : 0.0,
       "y" : 10.5
     }
   }

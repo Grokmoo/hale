@@ -20,7 +20,6 @@
 package net.sf.hale.characterbuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -102,6 +101,10 @@ public class BuilderPaneAbilities extends AbstractBuilderPane implements Ability
 		} else {
 			getCharacterBuilder().finish();
 		}
+	}
+	
+	@Override protected int getAdditionalSelectorPaneHeightLimit() {
+		return resetButton.getPreferredHeight();
 	}
 	
 	@Override protected void applyTheme(ThemeInfo themeInfo) {

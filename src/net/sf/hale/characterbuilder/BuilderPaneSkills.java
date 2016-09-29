@@ -106,6 +106,10 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 		}
 	}
 	
+	@Override protected int getAdditionalSelectorPaneHeightLimit() {
+		return Math.max(resetButton.getPreferredHeight(), roleButton.getPreferredHeight());
+	}
+	
 	private SkillSelector findSelector(String skillID) {
 		for (SkillSelector selector : selectors) {
 			if (selector.skill.getID().equals(skillID)) return selector;

@@ -50,6 +50,7 @@
 	<theme name="builderpane" ref="-defaults">
 		<param name="minHeight"><int>500</int></param>
 		<param name="titlegap"><int>2</int></param>
+		<param name="panegap"><int>10</int></param>
 		
 		<theme name="titlelabel" ref="labelbigblack"/>
 		<theme name="descriptionpane" ref="scrollpane"/>
