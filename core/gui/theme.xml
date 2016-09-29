@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE themes PUBLIC "-//www.matthiasmann.de//TWL-Theme//EN" "http://hg.l33tlabs.org/twl/raw-file/tip/src/de/matthiasmann/twl/theme/theme.dtd">
-<!--
-    Document   : simple.xml
-    Created on : November 22, 2007, 9:23 PM
-    Author     : Matthias Mann
---><themes>
-    <include filename="guiElements.xml"/>
+<themes>
 	<include filename="gothicUI.xml"/>
     <include filename="cursors.xml"/>
     
@@ -141,15 +135,15 @@
 	</theme>
 
 	<theme name="incrementbutton" ref="button">
-		<param name="overlay"><image>incrementuparrow</image></param>
-		<param name="minHeight"><int>20</int></param>
-		<param name="minWidth"><int>20</int></param>
+		<param name="overlay"><image>centereduparrow</image></param>
+		<param name="minHeight"><int>19</int></param>
+		<param name="minWidth"><int>19</int></param>
 	</theme>
 					
 	<theme name="decrementbutton" ref="button">
-		<param name="overlay"><image>incrementdownarrow</image></param>
-		<param name="minHeight"><int>20</int></param>
-		<param name="minWidth"><int>20</int></param>
+		<param name="overlay"><image>centereddownarrow</image></param>
+		<param name="minHeight"><int>19</int></param>
+		<param name="minWidth"><int>19</int></param>
 	</theme>
 	
     <theme name="checkbox" ref="-defaults" allowWildcard="true">
@@ -247,7 +241,7 @@
 
     <theme name="listbox" ref="-defaults" allowWildcard="true">
 		<param name="minDisplayedRows"><int>3</int></param>
-        <param name="background"><image>-borderC</image></param>
+        <param name="background"><image>textbackground-gothic</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="cellHeight"><int>font.lineHeight + 4</int></param>
         <param name="cellWidth"><constant>SINGLE_COLUMN</constant></param>
@@ -265,7 +259,7 @@
     </theme>
 
     <theme name="combobox" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
+        <param name="background"><image>textbackground-gothic</image></param>
         <theme name="display" ref="label">
             <param name=""><image>combobox.display.*</image></param>
             <param name="border"><border>3</border></param>
@@ -280,7 +274,7 @@
     </theme>
 
     <theme name="comboboxPopup" ref="-defaults">
-        <param name="background"><image>-borderH</image></param>
+        <param name="background"><image>textbackground-gothic</image></param>
         <param name="border"><border>2</border></param>
         <theme name="listbox" ref="listbox">
 			<param name="minDisplayedRows"><int>5</int></param>
@@ -392,9 +386,9 @@
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
     </theme>
 
-    <theme name="editfieldautocompletionwindow" ref="-defaults">
-        <param name="background"><image>-borderG</image></param>
-        <theme name="listbox" ref="listbox"/>
+    <theme name="editfield-errorinfowindow" ref="-defaults">
+        <param name="background"><image>textbackground-gothic</image></param>
+        <theme name="label" ref="label"/>
     </theme>
 
     <theme name="progressbar" ref="-defaults" allowWildcard="true">
@@ -479,41 +473,6 @@
         <theme name="valueadjuster" ref="valueadjuster"></theme>
     </theme>
 
-    <fontDef name="popupmenu-button" filename="fonts/small.fnt" color="black">
-        <fontParam if="hover | armed" color="white"/>
-    </fontDef>
-    <theme name="popupmenu-button" ref="-defaults">
-        <param name=""><image>popupmenu.button.*</image></param>
-        <param name="font"><font>popupmenu-button</font></param>
-        <param name="border"><border>5,2</border></param>
-    </theme>
-
-    <theme name="menumanager" ref="-defaults">
-        <theme name="menupopup" ref="dialoglayout">
-            <param name="background"><image>-borderA</image></param>
-            <param name="border"><border>background.border</border></param>
-            <theme name="button" ref="popupmenu-button"/>
-            <theme name="checkbox" ref="checkbutton"/>
-            <theme name="submenu" ref="popupmenu-button"/>
-            <theme name="spacer" ref="-defaults">
-                <param name="background"><image>popupmenu.separator</image></param>
-            </theme>
-            <param name="namedGaps"><map>
-                <param name="menuitem"><gap>0</gap></param>
-            </map></param>
-        </theme>
-
-        <theme name="menubar" ref="dialoglayout">
-            <theme name="button" ref="button"/>
-            <theme name="checkbox" ref="checkbutton"/>
-            <theme name="submenu" ref="popupmenu-button"/>
-        </theme>
-    </theme>
-
-    <theme name="menubar" ref="menumanager">
-        <param name="background"><image>-borderB</image></param>
-    </theme>
-
     <theme name="tabbedpane" ref="-defaults">
         <theme name="tabbox" ref="-defaults">
             <theme name="tabbutton" ref="togglebutton"/>
@@ -528,10 +487,10 @@
     </theme>
 	
 	<theme name="tooltipwindow" ref="-defaults">
-        <param name="background"><image>-borderH</image></param>
+        <param name="background"><image>textbackground-gothic</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="fadeInTime"><int>250</int></param>
-        <theme name="label" ref="labelblack"/>
+        <theme name="label" ref="label"/>
     </theme>
 	
 	<include filename="characterbuilder.xml"/>

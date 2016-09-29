@@ -28,7 +28,7 @@
 	
 	<theme name="itemiconhover" ref="textarea">
 		<param name="border"><border>0,4,2,4</border></param>
-		<param name="background"><image>-borderH</image></param>
+		<param name="background"><image>textbackground-gothic</image></param>
 		<param name="maxWidth"><int>1000</int></param>
 	</theme>
 	
@@ -120,10 +120,10 @@
 		<theme name="endturnbutton" ref="button">
 			<param name=""><image>endturnbutton.*</image></param>
 			<param name="tooltip"><string>End the turn of the active character</string></param>
-			
-			<param name="font"><font>large</font></param>
-			<param name="minWidth"><int>75</int></param>
-			<param name="minHeight"><int>48</int></param>
+			<param name="font"><font>medium-white</font></param>
+			<param name="text"><string>End Turn</string></param>
+			<param name="minWidth"><int>76</int></param>
+			<param name="minHeight"><int>17</int></param>
 		</theme>
 		
 		<theme name="turnmodebutton" ref="togglebutton">
@@ -293,11 +293,11 @@
 			<theme name="portraitviewer" ref="portraitviewer"/>
 			<theme name="textarea" ref="textarea"/>
 			<theme name="xpbar" ref="statbar">
-				<param name="emptyImage"><image>white</image></param>
+				<param name="emptyImage"><image>-xpBarEmpty</image></param>
 				<param name="font"><font>medium-italic</font></param>
 				<param name="background"><image>-xpBarBorder</image></param>
-			<param name="fullImage"><image>-xpBar</image></param>
-		</theme>
+				<param name="fullImage"><image>-xpBar</image></param>
+			</theme>
 		</theme>
 	</theme>
 	
@@ -698,7 +698,7 @@
 	<theme name="legendpopup" ref="-defaults">
 		<theme name="content" ref="-defaults">
 			<param name="border"><border>5</border></param>
-			<param name="background"><image>-borderH</image></param>
+			<param name="background"><image>textbackground-gothic</image></param>
 			<param name="labelgap"><int>3</int></param>
 		
 			<theme name="friendlylabel" ref="labelblack">
@@ -816,8 +816,8 @@
 			<param name="labeloverlap"><int>15</int></param>
 				
 			<param name="border"><border>5</border></param>
-			<param name="background"><image>-borderH</image></param>
-			<theme name="label" ref="labelbigblack"/>
+			<param name="background"><image>textbackground-gothic</image></param>
+			<theme name="label" ref="labelbig"/>
 			<theme name="button" ref="button">
 				<param name="minWidth"><int>70</int></param>
 				<param name="minHeight"><int>25</int></param>
@@ -866,11 +866,12 @@
 	
 	<theme name="rightclickmenu" ref="-defaults">
 		<theme name="content" ref="-defaults">
-			<theme name="rightclickmenulevel" ref="largebutton">
+			<theme name="rightclickmenulevel" ref="-defaults">
+				<param name="background"><image>tinybackground-gothic</image></param>
 				<param name="titleBorder"><int>10</int></param>
 				<param name="border"><border>3,0,0,0</border></param>
-				<theme name="titlelabel" ref="labelblack"/>
-				<theme name="menubutton" ref="largebutton"/>
+				<theme name="titlelabel" ref="label"/>
+				<theme name="menubutton" ref="button"/>
 			</theme>
 		</theme>
 	</theme>
@@ -887,7 +888,7 @@
 			</theme>
 			
 			<theme name="textarea" ref="textarea">
-				<param name="background"><image>-borderL</image></param>
+				<param name="background"><image>textbackground-transparent</image></param>
 				<param name="border"><border>20,20,20,20</border></param>
 			</theme>
 			
