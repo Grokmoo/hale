@@ -221,7 +221,7 @@
             <alias ref="buttonbackground-gothic-normal" if="prereqsNotMet" tint="#5fff"/>
             <alias ref="buttonbackground-gothic-normal" if="armed" tint="#888"/>
 			<alias ref="buttonbackground-gothic-hover" if="hover"/>
-            <alias ref="buttonbackground-gothic-normal" tint="#0c0"/>
+            <alias ref="buttonbackground-gothic-normal" tint="#0f0"/>
 		</select>
 		
 		<select name="itemiconviewer.background" border="2">

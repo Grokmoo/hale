@@ -107,7 +107,11 @@ public class QuickbarViewer extends Widget {
 				}
 			}
 			
-			groupGapCount++;
+			
+			if (!abilityButtons.get(group).isEmpty()) {
+				groupGapCount++;
+			}
+			
 			if (row != 0) {
 				row = 0;
 				col++;
