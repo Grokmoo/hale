@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <themes>
-	<theme name="mainmenubutton" ref="-defaults">
-		<param name=""><image>hoverbutton.*</image></param>
-		<param name="textAlignment"><enum type="alignment">center</enum></param>
-		<param name="font"><font>large</font></param>
-		
-		<param name="minWidth"><int>200</int></param>
-		<param name="minHeight"><int>50</int></param>
-	</theme>
-	
-	<theme name="updatepopup" ref="iconbuttongrey">
+	<theme name="updatepopup" ref="infodialog">
 		<theme name="content" ref="-defaults">
-			<param name="border"><border>10</border></param>
 			<param name="minWidth"><int>300</int></param>
 			<param name="minHeight"><int>200</int></param>
 			
@@ -23,7 +13,7 @@
 			
 			<theme name="currenttasklabel" ref="labelbigblack"/>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>35</int></param>
@@ -46,14 +36,15 @@
 		</theme>
 	</theme>
 	
-	<theme name="errorpopup" ref="iconbuttongrey">
+	<theme name="errorpopup" ref="-defaults">
+		<param name="background"><image>mediumbackground-gothic</image></param>
 		<theme name="content" ref="-defaults">
 			<param name="border"><border>10</border></param>
 			<param name="gap"><int>10</int></param>
 			
-			<theme name="messagelabel" ref="labelbigblack"/>
+			<theme name="messagelabel" ref="labelbig"/>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>OK</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
@@ -61,24 +52,25 @@
 		</theme>
 	</theme>
 	
-	<theme name="confirmationpopup" ref="iconbuttongrey">
+	<theme name="confirmationpopup" ref="-defaults">
+		<param name="background"><image>mediumbackground-gothic</image></param>
 		<theme name="content" ref="-defaults">
 			<param name="titleGap"><int>50</int></param>
 			<param name="acceptCancelGap"><int>30</int></param>
 		
 			<param name="border"><border>10</border></param>
 			
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 			
 			<theme name="warninglabel" ref="labelbigred"/>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Yes</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>No</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
@@ -91,7 +83,7 @@
 	<theme name="createcharacterselector" ref="-defaults">
 		<param name=""><image>characterselector.*</image></param>
 		<param name="border"><border>5</border></param>
-		<theme name="newcharacterbutton" ref="mainmenubutton">
+		<theme name="newcharacterbutton" ref="largebutton">
 			<param name="text"><string>Create New Character</string></param>
 			<param name="minWidth"><int>256</int></param>
 			<param name="minHeight"><int>30</int></param>
@@ -99,8 +91,8 @@
 	</theme>
 
 	<theme name="characterselector" ref="-defaults">
-		<param name=""><image>characterselector.*</image></param>
-		<param name="border"><border>2,2,2,2</border></param>
+		<param name="background"><image>tinybackground-gothic</image></param>
+		<param name="border"><border>3</border></param>
 	
 		<theme name="portraitviewer" ref="portraitviewer"/>
 	
@@ -108,18 +100,14 @@
 			<param name="minWidth"><int>160</int></param>
 		</theme>
 		
-		<theme name="detailsbutton" ref="-defaults">
-			<param name=""><image>hoverbutton.*</image></param>
-			<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<theme name="detailsbutton" ref="button">
 			<param name="text"><string>Show Details</string></param>
 			<param name="minWidth"><int>140</int></param>
 			<param name="minHeight"><int>20</int></param>
 			<param name="tooltip"><string>Show the Character Sheet for this Character</string></param>
 		</theme>
 		
-		<theme name="addremovebutton" ref="-defaults">
-			<param name=""><image>hoverbutton.*</image></param>
-			<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<theme name="addremovebutton" ref="button">
 			<param name="font"><font>blue</font></param>
 			<param name="minWidth"><int>140</int></param>
 			<param name="minHeight"><int>20</int></param>
@@ -132,11 +120,13 @@
 			<param name="minHeight"><int>19</int></param>
 		</theme>
 		
-		<param name="expandboxy"><int>40</int></param>
+		<param name="expandboxy"><int>38</int></param>
 		<param name="expandboxborder"><int>1</int></param>
+		<param name="expandExtraPadding"><int>5</int></param>
 		
 		<theme name="expandbox" ref="-defaults">
-			<param name="border"><border>3,1,3,1</border></param>
+			<param name="border"><border>0</border></param>
+			<param name="rowHeight"><int>17</int></param>
 		
 			<param name="tooltip"><string>Select another version of this character</string></param>
 		
@@ -144,25 +134,22 @@
 				<param name="tooltip"><string>Select another version of this character</string></param>
 			</theme>
 			
-			<theme name="box" ref="-defaults">
-				<param name="background"><image>characterselectorbox.background</image></param>
-				<param name="border"><border>1</border></param>
+			<theme name="box" ref="textarea">
+				<param name="background"><image>tinybackground-gothic</image></param>
+				<param name="border"><border>2</border></param>
 			</theme>
 		</theme>
 	</theme>
 	
 	<theme name="difficultyselector" ref="-defaults">
 		<param name="border"><border>3</border></param>
-		<param name="background"><image>-borderD</image></param>
+		<param name="background"><image>textbackground-gothic</image></param>
 	
 		<theme name="difficultylabel" ref="labelbigblack">
 			<param name="text"><string>Difficulty Level</string></param>
 		</theme>
 			
-		<theme name="difficultybutton" ref="-defaults">
-			<param name=""><image>hoverbutton.*</image></param>
-			<param name="border"><border>background.border</border></param>
-			<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<theme name="difficultybutton" ref="togglebutton">
 			<param name="minWidth"><int>70</int></param>
 			<param name="minHeight"><int>25</int></param>
 		</theme>
@@ -173,15 +160,12 @@
 	</theme>
 	
 	<theme name="characterselectorpopup" ref="-defaults">
-		<param name="background"><image>-borderH</image></param>
-		<param name="border"><border>2</border></param>
+		<param name="background"><image>tinybackground-gothic</image></param>
+		<param name="border"><border>3</border></param>
 
 		<theme name="content" ref="-defaults">
-			<theme name="characterbutton" ref="-defaults">
-				<param name="height"><int>24</int></param>
-				<param name="border"><border>2</border></param>
-				<param name="background"><image>characterbutton.background</image></param>
-			
+			<theme name="characterbutton" ref="togglebutton">
+				<param name="rowHeight"><int>15</int></param>
 				<theme name="textarea" ref="textarea"/>
 			</theme>
 			
@@ -194,17 +178,16 @@
 		</theme>
 	</theme>
 	
-	<theme name="savegameselector" ref="-defaults">
-		<param name=""><image>hoverbutton.*</image></param>
+	<theme name="savegameselector" ref="togglebutton">
 		<param name="minHeight"><int>50</int></param>
-		<param name="border"><border>2</border></param>
+		<param name="minHeight"><int>50</int></param>
 	
 		<param name="nameDateGap"><int>50</int></param>
 		<param name="partyLevelGap"><int>10</int></param>
 						
 		<theme name="namelabel" ref="labelbigred"/>
-		<theme name="datelabel" ref="labelblack"/>
-		<theme name="partynamelabel" ref="labelblack"/>
+		<theme name="datelabel" ref="label"/>
+		<theme name="partynamelabel" ref="label"/>
 		<theme name="partylevellabel" ref="labelgreen"/>
 		<theme name="arealabel" ref="labelblue"/>
 	</theme>
@@ -227,7 +210,8 @@
 		<theme name="errorlabel" ref="labelred"/>
 	</theme>
 	
-	<theme name="keybindpopup" ref="iconbuttongrey">
+	<theme name="keybindpopup" ref="-defaults">
+		<param name="background"><image>mediumbackground-gothic</image></param>
 		<theme name="content" ref="dialoglayout">
 			<param name="border"><border>10</border></param>
 			
@@ -242,7 +226,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="optionspopup" ref="iconbuttongrey">
+	<theme name="optionspopup" ref="infodialog">
 		<theme name="content" ref="dialoglayout">
 			<param name="border"><border>10</border></param>
 			<param name="defaultGap"><dimension>10,10</dimension></param>
@@ -254,35 +238,35 @@
 		
 			<param name="maxHeight"><int>500</int></param>
 		
-			<theme name="titlelabel" ref="labelbigblack">
+			<theme name="titlelabel" ref="labelbig">
 				<param name="text"><string>Game Options</string></param>
 				<param name="textAlignment"><enum type="alignment">center</enum></param>
 			</theme>
 			
-			<theme name="keybindingslabel" ref="labelbigblack">
+			<theme name="keybindingslabel" ref="labelbig">
 				<param name="text"><string>Keybindings</string></param>
 				<param name="textAlignment"><enum type="alignment">center</enum></param>
 			</theme>
 			
-			<theme name="resetbutton" ref="mainmenubutton">
+			<theme name="resetbutton" ref="largebutton">
 				<param name="text"><string>Reset</string></param>
 				<param name="minWidth"><int>80</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>85</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Accept</string></param>
 				<param name="minWidth"><int>85</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="modeslabel" ref="labelblack">
+			<theme name="modeslabel" ref="label">
 				<param name="text"><string>Resolution</string></param>
 			</theme>
 			
@@ -307,7 +291,7 @@
 				<param name="tooltip"><string>Whether to scale the entire display by a factor of 2.  This requires a display resolution with at least 1200 vertical pixels and 1600 horizontal pixels.</string></param>
 			</theme>
 			
-			<theme name="tooltiplabel" ref="labelblack">
+			<theme name="tooltiplabel" ref="label">
 				<param name="text"><string>Tooltip Delay</string></param>
 				<param name="minWidth"><int>95</int></param>
 			</theme>
@@ -316,7 +300,7 @@
 				<param name="minWidth"><int>150</int></param>
 			</theme>
 			
-			<theme name="combatspeedlabel" ref="labelblack">
+			<theme name="combatspeedlabel" ref="label">
 				<param name="text"><string>Combat Speed</string></param>
 				<param name="minWidth"><int>95</int></param>
 			</theme>
@@ -330,15 +314,11 @@
 			
 				<theme name="keybindingscontent" ref="dialoglayout">
 					<theme name="keybindwidget" ref="-defaults">
-						<theme name="actionlabel" ref="labelblack">
+						<theme name="actionlabel" ref="label">
 							<param name="minWidth"><int>200</int></param>
 						</theme>
 						
-						<theme name="keybindingbutton" ref="-defaults">
-							<param name=""><image>hoverbutton.*</image></param>
-							<param name="textAlignment"><enum type="alignment">center</enum></param>
-							<param name="font"><font>black</font></param>
-						
+						<theme name="keybindingbutton" ref="button">
 							<param name="minWidth"><int>90</int></param>
 							<param name="minHeight"><int>24</int></param>
 						</theme>
@@ -348,7 +328,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="savegamepopup" ref="iconbuttongrey">
+	<theme name="savegamepopup" ref="infodialog">
 		<theme name="content" ref="-defaults">
 			<param name="acceptCancelGap"><int>5</int></param>
 		
@@ -356,23 +336,23 @@
 			<param name="minWidth"><int>500</int></param>
 			<param name="minHeight"><int>400</int></param>
 			
-			<theme name="titlelabel" ref="labelbigblack">
+			<theme name="titlelabel" ref="labelbig">
 				<param name="text"><string>Select a Save File</string></param>
 			</theme>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Save</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="deletebutton" ref="mainmenubutton">
+			<theme name="deletebutton" ref="largebutton">
 				<param name="text"><string>Delete</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
@@ -401,19 +381,18 @@
 		</theme>
 	</theme>
 	
-	<theme name="campaigngroupselector" ref="-defaults">
-		<param name=""><image>hoverbutton.*</image></param>
+	<theme name="campaigngroupselector" ref="button">
 		<param name="border"><border>5</border></param>
 		<param name="minWidth"><int>160</int></param>
 		<param name="minHeight"><int>50</int></param>
 		
-		<theme name="namelabel" ref="labelbigblack"/>
+		<theme name="namelabel" ref="labelbig"/>
                 <theme name="namearea" ref="textarea"/>
 		
-		<theme name="campaignselector" ref="mainmenubutton"/>
+		<theme name="campaignselector" ref="largebutton"/>
 	</theme>
 	
-	<theme name="campaignpopup" ref="iconbuttongrey">
+	<theme name="campaignpopup" ref="infodialog">
 		<theme name="content" ref="-defaults">
                         <param name="selectorWidth"><int>250</int></param>
 			<param name="acceptCancelGap"><int>5</int></param>
@@ -422,17 +401,17 @@
 			<param name="minWidth"><int>650</int></param>
 			<param name="minHeight"><int>400</int></param>
 			
-			<theme name="titlelabel" ref="labelbigblack">
+			<theme name="titlelabel" ref="labelbig">
 				<param name="text"><string>Select a Campaign</string></param>
 			</theme>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Accept</string></param>
 				<param name="minWidth"><int>100</int></param>
 				<param name="minHeight"><int>30</int></param>
@@ -451,7 +430,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="partyformationwindow" ref="iconbuttongrey">
+	<theme name="partyformationwindow" ref="infodialog">
 		<param name="defaultpartyname"><string>The Adventurers</string></param>
 		<param name="smallGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
@@ -487,13 +466,13 @@
 			<param name="minWidth"><int>220</int></param>
 		</theme>
 		
-		<theme name="cancelbutton" ref="mainmenubutton">
+		<theme name="cancelbutton" ref="largebutton">
 			<param name="text"><string>Cancel</string></param>
 			<param name="minWidth"><int>100</int></param>
 			<param name="minHeight"><int>30</int></param>
 		</theme>
 		
-		<theme name="acceptbutton" ref="mainmenubutton">
+		<theme name="acceptbutton" ref="largebutton">
 			<param name="text"><string>Accept</string></param>
 			<param name="minWidth"><int>100</int></param>
 			<param name="minHeight"><int>30</int></param>
@@ -515,9 +494,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="partyselector" ref="-defaults">
-		<param name=""><image>partyselector.*</image></param>
-		<param name="border"><border>2</border></param>
+	<theme name="partyselector" ref="togglebutton">
 		<param name="deletedisabledtooltip"><string>This party is pregenerated and may not be deleted</string></param>
 	
 		<theme name="textarea" ref="textarea"/>
@@ -530,26 +507,25 @@
 		</theme>
 	</theme>
 	
-	<theme name="newgamewindow" ref="iconbuttongrey">
+	<theme name="newgamewindow" ref="infodialog">
 		<param name="acceptCancelGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
 		<param name="innerwidth"><int>580</int></param>
 		<param name="preselectedwidth"><int>290</int></param>
 		<param name="preselectedheight"><int>414</int></param>
-		<param name="border"><border>10</border></param>
 		<param name="maxHeight"><int>600</int></param>
 	
-		<theme name="titlelabel" ref="labelbigblack">
+		<theme name="titlelabel" ref="labelbig">
 			<param name="text"><string>New Game</string></param>
 		</theme>
 		
-		<theme name="cancelbutton" ref="mainmenubutton">
+		<theme name="cancelbutton" ref="largebutton">
 			<param name="text"><string>Cancel</string></param>
 			<param name="minWidth"><int>100</int></param>
 			<param name="minHeight"><int>30</int></param>
 		</theme>
 		
-		<theme name="acceptbutton" ref="mainmenubutton">
+		<theme name="acceptbutton" ref="largebutton">
 			<param name="text"><string>Accept</string></param>
 			<param name="minWidth"><int>100</int></param>
 			<param name="minHeight"><int>30</int></param>
@@ -571,7 +547,7 @@
 			<param name="text"><string>Party Members</string></param>
 		</theme>
 		
-		<theme name="newpartybutton" ref="mainmenubutton">
+		<theme name="newpartybutton" ref="largebutton">
 			<param name="text"><string>Create New Party</string></param>
 			<param name="minWidth"><int>240</int></param>
 			<param name="minHeight"><int>30</int></param>
@@ -603,19 +579,19 @@
 			<param name="text"><string>View Release Notes</string></param>
 		</theme>
 		
-		<theme name="campaignbutton" ref="mainmenubutton">
+		<theme name="campaignbutton" ref="largebutton">
 			<param name="text"><string>Choose Campaign</string></param>
 		</theme>
 		
-		<theme name="newgamebutton" ref="mainmenubutton">
+		<theme name="newgamebutton" ref="largebutton">
 			<param name="text"><string>New Game</string></param>
 		</theme>
 		
-		<theme name="loadgamebutton" ref="mainmenubutton">
+		<theme name="loadgamebutton" ref="largebutton">
 			<param name="text"><string>Load Game</string></param>
 		</theme>
 		
-		<theme name="creditsbutton" ref="mainmenubutton">
+		<theme name="creditsbutton" ref="largebutton">
 			<param name="text"><string>Credits</string></param>
 		</theme>
 		
@@ -624,11 +600,11 @@
 			<param name="minHeight"><int>30</int></param>
 		</theme>
 		
-		<theme name="optionsbutton" ref="mainmenubutton">
+		<theme name="optionsbutton" ref="largebutton">
 			<param name="text"><string>Options</string></param>
 		</theme>
 		
-		<theme name="exitbutton" ref="mainmenubutton">
+		<theme name="exitbutton" ref="largebutton">
 			<param name="text"><string>Exit</string></param>
 		</theme>
 		
@@ -640,37 +616,38 @@
 		<theme name="abilitydetailswindow" ref="abilitydetailswindow"/>
 	</theme>
 	
-	<theme name="ingamemenu" ref="iconbuttongrey">
+	<theme name="ingamemenu" ref="-defaults">
+		<param name="background"><image>mediumbackground-gothic</image></param>
 		<theme name="content" ref="dialoglayout">
 			<param name="border"><border>10</border></param>
 			
-			<theme name="backbutton" ref="mainmenubutton">
+			<theme name="backbutton" ref="largebutton">
 				<param name="text"><string>Back to Game</string></param>
 			</theme>
 		
-			<theme name="savebutton" ref="mainmenubutton">
+			<theme name="savebutton" ref="largebutton">
 				<param name="text"><string>Save</string></param>
 			</theme>
 		
-			<theme name="loadbutton" ref="mainmenubutton">
+			<theme name="loadbutton" ref="largebutton">
 				<param name="text"><string>Load</string></param>
 			</theme>
 			
-			<theme name="optionsbutton" ref="mainmenubutton">
+			<theme name="optionsbutton" ref="largebutton">
 				<param name="text"><string>Options</string></param>
 			</theme>
 		
-			<theme name="menubutton" ref="mainmenubutton">
+			<theme name="menubutton" ref="largebutton">
 				<param name="text"><string>Quit to Menu</string></param>
 			</theme>
 		
-			<theme name="exitbutton" ref="mainmenubutton">
+			<theme name="exitbutton" ref="largebutton">
 				<param name="text"><string>Exit Game</string></param>
 			</theme>
 		</theme>
 	</theme>
 	
-	<theme name="ingameoptionspopup" ref="iconbuttongrey">
+	<theme name="ingameoptionspopup" ref="infodialog">
 		<theme name="content" ref="-defaults">
 			<param name="border"><border>10</border></param>
 			<param name="sectiongap"><int>10</int></param>
@@ -682,13 +659,13 @@
 			
 			<theme name="difficultyselector" ref="difficultyselector"/>
 			
-			<theme name="cancelbutton" ref="mainmenubutton">
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>120</int></param>
 				<param name="minHeight"><int>30</int></param>
 			</theme>
 			
-			<theme name="acceptbutton" ref="mainmenubutton">
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Accept</string></param>
 				<param name="minWidth"><int>120</int></param>
 				<param name="minHeight"><int>30</int></param>
@@ -702,8 +679,7 @@
 		
 			<param name="background"><image>black</image></param>
 			
-			<theme name="window" ref="iconbuttongrey">
-				<param name="border"><border>10</border></param>
+			<theme name="window" ref="infodialog">
 				<param name="gap"><int>5</int></param>
 			
 				<param name="defaultwidth"><int>550</int></param>
@@ -718,20 +694,20 @@
 					</theme>
 				</theme>
 				
-				<theme name="exportbutton" ref="mainmenubutton">
+				<theme name="exportbutton" ref="largebutton">
 					<param name="text"><string>Export Party</string></param>
 					<param name="border"><border>5</border></param>
 				</theme>
 				
-				<theme name="continuebutton" ref="mainmenubutton">
+				<theme name="continuebutton" ref="largebutton">
 					<param name="border"><border>5</border></param>
 				</theme>
 				
-				<theme name="quittomenubutton" ref="mainmenubutton">
+				<theme name="quittomenubutton" ref="largebutton">
 					<param name="text"><string>Quit to Menu</string></param>
 				</theme>
 				
-				<theme name="exitbutton" ref="mainmenubutton">
+				<theme name="exitbutton" ref="largebutton">
 					<param name="text"><string>Exit</string></param>
 				</theme>
 				

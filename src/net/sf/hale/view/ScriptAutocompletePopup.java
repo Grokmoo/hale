@@ -106,9 +106,9 @@ public class ScriptAutocompletePopup extends PopupWindow {
 			
 			sb.append("<span style=\"font-family: red\">");
 			appendStringFormatted(sb, base);
-			sb.append("</span>");
+			sb.append("</span><span style=\"font-family: white\">");
 			sb.append(" is an instance of ");
-			sb.append("<span style=\"font-family: green\">");
+			sb.append("</span><span style=\"font-family: green\">");
 			appendStringFormatted(sb, value.getClass().getName());
 			sb.append("</span>");
 			
@@ -243,9 +243,9 @@ public class ScriptAutocompletePopup extends PopupWindow {
 				sb.append(returnType.toString());
 			}
 			sb.append("</span>");
-			sb.append(' ');
+			sb.append(" <span style=\"font-family: white\">");
 			sb.append(method.getName());
-			sb.append('(');
+			sb.append("(</span>");
 			
 			editFieldText.append(method.getName());
 			editFieldText.append('(');
@@ -264,14 +264,14 @@ public class ScriptAutocompletePopup extends PopupWindow {
 				sb.append("</span>");
 
 				if (i != paramTypes.length - 1) {
-					sb.append(',');
+					sb.append("<span style=\"font-family: white\">,</span>");
 					sb.append(' ');
 					
 					editFieldText.append(", ");
 				}
 			}
 
-			sb.append(')');
+			sb.append("<span style=\"font-family: white\">)</span>");
 			editFieldText.append(')');
 
 			model.setHtml(sb.toString());

@@ -139,13 +139,13 @@ public class ColorSelectorPopup extends PopupWindow {
 			this.add(accept);
 		}
 		
-		@Override public int getPreferredWidth() {
-			return colorSelector.getPreferredWidth() + getBorderHorizontal();
+		@Override public int getPreferredInnerWidth() {
+			return colorSelector.getPreferredWidth();
 		}
 		
-		@Override public int getPreferredHeight() {
+		@Override public int getPreferredInnerHeight() {
 			return title.getPreferredHeight() + colorSelector.getPreferredHeight() +
-				buttonGap + accept.getPreferredHeight() + getBorderVertical();
+				buttonGap + accept.getPreferredHeight();
 		}
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {

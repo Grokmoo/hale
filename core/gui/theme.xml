@@ -98,18 +98,6 @@
         <param name="maxHeight"><int>0</int></param>
         <param name="inputMap"><inputMap>-defaultInputMap</inputMap></param>
     </theme>
-
-    <theme name="iconbuttongrey" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderI</image></param>
-        <param name="border"><border>2,2,1,1</border></param>
-		<param name="textAlignment"><enum type="alignment">center</enum></param>
-    </theme>
-
-    <theme name="iconbutton" ref="-defaults" allowWildcard="true">
-        <param name=""><image>iconbutton.*</image></param>
-        <param name="border"><border>background.border</border></param>
-		<param name="textAlignment"><enum type="alignment">center</enum></param>
-    </theme>
 	
 	<theme name="roundedbutton" ref="-defaults">
 	    <param name=""><image>roundedbutton.*</image></param>
@@ -129,6 +117,14 @@
         <param name=""><image>togglebutton.*</image></param>
         <param name="border"><border>background.border</border></param>
     </theme>
+	
+	<theme name="largebutton" ref="roundedbutton">
+		<param name="textAlignment"><enum type="alignment">center</enum></param>
+		<param name="font"><font>large-white</font></param>
+		
+		<param name="minWidth"><int>200</int></param>
+		<param name="minHeight"><int>50</int></param>
+	</theme>
 
 	<theme name="checkbutton" ref="-defaults">
 		<param name=""><image>checkbutton.*</image></param>
@@ -185,12 +181,6 @@
         <param name="font"><font>large</font></param>
     </theme>
 
-    <theme name="labelborder" ref="-defaults" allowWildcard="true">
-        <param name="font"><font>black</font></param>
-        <param name="background"><image>-borderA</image></param>
-        <param name="border"><border>2,4,2,2</border></param>
-    </theme>
-
     <theme name="labelblack" ref="-defaults" allowWildcard="true">
         <param name="font"><font>black</font></param>
     </theme>
@@ -206,10 +196,6 @@
 	<theme name="labelgreen" ref="-defaults" allowWildcard="true">
 		<param name="font"><font>green</font></param>
 	</theme>
-	
-    <theme name="titlelabel" ref="-defaults" allowWildcard="true">
-        <param name="font"><fontDef filename="fonts/small.fnt" color="black" underlineOffset="1" underline="true"/></param>
-    </theme>
 
     <theme name="editfield" ref="labelblack" allowWildcard="true">
         <param name=""><image>editfield.*</image></param>
@@ -338,7 +324,7 @@
             <param name="menuitem"><gap>5</gap></param>
         </map></param>
 
-        <theme name="label" ref="labelblack"/>
+        <theme name="label" ref="label"/>
         <theme name="listbox" ref="listbox"/>
         <theme name="button" ref="button"/>
         <theme name="combobox" ref="combobox"/>
@@ -346,7 +332,6 @@
     </theme>
 
     <theme name="textarea" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>none</image></param>
         <param name="border"><border>background.border</border></param>
         <param name="fonts"><map>
            <param name="default"><font>black</font></param>
@@ -382,6 +367,7 @@
 		   <param name="large-yellow"><font>large-yellow</font></param>
 		   <param name="large-orange"><font>large-orange</font></param>
 		   <param name="large-purple"><font>large-purple</font></param>
+		   <param name="large-white"><font>large-white</font></param>
         </map></param>
         <param name="images"><map>
 			<param name="ul-bullet"><image>transparent</image></param>
@@ -395,7 +381,6 @@
         <param name="background"><image>textbackground-gothic</image></param>
         <param name="border"><border>background.border</border></param>
         <theme name="textarea" ref="textarea">
-            <param name="background"><image>none</image></param>
             <param name="minWidth"><int>10</int></param>
         </theme>
         <theme name="hscrollbar" ref="hscrollbar"/>
@@ -410,164 +395,28 @@
         <param name="scrollbarsAlwaysVisible"><bool>false</bool></param>
     </theme>
 
-    <theme name="-treecellrenderer" ref="-defaults">
-        <param name="treeIndent"><int>15</int></param>
-        <param name="treeButtonSize"><dimension>14,11</dimension></param>
-    </theme>
-
-	<theme name="table" ref="-defaults" allowWildcard="true">
-        <param name="rowHeight"><int>font.lineHeight + 6</int></param>
-        <theme name="stringcellrenderer" ref="-defaults">
-            <param name="font"><font>listbox-display</font></param>
-            <param name="border"><border>0,3,0,0</border></param>
-        </theme>
-        <theme name="TreeLeafCellRenderer" ref="-treecellrenderer"/>
-        <theme name="TreeNodeCellRenderer" ref="-treecellrenderer"/>
-        <theme name="PropertyEditorCellRender" ref="-treecellrenderer"/>
-        <theme name="PropertyListCellRenderer" ref="-treecellrenderer">
-            <param name=""><image>propertysheet.sublist.*</image></param>
-            <theme name="label" ref="label"/>
-        </theme>
-        <theme name="spanrenderer" ref="-defaults"/>
-        <theme name="treeButton" ref="-defaults">
-            <param name=""><image>treetable.treebutton.*</image></param>
-        </theme>
-        <theme name="columnHeader" ref="button">
-            <param name=""><image>columnHeader.*</image></param>
-        </theme>
-		<param name="ensureColumnHeaderMinWidth"><bool>true</bool></param>
-        <param name="columnHeaderWidth"><int>256</int></param>
-        <param name="columnHeaderHeight"><int>20</int></param>
-        <param name="columnDividerDragableDistance"><int>3</int></param>
-        <param name="columnResizeCursor"><cursor>cursor.resizecolumn</cursor></param>
-        <param name="columnDivider"><image>none</image></param>
-        <param name="columnWidths"><map/></param>
-        <param name="row"><image>table.row.*</image></param>
-        <param name="inputMap"><inputMapDef ref="-defaultInputMap">
-            <action name="toggleSelectionOnLeadRow">ctrl SPACE</action>
-            <action name="selectNextRow">DOWN</action>
-            <action name="selectPreviousRow">UP</action>
-            <action name="selectNextPage">NEXT</action>
-            <action name="selectPreviousPage">PRIOR</action>
-            <action name="selectFirstRow">HOME</action>
-            <action name="selectLastRow">END</action>
-            <action name="extendSelectionToNextRow">shift DOWN</action>
-            <action name="extendSelectionToPreviousRow">shift UP</action>
-            <action name="extendSelectionToNextPage">shift NEXT</action>
-            <action name="extendSelectionToPreviousPage">shift PRIOR</action>
-            <action name="extendSelectionToFirstRow">shift HOME</action>
-            <action name="extendSelectionToLastRow">shift END</action>
-            <action name="moveLeadToNextRow">ctrl DOWN</action>
-            <action name="moveLeadToPreviousRow">ctrl UP</action>
-            <action name="moveLeadToNextPage">ctrl NEXT</action>
-            <action name="moveLeadToPreviousPage">ctrl PRIOR</action>
-            <action name="moveLeadToFirstRow">ctrl HOME</action>
-            <action name="moveLeadToLastRow">ctrl END</action>
-            <action name="expandLeadRow">ADD</action>
-            <action name="collapseLeadRow">SUBTRACT</action>
-        </inputMapDef></param>
-        <theme name="" ref="*"/>
-        <theme name="ComboBoxCellRenderer">
-            <param name="comboBoxHeight"><int>20</int></param>
-        </theme>
-        <theme name="EditFieldCellRenderer">
-            <param name="editFieldHeight"><int>20</int></param>
-        </theme>
-    </theme>
-
-    <theme name="treepathdisplay" ref="-defaults" allowWildcard="true">
-        <theme name="pathbox" ref="-defaults">
-            <param name="spacing"><int>0</int></param>
-            <theme name="node" ref="label">
-                <param name=""><image>treepathdisplay.node.*</image></param>
-            </theme>
-            <theme name="separator" ref="label">
-                <param name="mouseCursor"><cursor>cursor.text</cursor></param>
-                <param name="border"><border>2,0</border></param>
-            </theme>
-            <param name="minHeight"><int>node.font.lineHeight + 4</int></param>
-            <param name="alignment"><enum type="alignment">center</enum></param>
-            <param name="mouseCursor"><cursor>cursor.text</cursor></param>
-        </theme>
-        <theme name="patheditfield" ref="editfield"/>
-    </theme>
-
-    <theme name="treecombobox" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
-        <param name="popupThemeName"><string>treecomboboxPopup</string></param>
-        <theme name="display" ref="treepathdisplay">
-            <param name=""><image>combobox.display.*</image></param>
-            <param name="minWidth"><int>50</int></param>
-            <theme name="pathbox" merge="true">
-                <param name="border"><border>3</border></param>
-                <theme name="node" merge="true">
-                    <param name="font"><font>combobox</font></param>
-                </theme>
-                <theme name="separator" merge="true">
-                    <param name="font"><font>combobox</font></param>
-                </theme>
-            </theme>
-        </theme>
-        <theme name="button" ref="-defaults">
-            <param name=""><image>combobox.button.*</image></param>
-            <param name="minWidth"><int>18</int></param>
-        </theme>
-    </theme>
-    <theme name="treecomboboxPopup" ref="-defaults">
-        <param name="background"><image>-borderH</image></param>
-        <param name="border"><border>2</border></param>
-        <theme name="scrollpane" ref="scrollpane">
-            <theme name="treetable" ref="table">
-                <param name="background"><image>none</image></param>
-                <param name="border"><border>0</border></param>
-                <param name="columnHeaderHeight"><int>0</int></param>
-            </theme>
-        </theme>
-        <param name="minHeight"><int>300</int></param>
-    </theme>
-
     <theme name="editfieldautocompletionwindow" ref="-defaults">
         <param name="background"><image>-borderG</image></param>
         <theme name="listbox" ref="listbox"/>
     </theme>
 
-    <theme name="graph" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderC</image></param>
-        <param name="border"><border>background.border</border></param>
-        <param name="minWidth"><int>100</int></param>
-        <param name="minHeight"><int>100</int></param>
-        <param name="sizeMultipleX"><int>1</int></param>
-        <param name="sizeMultipleY"><int>1</int></param>
-        <param name="lineStyles"><map>
-            <param name="default"><map>
-                <param name="color"><color>black</color></param>
-                <param name="width"><float>1.0</float></param>
-            </map></param>
-        </map></param>
-        <theme name="grapharea" ref="-defaults"/>
-    </theme>
-
     <theme name="progressbar" ref="-defaults" allowWildcard="true">
-        <param name="background"><image>-borderE</image></param>
-        <param name="progressImage"><image>-gradC</image></param>
+        <param name="background"><image>tinybackground-gothic</image></param>
+        <param name="progressImage"><image>gradient-gothic</image></param>
         <param name="border"><border>2</border></param>
         <param name="minWidth"><int>100</int></param>
     </theme>
 
-    <theme name="progressbar-glow" ref="progressbar" allowWildcard="true"/>
-    <theme name="progressbar-glow-anim" ref="progressbar" allowWildcard="true"/>
-
     <theme name="colorselector" ref="dialoglayout">
-        <theme name="label" ref="label"/>
         <theme name="colorarea1d" ref="-defaults">
-            <param name="background"><image>-borderC</image></param>
+            <param name="background"><image>tinybackground-gothic</image></param>
             <param name="border"><border>2</border></param>
             <param name="minWidth"><int>30</int></param>
             <param name="minHeight"><int>128</int></param>
             <param name=""><image>colorselector.*</image></param>
         </theme>
         <theme name="colorarea2d" ref="-defaults">
-            <param name="background"><image>-borderC</image></param>
+            <param name="background"><image>tinybackground-gothic</image></param>
             <param name="border"><border>2</border></param>
             <param name="minWidth"><int>128</int></param>
             <param name="minHeight"><int>128</int></param>
@@ -580,7 +429,7 @@
             <param name="text"><string>Current color:</string></param>
         </theme>
         <theme name="preview" ref="-defaults">
-            <param name="background"><image>-borderC</image></param>
+            <param name="background"><image>tinybackground-gothic</image></param>
             <param name="border"><border>2</border></param>
             <param name="minWidth"><int>64</int></param>
             <param name="minHeight"><int>64</int></param>
@@ -690,8 +539,6 @@
     </theme>
 	
 	<include filename="characterbuilder.xml"/>
-	
 	<include filename="interface.xml"/>
-	
 	<include filename="mainMenu.xml"/>
 </themes>

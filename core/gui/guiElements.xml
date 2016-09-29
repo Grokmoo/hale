@@ -140,11 +140,6 @@
 		
 		<alias name="transparent" ref="white" tint="#0fff"/>
 		
-        <select name="treetable.treebutton.background" inset="2,1,0,4">
-            <area unless="selected" xywh="0,41,9,9"/>
-            <area xywh="10,41,9,9"/>
-        </select>
-		
         <composed name="frame.resizeable-title-black" border="25,5,5,5">
             <alias ref="-borderJ"/>
         </composed>
@@ -178,7 +173,6 @@
         </composed>
 		
 		<alias name="black" ref="white" tint="#000"/>
-		<alias name="-borderred" ref="-borderH" tint="#f00"/>
         <alias name="frame.resizeIcon" ref="-iconC"/>
 		<alias name="connector.background" ref="white" tint="#f888" border="0,0,0,0"/>
 		
@@ -202,26 +196,6 @@
             <alias ref="-borderI" if="hover"/>
             <alias ref="-borderH"/>
 		</select>
-		
-		<select name="portraitviewer.overlay">
-			<alias ref="-borderM" if="selected" tint="#02f"/>
-			<alias ref="-borderL"/>
-		</select>
-		
-		<select name="portraitviewer.background">
-			<alias ref="-borderH" if="armed" tint="#666"/>
-			<alias ref="-borderH" if="hover" tint="#333"/>
-			<alias ref="-borderH" if="draghover" tint="#333"/>
-			<alias ref="-borderJ"/>
-		</select>
-		
-        <select name="iconbutton.background" border="2,2,1,1">
-            <alias ref="-borderH" if="disabled" tint="#8fff"/>
-            <alias ref="-borderE" if="armed"/>
-			<alias ref="white"    if="selected" tint="#f00"/>
-            <alias ref="-borderI" if="hover"/>
-            <alias ref="-borderH"/>
-        </select>
 		
 		<select name="abilityselectorbutton.background">
 			<alias ref="-borderH" if="alreadyOwned"/>
@@ -248,25 +222,6 @@
             <alias ref="endturniconpressed" if="armed"/>
 			<alias ref="endturniconhover" if="hover"/>
             <alias ref="endturnicon"/>
-		</select>
-		
-		<select name="partyselector.background" border="3,3,3,3">
-			<alias ref="-borderC" if="selected + invalid" tint="#8fff"/>
-			<alias ref="-borderC" if="pressed + invalid" tint="#8fff"/>
-			<alias ref="-borderD" if="hover + invalid" tint="#8fff"/>
-			<alias ref="-borderB" if="disabled | invalid" tint="#8fff"/>
-			<alias ref="-borderC" if="selected"/>
-			<alias ref="-borderC" if="pressed"/>
-			<alias ref="-borderD" if="hover"/>
-			<alias ref="-borderB"/>
-		</select>
-
-		<select name="hoverbutton.background" border="3,3,3,3">
-			<alias ref="-borderB" if="disabled" tint="#8fff"/>
-			<alias ref="-borderC" if="selected"/>
-			<alias ref="-borderC" if="pressed"/>
-			<alias ref="-borderD" if="hover"/>
-			<alias ref="-borderB"/>
 		</select>
 		
 		<select name="paneselector.background" border="6,3,6,3">
@@ -529,17 +484,6 @@
                 </select>
             </grid>
         </composed>
-
-        <alias name="table.row.background" ref="-gradC" if="rowSelected"/>
-        <alias name="table.row.overlay" ref="--selection" inset="1" if="keyboardFocus + !hasFocusedChild + leadRow"/>
-		<alias name="table.row.dropmarker" ref="-gradC"/>
-
-        <alias name="propertysheet.sublist.background" ref="-borderB"/>
-
-        <select name="treepathdisplay.node.background">
-            <alias ref="-borderE" if="armed"/>
-            <alias ref="-borderD" if="hover"/>
-        </select>
 
         <alias name="colorselector.cursor" ref="-selH"/>
     </images>

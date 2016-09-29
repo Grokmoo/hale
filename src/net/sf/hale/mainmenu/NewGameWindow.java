@@ -463,11 +463,11 @@ public class NewGameWindow extends Widget {
 			
 			StringBuilder sb = new StringBuilder();
 			
-			sb.append("<div style=\"font-family: medium;\">");
+			sb.append("<div style=\"font-family: medium-white;\">");
 			sb.append(party.getName());
 			sb.append("</div>");
 			
-			sb.append("<div>");
+			sb.append("<div style=\"font-family: white;\">");
 			if (party.getMaxLevel() == party.getMinLevel()) {
 				sb.append("Level ");
 				sb.append(party.getMaxLevel());

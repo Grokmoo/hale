@@ -1,6 +1,6 @@
 <themes>
     <images file="gothicUI.png" format="RGBA">
-	    <area name="windowbackground-gothic" border="93" xywh="0,0,192,192" splitx="L64,R64" splity="T64,B64"/>
+	    <area name="windowbackground-gothic" border="30,18,30,18" xywh="0,0,192,192" splitx="L64,R64" splity="T64,B64"/>
 		
 		<area name="windowclosebutton-normal" xywh="192,0,17,17"/>
 		<area name="windowclosebutton-hover" xywh="192,17,17,17"/>
@@ -12,19 +12,22 @@
             <alias ref="windowclosebutton-normal"/>
         </select>
 		
-		<area name="mediumbackground-gothic" border="7" xywh="0,192,72,72" splitx="L24,R24" splity="T24,B24"/>
+		<area name="mediumbackground-gothic" border="9" xywh="0,192,72,72" splitx="L24,R24" splity="T24,B24"/>
 		
 		<area name="smallbackground-gothic" border="3" xywh="0,264,27,27" splitx="L9,R9" splity="T9,B9"/>
 		
 		<area name="tinybackground-gothic" border="2" xywh="0,291,12,12" splitx="L4,R4" splity="T4,B4"/>
+		<area name="tinybackground-transparent" border="2" xywh="12,291,12,12" splitx="L4,R4" splity="T4,B4"/>
+		<area name="tinybackground-red" border="2" xywh="24,291,12,12" splitx="L4,R4" splity="T4,B4"/>
 		
 		<area name="textbackground-gothic" border="3" xywh="0,303,9,9" splitx="L3,R3" splity="T3,B3"/>
+		<area name="textbackground-transparent" border="3" xywh="9,303,9,9" splitx="L3,R3" splity="T3,B3"/>
 		
 		<area name="roundedbuttonbackground-gothic-normal" border="3" xywh="72,192,24,24" splitx="L8,R8" splity="T8,B8"/>
 		<area name="roundedbuttonbackground-gothic-hover" border="3" xywh="72,216,24,24" splitx="L8,R8" splity="T8,B8"/>
 		
 		<select name="roundedbutton.background" border="2">
-		    <alias ref="roundedbuttonbackground-gothic-normal" if="disabled" tint="#8fff"/>
+		    <alias ref="roundedbuttonbackground-gothic-normal" if="disabled" tint="#5fff"/>
 		    <alias ref="roundedbuttonbackground-gothic-normal" if="armed" tint="#888"/>
 			<alias ref="roundedbuttonbackground-gothic-hover" if="hover"/>
 			<alias ref="roundedbuttonbackground-gothic-normal"/>
@@ -45,15 +48,15 @@
 		<area name="buttonbackground-gothic-selected" border="2" xywh="192,81,15,15" splitx="L5,R5" splity="T5,B5"/>
 		
 		<select name="button.background" border="3">
-		    <alias ref="buttonbackground-gothic-normal" if="disabled" tint="#8fff"/>
+		    <alias ref="buttonbackground-gothic-normal" if="disabled" tint="#5fff"/>
             <alias ref="buttonbackground-gothic-normal" if="armed" tint="#888"/>
 			<alias ref="buttonbackground-gothic-hover" if="hover"/>
             <alias ref="buttonbackground-gothic-normal"/>
 		</select>
 		
 		<select name="togglebutton.background" border="5,3">
-            <alias ref="buttonbackground-gothic-selected" if="disabled + selected" tint="#8fff"/>
-            <alias ref="buttonbackground-gothic-normal" if="disabled" tint="#8fff"/>
+            <alias ref="buttonbackground-gothic-selected" if="disabled + selected" tint="#5fff"/>
+            <alias ref="buttonbackground-gothic-normal" if="disabled" tint="#5fff"/>
             <alias ref="buttonbackground-gothic-normal" if="armed" tint="#888"/>
             <alias ref="buttonbackground-gothic-selected" if="selected"/>
 			<alias ref="buttonbackground-gothic-hover" if="hover"/>
@@ -83,6 +86,20 @@
         </select>
 		
 		<alias name="scrollbar.thumb.background" ref="valueadjuster.display.background"/>
+		
+		<area name="gradient-gothic" xywh="0,312,128,3"/>
+		
+		<select name="portraitviewer.overlay">
+			<alias ref="tinybackground-red" if="selected"/>
+			<alias ref="tinybackground-transparent"/>
+		</select>
+		
+		<select name="portraitviewer.background">
+			<alias ref="tinybackground-gothic" if="armed" tint="#666"/>
+			<alias ref="tinybackground-gothic" if="hover" tint="#333"/>
+			<alias ref="tinybackground-gothic" if="draghover" tint="#333"/>
+			<alias ref="tinybackground-gothic"/>
+		</select>
 
 	</images>
 </themes>

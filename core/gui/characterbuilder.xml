@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <themes>
 	<theme name="colorselectorpopup" ref="-defaults">
-		<theme name="content" ref="iconbuttongrey">
-			<param name="border"><border>10</border></param>
+		<theme name="content" ref="infodialog">
 			<param name="buttongap"><int>15</int></param>
 		
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 		
-			<theme name="colorselector" ref="colorselector">
-				<theme name="label" ref="labelblack"/>
-			</theme>
+			<theme name="colorselector" ref="colorselector"/>
 			
 			<theme name="cancelbutton" ref="button">
 				<param name="font"><font>large</font></param>
@@ -21,9 +18,7 @@
 		</theme>
 	</theme>
 	
-	<theme name="charpropertyeditor" ref="-defaults">
-		<param name=""><image>hoverbutton.*</image></param>
-		
+	<theme name="charpropertyeditor" ref="togglebutton">
 		<param name="defaultGap"><dimension>8,8</dimension></param>
 		<param name="smallGap"><dimension>8,8</dimension></param>
 		<param name="mediumGap"><dimension>10,10</dimension></param>
@@ -34,7 +29,6 @@
 		</map></param>
 				
 		<theme name="iconviewer" ref="-defaults">
-			<param name="background"><image>-borderH</image></param>
 			<param name="border"><border>2,2,2,2</border></param>
 			<param name="minWidth"><int>48</int></param>
 			<param name="minHeight"><int>48</int></param>
@@ -45,7 +39,7 @@
 			<param name="minWidth"><int>45</int></param>
 		</theme>
 					
-		<theme name="namelabel" ref="labelbigblack">
+		<theme name="namelabel" ref="labelbig">
 			<param name="minWidth"><int>100</int></param>
 		</theme>
 					
@@ -134,13 +128,14 @@
 		<theme name="abilityselectorbutton" ref="abilityselectorbutton"/>
 		<theme name="connector" ref="connector"/>
 		<theme name="title" ref="labelbigblack"/>
-		<theme name="abilityselectionlistpane" ref="iconbutton">
+		<theme name="abilityselectionlistpane" ref="-defaults">
+		    <param name="background"><image>mediumbackground-gothic</image></param>
 			<param name="gridSize"><int>60</int></param>
 			<param name="notOwnedText"><string>Not Owned</string></param>
 			<param name="alreadyOwnedText"><string>Already Owned</string></param>
 			<param name="prereqsNotMetText"><string>Prereqs not met</string></param>
 			<param name="selectableText"><string>Click to select</string></param>
-			<param name="border"><border>2,2,2,2</border></param>
+			<param name="border"><border>9</border></param>
 			
 			<theme name="abilityselectorbutton" ref="abilityselectorbutton"/>
 			<theme name="connector" ref="connector"/>
@@ -151,14 +146,14 @@
 		<param name="resetGap"><int>50</int></param>
 				
 		<theme name="abilityhover" ref="button">
-			<theme name="abilitynamelabel" ref="labelblack"/>
+			<theme name="abilitynamelabel" ref="label"/>
 			<theme name="hovermessagelabel" ref="label"/>
 		</theme>
-		<theme name="abilityhoverdetails" ref="iconbutton">
+		<theme name="abilityhoverdetails" ref="button">
 			<param name="border"><border>4,4,4,4</border></param>
 		</theme>
 		<theme name="selectedabilityhover" ref="button">
-			<theme name="abilitynamelabel" ref="labelbigblack"/>
+			<theme name="abilitynamelabel" ref="labelbig"/>
 		</theme>
 			
 		<theme name="resetbutton" ref="button">
@@ -172,7 +167,7 @@
 			<param name="minWidth"><int>160</int></param>
 		
 			<theme name="content" ref="dialoglayout">
-				<theme name="abilityselectionviewer" ref="iconbutton"/>
+				<theme name="abilityselectionviewer" ref="button"/>
 			</theme>
 		</theme>
 	</theme>
@@ -187,18 +182,18 @@
 		<theme name="othercolorbutton" ref="button"/>
 	</theme>
 	
-	<theme name="portraitselector" ref="iconbutton">
+	<theme name="portraitselector" ref="infodialog">
 		<param name="border"><border>10</border></param>
 		<param name="numcolumns"><int>6</int></param>
 		<param name="buttongap"><int>10</int></param>
 		<param name="portraitsize"><int>104</int></param>
 	
 		<theme name="content" ref="-defaults">
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 		
 			<theme name="portraitpane" ref="scrollpane">
 				<theme name="content" ref="-defaults">
-					<theme name="portraitviewer" ref="iconbutton"/>
+					<theme name="portraitviewer" ref="togglebutton"/>
 				</theme>
 			</theme>
 			
@@ -220,11 +215,11 @@
 		<param name="nogendermessage"><string>Please select a gender for your character</string></param>
 		<param name="noportraitmessage"><string>Please select a portrait for your character</string></param>
 	
-		<theme name="appearancearea" ref="iconbutton">
+		<theme name="appearancearea" ref="-defaults">
 			<param name="border"><border>10</border></param>
 			
-			<theme name="characterviewer" ref="-defaults"/>
-			<theme name="portraitviewer" ref="iconbutton">
+			<theme name="characterviewer" ref="button"/>
+			<theme name="portraitviewer" ref="button">
 				<param name="portraitScale"><int>2</int></param>
 			</theme>
 		</theme>

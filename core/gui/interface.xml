@@ -8,11 +8,8 @@
 			<param name=""><image>mediumbackground-gothic.*</image></param>
 			<param name="border"><border>7</border></param>
 			
-			<theme name="closebutton" ref="-defaults">
-				<param name=""><image>hoverbutton.*</image></param>
+			<theme name="closebutton" ref="button">
 				<param name="text"><string>Continue</string></param>
-				<param name="border"><border>background.border</border></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
 			</theme>
 			
 			<theme name="scrollpane" ref="scrollpane">
@@ -324,7 +321,7 @@
 	
 		<theme name="content" ref="-defaults">
 			<theme name="abilityhover" ref="button">
-				<theme name="abilitynamelabel" ref="labelblack"/>
+				<theme name="abilitynamelabel" ref="label"/>
 				<theme name="hovermessagelabel" ref="label"/>
 			</theme>
 			<theme name="abilityhoverdetails" ref="button">
@@ -756,20 +753,12 @@
 				<param name="font"><font>medium</font></param>
 			</theme>
 			
-			<theme name="acceptbutton" ref="-defaults">
-				<param name=""><image>hoverbutton.*</image></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-				<param name="font"><font>large</font></param>
-				
+			<theme name="acceptbutton" ref="largebutton">
 				<param name="text"><string>Craft</string></param>
 				<param name="minWidth"><int>80</int></param>
 			</theme>
 			
-			<theme name="cancelbutton" ref="-defaults">
-				<param name=""><image>hoverbutton.*</image></param>
-				<param name="textAlignment"><enum type="alignment">center</enum></param>
-				<param name="font"><font>large</font></param>
-			
+			<theme name="cancelbutton" ref="largebutton">
 				<param name="text"><string>Cancel</string></param>
 				<param name="minWidth"><int>80</int></param>
 			</theme>
@@ -812,7 +801,7 @@
 				<theme name="dialoglayout" ref="dialoglayout">
 					<param name="defaultGap"><dimension>1,1</dimension></param>
 				
-					<theme name="entryselector" ref="iconbutton">
+					<theme name="entryselector" ref="button">
 						<param name="overlay"><image>-selection</image></param>
 					
 						<theme name="textarea" ref="textarea">
@@ -842,8 +831,9 @@
 	</theme>
 	
 	<theme name="worldmappopup" ref="-defaults">
-		<theme name="content" ref="iconbutton">
-			<param name="border"><border>2</border></param>
+		<theme name="content" ref="-defaults">
+			<param name="background"><image>windowbackground-gothic</image></param>
+			<param name="border"><border>30,18,30,18</border></param>
 			
 			<theme name="worldmapviewer" ref="worldmapviewer"/>
 			<theme name="closebutton" ref="button">
@@ -881,19 +871,13 @@
 		</theme>
 	</theme>
 	
-	<theme name="menubutton" ref="-defaults">
-		<param name=""><image>hoverbutton.*</image></param>
-        <param name="border"><border>3</border></param>
-        <param name="textAlignment"><enum type="alignment">center</enum></param>
-	</theme>
-	
 	<theme name="rightclickmenu" ref="-defaults">
 		<theme name="content" ref="-defaults">
-			<theme name="rightclickmenulevel" ref="menubutton">
+			<theme name="rightclickmenulevel" ref="largebutton">
 				<param name="titleBorder"><int>10</int></param>
 				<param name="border"><border>3,0,0,0</border></param>
 				<theme name="titlelabel" ref="labelblack"/>
-				<theme name="menubutton" ref="menubutton"/>
+				<theme name="menubutton" ref="largebutton"/>
 			</theme>
 		</theme>
 	</theme>
@@ -914,7 +898,7 @@
 				<param name="border"><border>20,20,20,20</border></param>
 			</theme>
 			
-			<theme name="skipbutton" ref="iconbutton">
+			<theme name="skipbutton" ref="button">
 				<param name="text"><string>Skip</string></param>
 				<param name="minWidth"><int>40</int></param>
 				<param name="minHeight"><int>20</int></param>
@@ -922,13 +906,13 @@
 		</theme>
 	</theme>
 	
-	<theme name="exportpopup" ref="iconbuttongrey">
+	<theme name="exportpopup" ref="gamesubwindow">
 		<theme name="content" ref="-defaults">
 			<param name="minwidth"><int>300</int></param>
 			<param name="border"><border>10</border></param>
 			<param name="sectiongap"><int>10</int></param>
 			
-			<theme name="titlelabel" ref="labelbigblack">
+			<theme name="titlelabel" ref="labelbig">
 				<param name="text"><string>Export Characters</string></param>
 			</theme>
 			
@@ -941,7 +925,7 @@
 			
 			<theme name="portraitviewer" ref="portraitviewer"/>
 			
-			<theme name="portraitnamelabel" ref="labelblack"/>
+			<theme name="portraitnamelabel" ref="label"/>
 			
 			<theme name="exportbutton" ref="button"/>
 			

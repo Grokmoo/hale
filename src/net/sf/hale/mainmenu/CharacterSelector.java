@@ -53,7 +53,7 @@ import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
 public class CharacterSelector extends Widget {
 	private int numRoleLines;
 	
-	private int expandBoxY, expandBoxBorder;
+	private int expandBoxY, expandBoxBorder, expandExtraPadding;
 	
 	private Button details;
 	private HTMLTextAreaModel textAreaModel;
@@ -254,21 +254,21 @@ public class CharacterSelector extends Widget {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("<div style=\"font-family: medium-bold;\">").append(pc.getTemplate().getName()).append("</div>");
+		sb.append("<div style=\"font-family: medium-bold-white;\">").append(pc.getTemplate().getName()).append("</div>");
 		
-		sb.append("<div style=\"font-family: medium;\">");
+		sb.append("<div style=\"font-family: medium-white;\">");
 		sb.append(pc.getTemplate().getGender()).append(' ');
-		sb.append("<span style=\"font-family: medium-blue;\">").append(pc.getTemplate().getRace().getName()).append("</span>");
+		sb.append("<span style=\"font-family: medium-green;\">").append(pc.getTemplate().getRace().getName()).append("</span>");
 		sb.append("</div>");
 		
-		sb.append("<div style=\"font-family: medium; margin-bottom: 1em\">");
+		sb.append("<div style=\"font-family: white; margin-bottom: 1em\">");
 		for (String roleID : pc.roles.getRoleIDs()) {
 			Role role = Game.ruleset.getRole(roleID);
 			int level = pc.roles.getLevel(role);
 			
 			sb.append("<p>");
-			sb.append("Level <span style=\"font-family: medium-italic;\">").append(level).append("</span> ");
-			sb.append("<span style=\"font-family: medium-red;\">").append(role.getName()).append("</span>");
+			sb.append("Level <span style=\"font-family: white;\">").append(level).append("</span> ");
+			sb.append("<span style=\"font-family: red;\">").append(role.getName()).append("</span>");
 			sb.append("</p>");
 			
 			numRoleLines++;
@@ -283,20 +283,25 @@ public class CharacterSelector extends Widget {
 		
 		expandBoxY = themeInfo.getParameter("expandboxy", 0);
 		expandBoxBorder = themeInfo.getParameter("expandboxborder", 0);
+		expandExtraPadding = themeInfo.getParameter("expandExtraPadding", 0);
 	}
 	
-	@Override public int getPreferredWidth() {
-		return portrait.getPreferredWidth() + textArea.getPreferredWidth() + getBorderHorizontal();
+	@Override public int getPreferredInnerWidth() {
+		return portrait.getPreferredWidth() + textArea.getPreferredWidth();
 	}
 	
-	@Override public int getPreferredHeight() {
-		int height = textArea.getPreferredInnerHeight() + textArea.getBorderVertical();
+	@Override public int getPreferredInnerHeight() {
+		int height = textArea.getPreferredHeight();
 		height += details.getPreferredHeight();
-		if (addRemove != null)
+		if (addRemove != null) {
 			height += addRemove.getPreferredHeight();
+		}
 		
+		if (getChildIndex(expand) >= 0) {
+			height += expandExtraPadding;
+		}
 		
-		return Math.max(height, portrait.getPreferredHeight()) + getBorderVertical();
+		return Math.max(height, portrait.getPreferredHeight());
 	}
 	
 	@Override protected void layout() {
@@ -343,12 +348,15 @@ public class CharacterSelector extends Widget {
 	
 	private class ExpandBox extends Label implements CallbackWithReason<Label.CallbackReason> {
 		private boolean boxHover;
+		private int rowHeight;
 		
 		private Button expand;
-		private Widget box;
+		private TextArea box;
+		private HTMLTextAreaModel textAreaModel;
 		
 		private ExpandBox() {
-			box = new Widget(getAnimationState());
+			textAreaModel = new HTMLTextAreaModel();
+			box = new TextArea(textAreaModel);
 	        box.setTheme("box");
 	        if (!characterMeetsLevelRequirements) {
 	        	box.setEnabled(false);
@@ -371,6 +379,25 @@ public class CharacterSelector extends Widget {
 	        add(expand);
 	        
 	        addCallback(this);
+	        
+	        updateBoxText();
+		}
+		
+		public void updateBoxText() {
+			StringBuilder sb = new StringBuilder();
+			sb.append("<div style=\"font-family: white\">");
+			for (String roleID : pc.roles.getRoleIDs()) {
+				Role role = Game.ruleset.getRole(roleID);
+				int level = pc.roles.getLevel(role);
+				
+				sb.append("<p>");
+				sb.append("Level <span style=\"font-family: white;\">").append(level).append("</span> ");
+				sb.append("<span style=\"font-family: red;\">").append(role.getName()).append("</span>");
+				sb.append("</p>");
+			}
+			sb.append("</div>");
+			
+			textAreaModel.setHtml(sb.toString());
 		}
 		
 		private void openPopup() {
@@ -390,8 +417,14 @@ public class CharacterSelector extends Widget {
 			getAnimationState().setAnimationState(Label.STATE_HOVER, boxHover || expand.getModel().isHover());
 		}
 		
+		@Override protected void applyTheme(ThemeInfo themeInfo) {
+			super.applyTheme(themeInfo);
+			
+			rowHeight = themeInfo.getParameter("rowHeight", 0);
+		}
+		
 		@Override public int getPreferredInnerHeight() {
-			return numRoleLines * expand.getPreferredHeight() + box.getBorderVertical();
+			return Math.max(numRoleLines * rowHeight, expand.getPreferredHeight());
 		}
 		
 		@Override protected void layout() {
@@ -443,6 +476,7 @@ public class CharacterSelector extends Widget {
 				if (showDeleteButtons)
 					add(deleteButton);
 				deleteButtons.add(deleteButton);
+				button.addDeleteButton(deleteButton);
 			}
 		}
 		
@@ -549,7 +583,8 @@ public class CharacterSelector extends Widget {
 	}
 	
 	private class CharacterButton extends ToggleButton implements Runnable {
-		private int height, numRows;
+		private int rowHeight, numRows;
+		private DeleteButton deleteButton;
 		
 		private PopupWindow popup;
 		private PC pc;
@@ -574,14 +609,14 @@ public class CharacterSelector extends Widget {
 			numRows = 0;
 			
 			StringBuilder sb = new StringBuilder();
-			sb.append("<div style=\"font-family: medium\">");
+			sb.append("<div style=\"font-family: white\">");
 			for (String roleID : pc.roles.getRoleIDs()) {
 				Role role = Game.ruleset.getRole(roleID);
 				int level = pc.roles.getLevel(role);
 				
 				sb.append("<p>");
-				sb.append("Level <span style=\"font-family: medium-italic;\">").append(level).append("</span> ");
-				sb.append("<span style=\"font-family: medium-red;\">").append(role.getName()).append("</span>");
+				sb.append("Level <span style=\"font-family: white;\">").append(level).append("</span> ");
+				sb.append("<span style=\"font-family: red;\">").append(role.getName()).append("</span>");
 				sb.append("</p>");
 				
 				numRows++;
@@ -597,18 +632,24 @@ public class CharacterSelector extends Widget {
 			addCallback(this);
 		}
 		
+		public void addDeleteButton(DeleteButton deleteButton) {
+			this.deleteButton = deleteButton;
+		}
+		
 		// button click callback
 		
 		@Override public void run() {
 			popup.closePopup();
 			
 			setSelectedCreature(pc);
+			
+			expand.updateBoxText();
 		}
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
 			
-			height = themeInfo.getParameter("height", 0);
+			rowHeight = themeInfo.getParameter("rowHeight", 0);
 			
 			if (!isEnabled()) {
 				int minLevel = Game.curCampaign.getMinStartingLevel();
@@ -622,13 +663,13 @@ public class CharacterSelector extends Widget {
 			}
 		}
 		
-		@Override public int getPreferredHeight() {
-			return height * numRows;
+		@Override public int getPreferredInnerHeight() {
+			return Math.max(rowHeight * numRows, this.deleteButton.getPreferredHeight());
 		}
 		
 		@Override protected void layout() {
-			textArea.setPosition(getX(), getY());
-			textArea.setSize(getWidth(), textArea.getPreferredHeight());
+			textArea.setPosition(getInnerX(), getInnerY());
+			textArea.setSize(getInnerWidth(), getInnerHeight());
 		}
 	}
 }

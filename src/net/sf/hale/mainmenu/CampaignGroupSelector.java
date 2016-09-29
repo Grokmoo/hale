@@ -53,7 +53,7 @@ public class CampaignGroupSelector extends ToggleButton implements Runnable {
 		this.group = group;
 		
 		HTMLTextAreaModel model = new HTMLTextAreaModel();
-		model.setHtml("<div style=\"font-family: large;\">" + group.name + "</div>");
+		model.setHtml("<div style=\"font-family: large-white;\">" + group.name + "</div>");
 		
 		groupNameArea = new TextAreaNoInput(model);
 		groupNameArea.setTheme("namearea");
