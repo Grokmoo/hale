@@ -433,7 +433,7 @@ public class PartyFormationWindow extends Widget {
 		showPregeneratedCharactersButton.setPosition(getInnerRight() - showPregeneratedCharactersButton.getWidth(),
 				paneBottom - showPregeneratedCharactersButton.getHeight());
 		
-		availablePane.setPosition(partyPane.getRight(), nameBottom + sectionGap);
+		availablePane.setPosition(partyPane.getRight(), availableTitle.getBottom());
 		availablePane.setSize(getInnerWidth() - partyPane.getWidth(),
 				showPregeneratedCharactersButton.getY() - availablePane.getY());
 	}

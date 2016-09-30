@@ -373,7 +373,7 @@
 		<param name="minHeight"><int>300</int></param>
 		
 		<theme name="content" ref="dialoglayout">
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 			<theme name="iconviewer" ref="-defaults"/>
 			<theme name="scrollpane" ref="scrollpane"/>
 		</theme>
@@ -555,7 +555,7 @@
 				<param name="minWidth"><int>48</int></param>
 				<param name="minHeight"><int>48</int></param>
 			</theme>
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 			<theme name="detailspane" ref="scrollpane"/>
 		</theme>
 	</theme>
@@ -584,8 +584,8 @@
 		
 		<param name="labelGap"><int>5</int></param>
 		
-		<theme name="selllabel" ref="labelblack"/>
-		<theme name="buylabel" ref="labelblack"/>
+		<theme name="selllabel" ref="label"/>
+		<theme name="buylabel" ref="label"/>
 	
 		<theme name="itemlistviewer" ref="itemlistviewer"/>
 	</theme>
@@ -598,7 +598,7 @@
 		
 		<theme name="content" ref="dialoglayout">
 			<theme name="iconviewer" ref="-defaults"/>
-			<theme name="titlelabel" ref="labelbigblack"/>
+			<theme name="titlelabel" ref="labelbig"/>
 			<theme name="detailspane" ref="scrollpane"/>
 		</theme>
 	</theme>
@@ -853,7 +853,19 @@
 					<theme name="responsewidget" ref="button">
 						<param name="border"><border>3</border></param>
 				
-						<theme name="responsearea" ref="textarea"/>
+						<theme name="responsearea" ref="textarea">
+							<param name="fonts"><map>
+								<param name="default"><font>white</font></param>
+								<param name="white"><font>white</font></param>
+		   						<param name="black"><font>black</font></param>
+		   						<param name="red"><font>red</font></param>
+		   						<param name="green"><font>green</font></param>
+		   						<param name="blue"><font>blue</font></param>
+		   						<param name="yellow"><font>yellow</font></param>
+		   						<param name="orange"><font>orange</font></param>
+           						<param name="purple"><font>purple</font></param>
+							</map></param>
+						</theme>
 					</theme>
 				</theme>
 			</theme>

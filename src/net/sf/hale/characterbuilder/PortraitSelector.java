@@ -160,7 +160,7 @@ public class PortraitSelector extends PopupWindow {
 			
 			int paneHeight = getInnerHeight() - title.getHeight() - accept.getHeight() - buttonGap;
 			
-			portraitPane.setSize(portraitPane.getPreferredWidth() + portraitPane.getVerticalScrollbar().getWidth(), paneHeight);
+			portraitPane.setSize(portraitPane.getPreferredWidth(), paneHeight);
 			portraitPane.setPosition(getInnerX(), title.getBottom());
 			
 			accept.setPosition(getInnerX() + getInnerWidth() / 2 - accept.getWidth() - buttonGap,
@@ -169,13 +169,13 @@ public class PortraitSelector extends PopupWindow {
 			cancel.setPosition(getInnerX() + getInnerWidth() / 2 + buttonGap, portraitPane.getBottom() + buttonGap);
 		}
 		
-		@Override public int getPreferredWidth() {
-			return portraitPane.getPreferredWidth() + getBorderHorizontal() + portraitPane.getVerticalScrollbar().getWidth();
+		@Override public int getPreferredInnerWidth() {
+			return portraitPane.getPreferredWidth() + portraitPane.getVerticalScrollbar().getWidth();
 		}
 		
-		@Override public int getPreferredHeight() {
+		@Override public int getPreferredInnerHeight() {
 			return Math.min(Game.config.getResolutionY(), portraitPane.getPreferredHeight() + title.getPreferredHeight() +
-					accept.getPreferredHeight() + buttonGap + getBorderVertical());
+					accept.getPreferredHeight() + buttonGap);
 		}
 	}
 	

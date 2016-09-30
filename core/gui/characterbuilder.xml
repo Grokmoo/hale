@@ -9,11 +9,11 @@
 			<theme name="colorselector" ref="colorselector"/>
 			
 			<theme name="cancelbutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 			</theme>
 			
 			<theme name="acceptbutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 			</theme>
 		</theme>
 	</theme>
@@ -52,7 +52,7 @@
 		<param name="titlegap"><int>2</int></param>
 		<param name="panegap"><int>10</int></param>
 		
-		<theme name="titlelabel" ref="labelbigblack"/>
+		<theme name="titlelabel" ref="labelbig"/>
 		<theme name="descriptionpane" ref="scrollpane"/>
 		<theme name="nextbutton" ref="button">
 			<param name="minWidth"><int>80</int></param>
@@ -70,18 +70,18 @@
 				<theme name="raceselector" ref="charpropertyeditor"/>
 				
 				<theme name="roleselector" ref="charpropertyeditor">
-					<theme name="namelabel" ref="labelbigblack">
+					<theme name="namelabel" ref="labelbig">
 						<param name="minWidth"><int>140</int></param>
 					</theme>
 				</theme>
 				
 				<theme name="attributeselector" ref="charpropertyeditor">
-					<theme name="namelabel" ref="labelbigblack">
+					<theme name="namelabel" ref="labelbig">
 						<param name="minWidth"><int>130</int></param>
 					</theme>
 				</theme>
 				<theme name="skillselector" ref="charpropertyeditor">
-					<theme name="namelabel" ref="labelbigblack">
+					<theme name="namelabel" ref="labelbig">
 						<param name="minWidth"><int>160</int></param>
 					</theme>
 				</theme>
@@ -184,7 +184,6 @@
 	</theme>
 	
 	<theme name="portraitselector" ref="infodialog">
-		<param name="border"><border>10</border></param>
 		<param name="numcolumns"><int>6</int></param>
 		<param name="buttongap"><int>10</int></param>
 		<param name="portraitsize"><int>104</int></param>
@@ -199,10 +198,10 @@
 			</theme>
 			
 			<theme name="acceptbutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 			</theme>
 			<theme name="cancelbutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 			</theme>
 		</theme>
 		
@@ -225,39 +224,39 @@
 			</theme>
 		</theme>
 		
-		<theme name="namelabel" ref="labelbigblack"/>
+		<theme name="namelabel" ref="labelbig"/>
 		<theme name="nameeditfield" ref="editfield">
 			<param name="minWidth"><int>150</int></param>
-			<theme name="renderer" ref="labelbigred"/>
+			<theme name="renderer" ref="labelbigblack"/>
 		</theme>
 		<theme name="randomnamebutton" ref="button">
-			<param name="font"><font>large</font></param>
+			<param name="font"><font>large-white</font></param>
 		</theme>
-		<theme name="genderlabel" ref="labelbigblack"/>
+		<theme name="genderlabel" ref="labelbig"/>
 		<theme name="genderselector" ref="charpropertyeditor"/>
 		
-		<theme name="hairlabel" ref="labelbigblack"/>
-		<theme name="hairstylelabel" ref="labelbigblack"/>
+		<theme name="hairlabel" ref="labelbig"/>
+		<theme name="hairstylelabel" ref="labelbig"/>
 		<theme name="prevhairstyle" ref="button"/>
 		<theme name="nexthairstyle" ref="button"/>
 		<theme name="haircolorpicker" ref="colorpicker"/>
 		
-		<theme name="beardlabel" ref="labelbigblack"/>
+		<theme name="beardlabel" ref="labelbig"/>
 		<theme name="prevbeardstyle" ref="button"/>
 		<theme name="nextbeardstyle" ref="button"/>
-		<theme name="beardstylelabel" ref="labelbigblack"/>
+		<theme name="beardstylelabel" ref="labelbig"/>
 		<theme name="beardcolorpicker" ref="colorpicker"/>
 		
-		<theme name="skinlabel" ref="labelbigblack"/>
+		<theme name="skinlabel" ref="labelbig"/>
 		<theme name="skincolorpicker" ref="colorpicker"/>
 		
-		<theme name="clothinglabel" ref="labelbigblack"/>
+		<theme name="clothinglabel" ref="labelbig"/>
 		<theme name="clothingcolorpicker" ref="colorpicker"/>
 		
-		<theme name="portraitlabel" ref="labelbigblack"/>
+		<theme name="portraitlabel" ref="labelbig"/>
 		
 		<theme name="chooseportraitbutton" ref="button">
-			<param name="font"><font>large</font></param>
+			<param name="font"><font>large-white</font></param>
 		</theme>
 	</theme>
 	

@@ -373,5 +373,7 @@
 		</select>
 		
 		<alias name="minimapviewport" ref="textbackground-transparent" tint="#f00"/>
+		
+		<alias name="colorselector.cursor" ref="white"/>
 	</images>
 </themes>

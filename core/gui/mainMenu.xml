@@ -432,31 +432,31 @@
 	</theme>
 	
 	<theme name="partyformationwindow" ref="infodialog">
+		<param name="border"><border>18</border></param>
 		<param name="defaultpartyname"><string>The Adventurers</string></param>
 		<param name="smallGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
 		<param name="selectableWidth"><int>600</int></param>
 	
-		<param name="border"><border>10</border></param>
 		<param name="maxHeight"><int>600</int></param>
 		<param name="minHeight"><int>300</int></param>
 		
 		<theme name="difficultyselector" ref="difficultyselector"/>
 
-		<theme name="titlelabel" ref="labelbigblack"/>
+		<theme name="titlelabel" ref="labelbig"/>
 		
-		<theme name="namelabel" ref="labelbigblack">
+		<theme name="namelabel" ref="labelbig">
 			<param name="text"><string>Party Name</string></param>
 		</theme>
 		
 		<theme name="namefield" ref="editfield">
 			<param name="minWidth"><int>250</int></param>
-			<theme name="renderer" ref="labelbigred"/>
+			<theme name="renderer" ref="labelbigblack"/>
 		</theme>
 		
 		<theme name="partytitlelabel" ref="labelbigred"/>
 		
-		<theme name="partysizelabel" ref="labelblack"/>
+		<theme name="partysizelabel" ref="label"/>
 		
 		<theme name="availabletitlelabel" ref="labelbigred">
 			<param name="text"><string>Available Characters</string></param>
@@ -507,6 +507,7 @@
 	</theme>
 	
 	<theme name="newgamewindow" ref="infodialog">
+		<param name="border"><border>18</border></param>
 		<param name="acceptCancelGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
 		<param name="innerwidth"><int>580</int></param>
