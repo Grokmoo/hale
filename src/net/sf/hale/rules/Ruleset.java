@@ -195,11 +195,11 @@ public class Ruleset {
 		
 		Set<String> resources = ResourceManager.getResourcesInDirectory("races");
 		for (String resource : resources) {
-			String id = ResourceManager.getResourceID(resource, "races", ResourceType.JSON);
+			String id = ResourceManager.getResourceIDNoPath(resource, ResourceType.JSON);
 			if (id == null) continue;
 			
 			try {
-				races.put(id, new Race(id));
+				races.put(id, new Race(id, new SimpleJSONParser(resource)));
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error loading race " + id, e);
 			}

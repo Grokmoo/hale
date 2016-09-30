@@ -85,9 +85,7 @@ public class Race {
 	
 	private final boolean showDetailedDescription;
 	
-	public Race(String id) {
-		SimpleJSONParser parser = new SimpleJSONParser("races/" + id, ResourceType.JSON);
-		
+	public Race(String id, SimpleJSONParser parser) {
 		this.id = id;
 		this.name = parser.get("name", id);
 		

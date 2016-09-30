@@ -209,6 +209,7 @@
     "devastatingShot" : [ 616, 484, 44, 44 ],
     "trainIntelligence2" : [ 660, 484, 44, 44 ],
     "songOfSlaying" : [ 704, 484, 44, 44 ],
+	"trollkin" : [ 748, 484, 44, 44 ],
     "fortifyHealth" : [ 0, 528, 44, 44 ],
     "poisonFog" : [ 88, 528, 44, 44 ],
     "acidSplash" : [ 132, 528, 44, 44 ],
