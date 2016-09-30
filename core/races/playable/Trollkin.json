@@ -19,7 +19,9 @@
 	"femaleForeground" : "creatures/trollkin-fg",
 	"femaleBackground" : "creatures/trollkin-bg",
 	"maleClothes" : "creatures/trollkin-clothes",
-	"femaleClothes" : "creatures/trollkin-clothes"
+	"femaleClothes" : "creatures/trollkin-clothes",
+	"maleEars" : "subIcons/earsTrollkin",
+	"femaleEars" : "subIcons/earsTrollkin",
   },
   
   "iconOffsets" : {
@@ -27,14 +29,14 @@
 	"Quiver" : [ 16, 7 ],
 	"Torso" : [ 16, 17 ],
 	"Gloves" : [ 16, 15 ],
-	"Head" : [ 16, -4 ],
-	"Ears" : [ 16, -4 ],
+	"Head" : [ 18, -4 ],
+	"Ears" : [ 18, -1 ],
 	"Hair" : [ 17, -4 ],
 	"Beard" : [ 16, -3 ],
 	"Shield" : [ 23, 15 ],
 	"Boots" : [ 16, 26 ],
 	"MainHandWeapon" : [ 1, 10 ],
-	"OffHandWeapon" : [ 25, 11 ]
+	"OffHandWeapon" : [ 25, 10 ]
   },
   
   "hasBeard" : false,
