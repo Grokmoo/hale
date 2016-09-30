@@ -33,7 +33,6 @@ import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.TextArea;
 import de.matthiasmann.twl.Widget;
 import de.matthiasmann.twl.textarea.HTMLTextAreaModel;
-import de.matthiasmann.twl.textarea.SimpleTextAreaModel;
 
 /**
  * A popup window that appears whenever the user presses "ESC" while typing in the
@@ -215,8 +214,8 @@ public class ScriptAutocompletePopup extends PopupWindow {
 		}
 		
 		private EntrySelector(Field field) {
-			SimpleTextAreaModel model = new SimpleTextAreaModel();
-			model.setText(field.getName());
+			HTMLTextAreaModel model = new HTMLTextAreaModel();
+			model.setHtml("<span style=\"font-family: white\">" + field.getName() + "</span>");
 			
 			textArea = new TextAreaNoInput(model);
 			add(textArea);
