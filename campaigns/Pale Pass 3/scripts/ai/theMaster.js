@@ -1,6 +1,6 @@
 function cutsceneFinished(game) {
     var popup = game.showCampaignConclusionPopup();
-    popup.addText("<div style=\"font-family: medium;\">");
+    popup.addText("<div style=\"font-family: medium-white;\">");
     popup.addText("Congratulations on completing the Pale Pass campaign.");
     popup.addText("</div>");
     

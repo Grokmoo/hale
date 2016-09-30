@@ -9,7 +9,7 @@ function startCutscene(game) {
 
 function campaignConclusion(game) {
 	var popup = game.showCampaignConclusionPopup();
-	popup.addText("<div style=\"font-family: medium;\">");
+	popup.addText("<div style=\"font-family: medium-white;\">");
 	popup.addText("Congratulations, you have completed Chapter 2 of the Pale Pass campaign.");
 	popup.addText("  You may export your characters now if you wish and continue on with the next chapter.");
 	popup.addText("</div>");
