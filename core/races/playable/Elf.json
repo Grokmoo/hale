@@ -10,7 +10,7 @@
     "Humanoid"
   ],
   
-  "subIconRaceString" : "Human",
+  "subIconRaceString" : "Medium",
   
   "icons" : {
     "maleForeground" : "creatures/human-male-fg",

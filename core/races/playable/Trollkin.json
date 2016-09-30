@@ -11,7 +11,7 @@
     "Humanoid", "Beast"
   ],
   
-  "subIconRaceString" : "Human",
+  "subIconRaceString" : "Large",
   
   "icons" : {
     "maleForeground" : "creatures/trollkin-fg",

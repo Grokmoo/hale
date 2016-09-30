@@ -10,7 +10,7 @@
     "Humanoid"
   ],
   
-  "subIconRaceString" : "Dwarf",
+  "subIconRaceString" : "Small",
 
   "icons" : {
     "maleForeground" : "creatures/dwarf-fg",
