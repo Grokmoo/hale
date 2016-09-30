@@ -70,6 +70,7 @@ public class Race {
 	
 	private final Map<Integer, List<String>> abilitySelectionLists;
 	
+	private final String subIconRaceString;
 	private final Map<SubIcon.Type, Point> iconOffsets;
 	
 	private final List<String> abilities;
@@ -183,6 +184,7 @@ public class Race {
 		}
 		this.skinColors = Collections.unmodifiableList(skinColors);
 		
+		this.subIconRaceString = parser.get("subIconRaceString", null);
 		if (parser.containsKey("icons")) {
 			SimpleJSONObject obj = parser.getObject("icons");
 			
@@ -267,6 +269,14 @@ public class Race {
 		
 		listsAtLevel.add(listID);
 	}
+	
+	/**
+	 * Returns the string that should be used for this race when selecting sub icons from the
+	 * set of available sub icons.
+	 * @return the string used for this race when selecting sub icons
+	 */
+	
+	public String getSubIconRaceString() { return subIconRaceString; }
 	
 	/**
 	 * Returns true if members of this race should draw this sub icon type, false

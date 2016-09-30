@@ -9,6 +9,8 @@
   "racialTypes" : [
     "Humanoid"
   ],
+  
+  "subIconRaceString" : "Dwarf",
 
   "icons" : {
     "maleForeground" : "creatures/dwarf-fg",

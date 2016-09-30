@@ -78,8 +78,8 @@ public class SubIcon implements Comparable<SubIcon> {
 		// look for a secondary icon if one has not been set
 		if (secondaryIcon == null) {
 			String secondaryBase = icon + "Secondary";
-			String secondaryRaceGender = icon + race.getName() + gender + "Secondary";
-			String secondaryRace = icon + race.getName() + "Secondary";
+			String secondaryRaceGender = icon + race.getSubIconRaceString() + gender + "Secondary";
+			String secondaryRace = icon + race.getSubIconRaceString() + "Secondary";
 
 			if (SpriteManager.hasSprite(secondaryRaceGender))
 				secondaryIcon = secondaryRaceGender;
@@ -98,8 +98,8 @@ public class SubIcon implements Comparable<SubIcon> {
 			
 		} else {
 			// look for a racial / gender specific icon
-			String iconRaceGender = icon + race.getName() + gender;
-			String iconRace = icon + race.getName();
+			String iconRaceGender = icon + race.getSubIconRaceString() + gender;
+			String iconRace = icon + race.getSubIconRaceString();
 			
 			if (SpriteManager.hasSprite(iconRaceGender))
 				this.icon = iconRaceGender;
