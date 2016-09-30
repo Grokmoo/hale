@@ -3,7 +3,7 @@
   "height" : 15,
   "tileset" : "outdoor",
   "visibilityRadius" : 8,
-  "explored" : false,
+  "explored" : true,
   "encounters" : {
     "tutorialOrc" : [
       [ 8, 13 ]
