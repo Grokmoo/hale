@@ -28,6 +28,7 @@ import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.PC;
 import net.sf.hale.icon.IconFactory;
 import net.sf.hale.resource.SpriteManager;
+import net.sf.hale.rules.Race;
 import net.sf.hale.rules.Ruleset;
 import net.sf.hale.widgets.BasePortraitViewer;
 import de.matthiasmann.twl.Button;
@@ -47,24 +48,7 @@ import de.matthiasmann.twl.utils.TintAnimator;
  */
 
 public class BuilderPaneCosmetic extends AbstractBuilderPane implements PortraitSelector.Callback {
-	private static final int DEFAULT_HAIR = 2;
-	private static final int DEFAULT_BEARD = 1;
-	private static final Color DEFAULT_BEARD_COLOR = Color.MAROON;
-	private static final Color DEFAULT_HAIR_COLOR = Color.MAROON;
-	private static final Color DEFAULT_SKIN_COLOR = new Color(0xFFF6D39B);
 	private static final Color DEFAULT_CLOTHING_COLOR = Color.GREEN;
-	
-	private static final Color[] HAIR_BEARD_COLORS = { Color.WHITE, Color.SILVER, Color.GRAY,
-		new Color(0xFF545454), new Color(0xFF545454), Color.BLACK, new Color(0xFFEEE685),
-		Color.YELLOW, new Color(0xFFCC9900), new Color(0xFFD98719), Color.ORANGE,
-		new Color(0xFFEE7600), Color.RED, new Color(0xFFC00000), Color.MAROON,
-		new Color(0xFFCD853F), new Color(0xFF8B5A2B), new Color(0xFF8B5A00), new Color(0xFF8B4513),
-		new Color(0xFF5C3317) };
-	
-	private static final Color[] SKIN_COLORS = { new Color(0xFFF9F4C8), new Color(0xFFF6D39B), 
-		new Color(0xFFF8e088), new Color(0xFFF6D39B), new Color(0xFFEDAE67), new Color(0xFFCE9452), 
-		new Color(0xFF734A29), new Color(0xFF422110), new Color(0xFF2F1010), new Color(0xFFFFC794),
-		new Color(0xFFD48661), new Color(0xFF80412B), new Color(0xFF501002) };
 	
 	private static final Color[] CLOTHING_COLORS = { Color.WHITE, Color.SILVER, Color.GRAY, new Color(0xFF444444),
 		Color.MAROON, Color.RED, Color.ORANGE, Color.YELLOW, Color.LIGHTYELLOW,
@@ -80,6 +64,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	private String noNameMessage, noGenderMessage, noPortraitMessage;
 	
 	private PC workingCopy;
+	private Race workingRace;
+	private boolean[] beardsValid, hairValid;
 	
 	private Label nameLabel;
 	private EditField nameField;
@@ -140,8 +126,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		} while(SpriteManager.hasSprite(currentValue));
 
 		this.hairStyleMax = i - 2;
-		currentHairStyle = DEFAULT_HAIR;
-		currentHairColor = DEFAULT_HAIR_COLOR;
+		
+		hairValid = new boolean[hairStyleMax + 1];
 
 		// determine the total number of available beard styles
 		i = 1;
@@ -152,9 +138,8 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		} while(SpriteManager.hasSprite(currentValue));
 
 		this.beardStyleMax = i - 2;
-
-		currentBeardStyle = DEFAULT_BEARD;
-		currentBeardColor = DEFAULT_BEARD_COLOR;
+		
+		beardsValid = new boolean[beardStyleMax + 1];
 		
 		// add widgets
 		appearanceHolder = new AppearanceArea();
@@ -234,18 +219,6 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		nextHairStyle.setTheme("nexthairstyle");
 		add(nextHairStyle);
 		
-		hairColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setHairColor(color);
-			}
-
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedHairColor();
-			}
-		}, HAIR_BEARD_COLORS);
-		hairColorPicker.setTheme("haircolorpicker");
-		add(hairColorPicker);
-		
 		beardLabel = new Label("Beard");
 		beardLabel.setTheme("beardlabel");
 		add(beardLabel);
@@ -272,35 +245,9 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		nextBeardStyle.setTheme("nextbeardstyle");
 		add(nextBeardStyle);
 		
-		beardColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setBeardColor(color);
-			}
-
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedBeardColor();
-			}
-		}, HAIR_BEARD_COLORS);
-		beardColorPicker.setTheme("beardcolorpicker");
-		add(beardColorPicker);
-		
 		skinLabel = new Label("Skin");
 		skinLabel.setTheme("skinlabel");
 		add(skinLabel);
-		
-		skinColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setSkinColor(color);
-			}
-
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedSkinColor();
-			}
-		}, SKIN_COLORS);
-		skinColorPicker.setTheme("skincolorpicker");
-		add(skinColorPicker);
-		
-		currentSkinColor = DEFAULT_SKIN_COLOR;
 		
 		clothingLabel = new Label("Clothing");
 		clothingLabel.setTheme("clothinglabel");
@@ -499,16 +446,16 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		boolean editEnabled = getCharacter().getSelectedGender() != null;
 		boolean hasBeard = getCharacter().getSelectedGender() != Ruleset.Gender.Female;
 		
-		beardColorPicker.setEnabled(editEnabled && hasBeard);
-		hairColorPicker.setEnabled(editEnabled);
+		if (beardColorPicker != null) beardColorPicker.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
+		if (hairColorPicker != null) hairColorPicker.setEnabled(editEnabled);
 		
 		nextHairStyle.setEnabled(editEnabled);
 		prevHairStyle.setEnabled(editEnabled);
-		nextBeardStyle.setEnabled(editEnabled && hasBeard);
-		prevBeardStyle.setEnabled(editEnabled && hasBeard);
+		nextBeardStyle.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
+		prevBeardStyle.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
 		choosePortrait.setEnabled(editEnabled);
 		
-		skinColorPicker.setEnabled(editEnabled);
+		if (skinColorPicker != null) skinColorPicker.setEnabled(editEnabled);
 		clothingColorPicker.setEnabled(editEnabled);
 		
 		portraitViewer.setVisible(getCharacter().getSelectedPortrait() != null);
@@ -516,8 +463,89 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		invalidateLayout();
 	}
 	
+	private void createHairBeardAndSkinPickers() {
+		if (hairColorPicker != null) {
+			this.removeChild(hairColorPicker);
+		}
+		
+		if (skinColorPicker != null) {
+			this.removeChild(skinColorPicker);
+		}
+		
+		if (beardColorPicker != null) {
+			this.removeChild(beardColorPicker);
+		}
+		
+		List<String> hairBeardColorsList = workingRace.getHairAndBeardColors();
+		Color[] hairBeardColors = new Color[hairBeardColorsList.size()];
+		int i = 0;
+		for (String color : hairBeardColorsList) {
+			hairBeardColors[i] = Color.parserColor(color);
+			i++;
+		}
+		
+		List<String> skinColorsList = workingRace.getSkinColors();
+		Color[] skinColors = new Color[skinColorsList.size()];
+		i = 0;
+		for (String color : skinColorsList) {
+			skinColors[i] = Color.parserColor(color);
+			i++;
+		}
+		
+		hairColorPicker = new ColorPicker(new ColorCallback() {
+			@Override public void colorSet(Color color) {
+				setHairColor(color);
+			}
+
+			@Override public Color getCurrentColor() {
+				return getCharacter().getSelectedHairColor();
+			}
+		}, hairBeardColors);
+		hairColorPicker.setTheme("haircolorpicker");
+		add(hairColorPicker);
+		
+		beardColorPicker = new ColorPicker(new ColorCallback() {
+			@Override public void colorSet(Color color) {
+				setBeardColor(color);
+			}
+
+			@Override public Color getCurrentColor() {
+				return getCharacter().getSelectedBeardColor();
+			}
+		}, hairBeardColors);
+		beardColorPicker.setTheme("beardcolorpicker");
+		add(beardColorPicker);
+		
+		skinColorPicker = new ColorPicker(new ColorCallback() {
+			@Override public void colorSet(Color color) {
+				setSkinColor(color);
+			}
+
+			@Override public Color getCurrentColor() {
+				return getCharacter().getSelectedSkinColor();
+			}
+		}, skinColors);
+		skinColorPicker.setTheme("skincolorpicker");
+		add(skinColorPicker);
+		
+		for (i = 0; i < hairValid.length; i++) { hairValid[i] = false; }
+		for (int hairIndex : workingRace.getSelectableHairIndices()) {
+			hairValid[hairIndex] = true;
+		}
+		
+		for (i = 0; i < beardsValid.length; i++) { beardsValid[i] = false; }
+		for (int beardIndex : workingRace.getSelectableBeardIndices()) {
+			beardsValid[beardIndex] = true;
+		}
+	}
+	
 	@Override protected void updateCharacter() {
 		// reset the fields as needed
+		if (getCharacter().getSelectedRace() != workingRace) {
+			workingRace = getCharacter().getSelectedRace();
+			createHairBeardAndSkinPickers();
+		}
+		
 		if (getCharacter().getSelectedName() == null)
 			nameField.setText("");
 		
@@ -528,17 +556,17 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		}
 		
 		if (getCharacter().getSelectedHairIcon() == null) {
-			currentHairStyle = DEFAULT_HAIR;
-			currentHairColor = DEFAULT_HAIR_COLOR;
+			currentHairStyle = workingRace.getDefaultHairIndex();
+			currentHairColor = Color.parserColor(workingRace.getDefaultHairColor());
 		}
 		
 		if (getCharacter().getSelectedBeardIcon() == null) {
-			currentBeardStyle = DEFAULT_BEARD;
-			currentBeardColor = DEFAULT_BEARD_COLOR;
+			currentBeardStyle = workingRace.getDefaultBeardIndex();
+			currentBeardColor = Color.parserColor(workingRace.getDefaultBeardColor());
 		}
 		
 		if (getCharacter().getSelectedSkinColor() == null) {
-			currentSkinColor = DEFAULT_SKIN_COLOR;
+			currentSkinColor = Color.parserColor(workingRace.getDefaultSkinColor());
 		}
 		
 		if (getCharacter().getSelectedClothingColor() == null) {
@@ -566,7 +594,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		if (gender == Ruleset.Gender.Female) {
 			getCharacter().setSelectedBeardIcon(null);
 			getCharacter().setSelectedBeardColor(null);
-			currentBeardStyle = DEFAULT_BEARD;
+			currentBeardStyle = getCharacter().getSelectedRace().getDefaultBeardIndex();
 		} else {
 			getCharacter().setSelectedBeardIcon("subIcons/beard" + numberFormat.format(currentBeardStyle));
 			getCharacter().setSelectedBeardColor(currentBeardColor);
@@ -613,8 +641,11 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private void previousBeardStyle() {
-		currentBeardStyle--;
-		if (currentBeardStyle == 0) currentBeardStyle = beardStyleMax;
+		int startStyle = currentBeardStyle;
+		do {
+			currentBeardStyle--;
+			if (currentBeardStyle == 0) currentBeardStyle = beardStyleMax;
+		} while (!beardsValid[currentBeardStyle] && currentBeardStyle != startStyle);
 		
 		getCharacter().setSelectedBeardIcon("subIcons/beard" + numberFormat.format(currentBeardStyle));
 		
@@ -622,8 +653,11 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private void nextBeardStyle() {
-		currentBeardStyle++;
-		if (currentBeardStyle > beardStyleMax) currentBeardStyle = 1;
+		int startStyle = currentBeardStyle;
+		do {
+			currentBeardStyle++;
+			if (currentBeardStyle > beardStyleMax) currentBeardStyle = 1;
+		} while (!beardsValid[currentBeardStyle] && currentBeardStyle != startStyle);
 		
 		getCharacter().setSelectedBeardIcon("subIcons/beard" + numberFormat.format(currentBeardStyle));
 		
@@ -631,8 +665,11 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private void previousHairStyle() {
-		currentHairStyle--;
-		if (currentHairStyle == 0) currentHairStyle = hairStyleMax;
+		int startStyle = currentHairStyle;
+		do {
+			currentHairStyle--;
+			if (currentHairStyle == 0) currentHairStyle = hairStyleMax;
+		} while (!hairValid[currentHairStyle] && currentHairStyle != startStyle);
 		
 		getCharacter().setSelectedHairIcon("subIcons/hair" + numberFormat.format(currentHairStyle));
 		
@@ -640,8 +677,11 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private void nextHairStyle() {
-		currentHairStyle++;
-		if (currentHairStyle > hairStyleMax) currentHairStyle = 1;
+		int startStyle = currentHairStyle;
+		do {
+			currentHairStyle++;
+			if (currentHairStyle > hairStyleMax) currentHairStyle = 1;
+		} while (!hairValid[currentHairStyle] && currentHairStyle != startStyle);
 		
 		getCharacter().setSelectedHairIcon("subIcons/hair" + numberFormat.format(currentHairStyle));
 		

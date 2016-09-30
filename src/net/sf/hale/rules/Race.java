@@ -74,7 +74,11 @@ public class Race {
 	
 	private final List<String> abilities;
 	
-	private final List<String> randomMaleNames, randomFemaleNames;
+	private final List<String> randomMaleNames, randomFemaleNames, hairAndBeardColors, skinColors;
+	private final boolean hasBeard;
+	private final String defaultBeardColor, defaultHairColor, defaultSkinColor;
+	private final int defaultBeardIndex, defaultHairIndex;
+	private final List<Integer> selectableBeardIndices, selectableHairIndices;
 	
 	private final int baseStr, baseDex, baseCon, baseInt, baseWis, baseCha;
 	
@@ -134,6 +138,50 @@ public class Race {
 			}
 		}
 		((ArrayList<RacialType>)racialTypes).trimToSize();
+		
+		this.hasBeard = parser.get("hasBeard", true);
+		this.defaultBeardIndex = parser.get("defaultBeardIndex", 1);
+		this.defaultHairIndex = parser.get("defaultHairIndex", 1);
+		this.defaultBeardColor = parser.get("defaultBeardColor", null);
+		this.defaultHairColor = parser.get("defaultHairColor", null);
+		this.defaultSkinColor = parser.get("defaultSkinColor", null);
+		
+		List<Integer> selectableHairIndices = new ArrayList<Integer>();
+		if (parser.containsKey("selectableHairIndices")) {
+			SimpleJSONArray array = parser.getArray("selectableHairIndices");
+			for (SimpleJSONArrayEntry entry : array) {
+				selectableHairIndices.add(entry.getInt(1));
+			}
+		}
+		this.selectableHairIndices = Collections.unmodifiableList(selectableHairIndices);
+		
+		List<Integer> selectableBeardIndices = new ArrayList<Integer>();
+		if (parser.containsKey("selectableBeardIndices")) {
+			SimpleJSONArray array = parser.getArray("selectableBeardIndices");
+			for (SimpleJSONArrayEntry entry : array) {
+				selectableBeardIndices.add(entry.getInt(1));
+			}
+		}
+		this.selectableBeardIndices = Collections.unmodifiableList(selectableBeardIndices);
+		
+		
+		List<String> hairAndBeardColors = new ArrayList<String>();
+		if (parser.containsKey("hairAndBeardColors")) {
+			SimpleJSONArray array = parser.getArray("hairAndBeardColors");
+			for (SimpleJSONArrayEntry entry : array) {
+				hairAndBeardColors.add(entry.getString());
+			}
+		}
+		this.hairAndBeardColors = Collections.unmodifiableList(hairAndBeardColors);
+		
+		List<String> skinColors = new ArrayList<String>();
+		if (parser.containsKey("skinColors")) {
+			SimpleJSONArray array = parser.getArray("skinColors");
+			for (SimpleJSONArrayEntry entry : array) {
+				skinColors.add(entry.getString());
+			}
+		}
+		this.skinColors = Collections.unmodifiableList(skinColors);
 		
 		if (parser.containsKey("icons")) {
 			SimpleJSONObject obj = parser.getObject("icons");
@@ -251,6 +299,49 @@ public class Race {
 			return names.get(Game.dice.rand(0, names.size() - 1));
 		}
 	}
+	
+	public int getDefaultBeardIndex() { return defaultBeardIndex; }
+	public int getDefaultHairIndex() { return defaultHairIndex; }
+	public String getDefaultHairColor() { return defaultHairColor; }
+	public String getDefaultBeardColor() { return defaultBeardColor; }
+	public String getDefaultSkinColor() { return defaultSkinColor; }
+	
+	/**
+	 * returns the list of indices (sub-icon sprite indices) of hair icons that are valid for this
+	 * race as a player selection
+	 * @return the list of valid hair indices
+	 */
+	
+	public List<Integer> getSelectableHairIndices() { return selectableHairIndices; }
+	
+	/**
+	 * returns the list of indices (sub-icon sprite indices) of beard icons that are valid for this
+	 * race as a player selection
+	 * @return the list of valid beard indices
+	 */
+	
+	public List<Integer> getSelectableBeardIndices() { return selectableBeardIndices; }
+	
+	/**
+	 * returns the list of standard hair and beard colors for this race
+	 * @return the list of standard hair and beard colors for this race
+	 */
+	
+	public List<String> getHairAndBeardColors() { return hairAndBeardColors; }
+	
+	/**
+	 * returns the list of standard skin colors for this race
+	 * @return the list of standard skin colors for this race
+	 */
+	
+	public List<String> getSkinColors() { return skinColors; }
+	
+	/**
+	 * returns whether player characters of this race can have a beard
+	 * @return whether player characters of this race can have a beard
+	 */
+	
+	public boolean hasBeard() { return hasBeard; }
 	
 	public String getRandomMaleName() {
 		return getRandomFromList(randomMaleNames);
