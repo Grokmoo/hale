@@ -436,7 +436,7 @@
 		<param name="defaultpartyname"><string>The Adventurers</string></param>
 		<param name="smallGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
-		<param name="selectableWidth"><int>600</int></param>
+		<param name="selectableWidth"><int>620</int></param>
 	
 		<param name="maxHeight"><int>600</int></param>
 		<param name="minHeight"><int>300</int></param>
@@ -510,7 +510,7 @@
 		<param name="border"><border>18</border></param>
 		<param name="acceptCancelGap"><int>5</int></param>
 		<param name="sectionGap"><int>10</int></param>
-		<param name="innerwidth"><int>580</int></param>
+		<param name="innerwidth"><int>590</int></param>
 		<param name="preselectedwidth"><int>290</int></param>
 		<param name="preselectedheight"><int>414</int></param>
 		<param name="maxHeight"><int>600</int></param>
