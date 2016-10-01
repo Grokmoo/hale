@@ -1,7 +1,7 @@
 {
   "name" : "Trollkin",
   "icon" : "icons/trollkin",
-  "baseMovementCost" : 1000,
+  "baseMovementCost" : 1100,
   "defaultWeapon" : "unarmedLarge",
   "playerSelectable" : true,
   
@@ -29,11 +29,11 @@
 	"Quiver" : [ 16, 7 ],
 	"Torso" : [ 16, 17 ],
 	"Gloves" : [ 16, 15 ],
-	"Head" : [ 18, -4 ],
+	"Head" : [ 18, -3 ],
 	"Ears" : [ 18, -1 ],
 	"Hair" : [ 17, -4 ],
 	"Beard" : [ 16, -3 ],
-	"Shield" : [ 23, 15 ],
+	"Shield" : [ 23, 14 ],
 	"Boots" : [ 16, 26 ],
 	"MainHandWeapon" : [ 1, 10 ],
 	"OffHandWeapon" : [ 25, 10 ]
