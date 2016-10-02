@@ -152,5 +152,21 @@
     "armor-05MediumFemaleSecondary" : [ 484, 440, 44, 44 ],
     "armor-01MediumFemaleSecondary" : [ 528, 440, 44, 44 ],
     "armor-06MediumFemaleSecondary" : [ 572, 440, 44, 44 ],
+	
+	"armor-01Large" : [ 0, 440, 44, 44 ],
+    "armor-04Large" : [ 44, 440, 44, 44 ],
+    "armor-05Large" : [ 88, 440, 44, 44 ],
+    "armor-06Large" : [ 132, 440, 44, 44 ],
+    "armor-07Large" : [ 176, 440, 44, 44 ],
+	"armor-11Large" : [ 220, 440, 44, 44 ],
+	"armor-08Large" : [ 264, 484, 44, 44 ],
+	
+	"armor-01LargeSecondary" : [ 0, 484, 44, 44 ],
+    "armor-04LargeSecondary" : [ 44, 484, 44, 44 ],
+    "armor-05LargeSecondary" : [ 88, 484, 44, 44 ],
+    "armor-06LargeSecondary" : [ 132, 484, 44, 44 ],
+    "armor-07LargeSecondary" : [ 176, 484, 44, 44 ],
+	"armor-11LargeSecondary" : [ 220, 484, 44, 44 ],
+	"armor-08LargeSecondary" : [ 308, 484, 44, 44 ],
   }
 }
