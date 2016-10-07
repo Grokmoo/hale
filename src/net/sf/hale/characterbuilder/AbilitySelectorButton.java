@@ -100,11 +100,14 @@ public class AbilitySelectorButton extends Button implements Runnable {
 		if (workingCopy.abilities.has(ability)) {
 			getAnimationState().setAnimationState(STATE_ALREADY_OWNED, true);
 			icon = ability.getIcon();
+			setEnabled(false);
 		} else if (ability.meetsPrereqs(workingCopy) && showSelectable) {
 			icon = ability.getIcon();
+			setEnabled(true);
 		} else {
 			getAnimationState().setAnimationState(STATE_PREREQS_NOT_MET, true);
 			icon = ability.getIcon().multiplyByColor(new Color(0xFF444444));
+			setEnabled(false);
 		}
 	}
 	
