@@ -33,6 +33,7 @@ import net.sf.hale.ability.Ability;
 import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
+import net.sf.hale.entity.Inventory;
 import net.sf.hale.entity.Weapon;
 import net.sf.hale.entity.WeaponTemplate;
 import net.sf.hale.icon.SubIcon;
@@ -85,6 +86,8 @@ public class Race {
 	
 	private final boolean showDetailedDescription;
 	
+	private final List<Inventory.Slot> restrictedSlots; 
+	
 	public Race(String id, SimpleJSONParser parser) {
 		this.id = id;
 		this.name = parser.get("name", id);
@@ -119,6 +122,16 @@ public class Race {
 			this.baseWis = 10;
 			this.baseCha = 10;
 		}
+		
+		List<Inventory.Slot> restrictedSlots = new ArrayList<Inventory.Slot>();
+		if (parser.containsKey("restrictedSlots")) {
+			SimpleJSONArray array = parser.getArray("restrictedSlots");
+			for (SimpleJSONArrayEntry entry : array) {
+				String slotID = entry.getString();
+				restrictedSlots.add(Inventory.Slot.valueOf(slotID));
+			}
+		}
+		this.restrictedSlots = Collections.unmodifiableList(restrictedSlots);
 		
 		abilities = new ArrayList<String>();
 		if (parser.containsKey("abilities")) {
@@ -267,6 +280,17 @@ public class Race {
 		}
 		
 		listsAtLevel.add(listID);
+	}
+	
+	/**
+	 * returns true if the slot is restricted - this race cannot equip items in the specified slot,
+	 * false otherwise
+	 * @param slot
+	 * @return whether the slot is restricted
+	 */
+	
+	public boolean isSlotRestricted(Inventory.Slot slot) {
+		return restrictedSlots.contains(slot);
 	}
 	
 	/**

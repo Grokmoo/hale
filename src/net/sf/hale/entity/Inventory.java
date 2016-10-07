@@ -412,6 +412,9 @@ public class Inventory implements ItemList.Listener, Saveable {
 			slot = getDefaultSlot(item);
 		}
 		
+		if (parent.getTemplate().getRace().isSlotRestricted(slot))
+			return false;
+		
 		if (!parent.timer.canPerformEquipAction(item))
 			return false;
 
