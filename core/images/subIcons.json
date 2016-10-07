@@ -74,6 +74,7 @@
 	"earsTrollkin" : [ 396, 176, 44, 44 ],
 	"earsMerlingMale" : [ 440, 176, 44, 44 ],
 	"earsMerlingFemale" : [ 484, 176, 44, 44 ],
+	"earsFurfoot" : [ 528, 176, 44, 44 ],
     "shield-buckler01" : [ 0, 220, 44, 44 ],
     "shield-smallshield01" : [ 44, 220, 44, 44 ],
     "shield-largeshield01" : [ 88, 220, 44, 44 ],

@@ -4,7 +4,7 @@
   "defaultWeapon" : "unarmedMedium",
   "playerSelectable" : true,
   
-  "baseAttributes" : [ 9, 12, 9, 10, 10, 10 ],
+  "baseAttributes" : [ 9, 11, 10, 11, 10, 10 ],
   
   "racialTypes" : [
     "Humanoid"

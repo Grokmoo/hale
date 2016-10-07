@@ -170,6 +170,9 @@
     "demon10" : [ 4, 11],
     "dracona-fg" : [ 5, 11],
     "dracona-bg" : [ 6, 11],
-    "dracona-clothes" : [ 7, 11]
+    "dracona-clothes" : [ 7, 11],
+	"furfoot-fg" : [ 8, 11],
+    "furfoot-bg" : [ 9, 11],
+    "furfoot-clothes" : [ 10, 11],
   }
 }

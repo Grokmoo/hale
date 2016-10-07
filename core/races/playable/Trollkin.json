@@ -5,7 +5,7 @@
   "defaultWeapon" : "unarmedLarge",
   "playerSelectable" : true,
   
-  "baseAttributes" : [ 12, 9, 12, 8, 10, 7 ],
+  "baseAttributes" : [ 12, 9, 11, 8, 10, 9 ],
   
   "racialTypes" : [
     "Humanoid", "Beast"

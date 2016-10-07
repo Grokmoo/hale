@@ -262,6 +262,7 @@
     "massParalyze" : [ 616, 616, 44, 44 ],
     "trainStrength3" : [ 660, 616, 44, 44 ],
     "songOfEnemies" : [ 704, 616, 44, 44 ],
+	"furfoot" : [ 748, 616, 44, 44 ],
     "steadfastRage" : [ 0, 660, 44, 44 ],
     "epicRage" : [ 44, 660, 44, 44 ],
     "bruiser" : [ 88, 660, 44, 44 ],
