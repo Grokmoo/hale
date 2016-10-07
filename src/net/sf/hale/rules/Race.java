@@ -76,7 +76,7 @@ public class Race {
 	private final List<String> abilities;
 	
 	private final List<String> randomMaleNames, randomFemaleNames, hairAndBeardColors, skinColors;
-	private final boolean hasBeard;
+	private final boolean hasBeard, hasHair;
 	private final String defaultBeardColor, defaultHairColor, defaultSkinColor;
 	private final int defaultBeardIndex, defaultHairIndex;
 	private final List<Integer> selectableBeardIndices, selectableHairIndices;
@@ -139,6 +139,7 @@ public class Race {
 		((ArrayList<RacialType>)racialTypes).trimToSize();
 		
 		this.hasBeard = parser.get("hasBeard", true);
+		this.hasHair = parser.get("hasHair", true);
 		this.defaultBeardIndex = parser.get("defaultBeardIndex", 1);
 		this.defaultHairIndex = parser.get("defaultHairIndex", 1);
 		this.defaultBeardColor = parser.get("defaultBeardColor", null);
@@ -350,6 +351,14 @@ public class Race {
 	 */
 	
 	public boolean hasBeard() { return hasBeard; }
+	
+	/**
+	 * Returns whether player characters can select a hair icon on character
+	 * creation
+	 * @return whether player characters can select a hairstyle
+	 */
+	
+	public boolean hasHair() { return hasHair; }
 	
 	public String getRandomMaleName() {
 		return getRandomFromList(randomMaleNames);

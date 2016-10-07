@@ -447,10 +447,10 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		boolean hasBeard = getCharacter().getSelectedGender() != Ruleset.Gender.Female;
 		
 		if (beardColorPicker != null) beardColorPicker.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
-		if (hairColorPicker != null) hairColorPicker.setEnabled(editEnabled);
+		if (hairColorPicker != null) hairColorPicker.setEnabled(editEnabled && getCharacter().getSelectedRace().hasHair());
 		
-		nextHairStyle.setEnabled(editEnabled);
-		prevHairStyle.setEnabled(editEnabled);
+		nextHairStyle.setEnabled(editEnabled && getCharacter().getSelectedRace().hasHair());
+		prevHairStyle.setEnabled(editEnabled && getCharacter().getSelectedRace().hasHair());
 		nextBeardStyle.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
 		prevBeardStyle.setEnabled(editEnabled && hasBeard && getCharacter().getSelectedRace().hasBeard());
 		choosePortrait.setEnabled(editEnabled);
