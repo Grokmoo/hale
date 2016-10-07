@@ -244,6 +244,7 @@
     "berserker" : [ 616, 572, 44, 44 ],
     "trainCharisma2" : [ 660, 572, 44, 44 ],
     "songOfAllies" : [ 704, 572, 44, 44 ],
+	"dracona" : [ 748, 572, 44, 44 ],
     "positiveEnergy" : [ 0, 616, 44, 44 ],
     "personalMagnetism" : [ 44, 616, 44, 44 ],
     "aid" : [ 88, 616, 44, 44 ],

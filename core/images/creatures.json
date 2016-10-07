@@ -168,15 +168,8 @@
     "orc03" : [ 2, 11],
     "werewolf03" : [ 3, 11],
     "demon10" : [ 4, 11],
-    "empty01" : [ 5, 11],
-    "empty02" : [ 6, 11],
-    "empty03" : [ 7, 11],
-    "empty04" : [ 8, 11],
-    "empty05" : [ 9, 11],
-    "empty06" : [ 10, 11],
-    "empty07" : [ 11, 11],
-    "empty08" : [ 12, 11],
-    "empty09" : [ 13, 11],
-    "empty10" : [ 14, 11]
+    "dracona-fg" : [ 5, 11],
+    "dracona-bg" : [ 6, 11],
+    "dracona-clothes" : [ 7, 11]
   }
 }
