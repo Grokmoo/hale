@@ -249,12 +249,12 @@ public class PortraitSelector extends PopupWindow {
 			getGUI().invokeAsync(loader, new PortraitLoaderListener());
 		}
 		
-		@Override public int getPreferredWidth() {
-			return portraitSize * numColumns + getBorderHorizontal();
+		@Override public int getPreferredInnerWidth() {
+			return portraitSize * numColumns;
 		}
 		
-		@Override public int getPreferredHeight() {
-			return portraitSize * ((numPortraits / numColumns)) + getBorderVertical();
+		@Override public int getPreferredInnerHeight() {
+			return portraitSize * ( (int)Math.ceil(numPortraits / numColumns) + 1 );
 		}
 		
 		@Override protected void layout() {
