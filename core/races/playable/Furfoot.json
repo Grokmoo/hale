@@ -63,8 +63,7 @@
   "defaultSkinColor" : "#FF909090",
   
   "abilitySelectionsFromList" : {
-	"General" : [ 2, 5, 8, 11, 14, 17, 20, 23, 26, 29,
-	              32, 35, 38, 41, 44, 47, 50, 53, 56, 59 ]
+  
   },
   
   "randomMaleNames" : [ "Alba","Alli","Ana","Ante","Arma","Barra","Bea","Buffa","Cani","Cari","Cate","Coyo","Cri","Cro","Croco","Drago",
