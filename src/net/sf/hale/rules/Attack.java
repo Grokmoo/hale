@@ -239,7 +239,7 @@ public class Attack {
 			
 			if (weapon.getTemplate().getWeaponType() != WeaponTemplate.Type.Thrown) {
 				quiverAttackBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Bonus.Type.WeaponAttack);
-				quiverDamageBonus = quiver.getQualityAttackBonus() + quiver.bonuses.get(Bonus.Type.WeaponDamage);
+				quiverDamageBonus = quiver.getQualityDamageBonus() + quiver.bonuses.get(Bonus.Type.WeaponDamage);
 			} 
 		}
 
