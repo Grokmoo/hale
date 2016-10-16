@@ -11,5 +11,13 @@
     "armor" : [
       "Medium"
     ]
+  },
+  "restrictions" : {
+    "roles" : [
+      {
+        "id" : "Monk",
+        "level" : 1
+      }
+    ]
   }
 }

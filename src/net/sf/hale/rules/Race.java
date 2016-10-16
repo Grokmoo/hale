@@ -34,7 +34,6 @@ import net.sf.hale.ability.AbilitySelectionList;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.EntityManager;
 import net.sf.hale.entity.Inventory;
-import net.sf.hale.entity.Weapon;
 import net.sf.hale.entity.WeaponTemplate;
 import net.sf.hale.icon.SubIcon;
 import net.sf.hale.resource.ResourceManager;

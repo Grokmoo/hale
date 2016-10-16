@@ -6,5 +6,13 @@
     "sprite" : "icons/proficiencyLightArmor"
   },
   "description" : "You are able to use light armor, such as leather and hardened leather.",
-  "isActivateable" : false
+  "isActivateable" : false,
+  "restrictions" : {
+    "roles" : [
+      {
+        "id" : "Monk",
+        "level" : 1
+      }
+    ]
+  }
 }

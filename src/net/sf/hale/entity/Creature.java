@@ -98,7 +98,7 @@ public abstract class Creature extends Entity {
 	// so List is better for Set, even though we will be searching it
 	private final List<Creature> moveAoOsThisRound;
 	
-	private final List<WeaponTemplate> unarmedWeapons;
+	private final List<String> unarmedWeapons;
 	private Weapon unarmedWeapon;
 	
 	/**
@@ -206,6 +206,9 @@ public abstract class Creature extends Entity {
 		attributes[5] = obj.get("charisma", 0);
 		stats.setAttributes(attributes);
 		
+		unarmedWeapons = new ArrayList<String>();
+		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate().getID());
+		
 		// parse skills
 		skills = new SkillSet(this);
 		if (parser.containsKey("skills"))
@@ -251,9 +254,6 @@ public abstract class Creature extends Entity {
 		} catch (LoadGameException e) {
 			Logger.appendToErrorLog("Error loading inventory for " + template.getID(), e);
 		}
-		
-		unarmedWeapons = new ArrayList<WeaponTemplate>();
-		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
 	}
 	
 	/**
@@ -276,6 +276,12 @@ public abstract class Creature extends Entity {
 			this.renderer = IconFactory.emptyIcon;
 		
 		stats = new StatManager(this);
+		
+		unarmedWeapons = new ArrayList<String>();
+		if (template.getRace() != null) {
+			unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate().getID());
+		}
+		
 		roles = new RoleSet(this);
 		skills = new SkillSet(this);
 		abilities = new CreatureAbilitySet(this);
@@ -292,11 +298,6 @@ public abstract class Creature extends Entity {
 		
 		// Note that Inventory MUST be initialized last
 		inventory = new Inventory(this);
-		
-		unarmedWeapons = new ArrayList<WeaponTemplate>();
-		if (template.getRace() != null) {
-			unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
-		}
 	}
 	
 	/**
@@ -330,9 +331,9 @@ public abstract class Creature extends Entity {
 		// Note that Inventory MUST be initialized last
 		inventory = new Inventory(other.inventory, this);
 		
-		unarmedWeapons = new ArrayList<WeaponTemplate>();
-		for (WeaponTemplate template : other.unarmedWeapons) {
-			unarmedWeapons.add(template);
+		unarmedWeapons = new ArrayList<String>();
+		for (String templateID : other.unarmedWeapons) {
+			unarmedWeapons.add(templateID);
 		}
 	}
 	
@@ -758,10 +759,12 @@ public abstract class Creature extends Entity {
 	
 	public Weapon getDefaultWeapon() {
 		if (unarmedWeapon == null) {
-			WeaponTemplate bestWeapon = unarmedWeapons.get(0);
+			WeaponTemplate bestWeapon = (WeaponTemplate)EntityManager.getItemTemplate(unarmedWeapons.get(0));;
 			for (int i = 1; i < unarmedWeapons.size(); i++) {
-				if (unarmedWeapons.get(i).getAverageDamagePerAP() > bestWeapon.getAverageDamagePerAP()) {
-					bestWeapon = unarmedWeapons.get(i);
+				WeaponTemplate curWeapon = (WeaponTemplate)EntityManager.getItemTemplate(unarmedWeapons.get(i));
+				
+				if (curWeapon.getAverageDamagePerAP() > bestWeapon.getAverageDamagePerAP()) {
+					bestWeapon = curWeapon;
 				}
 			}
 			
@@ -774,11 +777,11 @@ public abstract class Creature extends Entity {
 	/**
 	 * Adds the specified weapon template as a possible default weapon for this creature.  the actual
 	 * default weapon will then be the strongest (most average damage per action point) weapon of the available default weapons
-	 * @param template
+	 * @param templateID the weapon template to add
 	 */
 	
-	public void addDefaultWeapon(WeaponTemplate template) {
-		unarmedWeapons.add(template);
+	public void addDefaultWeapon(String templateID) {
+		unarmedWeapons.add(templateID);
 		
 		unarmedWeapon = null; // recompute the best unarmed weapon next time we ask for it
 	}
