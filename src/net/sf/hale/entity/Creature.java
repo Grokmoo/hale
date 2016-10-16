@@ -294,7 +294,9 @@ public abstract class Creature extends Entity {
 		inventory = new Inventory(this);
 		
 		unarmedWeapons = new ArrayList<WeaponTemplate>();
-		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
+		if (template.getRace() != null) {
+			unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
+		}
 	}
 	
 	/**
