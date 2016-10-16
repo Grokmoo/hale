@@ -62,6 +62,8 @@ public class WeaponTemplate extends EquippableItemTemplate {
 	// the maximum / minimum amount of damage bonus allowed for this weapon as a percentage
 	private final int maxStrengthBonus, minStrengthBonus;
 	
+	private final double averageDamagePerAP;
+	
 	/**
 	 * The basic weapon type - melee, thrown, or ranged
 	 * @author Jared
@@ -126,6 +128,8 @@ public class WeaponTemplate extends EquippableItemTemplate {
 		} else {
 			projectileIcon = null;
 		}
+		
+		this.averageDamagePerAP = computeAverageDamagePerAP();
 	}
 	
 	private WeaponTemplate(String id, WeaponTemplate other, CreatedItem createdItem) {
@@ -147,10 +151,30 @@ public class WeaponTemplate extends EquippableItemTemplate {
 		this.rangePenalty = other.rangePenalty;
 		this.maxStrengthBonus = other.maxStrengthBonus;
 		this.minStrengthBonus = other.minStrengthBonus;
+		
+		this.averageDamagePerAP = computeAverageDamagePerAP();
+	}
+	
+	private double computeAverageDamagePerAP() {
+		double avgDamageBase = (minDamage + maxDamage) / 2.0;
+		double critChance = ((100 - criticalThreat) + 1) / 100.0;
+		double avgDamage = avgDamageBase * (1 - critChance) + avgDamageBase * criticalMultiplier * critChance;
+		
+		return avgDamage / ((double)attackCost);
 	}
 	
 	@Override public WeaponTemplate createModifiedCopy(String id, CreatedItem createdItem) {
 		return new WeaponTemplate(id, this, createdItem);
+	}
+	
+	/**
+	 * Returns the computed average damage per AP, taking into account min and max damage, critical threat range, critical multiplier
+	 * and AP cost
+	 * @return the computed average damage per AP
+	 */
+	
+	public double getAverageDamagePerAP() {
+		return averageDamagePerAP;
 	}
 	
 	/**

@@ -495,11 +495,10 @@ public class Race {
 		return lists;
 	}
 	
-	public Weapon getDefaultWeapon() throws IllegalStateException {
-		try {
-			return (Weapon)EntityManager.getItem(defaultWeapon.getID(), defaultWeapon.getDefaultQuality());
-		} catch (Exception e) {
-			throw new IllegalStateException("Error creating default weapon for race " + id, e);
-		}
-	}
+	/**
+	 * Returns the weapon template of this race's default (unarmed) weapon
+	 * @return the default weapon template
+	 */
+	
+	public WeaponTemplate getDefaultWeaponTemplate() { return defaultWeapon; }
 }

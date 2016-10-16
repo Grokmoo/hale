@@ -209,7 +209,7 @@ public class Attack {
 		}
 		
 		this.weapon = (Weapon)attacker.inventory.getEquippedItem(slot);
-		if (weapon == null) weapon = attacker.getTemplate().getRace().getDefaultWeapon();
+		if (weapon == null) weapon = attacker.getDefaultWeapon();
 		
 		int concealment = Game.curCampaign.curArea.getConcealment(attacker, defender);
 		if (weapon.isRanged()) {

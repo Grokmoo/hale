@@ -98,6 +98,9 @@ public abstract class Creature extends Entity {
 	// so List is better for Set, even though we will be searching it
 	private final List<Creature> moveAoOsThisRound;
 	
+	private final List<WeaponTemplate> unarmedWeapons;
+	private Weapon unarmedWeapon;
+	
 	/**
 	 * Controls all primary and secondary statistics for this creature
 	 */
@@ -248,6 +251,9 @@ public abstract class Creature extends Entity {
 		} catch (LoadGameException e) {
 			Logger.appendToErrorLog("Error loading inventory for " + template.getID(), e);
 		}
+		
+		unarmedWeapons = new ArrayList<WeaponTemplate>();
+		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
 	}
 	
 	/**
@@ -286,6 +292,9 @@ public abstract class Creature extends Entity {
 		
 		// Note that Inventory MUST be initialized last
 		inventory = new Inventory(this);
+		
+		unarmedWeapons = new ArrayList<WeaponTemplate>();
+		unarmedWeapons.add(template.getRace().getDefaultWeaponTemplate());
 	}
 	
 	/**
@@ -318,6 +327,11 @@ public abstract class Creature extends Entity {
 		
 		// Note that Inventory MUST be initialized last
 		inventory = new Inventory(other.inventory, this);
+		
+		unarmedWeapons = new ArrayList<WeaponTemplate>();
+		for (WeaponTemplate template : other.unarmedWeapons) {
+			unarmedWeapons.add(template);
+		}
 	}
 	
 	private IconRenderer createIconRenderer() {
@@ -729,10 +743,42 @@ public abstract class Creature extends Entity {
 		EquippableItem item = this.inventory.getEquippedItem(Inventory.Slot.MainHand);
 		
 		if (item == null) {
-			return template.getRace().getDefaultWeapon();
+			return getDefaultWeapon();
 		} else {
 			return (Weapon)item;
 		}
+	}
+	
+	/**
+	 * Returns the current default weapon of this creature.  This is normally the racial default weapon
+	 * @return the current default weapon
+	 */
+	
+	public Weapon getDefaultWeapon() {
+		if (unarmedWeapon == null) {
+			WeaponTemplate bestWeapon = unarmedWeapons.get(0);
+			for (int i = 1; i < unarmedWeapons.size(); i++) {
+				if (unarmedWeapons.get(i).getAverageDamagePerAP() > bestWeapon.getAverageDamagePerAP()) {
+					bestWeapon = unarmedWeapons.get(i);
+				}
+			}
+			
+			unarmedWeapon = (Weapon)EntityManager.getItem(bestWeapon.getID(), bestWeapon.getDefaultQuality());
+		}
+		
+		return unarmedWeapon;
+	}
+	
+	/**
+	 * Adds the specified weapon template as a possible default weapon for this creature.  the actual
+	 * default weapon will then be the strongest (most average damage per action point) weapon of the available default weapons
+	 * @param template
+	 */
+	
+	public void addDefaultWeapon(WeaponTemplate template) {
+		unarmedWeapons.add(template);
+		
+		unarmedWeapon = null; // recompute the best unarmed weapon next time we ask for it
 	}
 	
 	/**
