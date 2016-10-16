@@ -416,7 +416,7 @@ public class Role {
 			sb.append("</div>");
 		}
 		
-		prereqs.appendDescription(sb, c);
+		prereqs.appendDescription(sb, c, "Prerequisites");
 		
 		sb.append("<div style=\"font-family: medium-bold-blue; margin-top: 1em;\">");
 		sb.append("Stats");

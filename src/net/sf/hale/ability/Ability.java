@@ -134,7 +134,7 @@ public class Ability extends Scriptable {
 	private final int actionPointCost;
 	private final String actionPointCostDescription;
 	
-	private final PrereqList prereqs;
+	private final PrereqList prereqs, restrictions;
 	
 	private final ActionType actionType;
 	private final GroupType groupType;
@@ -358,6 +358,12 @@ public class Ability extends Scriptable {
 			prereqs = new PrereqList(map.getObject("prereqs"));
 		} else {
 			prereqs = new PrereqList();
+		}
+		
+		if (map.containsKey("restrictions")) {
+			restrictions = new PrereqList(map.getObject("restrictions"));
+		} else {
+			restrictions = new PrereqList();
 		}
 	}
 	
@@ -657,7 +663,8 @@ public class Ability extends Scriptable {
 	
 	/**
 	 * Returns true if and only if the specified Creature meets all the
-	 * prereqs specified in this Abilities definition text file.
+	 * prereqs specified in this Abilities definition text file, and none
+	 * of the restrictions.
 	 * Note that Abilities can be added to Creatures that do not satisfy
 	 * the prereqs.  However, when selecting new Abilities at level up,
 	 * players will only be able to choose Abilities where they meet the
@@ -668,7 +675,7 @@ public class Ability extends Scriptable {
 	 */
 	
 	public boolean meetsPrereqs(Creature parent) {
-		return prereqs.meetsPrereqs(parent);
+		return prereqs.meetsPrereqs(parent) && restrictions.meetsRestrictions(parent);
 	}
 	
 	private void appendUpgradesList(StringBuilder sb, Creature parent, boolean upgraded) {
@@ -743,7 +750,9 @@ public class Ability extends Scriptable {
 		}
 		sb.append("</table>");
 		
-		this.prereqs.appendDescription(sb, parent);
+		this.prereqs.appendDescription(sb, parent, "Prerequisites");
+		
+		this.restrictions.appendDescription(sb, parent, "Restrictions");
 	}
 	
 	/**

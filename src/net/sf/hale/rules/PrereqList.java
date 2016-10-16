@@ -140,6 +140,39 @@ public class PrereqList {
 	}
 	
 	/**
+	 * Returns true if and only if the specified creature meets none of the prereqs
+	 * in this prereq list.  See {@link #meetsPrereqs(Creature)}
+	 * @param c
+	 * @return true if and only if the creature meets no prereqs
+	 */
+	
+	public boolean meetsRestrictions(Creature c) {
+		for (Stat stat : statPrereqs.keySet()) {
+			if (meetsStatPrereq(c, stat)) return false;
+		}
+		
+		for (String skillID : skillPrereqs.keySet()) {
+			if (meetsSkillPrereq(c, skillID)) return false;
+		}
+		
+		if (meetsRolePrereqs(c) && rolePrereqs.size() > 0) return false;
+		
+		for (String abilityID : abilityPrereqs) {
+			if (meetsAbilityPrereq(c, abilityID)) return false;
+		}
+		
+		for (String baseWeapon : weaponProficiencyPrereqs) {
+			if (meetsWeaponProficiencyPrereq(c, baseWeapon)) return false;
+		}
+		
+		for (String armorType : armorProficiencyPrereqs) {
+			if (meetsArmorProficiencyPrereq(c, armorType)) return false;
+		}
+		
+		return true;
+	}
+	
+	/**
 	 * Returns true if and only if the specified Creature meets all prereqs in this
 	 * prereq list.  This includes having at least the specified ranks in each
 	 * skill prereq, possessing each required ability, having at least the specified
@@ -239,12 +272,15 @@ public class PrereqList {
 	 * 
 	 * @param sb the StringBuilder to append to
 	 * @param c the creature to compare to or null to not show whether prereqs are met
+	 * @param title the title string to display, i.e. "Prerequisites"
 	 */
 	
-	public void appendDescription(StringBuilder sb, Creature c) {
+	public void appendDescription(StringBuilder sb, Creature c, String title) {
 		if (isEmpty()) return;
 		
-		sb.append("<div style=\"font-family: medium-bold-blue; margin-top : 1em;\">Prerequisites</div>");
+		sb.append("<div style=\"font-family: medium-bold-blue; margin-top : 1em;\">");
+		sb.append(title);
+		sb.append("</div>");
 		
 		sb.append("<table>");
 		for (Stat stat : statPrereqs.keySet()) {
