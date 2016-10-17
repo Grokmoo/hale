@@ -26,6 +26,7 @@ import net.sf.hale.util.Logger;
 import net.sf.hale.util.SaveGameUtil;
 
 import de.matthiasmann.twl.Button;
+import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.DialogLayout;
 import de.matthiasmann.twl.PopupWindow;
 import de.matthiasmann.twl.Widget;
@@ -68,11 +69,13 @@ public class InGameMenu extends PopupWindow implements LoadGamePopup.Callback, S
 		} catch (Exception e) {
 			Logger.appendToErrorLog("Error saving game to file " + fout.getName(), e);
 			Game.mainViewer.addMessage("link", "Error saving game!");
+			Game.mainViewer.addFixedFadeAway("Error saving game!", 10, 10, Color.RED);
 			fout.delete();
 			return;
 		}
 		
 		Game.mainViewer.addMessage("link", "Game saved successfully.");
+		Game.mainViewer.addFixedFadeAway("Game saved successfully.", 10, 10, Color.RED);
 		Game.mainViewer.updateInterface();
 		
 		closePopup();
