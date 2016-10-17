@@ -313,6 +313,7 @@
 	"improvedStrike2" : [ 220, 748, 44, 44 ],
 	"improvedStrike3" : [ 264, 748, 44, 44 ],
 	"strengthOfBody" : [ 308, 748, 44, 44 ],
-	"stunningBlow" : [ 352, 748, 44, 44 ]
+	"stunningBlow" : [ 352, 748, 44, 44 ],
+	"pivot" : [ 396, 748, 44, 44 ]
   }
 }
