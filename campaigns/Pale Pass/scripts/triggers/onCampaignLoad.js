@@ -69,7 +69,12 @@ function onAreaLoadFirstTime(game, area) {
             item = inv.getUnequippedItems().add("potionStrength", "Mediocre");
             quickbar.addToFirstEmptySlot("potionStrength", "Mediocre");
             
-        }
+        } else if (role.equals("Monk")) {
+			inv.addAndEquip("armor_clothes");
+			
+			item = inv.getUnequippedItems().add("potionWis", "Mediocre");
+			quickbar.addToFirstEmptySlot("potionWis", "Mediocre");
+		}
         
     }
 }
