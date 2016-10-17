@@ -10,8 +10,9 @@
     "roles" : [
       {
         "id" : "Monk",
-        "level" : 1
+        "level" : 3
       }
-    ]
+    ],
+	"abilities" : [ "ImprovedStrike1" ]
   }
 }

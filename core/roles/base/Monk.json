@@ -26,7 +26,6 @@
   "abilitiesAdded" : {
     "ProficiencySimpleWeapons" : 1,
     "ProficiencySpears" : 1,
-	"ImprovedStrike" : 1
   },
   "abilitySelectionsFromList" : {
     "Monk" : [

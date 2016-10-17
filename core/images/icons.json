@@ -306,9 +306,13 @@
 	"groupConjuration" : [ 748, 440, 44, 44 ],
 	
 	"monk" : [ 0, 748, 44, 44 ],
-	"improvedStrike" : [ 44, 748, 44, 44 ],
+	"improvedStrike1" : [ 44, 748, 44, 44 ],
 	"flurryOfBlows" : [ 88, 748, 44, 44 ],
 	"fleetOfFoot" : [ 132, 748, 44, 44 ],
-	"strengthOfMind" : [ 176, 748, 44, 44 ]
+	"strengthOfMind" : [ 176, 748, 44, 44 ],
+	"improvedStrike2" : [ 220, 748, 44, 44 ],
+	"improvedStrike3" : [ 264, 748, 44, 44 ],
+	"strengthOfBody" : [ 308, 748, 44, 44 ],
+	"stunningBlow" : [ 352, 748, 44, 44 ]
   }
 }

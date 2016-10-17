@@ -1,0 +1,18 @@
+{
+  "inlineScript" : "function onApply(game, parent) { parent.addDefaultWeapon('monkStrike2'); }",
+  "name" : "Improved Strike II",
+  "type" : "Monk Abilities",
+  "icon" : {
+    "sprite" : "icons/improvedStrike2"
+  },
+  "description" : "Your unarmed strike is further improved, doing 3 to 7 damage.",
+  "prereqs" : {
+    "roles" : [
+      {
+        "id" : "Monk",
+        "level" : 6
+      }
+    ],
+	"abilities" : [ "ImprovedStrike1" ]
+  }
+}
