@@ -75,6 +75,9 @@ function onAreaLoadFirstTime(game, area, transition) {
 			inv.addAndEquip("arrow");
 			inv.getUnequippedItems().add("longbow", "Decent");
 			inv.getUnequippedItems().add("arrow", 100);
-        }
+        } else if (role.equals("Monk")) {
+			inv.addAndEquip("armor_robe");
+			inv.getUnequippedItems().add("potionHealing", "Good", 2);
+		}
 	}
 }

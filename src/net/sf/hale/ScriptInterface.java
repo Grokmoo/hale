@@ -119,6 +119,10 @@ public class ScriptInterface implements HasScriptState {
 		Game.mainViewer.addMessage(font, text);
 	}
 	
+	public void addFadeAway(String text, int x, int y, String color) {
+		Game.mainViewer.addFadeAway(text, x, y, Color.parserColor(color));
+	}
+	
 	public void addEncounterToArea(String encounterID, int x, int y) {
 		Encounter encounter = Game.curCampaign.getEncounter(encounterID, new Location(Game.curCampaign.curArea, x, y));
 		encounter.checkSpawnCreatures();

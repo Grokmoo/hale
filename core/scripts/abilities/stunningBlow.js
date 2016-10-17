@@ -32,23 +32,24 @@ function performAttack(game, targeter) {
 	
 	if (game.standardAttack(parent, target)) {
 		// attack suceeded
-		var checkDC = 50 + 2 * (parent.stats.getWis() - 10) +
-			parent.roles.getLevel("Monk") * 2;
+		var checkDC = 50 + 4 * (parent.stats.getWis() - 10) +
+			parent.roles.getLevel("Monk") * 4;
 		
 		if (!target.stats.getReflexResistanceCheck(checkDC)) {
 			// target failed check
-			applyEffet(game, parent, target);
+			applyEffect(game, parent, target, targeter.getSlot());
 			
 			game.addMessage("red", parent.getName() + " succeeded on Stunning Blow against " + target.getName() + ".");
 		} else {
 			game.addMessage("red", parent.getName() + " failed on Stunning Blow against " + target.getName() + ".");
+			game.addFadeAway("Failed", target.getLocation().getX(), target.getLocation().getY(), "gray");
 		}
 	} else {
 		game.addMessage("red", parent.getName() + " missed on Stunning Blow attempt.");
 	}
 }
 
-function applyEffect(game, parent, target) {
+function applyEffect(game, parent, target, slot) {
 	if ( target.stats.has("ImmobilizationImmunity")) {
 		game.addMessage("blue", target.getName() + " is immune.");
 		return;
