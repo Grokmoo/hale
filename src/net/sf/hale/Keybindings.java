@@ -30,7 +30,7 @@ import net.sf.hale.quickbar.Quickbar;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.SaveGameUtil;
 import net.sf.hale.interfacelock.MovementHandler;
-
+import de.matthiasmann.twl.Color;
 import de.matthiasmann.twl.Widget;
 
 /**
@@ -240,6 +240,7 @@ public class Keybindings {
 			try {
 				SaveGameUtil.saveGame(fout);
 				Game.mainViewer.addMessage("link", "Quicksave successful.");
+				Game.mainViewer.addFixedFadeAway("Quicksave successful.", 10, 10, Color.RED);
 			} catch (Exception e) {
 				Logger.appendToErrorLog("Error when quicksaving to " + fout.getPath(), e);
 				Game.mainViewer.addMessage("red", "Error saving game!");

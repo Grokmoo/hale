@@ -40,6 +40,7 @@ import net.sf.hale.util.AreaUtil;
 import net.sf.hale.util.Logger;
 import net.sf.hale.util.Point;
 import net.sf.hale.widgets.EntityMouseover;
+import net.sf.hale.widgets.FixedFadeAway;
 import net.sf.hale.widgets.InitiativeTicker;
 import net.sf.hale.widgets.MainPane;
 import net.sf.hale.widgets.OverHeadFadeAway;
@@ -447,6 +448,24 @@ public class MainViewer extends DesktopArea {
 
 			OverHeadFadeAway fadeAway = new OverHeadFadeAway(text, gridPoint, color);
 			fadeAway.setOffset(0, offsetY);
+			fadeAwaysToAdd.add(fadeAway);
+		}
+	}
+	
+	/**
+	 * Adds a fixed position fade away to the specified screen coordinates
+	 * @param text the text to display
+	 * @param x the x screen coordinate
+	 * @param y the y screen coordinate
+	 * @param color the text color
+	 */
+	
+	public void addFixedFadeAway(String text, int x, int y, Color color) {
+		Point screenPoint = new Point(x, y);
+		
+		synchronized (fadeAwaysToAdd) {
+			FixedFadeAway fadeAway = new FixedFadeAway(text, screenPoint, color);
+			fadeAway.setOffset(0, 0);
 			fadeAwaysToAdd.add(fadeAway);
 		}
 	}
