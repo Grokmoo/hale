@@ -402,9 +402,11 @@ public class ScriptInterface implements HasScriptState {
 		return Game.curCampaign.party;
 	}
 	
-	public void moveCreature(Creature c, int x, int y) {
-		c.setLocation(new Location(c.getLocation().getArea(), x, y));
+	public boolean moveCreature(Creature c, int x, int y) {
+		boolean retVal = c.setLocation(new Location(c.getLocation().getArea(), x, y));
 		Game.areaListener.getCombatRunner().checkAIActivation();
+		
+		return retVal;
 	}
 	
 	public void showMerchant(String merchantName) {
@@ -609,6 +611,14 @@ public class ScriptInterface implements HasScriptState {
 		}
 		
 		return null;
+	}
+	
+	public Point[] getAdjacentHexes(Point p) {
+		return AreaUtil.getAdjacentTiles(p);
+	}
+	
+	public Point[] getAdjacentHexes(int x, int y) {
+		return AreaUtil.getAdjacentTiles(x, y);
 	}
 	
 	public CombatRunner combatRunner() { return Game.areaListener.getCombatRunner(); }

@@ -211,11 +211,20 @@ public abstract class Targeter {
 	
 	/**
 	 * Adds the specified Point to the list of allowed, selectable Points
+	 * @param point the Point to add
+	 */
+	
+	public void addAllowedPoint(Point point) {
+		allowedPoints.add(point);
+	}
+	
+	/**
+	 * Adds the specified Point to the list of allowed, selectable Points
 	 * @param location the Point to add
 	 */
 	
 	public void addAllowedPoint(Location location) {
-		allowedPoints.add(location.toPoint());
+		addAllowedPoint(location.toPoint());
 	}
 	
 	/**

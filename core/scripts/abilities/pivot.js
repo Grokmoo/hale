@@ -15,9 +15,23 @@ function onActivate(game, slot) {
    targeter.activate();
 }
 
-function onTargetSelect(game, targeter, targeterType) {
+function onTargetSelect(game, targeter, targeterType, target) {
    if (targeterType == "creatureSelect") {
 	   // perform phase two of the target selection
+	   var target = targeter.getSelectedCreature();
+	   var targeter2 = game.createListTargeter(targeter.getSlot());
+	   
+	   var adj = game.getAdjacentHexes(targeter.getSelectedCreature().getLocation().toPoint());
+	   
+	   for ( var i = 0; i < adj.length; i++ ) {
+		   if (game.currentArea().isFreeForCreature(adj[i].x, adj[i].y)) {
+			   targeter2.addAllowedPoint(adj[i]);
+		   }
+	   }
+	   
+	   targeter2.addCallbackArgument("locationSelect");
+	   targeter2.addCallbackArgument(targeter.getSelectedCreature());
+	   targeter2.activate();
    } else {
 	  targeter.getSlot().activate();
    
@@ -27,53 +41,16 @@ function onTargetSelect(game, targeter, targeterType) {
       // block
       var cb = ability.createDelayedCallback("performAttack");
       cb.addArgument(targeter);
+	  cb.addArgument(target);
       cb.start();
    }
 }
 
-function performAttack(game, targeter) {
+function performAttack(game, targeter, target) {
 	var parent = targeter.getParent();
-	var target = targeter.getSelectedCreature();
 	
-	if (game.standardAttack(parent, target)) {
-		// attack suceeded
-		var checkDC = 50 + 4 * (parent.stats.getWis() - 10) +
-			parent.roles.getLevel("Monk") * 4;
-		
-		if (!target.stats.getReflexResistanceCheck(checkDC)) {
-			// target failed check
-			applyEffect(game, parent, target, targeter.getSlot());
-			
-			game.addMessage("red", parent.getName() + " succeeded on Stunning Blow against " + target.getName() + ".");
-		} else {
-			game.addMessage("red", parent.getName() + " failed on Stunning Blow against " + target.getName() + ".");
-			game.addFadeAway("Failed", target.getLocation().getX(), target.getLocation().getY(), "gray");
-		}
-	} else {
-		game.addMessage("red", parent.getName() + " missed on Stunning Blow attempt.");
-	}
-}
-
-function applyEffect(game, parent, target, slot) {
-	if ( target.stats.has("ImmobilizationImmunity")) {
-		game.addMessage("blue", target.getName() + " is immune.");
-		return;
-	}
-		
-	var effect = slot.createEffect();
-	effect.setDuration(2);
-	effect.setTitle("Stunning Blow");
-	effect.getBonuses().add("Immobilized");
-	effect.getBonuses().add("Helpless");
-	effect.addNegativeIcon("items/enchant_death_small");
+	game.standardAttack(parent, target)
 	
-	var g1 = game.getBaseParticleGenerator("sparkle");
-	g1.setDurationInfinite();
-	g1.setRotationSpeedDistribution(game.getUniformDistribution(100.0, 200.0));
-	g1.setPosition(target.getLocation());
-	g1.setBlueDistribution(game.getFixedDistribution(0.0));
-	g1.setGreenDistribution(game.getFixedDistribution(0.0));
-	effect.addAnimation(g1);
-	
-	target.applyEffect(effect);
+	var movePoint = targeter.getSelected();
+	game.moveCreature(parent, movePoint.x, movePoint.y);
 }
