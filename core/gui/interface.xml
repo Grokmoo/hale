@@ -289,6 +289,7 @@
 		<theme name="content" ref="-defaults">
 			<param name="xpBarX"><int>0</int></param>
 			<param name="xpBarY"><int>26</int></param>
+			<param name="portraitViewerOffset"><int>450</int></param>
 		
 			<theme name="portraitviewer" ref="portraitviewer"/>
 			<theme name="textarea" ref="textarea"/>
@@ -348,8 +349,8 @@
 	</theme>
 	
 	<theme name="characterwindow" ref="gamesubwindow">
-		<param name="minWidth"><int>650</int></param>
-		<param name="maxWidth"><int>650</int></param>
+		<param name="minWidth"><int>700</int></param>
+		<param name="maxWidth"><int>700</int></param>
 		<param name="defaultX"><int>0</int></param>
 	
 		<theme name="exportbutton" ref="button">
@@ -923,7 +924,7 @@
 			</theme>
 			
 			<theme name="closebutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 				<param name="minWidth"><int>80</int></param>
 				<param name="minHeight"><int>20</int></param>
 				<param name="text"><string>Close</string></param>
@@ -936,7 +937,7 @@
 			<theme name="exportbutton" ref="button"/>
 			
 			<theme name="exportallbutton" ref="button">
-				<param name="font"><font>large</font></param>
+				<param name="font"><font>large-white</font></param>
 				<param name="minWidth"><int>130</int></param>
 				<param name="minHeight"><int>20</int></param>
 			</theme>

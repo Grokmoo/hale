@@ -116,6 +116,13 @@ public class AbilitySelectionListPane extends Widget {
 	}
 	
 	/**
+	 * returns the grid size for this pane
+	 * @return the grid size
+	 */
+	
+	public int getGridSize() { return gridSize; }
+	
+	/**
 	 * Adds the specified callback as a callback for all AbilitySelectoButtons in this
 	 * pane and all sub panes.
 	 * @param callback the callback to add

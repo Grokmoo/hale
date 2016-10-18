@@ -436,13 +436,14 @@ public class CharacterSheet extends ScrollPane {
 	}
 	
 	private class Content extends Widget {
-		private int xpBarX, xpBarY;
+		private int xpBarX, xpBarY, portraitViewerOffset;
 		
 		@Override protected void applyTheme(ThemeInfo themeInfo) {
 			super.applyTheme(themeInfo);
 			
 			xpBarX = themeInfo.getParameter("xpBarX", 0);
 			xpBarY = themeInfo.getParameter("xpBarY", 0);
+			portraitViewerOffset = themeInfo.getParameter("portraitViewerOffset", 0);
 		}
 		
 		@Override public int getPreferredWidth() {
@@ -460,7 +461,7 @@ public class CharacterSheet extends ScrollPane {
 			
 			if (viewer != null) {
 				viewer.setSize(viewer.getPreferredWidth(), viewer.getPreferredHeight());
-				viewer.setPosition(textArea.getInnerX() + 500, textArea.getInnerY());
+				viewer.setPosition(textArea.getInnerX() + portraitViewerOffset, textArea.getInnerY());
 			}
 			
 			xpBar.setSize(xpBar.getPreferredWidth(), xpBar.getPreferredHeight());

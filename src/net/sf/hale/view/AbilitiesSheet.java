@@ -159,7 +159,7 @@ public class AbilitiesSheet extends ScrollPane implements CreatureAbilitySet.Lis
 			
 			for (AbilitySelectionListPane pane : listPanes) {
 				pane.setSize(pane.getPreferredWidth(), pane.getPreferredHeight());
-				pane.setPosition(getInnerX(), curY);
+				pane.setPosition(getInnerX() + pane.getGridSize() / 2, curY);
 				
 				curY = pane.getBottom() + viewerGap;
 			}
