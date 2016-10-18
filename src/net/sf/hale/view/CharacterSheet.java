@@ -139,7 +139,7 @@ public class CharacterSheet extends ScrollPane {
 
 		sb.append("</div>");
 		
-		sb.append("</td><td>");
+		sb.append("</td><td style=\"width: 32ex\">");
 		
 		Weapon mainHand = parent.getMainHandWeapon();
 		EquippableItem offHand = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
@@ -179,7 +179,8 @@ public class CharacterSheet extends ScrollPane {
 
 			sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 			sb.append("</span> to <span style=\"font-family: medium-red;\">");
-			sb.append(Game.numberFormat(1).format(damageMax)).append("</span></p></div>");
+			sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
+			sb.append(mainHand.getTemplate().getDamageType().getName()).append("</span></p></div>");
 		}
 		
 		sb.append("</td></tr><tr style=\"margin-top: 1em;\"><td>");
@@ -246,7 +247,8 @@ public class CharacterSheet extends ScrollPane {
 
 				sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 				sb.append("</span> to <span style=\"font-family: medium-red;\">");
-				sb.append(Game.numberFormat(1).format(damageMax)).append("</span></p>");
+				sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
+				sb.append(offHandWeapon.getTemplate().getDamageType().getName()).append("</span></p>");
 				break;
 			default:
 				// do nothing
