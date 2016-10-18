@@ -12,7 +12,7 @@
   "isMode" : false,
   "isCancelable" : false,
   "cooldown" : 8,
-  "actionPointCost" : "20",
+  "actionPointCost" : 2000,
   "ai" : {
     "power" : 20,
     "priority" : 5,
