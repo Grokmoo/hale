@@ -315,6 +315,7 @@
 	"strengthOfBody" : [ 308, 748, 44, 44 ],
 	"stunningBlow" : [ 352, 748, 44, 44 ],
 	"pivot" : [ 396, 748, 44, 44 ],
-	"bodyMastery" : [ 440, 748, 44, 44 ]
+	"bodyMastery" : [ 440, 748, 44, 44 ],
+	"chiMastery" : [ 484, 748, 44, 44 ]
   }
 }
