@@ -14,7 +14,7 @@
   "ai" : {
     "power" : 20,
     "priority" : 1,
-    "actionType" : "Damage",
+    "actionType" : "Tactical",
     "groupType" : "Single",
     "rangeType" : "Touch"
   },
