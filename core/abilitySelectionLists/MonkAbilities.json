@@ -20,6 +20,10 @@
 	"StunningBlow" : {
 	  "x" : 2.0,
 	  "y" : 1.0
+	},
+	"SlayingBlow" : {
+	  "x" : 2.0,
+	  "y" : 3.0
 	}
 	"FleetOfFoot" : {
 	  "x" : 3.0,
@@ -90,6 +94,18 @@
 	{ "type" : "OneDown",
 	  "x" : 4.5,
 	  "y" : 2.0
-	}
+	},
+	{ "type" : "OneDown",
+	  "x" : 2.0,
+	  "y" : 1.0
+	},
+	{ "type" : "Through",
+	  "x" : 2.0,
+	  "y" : 2.0
+	},
+	{ "type" : "OneDown",
+	  "x" : 2.0,
+	  "y" : 2.0
+	},
   ]
 }
