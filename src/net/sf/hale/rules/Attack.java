@@ -392,7 +392,7 @@ public class Attack {
 		message.append(attacker.getTemplate().getName() + " attacks " + defender.getTemplate().getName() + ": " +
 				attackToString() + " vs AC " + defenderAC);
 		
-		if (attackRoll > 97 || (attackRoll > 2 && totalAttack >= defenderAC)) {
+		if (attackRoll > 95 || (attackRoll > 2 && totalAttack >= defenderAC)) {
 			hit = true;
 			
 			int threatRange = weapon.getTemplate().getCriticalThreat() -
@@ -406,7 +406,7 @@ public class Attack {
 
 				int threatCheck = threatRoll + attackBonus;
 				
-				boolean isCriticalHit = threatCheck > 97 || threatCheck >= defenderAC;
+				boolean isCriticalHit = threatCheck > 95 || threatCheck >= defenderAC;
 				
 				// no critical hits on PCs if that has been disabled by the difficulty manager
 				if (defender.isPlayerFaction() && !Game.ruleset.getDifficultyManager().criticalHitsOnPCs())

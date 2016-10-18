@@ -25,7 +25,7 @@
   "damageType" : "Piercing",
   "minDamage" : 1,
   "maxDamage" : 6,
-  "criticalThreat" : 95,
+  "criticalThreat" : 93,
   "criticalMultiplier" : 3,
   "attackCost" : 2800,
   "rangePenalty" : 0

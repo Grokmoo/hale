@@ -25,7 +25,7 @@
   "damageType" : "Blunt",
   "minDamage" : 3,
   "maxDamage" : 12,
-  "criticalThreat" : 97,
+  "criticalThreat" : 93,
   "criticalMultiplier" : 2,
   "attackCost" : 4200,
   "rangePenalty" : 0

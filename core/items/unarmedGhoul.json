@@ -12,7 +12,7 @@
   "damageType" : "Slashing",
   "minDamage" : 2,
   "maxDamage" : 6,
-  "criticalThreat" : 96,
+  "criticalThreat" : 93,
   "criticalMultiplier" : 2,
   "attackCost" : 2800
 }
