@@ -20,9 +20,7 @@
 package net.sf.hale.view;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.AbilitySelectionList;
@@ -31,7 +29,6 @@ import net.sf.hale.characterbuilder.AbilitySelectionListPane;
 import net.sf.hale.characterbuilder.AbilitySelectorButton;
 import net.sf.hale.entity.PC;
 import net.sf.hale.rules.Role;
-import net.sf.hale.rules.Ruleset;
 import de.matthiasmann.twl.ScrollPane;
 import de.matthiasmann.twl.ThemeInfo;
 import de.matthiasmann.twl.Widget;

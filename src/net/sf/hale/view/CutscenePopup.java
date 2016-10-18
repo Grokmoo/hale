@@ -207,6 +207,7 @@ public class CutscenePopup extends PopupWindow {
 				return true;
 			case MOUSE_BTNUP:
 				nextFrame();
+			default:
 			}
 			
 			return false;

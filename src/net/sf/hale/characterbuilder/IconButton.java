@@ -132,6 +132,7 @@ public class IconButton extends Button {
 					callback.rightClicked();
 				}
 			}
+		default:
 		}
 		
 		return super.handleEvent(evt);

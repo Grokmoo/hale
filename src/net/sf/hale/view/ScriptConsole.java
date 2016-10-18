@@ -346,7 +346,9 @@ public class ScriptConsole extends GameSubWindow {
 				case Event.KEY_ESCAPE:
 					evaluateScriptForHelp(editField.getText());
 					return true;
+				default:
 				}
+			default:
 			}
 			
 			return returnValue;

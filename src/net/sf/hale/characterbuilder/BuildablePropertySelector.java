@@ -327,6 +327,7 @@ public class BuildablePropertySelector extends DialogLayout implements PointAllo
 			break;
 		case MOUSE_WHEEL:
 			return false;
+		default:
 		}
 		
 		return evt.isMouseEvent();

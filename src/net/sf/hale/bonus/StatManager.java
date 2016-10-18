@@ -133,6 +133,7 @@ public class StatManager {
 		case Armor: case Gloves: case Helmet: case Boots:
 			recomputeArmorClass();
 			break;
+		default:
 		}
 	}
 	
@@ -190,6 +191,7 @@ public class StatManager {
 					break;
 				}
 				break;
+			default:
 			}
 		}
 		
@@ -586,6 +588,7 @@ public class StatManager {
 				addToStat(Stat.OffHandDamageBonus, get(Bonus.Type.OneHandedMeleeWeaponDamage));
 				offWeaponLightBonus = -10;
 				break;
+			default:
 			}
 			
 			addToStat(Stat.OffHandDamageBonus, (3 + get(Bonus.Type.DualWieldStrDamage)) * (getStr() - 10));

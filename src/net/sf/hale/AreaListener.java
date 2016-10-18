@@ -234,6 +234,7 @@ public class AreaListener {
 				mouseDragStartValid = true;
 			}
 			break;
+		default:
 		}
 		
 		return true;

@@ -96,6 +96,7 @@ public class KeyBindPopup extends PopupWindow {
 				break;
 			case MOUSE_ENTERED:
 				return true;
+			default:
 			}
 			
 			return super.handleEvent(evt);

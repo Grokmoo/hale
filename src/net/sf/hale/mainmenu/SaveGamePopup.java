@@ -218,6 +218,7 @@ public class SaveGamePopup extends AbstractSaveGamePopup implements Runnable {
 			case KEY_PRESSED:
 			case KEY_RELEASED:
 				return editField.handleEvent(evt);
+			default:
 			}
 			
 			return super.handleEvent(evt);

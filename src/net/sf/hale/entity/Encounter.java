@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.sf.hale.Game;
-import net.sf.hale.ScriptInterface;
 import net.sf.hale.area.Area;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.ReferenceHandler;

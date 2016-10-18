@@ -942,17 +942,11 @@ public class CombatRunner {
 			parent.takeAttackOfOpportunity();
 			DelayedAttackCallback cb = CombatRunner.this.creatureAoOAttack(parent, target);
 			
-			cb.addCallback(new CheckDefeatedAfterAoOCallback(target));
+			cb.addCallback(new CheckDefeatedAfterAoOCallback());
 		}
 	}
 	
 	private class CheckDefeatedAfterAoOCallback implements Runnable {
-		private Creature target;
-		
-		private CheckDefeatedAfterAoOCallback(Creature target) {
-			this.target = target;
-		}
-		
 		@Override public void run() {
 			if (isPartyDefeated()) {
 				setGameOver();

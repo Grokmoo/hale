@@ -80,6 +80,7 @@ public class DragAndDropHandler {
 			
 			Game.mainViewer.removeChild(viewer);
 			return false;
+		default:
 		}
 		
 		return true;
