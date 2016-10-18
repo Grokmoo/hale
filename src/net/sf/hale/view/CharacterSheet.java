@@ -177,10 +177,20 @@ public class CharacterSheet extends ScrollPane {
 			float damageMin = ((float)mainHand.getTemplate().getMinDamage() * damageMult);
 			float damageMax = ((float)mainHand.getTemplate().getMaxDamage() * damageMult);
 
+			int threatRange = mainHand.getTemplate().getCriticalThreat() -
+					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
+					mainHand.bonuses.get(Bonus.Type.WeaponCriticalChance);
+			int multiplier = mainHand.getTemplate().getCriticalMultiplier() +
+					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
+					mainHand.bonuses.get(Bonus.Type.WeaponCriticalMultiplier);
+			
 			sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 			sb.append("</span> to <span style=\"font-family: medium-red;\">");
 			sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
-			sb.append(mainHand.getTemplate().getDamageType().getName()).append("</span></p></div>");
+			sb.append(mainHand.getTemplate().getDamageType().getName()).append("</span></p><p>Critical ");
+			sb.append("<span style=\"font-family: medium-green;\">").append(Integer.toString(threatRange)).append(" - 100</span>");
+			sb.append(" / x").append("<span style=\"font-family: medium-blue;\">").append(Integer.toString(multiplier));
+			sb.append("</span></p></div>");
 		}
 		
 		sb.append("</td></tr><tr style=\"margin-top: 1em;\"><td>");
@@ -245,10 +255,20 @@ public class CharacterSheet extends ScrollPane {
 				float damageMin = ((float)offHandWeapon.getTemplate().getMinDamage() * damageMult);
 				float damageMax = ((float)offHandWeapon.getTemplate().getMaxDamage() * damageMult);
 
+				int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance);
+				int multiplier = offHandWeapon.getTemplate().getCriticalMultiplier() +
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier);
+				
 				sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 				sb.append("</span> to <span style=\"font-family: medium-red;\">");
 				sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
-				sb.append(offHandWeapon.getTemplate().getDamageType().getName()).append("</span></p>");
+				sb.append(offHandWeapon.getTemplate().getDamageType().getName()).append("</span></p><p>Critical ");
+				sb.append("<span style=\"font-family: medium-green;\">").append(Integer.toString(threatRange)).append(" - 100</span>");
+				sb.append(" / x").append("<span style=\"font-family: medium-blue;\">").append(Integer.toString(multiplier));
+				sb.append("</span></p>");
 				break;
 			default:
 				// do nothing
