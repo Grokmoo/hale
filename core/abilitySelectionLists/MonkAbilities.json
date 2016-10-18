@@ -26,27 +26,31 @@
 	  "y" : 3.0
 	}
 	"FleetOfFoot" : {
-	  "x" : 3.0,
+	  "x" : 3.5,
 	  "y" : 0.0
 	},
 	"Pivot" : {
 	  "x" : 3.0,
 	  "y" : 2.0
 	},
+	"ChiDefense" : {
+	  "x" : 4.0,
+	  "y" : 2.0
+	},
 	"StrengthOfMind" : {
-	  "x" : 5.0,
+	  "x" : 6.0,
 	  "y" : 0.0
 	},
 	"StrengthOfBody" : {
-	  "x" : 4.0,
+	  "x" : 5.0,
 	  "y" : 0.0
 	},
 	"BodyMastery" : {
-	  "x" : 4.5,
+	  "x" : 5.5,
 	  "y" : 2.0
 	},
 	"ChiMastery" : {
-	  "x" : 4.5,
+	  "x" : 5.5,
 	  "y" : 3.0
 	}
   },
@@ -67,45 +71,53 @@
 	  "x" : 1.0,
 	  "y" : 2.0
 	},
+	{ "type" : "TwoUp",
+	  "x" : 5.5,
+	  "y" : 1.0
+	},
 	{ "type" : "Through",
-	  "x" : 3.0,
+	  "x" : 5.5,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 3.0,
+	  "x" : 5.5,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 3.0,
+	  "x" : 5.5,
+	  "y" : 2.0
+	},
+	{ "type" : "OneDown",
+	  "x" : 2.0,
+	  "y" : 1.0
+	},
+	{ "type" : "Through",
+	  "x" : 2.0,
+	  "y" : 2.0
+	},
+	{ "type" : "OneDown",
+	  "x" : 2.0,
+	  "y" : 2.0
+	},
+	{ "type" : "TwoDown",
+	  "x" : 3.5,
 	  "y" : 0.0
 	},
-	{ "type" : "TwoUp",
-	  "x" : 4.5,
+	{ "type" : "Through",
+	  "x" : 3.0,
 	  "y" : 1.0
 	},
 	{ "type" : "Through",
-	  "x" : 4.5,
+	  "x" : 4.0,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 4.5,
+	  "x" : 3.0,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 4.5,
-	  "y" : 2.0
-	},
-	{ "type" : "OneDown",
-	  "x" : 2.0,
+	  "x" : 4.0,
 	  "y" : 1.0
-	},
-	{ "type" : "Through",
-	  "x" : 2.0,
-	  "y" : 2.0
-	},
-	{ "type" : "OneDown",
-	  "x" : 2.0,
-	  "y" : 2.0
-	},
+	}
   ]
 }
