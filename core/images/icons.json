@@ -318,6 +318,9 @@
 	"bodyMastery" : [ 440, 748, 44, 44 ],
 	"chiMastery" : [ 484, 748, 44, 44 ],
 	"slayingBlow" : [ 528, 748, 44, 44 ],
-	"chiDefense" : [ 572, 748, 44, 44 ]
+	"chiDefense" : [ 572, 748, 44, 44 ],
+	"furiousBlows" : [ 616, 748, 44, 44 ],
+	"preciseBlows" : [ 660, 748, 44, 44 ],
+	"unerringStrike" : [ 704, 748, 44, 44 ]
   }
 }

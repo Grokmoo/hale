@@ -10,8 +10,8 @@
   "minRange" : 1,
   "maxRange" : 1,
   "damageType" : "Blunt",
-  "minDamage" : 4,
-  "maxDamage" : 9,
+  "minDamage" : 2,
+  "maxDamage" : 8,
   "criticalThreat" : 96,
   "criticalMultiplier" : 3,
   "attackCost" : 2800

@@ -5,7 +5,7 @@
   "icon" : {
     "sprite" : "icons/improvedStrike3"
   },
-  "description" : "Your unarmed strike is even more powerful, doing 4 to 9 damage and with an improved x3 critical damage multiplier.",
+  "description" : "Your unarmed strike is even more powerful, doing 2 to 8 damage and with an improved x3 critical damage multiplier.",
   "prereqs" : {
     "roles" : [
       {

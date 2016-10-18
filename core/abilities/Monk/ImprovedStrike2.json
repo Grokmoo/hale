@@ -5,7 +5,7 @@
   "icon" : {
     "sprite" : "icons/improvedStrike2"
   },
-  "description" : "Your unarmed strike is further improved, doing 3 to 7 damage.",
+  "description" : "Your unarmed strike is further improved, doing 2 to 6 damage.",
   "prereqs" : {
     "roles" : [
       {

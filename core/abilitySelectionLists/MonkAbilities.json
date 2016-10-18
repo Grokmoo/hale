@@ -2,7 +2,7 @@
   "name" : "Monk",
   "abilities" : {
     "ImprovedStrike1" : {
-      "x" : 1.0,
+      "x" : 1.5,
       "y" : 0.0
     },
 	"ImprovedStrike2" : {
@@ -13,50 +13,62 @@
 	  "x" : 1.0,
 	  "y" : 3.0
 	},
+	"UnerringStrike" : {
+	  "x" : 2.0,
+	  "y" : 1.0
+	},
+	"PreciseBlows" : {
+	  "x" : 0.0,
+	  "y" : 3.0
+	},
+	"FuriousBlows" : {
+	  "x" : 2.0,
+	  "y" : 3.0
+	},
 	"FlurryOfBlows" : {
 	  "x" : 0.0,
 	  "y" : 1.0
 	},
 	"StunningBlow" : {
-	  "x" : 2.0,
+	  "x" : 3.0,
 	  "y" : 1.0
 	},
 	"SlayingBlow" : {
-	  "x" : 2.0,
+	  "x" : 3.0,
 	  "y" : 3.0
 	}
 	"FleetOfFoot" : {
-	  "x" : 3.5,
+	  "x" : 4.5,
 	  "y" : 0.0
 	},
 	"Pivot" : {
-	  "x" : 3.0,
-	  "y" : 2.0
-	},
-	"ChiDefense" : {
 	  "x" : 4.0,
 	  "y" : 2.0
 	},
+	"ChiDefense" : {
+	  "x" : 5.0,
+	  "y" : 2.0
+	},
 	"StrengthOfMind" : {
-	  "x" : 6.0,
+	  "x" : 7.0,
 	  "y" : 0.0
 	},
 	"StrengthOfBody" : {
-	  "x" : 5.0,
+	  "x" : 6.0,
 	  "y" : 0.0
 	},
 	"BodyMastery" : {
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 2.0
 	},
 	"ChiMastery" : {
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 3.0
 	}
   },
   "connectors" : [
-    { "type" : "ThreeDown",
-	  "x" : 1.0,
+    { "type" : "FourDown",
+	  "x" : 1.5,
 	  "y" : 0.0
 	},
 	{ "type" : "Through",
@@ -67,56 +79,56 @@
 	  "x" : 1.0,
 	  "y" : 1.0
 	},
-	{ "type" : "OneDown",
+	{ "type" : "ThreeDown",
 	  "x" : 1.0,
 	  "y" : 2.0
 	},
 	{ "type" : "TwoUp",
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 1.0
 	},
 	{ "type" : "Through",
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 5.5,
+	  "x" : 6.5,
 	  "y" : 2.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 2.0,
+	  "x" : 3.0,
 	  "y" : 1.0
 	},
 	{ "type" : "Through",
-	  "x" : 2.0,
+	  "x" : 3.0,
 	  "y" : 2.0
 	},
 	{ "type" : "OneDown",
-	  "x" : 2.0,
+	  "x" : 3.0,
 	  "y" : 2.0
 	},
 	{ "type" : "TwoDown",
-	  "x" : 3.5,
+	  "x" : 4.5,
 	  "y" : 0.0
 	},
 	{ "type" : "Through",
-	  "x" : 3.0,
+	  "x" : 4.0,
 	  "y" : 1.0
 	},
 	{ "type" : "Through",
-	  "x" : 4.0,
-	  "y" : 1.0
-	},
-	{ "type" : "OneDown",
-	  "x" : 3.0,
+	  "x" : 5.0,
 	  "y" : 1.0
 	},
 	{ "type" : "OneDown",
 	  "x" : 4.0,
+	  "y" : 1.0
+	},
+	{ "type" : "OneDown",
+	  "x" : 5.0,
 	  "y" : 1.0
 	}
   ]

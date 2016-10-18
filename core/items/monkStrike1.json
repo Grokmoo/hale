@@ -10,7 +10,7 @@
   "minRange" : 1,
   "maxRange" : 1,
   "damageType" : "Blunt",
-  "minDamage" : 2,
+  "minDamage" : 1,
   "maxDamage" : 5,
   "criticalThreat" : 96,
   "criticalMultiplier" : 2,

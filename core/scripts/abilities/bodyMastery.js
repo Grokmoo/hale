@@ -19,6 +19,7 @@ function onActivate(game, slot) {
 	
 	if (parent.abilities.has("ChiMastery")) {
 		effect.getBonuses().addBonus('SpellResistance', parent.roles.getLevel("Monk") * 4);
+		effect.addPositiveIcon("items/enchant_spellResistance_small");
 	}
 	
 	var g1 = game.getBaseParticleGenerator("sparkle");
