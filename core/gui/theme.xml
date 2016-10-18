@@ -49,15 +49,18 @@
     <fontDef name="purple" filename="fonts/small.fnt" color="purple"/>
     <fontDef name="link" filename="fonts/small.fnt" color="blue" underline="true" underlineOffset="1"/>
 	
+	<fontDef name="red-dark" filename="fonts/small.fnt" color="#c00000"/>
+    <fontDef name="green-dark" filename="fonts/small.fnt" color="#005000"/>
+	
 	<fontDef name="medium-white" filename="fonts/medium.fnt" color="white"/>
     <fontDef name="medium-bold-white" filename="fonts/mediumBold.fnt" color="white"/>
     <fontDef name="medium-italic-white" filename="fonts/mediumItalic.fnt" color="white"/>
-    <fontDef name="medium-red" filename="fonts/medium.fnt" color="red"/>
-    <fontDef name="medium-bold-red" filename="fonts/mediumBold.fnt" color="red"/>
-    <fontDef name="medium-italic-red" filename="fonts/mediumItalic.fnt" color="red"/>
-    <fontDef name="medium-green" filename="fonts/medium.fnt" color="green"/>
-    <fontDef name="medium-bold-green" filename="fonts/mediumBold.fnt" color="green"/>
-    <fontDef name="medium-italic-green" filename="fonts/mediumItalic.fnt" color="green"/>
+    <fontDef name="medium-red" filename="fonts/medium.fnt" color="#c00000"/>
+    <fontDef name="medium-bold-red" filename="fonts/mediumBold.fnt" color="#c00000"/>
+    <fontDef name="medium-italic-red" filename="fonts/mediumItalic.fnt" color="#c00000"/>
+    <fontDef name="medium-green" filename="fonts/medium.fnt" color="#005000"/>
+    <fontDef name="medium-bold-green" filename="fonts/mediumBold.fnt" color="#005000"/>
+    <fontDef name="medium-italic-green" filename="fonts/mediumItalic.fnt" color="#005000"/>
     <fontDef name="medium-blue" filename="fonts/medium.fnt" color="blue"/>
     <fontDef name="medium-bold-blue" filename="fonts/mediumBold.fnt" color="blue"/>
     <fontDef name="medium-italic-blue" filename="fonts/mediumItalic.fnt" color="blue"/>
@@ -329,8 +332,8 @@
            <param name="mono"><font>code</font></param>
 		   <param name="white"><font>white</font></param>
 		   <param name="black"><font>black</font></param>
-		   <param name="red"><font>red</font></param>
-		   <param name="green"><font>green</font></param>
+		   <param name="red"><font>red-dark</font></param>
+		   <param name="green"><font>green-dark</font></param>
 		   <param name="blue"><font>blue</font></param>
 		   <param name="yellow"><font>yellow</font></param>
 		   <param name="orange"><font>orange</font></param>
