@@ -314,6 +314,7 @@
 	"improvedStrike3" : [ 264, 748, 44, 44 ],
 	"strengthOfBody" : [ 308, 748, 44, 44 ],
 	"stunningBlow" : [ 352, 748, 44, 44 ],
-	"pivot" : [ 396, 748, 44, 44 ]
+	"pivot" : [ 396, 748, 44, 44 ],
+	"bodyMastery" : [ 440, 748, 44, 44 ]
   }
 }

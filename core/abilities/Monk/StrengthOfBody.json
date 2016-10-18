@@ -10,9 +10,8 @@
     "roles" : [
       {
         "id" : "Monk",
-        "level" : 3
+        "level" : 1
       }
-    ],
-	"abilities" : [ "StrengthOfMind" ]
+    ]
   }
 }
