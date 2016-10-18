@@ -23,7 +23,10 @@
       }, {
         "id" : "Rogue",
         "level" : 8
-      }
+      }, {
+	    "id" : "Monk",
+		"level" : 8
+	  }
     ]
   },
   "abilitiesAdded" : {
