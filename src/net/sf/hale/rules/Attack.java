@@ -322,7 +322,7 @@ public class Attack {
 				defender.getTemplate().getName() + ": ");
 		message.append(attackRoll + " + " + attackBonus + " = " + totalAttack + " vs " + defenderAC + ".  ");
 		
-		if (attackRoll > 97 || (attackRoll > 2 && totalAttack >= defenderAC)) {
+		if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
 			message.append("Succeeds.");
 			hit = true;
 		} else {
@@ -338,7 +338,7 @@ public class Attack {
 		message.append(attacker.getTemplate().getName() + " attempts melee touch attack on " + defender.getTemplate().getName() + ": ");
 		message.append(attackRoll + " + " + attackBonus + " = " + totalAttack + " vs " + defenderAC + ".  ");
 		
-		if (attackRoll > 97 || (attackRoll > 2 && totalAttack >= defenderAC)) {
+		if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
 			message.append("Succeeds.");
 			hit = true;
 		} else {
@@ -392,7 +392,7 @@ public class Attack {
 		message.append(attacker.getTemplate().getName() + " attacks " + defender.getTemplate().getName() + ": " +
 				attackToString() + " vs AC " + defenderAC);
 		
-		if (attackRoll > 95 || (attackRoll > 2 && totalAttack >= defenderAC)) {
+		if (attackRoll > 95 || (attackRoll > 5 && totalAttack >= defenderAC)) {
 			hit = true;
 			
 			int threatRange = weapon.getTemplate().getCriticalThreat() -
