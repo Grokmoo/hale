@@ -1,0 +1,35 @@
+{
+  "name" : "Storm Hand",
+  "icon" : {
+    "sprite" : "icons/stormHand"
+  },
+  "isPlayer" : true,
+  "isBase" : false,
+  "stats" : {
+    "hpPerLevel" : 3,
+    "damageBonusPerLevel" : 3,
+    "attackBonusPerLevel" : 4,
+    "skillPointsPerLevel" : 5,
+    "maximumLevel" : 10
+  },
+  "prereqs" : {
+    "abilities" : [
+      "EnergyResistance"
+    ],
+    "roles" : [
+      {
+        "id" : "Monk",
+        "level" : 7
+      }, {
+        "id" : "Warrior",
+        "level" : 7
+      }
+    ]
+  },
+  "abilitySelectionsFromList" : {
+    "StormHand" : [
+      1, 3, 5, 7, 9
+    ],
+	"General" : [ 2, 5, 8 ]
+  }
+}

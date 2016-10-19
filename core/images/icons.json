@@ -321,6 +321,7 @@
 	"chiDefense" : [ 572, 748, 44, 44 ],
 	"furiousBlows" : [ 616, 748, 44, 44 ],
 	"preciseBlows" : [ 660, 748, 44, 44 ],
-	"unerringStrike" : [ 704, 748, 44, 44 ]
+	"unerringStrike" : [ 704, 748, 44, 44 ],
+	"stormHand" : [ 748, 748, 44, 44 ]
   }
 }
