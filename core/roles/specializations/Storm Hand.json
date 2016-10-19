@@ -28,5 +28,8 @@
       1, 3, 5, 7, 9
     ],
 	"General" : [ 2, 5, 8 ]
-  }
+  },
+  "abilitiesAdded" : {
+    "StormStance" : 1
+  },
 }

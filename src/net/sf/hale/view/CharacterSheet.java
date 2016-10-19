@@ -179,10 +179,10 @@ public class CharacterSheet extends ScrollPane {
 
 			int threatRange = mainHand.getTemplate().getCriticalThreat() -
 					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-					mainHand.bonuses.get(Bonus.Type.WeaponCriticalChance);
+					mainHand.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
 			int multiplier = mainHand.getTemplate().getCriticalMultiplier() +
 					parent.stats.get(mainHand.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-					mainHand.bonuses.get(Bonus.Type.WeaponCriticalMultiplier);
+					mainHand.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
 			
 			sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 			sb.append("</span> to <span style=\"font-family: medium-red;\">");
@@ -257,10 +257,10 @@ public class CharacterSheet extends ScrollPane {
 
 				int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
 						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance);
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
 				int multiplier = offHandWeapon.getTemplate().getCriticalMultiplier() +
 						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier);
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
 				
 				sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
 				sb.append("</span> to <span style=\"font-family: medium-red;\">");

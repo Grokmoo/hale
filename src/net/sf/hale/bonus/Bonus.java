@@ -72,7 +72,7 @@ public class Bonus implements Saveable {
 		SpellFailure("Spell Success"), MeleeSpellFailure("Spell Success due to Threatening Creatures"),
 		SpellCooldown("Spell Cooldown"),
 		Attack, Damage, AttackCost("Attack Cost"), ArmorClass("Defense"), ArmorPenalty("Armor Penalty"),
-		ShieldAttack("Attack while using a Shield"),
+		ShieldAttack("Attack while using a Shield"), CriticalChance, CriticalMultiplier,
 		LightMeleeWeaponDamage("Light Melee Weapon Damage"),
 		OneHandedMeleeWeaponDamage("One Handed Melee Weapon Damage"),
 		TwoHandedMeleeWeaponDamage("Two Handed Melee Weapon Damage"), RangedDamage("Ranged Damage"),

@@ -322,6 +322,12 @@
 	"furiousBlows" : [ 616, 748, 44, 44 ],
 	"preciseBlows" : [ 660, 748, 44, 44 ],
 	"unerringStrike" : [ 704, 748, 44, 44 ],
-	"stormHand" : [ 748, 748, 44, 44 ]
+	"stormHand" : [ 748, 748, 44, 44 ],
+	
+	"stormStance" : [ 0, 792, 44, 44 ],
+	"burningPalm" : [ 44, 792, 44, 44 ],
+	"flowingBody" : [ 88, 792, 44, 44 ],
+	"stoneForm" : [ 132, 792, 44, 44 ],
+	"hurricaneClaw" : [ 176, 792, 44, 44 ]
   }
 }

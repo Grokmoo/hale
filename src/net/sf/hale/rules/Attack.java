@@ -246,8 +246,6 @@ public class Attack {
 		attackRoll = Game.dice.d100();
 		damageRoll = Game.dice.rand(weapon.getTemplate().getMinDamage(), weapon.getTemplate().getMaxDamage());
 
-		System.out.println("Rolled " + damageRoll + " between " + weapon.getTemplate().getMinDamage() + " to " + weapon.getTemplate().getMaxDamage());
-		
 		damageBonus += ((float)attacker.stats.get(Stat.LevelDamageBonus)) / 100.0f;
 		damageBonus += (float)(weapon.getQualityDamageBonus() + weapon.bonuses.get(Bonus.Type.WeaponDamage)) / 100.0f;
 		damageBonus += (float)(quiverDamageBonus) / 100.0f;
@@ -258,13 +256,9 @@ public class Attack {
 		damageBonus += (float)attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) / 100.0f;
 		attackBonus += attacker.stats.get(weapon.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType); 
 		
-		System.out.println("Got damage bonus " + damageBonus);
-		
 		totalAttack = attackRoll + attackBonus;
 		totalDamage = (int)Math.round( ((float)damageRoll * damageBonus) );
-		
-		System.out.println("Got total damage " + totalDamage);
-		
+
 		damageMin = (int)Math.round( ((float)weapon.getTemplate().getMinDamage() * damageBonus) );
 		damageMax = (int)Math.round( ((float)weapon.getTemplate().getMaxDamage() * damageBonus) );
 		
@@ -403,7 +397,7 @@ public class Attack {
 			
 			int threatRange = weapon.getTemplate().getCriticalThreat() -
 				attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-				weapon.bonuses.get(Bonus.Type.WeaponCriticalChance);
+				weapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - attacker.stats.get(Bonus.Type.CriticalChance);
 			
 			if ( attackRoll >= threatRange && !criticalHitImmunity ) {
 				threatRoll = Game.dice.d100();
@@ -423,7 +417,7 @@ public class Attack {
 
 					int multiplier = weapon.getTemplate().getCriticalMultiplier() +
 							attacker.stats.get(weapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-							weapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier);
+							weapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + attacker.stats.get(Bonus.Type.CriticalMultiplier);
 
 					damage.add(weapon.getTemplate().getDamageType(), totalDamage * (multiplier - 1));
 					damageRoll *= multiplier;

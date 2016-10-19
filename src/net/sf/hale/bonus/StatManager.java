@@ -154,7 +154,7 @@ public class StatManager {
 			case DualWieldArmorClass: case Movement: case ImmobilizationImmunity: case UndispellableImmobilized:
 				recomputeArmorClass = true;
 				break;
-			case Attack: case Damage: case AttackCost: case ShieldAttack:
+			case Attack: case Damage: case AttackCost: case ShieldAttack: case CriticalChance: case CriticalMultiplier:
 			case MainHandAttack: case OffHandAttack: case MainHandDamage: case OffHandDamage:
 			case BaseWeaponAttack: case BaseWeaponDamage: case BaseWeaponSpeed:
 			case BaseWeaponCriticalChance: case BaseWeaponCriticalMultiplier:
