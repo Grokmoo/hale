@@ -20,6 +20,7 @@
 package net.sf.hale.characterbuilder;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import de.matthiasmann.twl.Button;
@@ -27,9 +28,9 @@ import de.matthiasmann.twl.ScrollPane;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.PC;
-import net.sf.hale.rules.Role;
 import net.sf.hale.rules.Skill;
 import net.sf.hale.rules.SkillSet;
+import net.sf.hale.util.Logger;
 
 /**
  * The BuilderPane for editing a character's skills
@@ -91,15 +92,31 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	private void setRoleValues() {
 		resetValues();
 		
-		Role role = getCharacter().getBaseRole();
+		List<SkillSelector> selectorsSorted = new ArrayList<SkillSelector>(selectors);
+		selectorsSorted.sort(new Comparator<SkillSelector>() {
+			@Override public int compare(SkillSelector s1, SkillSelector s2) {
+				int s1Ranks = getCharacter().getSkillSet().getRanks(s1.skill);
+				int s2Ranks = getCharacter().getSkillSet().getRanks(s2.skill);
+				
+				if (s2Ranks > s1Ranks) return +1;
+				else if (s2Ranks < s1Ranks) return -1;
+				else {
+					for (String skillID : getCharacter().getBaseRole().getDefaultPlayerSkillSelections()) {
+						if (skillID.equals(s1.skill.getID())) return -1;
+						
+						if (skillID.equals(s2.skill.getID())) return +1;
+					}
+				}
+				
+				Logger.appendToErrorLog("Error in sorting skill selectors between " + s1.skill.getID() + " and " + s2.skill.getID());
+				
+				return 0;
+			}
+		});
 		
-		List<String> skillSelections = role.getDefaultPlayerSkillSelections();
-		
-		for (String skillID : skillSelections) {
+		for (SkillSelector selector : selectorsSorted) {
 			// break if we are out of points
 			if (points.getRemainingPoints() < 5) break;
-			
-			SkillSelector selector = findSelector(skillID);
 			
 			selector.addModelPoints(1);
 			selector.addValue(1);
@@ -108,14 +125,6 @@ public class BuilderPaneSkills extends BuilderPane implements PointAllocatorMode
 	
 	@Override protected int getAdditionalSelectorPaneHeightLimit() {
 		return Math.max(resetButton.getPreferredHeight(), roleButton.getPreferredHeight());
-	}
-	
-	private SkillSelector findSelector(String skillID) {
-		for (SkillSelector selector : selectors) {
-			if (selector.skill.getID().equals(skillID)) return selector;
-		}
-		
-		return null;
 	}
 
 	@Override protected void layout() {
