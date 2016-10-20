@@ -18,10 +18,19 @@ function enableStance(game, slot, stance) {
 		effect.getBonuses().addBonus("Attack", "Stackable", 2 * (level + wisBonus));
 		effect.getBonuses().addBonus("ArmorClass", "Stackable", 2 * (level + wisBonus));
 		
+		if (parent.abilities.has("TideWalker")) {
+			effect.getBonuses().addBonus("ActionPoint", "Stackable", (level + wisBonus));
+			effect.getBonuses().addBonus("Movement", "Stackable", (level + wisBonus));
+		}
+		
 		effect.put("stance", "Flowing Body");
 	} else if (stance == "Stone Form") {
 		effect.addIcon("items/enchant_physical_small");
 		effect.getBonuses().addDamageReduction("Physical", "Stackable", level + wisBonus);
+		
+		if (parent.abilities.has("StrengthOfTheEarth")) {
+			effect.getBonuses().addBonus("Con", "Stackable", wisBonus);
+		}
 		
 		effect.put("stance", "Stone Form");
 	} else if (stance == "Hurricane Claw") {
