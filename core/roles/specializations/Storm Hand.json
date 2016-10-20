@@ -14,13 +14,14 @@
   },
   "prereqs" : {
     "abilities" : [
-      "EnergyResistance"
+      "StrongSoul"
     ],
     "roles" : [
-      {
-        "id" : "Monk",
-        "level" : 7
-      }
+      { "id" : "Monk", "level" : 7 },
+	  { "id" : "Warrior", "level" : 7 }
+    ],
+	"stats" : [
+      { "type" : "Wis", "value" : 14 }
     ]
   },
   "abilitySelectionsFromList" : {
