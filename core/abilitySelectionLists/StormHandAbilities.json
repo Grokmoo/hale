@@ -20,6 +20,10 @@
 	"HurricaneClaw" : {
 	  "x" : 1.0,
 	  "y" : 1.0
+	},
+	"SearingImpact" : {
+	  "x" : 0.0,
+	  "y" : 2.0
 	}
   },
   "connectors" : [
@@ -27,6 +31,10 @@
       "type" : "FourDown",
       "x" : 1.5,
       "y" : 0.0
-    }
+    }, {
+	  "type" : "OneDown",
+	  "x" : 0.0,
+	  "y" : 1.0
+	}
   ]
 }

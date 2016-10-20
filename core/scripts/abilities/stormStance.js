@@ -1,5 +1,5 @@
 function enableStance(game, slot, stance) {
-	var effect = slot.createEffect();
+	var effect = slot.createEffect("effects/stormStanceEffect");
 	effect.setTitle(slot.getAbility().getName() + " - " + stance);
 	
 	var parent = slot.getParent();
@@ -10,13 +10,20 @@ function enableStance(game, slot, stance) {
 		effect.addIcon("items/enchant_fire_small");
 		effect.getBonuses().addStandaloneDamageBonus("Fire", 1 + level / 3, 3 + level / 3);
 		effect.getBonuses().addDamageReduction("Cold", "Stackable", 4);
+		
+		effect.put("stance", "Burning Palm");
+		
 	} else if (stance == "Flowing Body") {
 		effect.addIcon("items/enchant_ice_small");
 		effect.getBonuses().addBonus("Attack", "Stackable", 2 * (level + wisBonus));
 		effect.getBonuses().addBonus("ArmorClass", "Stackable", 2 * (level + wisBonus));
+		
+		effect.put("stance", "Flowing Body");
 	} else if (stance == "Stone Form") {
 		effect.addIcon("items/enchant_physical_small");
 		effect.getBonuses().addDamageReduction("Physical", "Stackable", level + wisBonus);
+		
+		effect.put("stance", "Stone Form");
 	} else if (stance == "Hurricane Claw") {
 		effect.addIcon("items/enchant_lightning_small");
 		effect.getBonuses().addBonus("CriticalChance", level + wisBonus);
@@ -24,6 +31,8 @@ function enableStance(game, slot, stance) {
 		effect.getBonuses().addDamageReduction("Acid", "Stackable", 5 + wisBonus);
 		effect.getBonuses().addDamageReduction("Cold", "Stackable", 5 + wisBonus);
 		effect.getBonuses().addDamageReduction("Fire", "Stackable", 5 + wisBonus);
+		
+		effect.put("stance", "Hurricane Claw");
 	}
 	
 	effect.setRemoveOnDeactivate(true);

@@ -328,6 +328,7 @@
 	"burningPalm" : [ 44, 792, 44, 44 ],
 	"flowingBody" : [ 88, 792, 44, 44 ],
 	"stoneForm" : [ 132, 792, 44, 44 ],
-	"hurricaneClaw" : [ 176, 792, 44, 44 ]
+	"hurricaneClaw" : [ 176, 792, 44, 44 ],
+	"searingImpact" : [ 220, 792, 44, 44 ]
   }
 }
