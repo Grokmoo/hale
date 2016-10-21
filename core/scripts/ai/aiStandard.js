@@ -149,7 +149,7 @@ function checkRenewal(game, parent, aiSet, allSlots) {
 	for (var i = 0; i < friendlies.size(); i++) {
 		var friendly = friendlies.get(i);
 		
-		var isValid = ability.executeFunction("isTargetValid", [friendly, slot]);
+		var isValid = ability.executeFunction("isTargetValid", friendly, slot);
 		
 		if (isValid == true) {
 			// if the friendly has attribute penalties, then add renewal to the list of spells
@@ -171,7 +171,7 @@ function checkDispell(game, parent, aiSet, allSlots) {
 	for (var i = 0; i < friendlies.size(); i++) {
 		var friendly = friendlies.get(i);
 		
-		var isValid = ability.executeFunction("isTargetValid", [friendly, slot]);
+		var isValid = ability.executeFunction("isTargetValid", friendly, slot);
 		
 		if (isValid == true) {
 			// if the friendly has dispellable effects, then add dispell to the list of spells
@@ -440,7 +440,7 @@ function findClosestTarget(game, creatures, parent, slot) {
 		for (var i = 0; i < creatures.size(); i++) {
 			var curTarget = creatures.get(i);
 		
-			var isValid = ability.executeFunction("isTargetValid", [curTarget, slot]);
+			var isValid = ability.executeFunction("isTargetValid", curTarget, slot);
 			
 			if (isValid == true) {
 				preferredTarget = curTarget;
