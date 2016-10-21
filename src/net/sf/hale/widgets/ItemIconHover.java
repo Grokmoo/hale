@@ -169,6 +169,8 @@ public class ItemIconHover extends TextArea {
 		sb.append( Weight.toStringKilograms(item.getTemplate().getWeightInGrams()) );
 		if (parent.getQuantity() == 1) {
 			sb.append("</span> kg</div>");
+		} else if (parent.getQuantity() == Integer.MAX_VALUE) {
+			sb.append("</span> kg each</div>");
 		} else {
 			sb.append("</span> kg each / <span style=\"font-family: blue;\">");
 			sb.append( Weight.toStringKilograms(item.getTemplate().getWeightInGrams() * parent.getQuantity()) );
