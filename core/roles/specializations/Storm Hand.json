@@ -17,8 +17,8 @@
       "StrongSoul"
     ],
     "roles" : [
-      { "id" : "Monk", "level" : 7 },
-	  { "id" : "Warrior", "level" : 7 }
+      { "id" : "Monk", "level" : 8 },
+	  { "id" : "Warrior", "level" : 8 }
     ],
 	"stats" : [
       { "type" : "Wis", "value" : 14 }

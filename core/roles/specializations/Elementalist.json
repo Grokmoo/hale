@@ -20,7 +20,10 @@
       {
         "id" : "Mage",
         "level" : 9
-      }
+      }, {
+	    "id" : "SpellSword",
+		"level" : 9
+	  }
     ]
   },
   "casterLevelsAdded" : [

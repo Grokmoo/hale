@@ -20,7 +20,10 @@
       {
         "id" : "Warrior",
         "level" : 8
-      }
+      }, {
+	    "id" : "SpellSword",
+		"level" : 8
+	  }
     ]
   },
   "abilitySelectionsFromList" : {
