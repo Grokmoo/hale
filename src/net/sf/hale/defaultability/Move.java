@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import de.matthiasmann.twl.Color;
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
 import net.sf.hale.entity.Location;
@@ -217,6 +218,7 @@ public class Move implements DefaultAbility {
 	private boolean checkOverburdened(Creature parent) {
 		if (parent.inventory.getTotalWeight().grams > parent.stats.getWeightLimit()) {
 			Game.mainViewer.addMessage("red", parent.getTemplate().getName() + " is overburdened and cannot move.");
+			Game.mainViewer.addFadeAway("Overburdened", parent.getLocation().getX(), parent.getLocation().getY(), Color.RED);
 			return false;
 		}
 		
