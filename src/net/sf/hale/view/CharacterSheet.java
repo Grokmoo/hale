@@ -139,7 +139,7 @@ public class CharacterSheet extends ScrollPane {
 
 		sb.append("</div>");
 		
-		sb.append("</td><td style=\"width: 32ex\">");
+		sb.append("</td><td style=\"width: 35ex\">");
 		
 		Weapon mainHand = parent.getMainHandWeapon();
 		EquippableItem offHand = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
