@@ -21,7 +21,7 @@
 	  { "id" : "Warrior", "level" : 8 }
     ],
 	"stats" : [
-      { "type" : "Wis", "value" : 14 }
+      { "type" : "BaseWis", "value" : 14 }
     ]
   },
   "abilitySelectionsFromList" : {

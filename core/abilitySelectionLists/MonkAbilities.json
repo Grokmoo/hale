@@ -15,7 +15,7 @@
 	},
 	"UnerringStrike" : {
 	  "x" : 2.0,
-	  "y" : 1.0
+	  "y" : 2.0
 	},
 	"PreciseBlows" : {
 	  "x" : 0.0,
@@ -82,6 +82,14 @@
 	{ "type" : "ThreeDown",
 	  "x" : 1.0,
 	  "y" : 2.0
+	},
+	{ "type" : "Through",
+	  "x" : 2.0,
+	  "y" : 1.0,
+	},
+	{ "type" : "OneDown",
+	  "x" : 2.0,
+	  "y" : 1.0,
 	},
 	{ "type" : "TwoUp",
 	  "x" : 6.5,
