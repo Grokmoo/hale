@@ -78,6 +78,13 @@ function onAreaLoadFirstTime(game, area, transition) {
         } else if (role.equals("Monk")) {
 			inv.addAndEquip("armor_robe");
 			inv.getUnequippedItems().add("potionHealing", "Good", 2);
+		} else if (role.equals("SpellSword")) {
+			inv.addAndEquip("armor_mail_base", "Decent");
+            inv.addAndEquip("battleaxe", "Decent");
+            inv.addAndEquip("shield_light_base", "Decent");
+			inv.addAndEquip("boots_leather_base", "Decent");
+			inv.addAndEquip("gloves_leather_base", "Decent");
+			inv.addAndEquip("helmet_mail_base", "Decent");
 		}
 	}
 }

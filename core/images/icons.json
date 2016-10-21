@@ -211,6 +211,7 @@
     "songOfSlaying" : [ 704, 484, 44, 44 ],
 	"trollkin" : [ 748, 484, 44, 44 ],
     "fortifyHealth" : [ 0, 528, 44, 44 ],
+	"spellSword" : [ 44, 528, 44, 44 ],
     "poisonFog" : [ 88, 528, 44, 44 ],
     "acidSplash" : [ 132, 528, 44, 44 ],
     "haste" : [ 176, 528, 44, 44 ],

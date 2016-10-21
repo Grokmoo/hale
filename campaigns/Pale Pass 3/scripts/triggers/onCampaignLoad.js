@@ -47,7 +47,7 @@ function onAreaLoadFirstTime(game, area, transition) {
 			inv.getUnequippedItems().add("bolt", 200);
             
         } else if (role.equals("Priest")) {
-		    inv.addAndEquip("armor_mail_base", "Fine");
+		    inv.addAndEquip("armor_plate_base", "Fine");
             inv.addAndEquip("morningstar", "Fine");
             inv.addAndEquip("shield_heavy_base", "Fine");
 			inv.addAndEquip("boots_mail_base", "Fine");
@@ -79,6 +79,13 @@ function onAreaLoadFirstTime(game, area, transition) {
         } else if (role.equals("Monk")) {
 			inv.addAndEquip("armor_robe");
 			inv.getUnequippedItems().add("potionHealing", "Superb", 2);
+		} else if (role.equals("SpellSword")) {
+			inv.addAndEquip("armor_mail_base", "Fine");
+            inv.addAndEquip("battleaxe", "Fine");
+            inv.addAndEquip("shield_light_base", "Fine");
+			inv.addAndEquip("boots_mail_base", "Fine");
+			inv.addAndEquip("gloves_mail_base", "Fine");
+			inv.addAndEquip("helmet_mail_base", "Fine");
 		}
 	}
 }

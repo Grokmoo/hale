@@ -74,6 +74,13 @@ function onAreaLoadFirstTime(game, area) {
 			
 			item = inv.getUnequippedItems().add("potionWis", "Mediocre");
 			quickbar.addToFirstEmptySlot("potionWis", "Mediocre");
+		} else if (role.equals("SpellSword")) {
+			inv.addAndEquip("armor_clothes");
+			inv.addAndEquip("boots_leather_base", "Mediocre");
+			inv.addAndEquip("handaxe", "Mediocre");
+			
+			item = inv.getUnequippedItems().add("potionCha", "Mediocre");
+            quickbar.addToFirstEmptySlot("potionCha", "Mediocre");
 		}
         
     }
