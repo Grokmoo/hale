@@ -3,7 +3,7 @@
 
 	"BaseActionPoints" : 10000,
 	
-	"OutsideCombatHealingFactor" : 7,
+	"OutsideCombatHealingFactor" : 3,
 	
 	"PickUpAndWieldItemCost" : 4000,
 	"DropItemCost" : 4000,
