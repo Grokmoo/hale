@@ -42,7 +42,7 @@ function performAttack(game, targeter) {
 	var center = targeter.getMouseGridPosition();
 	var target = game.currentArea().getCreatureAtGridPoint(center);
 	
-	var numAttacks = parseInt(parent.stats.getLevelAttackBonus() / 25) + 1;
+	var numAttacks = parseInt(parent.stats.getLevelAttackBonus() / 25) + 2;
 	
 	game.standardAttack(parent, target);
 	numAttacks--;
