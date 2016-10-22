@@ -30,6 +30,7 @@ function enableStance(game, slot, stance) {
 		
 		if (parent.abilities.has("StrengthOfTheEarth")) {
 			effect.getBonuses().addBonus("Con", "Stackable", wisBonus);
+			effect.addPositiveIcon("items/enchant_spellHealing_small");
 		}
 		
 		effect.put("stance", "Stone Form");
