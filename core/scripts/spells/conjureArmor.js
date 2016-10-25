@@ -78,6 +78,11 @@ function createItem(game, itemID, quality, target, duration, targeter) {
 	// get a copy of the item
 	var item = game.getItem(conjuredID, game.ruleset().getItemQuality(quality));
 	
+	if ( target.getTemplate().getRace().isSlotRestricted(item.getTemplate().getType().toString()) ) {
+		// the target cannot equip items to this slot
+		return;
+	}
+	
 	// create an effect to keep track of the item
 	var effect = targeter.getSlot().createEffect("effects/conjureItem");
 	effect.setDuration(duration);

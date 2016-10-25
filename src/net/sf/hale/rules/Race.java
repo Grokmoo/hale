@@ -293,6 +293,17 @@ public class Race {
 	}
 	
 	/**
+	 * returns true if the slot is restricted - this race cannot equip items in the specified slot,
+	 * false otherwise
+	 * @param slot
+	 * @return whether the slot is restricted
+	 */
+	
+	public boolean isSlotRestricted(String slot) {
+		return isSlotRestricted(Inventory.Slot.valueOf(slot));
+	}
+	
+	/**
 	 * Returns the string that should be used for this race when selecting sub icons from the
 	 * set of available sub icons.
 	 * @return the string used for this race when selecting sub icons
