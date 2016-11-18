@@ -126,7 +126,7 @@ public class StatManager {
 	
 	public void changeEquipment(EquippableItemTemplate.Type itemType) {
 		switch (itemType) {
-		case Weapon: case Shield:
+		case Weapon: case Shield: case Ammo:
 			// recompute attack bonus for shield swaps due to shield attack penalty
 			recomputeAttackBonus();
 			// recompute defense for weapon swaps for a few fringe cases where weapons affect your AC

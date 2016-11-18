@@ -281,6 +281,7 @@
     "beastSlayer" : [ 616, 660, 44, 44 ],
     "fireMage" : [ 660, 660, 44, 44 ],
     "poison" : [ 704, 660, 44, 44 ],
+	"medium" : [ 748, 660, 44, 44 ]
     "lingeringPoison" : [ 0, 704, 44, 44 ],
     "lethalPoison" : [ 44, 704, 44, 44 ],
     "deadlyInitiative" : [ 88, 704, 44, 44 ],
