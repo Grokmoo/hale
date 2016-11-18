@@ -407,7 +407,7 @@ public class AbilitySlot implements Saveable {
 		if (!Game.isInTurnMode() && !getAbility().canActivateOutsideCombat()) return false;
 		
 		if (getAbility().hasFunction(ScriptFunctionType.canActivate)) {
-			Object returnValue = getAbility().executeFunction(ScriptFunctionType.canActivate, parent);
+			Object returnValue = getAbility().executeFunction(ScriptFunctionType.canActivate, parent, this);
 			return Boolean.TRUE.equals(returnValue);
 		} else {
 			return true;

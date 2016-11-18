@@ -1,7 +1,10 @@
 {
   "name" : "Words",
   "abilities" : {
-
+    "WordFire" : {
+      "x" : 0.0,
+      "y" : 0.0
+    },
   },
   "connectors" : [
 

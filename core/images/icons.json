@@ -334,6 +334,8 @@
 	"searingImpact" : [ 220, 792, 44, 44 ],
 	"sonicStrike" : [ 264, 792, 44, 44 ],
 	"tideWalker" : [ 308, 792, 44, 44 ],
-	"strengthOfTheEarth" : [ 352, 792, 44, 44 ]
+	"strengthOfTheEarth" : [ 352, 792, 44, 44 ],
+	"invocation" : [ 396, 792, 44, 44 ],
+	"wordFire" : [ 440, 792, 44, 44 ]
   }
 }
