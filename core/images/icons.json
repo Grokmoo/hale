@@ -336,6 +336,9 @@
 	"tideWalker" : [ 308, 792, 44, 44 ],
 	"strengthOfTheEarth" : [ 352, 792, 44, 44 ],
 	"invocation" : [ 396, 792, 44, 44 ],
-	"wordFire" : [ 440, 792, 44, 44 ]
+	"wordFire" : [ 440, 792, 44, 44 ],
+	"wordIce" : [ 484, 792, 44, 44 ],
+	"wordLightning" : [ 528, 792, 44, 44 ],
+	"wordAcid" :  [ 572, 792, 44, 44 ]
   }
 }

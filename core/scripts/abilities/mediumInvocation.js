@@ -26,6 +26,9 @@ function getActiveWords(parent) {
 	var words = [];
 	
 	if (parent.get("roleMediumWordFire") == true) words.push("Fire");
+	if (parent.get("roleMediumWordIce") == true) words.push("Ice");
+	if (parent.get("roleMediumWordAcid") == true) words.push("Acid");
+	if (parent.get("roleMediumWordLightning") == true) words.push("Lightning");
 	
 	return words;
 }
@@ -47,33 +50,11 @@ function onTargetSelect(game, targeter) {
 	// check for spell failure
 	if (!ability.checkSpellFailure(parent, target)) return;
 	
-	// perform the touch attack in a new thread as it will block
-	var cb = ability.createDelayedCallback("performTouch");
-	cb.addArgument(targeter);
-	cb.start();
-}
-
-function performTouch(game, targeter) {
-	var spell = targeter.getSlot().getAbility();
-	var parent = targeter.getParent();
-	var target = targeter.getSelectedCreature();
-	var casterLevel = parent.stats.getCasterLevel();
-	
-	if (game.meleeTouchAttack(parent, target)) {
-		// create the callback that will apply damage partway through the animation
-		var callback = spell.createDelayedCallback("applyWords");
-		callback.setDelay(0.2);
-		callback.addArguments([parent, target, targeter]);
-		
-		// create the animation
-		var anim = game.getBaseAnimation("blast");
-		var position = target.getLocation().getCenteredScreenPoint();
-		anim.setPosition(position.x, position.y);
-		
-		game.runAnimationNoWait(anim);
-		game.lockInterface(anim.getSecondsRemaining());
-		callback.start();
-	}
+	// create the callback that will apply the effect
+	var callback = ability.createDelayedCallback("applyWords");
+	callback.setDelay(0.2);
+	callback.addArguments([parent, target, targeter]);
+	callback.start();
 }
 
 function applyWords(game, parent, target, targeter) {
@@ -81,12 +62,37 @@ function applyWords(game, parent, target, targeter) {
 	var spell = targeter.getSlot().getAbility();
 	var casterLevel = parent.stats.getCasterLevel();
 	
+	// create the animation
+	var anim = game.getBaseAnimation("blast");
+	var position = target.getLocation().getCenteredScreenPoint();
+	anim.setPosition(position.x, position.y);
+	
 	for (var i = 0; i < words.length; i++) {
 		var word = words[i];
 		
-		if (word == "Fire") {
+		switch (word) {
+		case "Fire" :
 			var damage = game.dice().rand(4, 8) + casterLevel;
 			spell.applyDamage(parent, target, damage, "Fire");
+			anim.setSecondaryRed(1.0);
+			break;
+		case "Ice" : 
+			var damage = game.dice().rand(3, 6) + casterLevel;
+			spell.applyDamage(parent, target, damage, "Cold");
+			anim.setSecondaryBlue(1.0);
+			break;
+		case "Acid" : 
+			var damage = game.dice().rand(2, 6) + casterLevel;
+			spell.applyDamage(parent, target, damage, "Acid");
+			anim.setSecondaryGreen(1.0);
+			break;
+		case "Lightning" : 
+			var damage = game.dice().rand(4, 8) + casterLevel;
+			spell.applyDamage(parent, target, damage, "Electrical");
+			break;
 		}
 	}
+	
+	game.runAnimationNoWait(anim);
+	game.lockInterface(anim.getSecondsRemaining());
 }

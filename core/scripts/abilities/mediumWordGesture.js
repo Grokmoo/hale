@@ -3,19 +3,28 @@ function onActivate(game, slot) {
    var parent = slot.getParent();
    var duration = 2;
    
-   if (abilityID == "WordFire") {
-	   slot.setActiveRoundsLeft(duration);
-	   slot.activate();
-	   parent.timer.performAction(5000);
+   slot.setActiveRoundsLeft(duration);
+   slot.activate();
+   parent.timer.performAction(5000);
 	   
-	   var effect = slot.createEffect("abilities/mediumWordGesture");
-	   effect.setDuration(duration);
-	   effect.setTitle("Medium Word: Fire");
-	   effect.put("parentMediumValue", "roleMediumWordFire");
-	   parent.put("roleMediumWordFire", true);
-	
-	   parent.applyEffect(effect);
+   var effect = slot.createEffect("abilities/mediumWordGesture");
+   effect.setDuration(duration);
+   
+   if (abilityID.startsWith("Word")) {
+	  var wordString = abilityID.substring(4);
+	  effect.setTitle("Medium Word: " + wordString);
+      effect.put("parentMediumValue", "roleMediumWord" + wordString);
+      parent.put("roleMediumWord" + wordString, true);
+	  
+   } else if (abilityID.startsWith("Gesture")) {
+	  var gestureString = abilityID.substring(7);
+	  effect.setTitle("Medium Gesture: " + gestureString);
+      effect.put("parentMediumValue", "roleMediumGesture" + gestureString);
+      parent.put("roleMediumGesture" + gestureString, true);
    }
+   
+   
+   parent.applyEffect(effect);
 }
 
 function canActivate(game, parent, slot) {
@@ -30,7 +39,7 @@ function canActivate(game, parent, slot) {
 		if (numWords + 1 > numGestures) {
 			return parent.timer.canPerformAction(5000);
 		}
-	} else {
+	} else if (abilityID.startsWith("Gesture")) {
 		// a gesture
 		if (numGestures + 1 > numWords) {
 			return parent.timer.canPerformAction(5000);
@@ -44,6 +53,9 @@ function getNumActiveWords(parent) {
 	var count = 0;
 	
 	if (parent.get("roleMediumWordFire") == true) count++;
+	if (parent.get("roleMediumWordIce") == true) count++;
+	if (parent.get("roleMediumWordAcid") == true) count++;
+	if (parent.get("roleMediumWordLightning") == true) count++;
 	
 	return count;
 }
