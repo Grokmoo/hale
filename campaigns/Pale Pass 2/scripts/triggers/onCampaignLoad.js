@@ -55,7 +55,6 @@ function onAreaLoadFirstTime(game, area, transition) {
             
         } else if (role.equals("Rogue")) {
 		    inv.addAndEquip("armor_leatherhard_base", "Decent");
-            inv.addAndEquip("shortSword", "Decent");
 			inv.addAndEquip("boots_leather_base", "Decent");
 			inv.addAndEquip("gloves_leather_base", "Decent");
 			inv.addAndEquip("helmet_leather_base", "Decent");
@@ -85,6 +84,13 @@ function onAreaLoadFirstTime(game, area, transition) {
 			inv.addAndEquip("boots_leather_base", "Decent");
 			inv.addAndEquip("gloves_leather_base", "Decent");
 			inv.addAndEquip("helmet_mail_base", "Decent");
+		} else if (role.equals("Medium")) {
+			inv.addAndEquip("armor_robe");
+			inv.addAndEquip("bolt");
+            inv.addAndEquip("shortspear", "Decent");
+			inv.addAndEquip("boots_leather_base", "Decent");
+			inv.getUnequippedItems().add("crossbow", "Decent");
+			inv.getUnequippedItems().add("bolt", 200);
 		}
 	}
 }

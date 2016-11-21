@@ -1,6 +1,4 @@
 function onAreaLoadFirstTime(game, area) {
-    //var game = Java.type('net.sf.hale.ScriptInterface');
-
     game.showCutscene("intro");
     
     var value = game.getPartyCurrency().getValue();
@@ -24,7 +22,7 @@ function onAreaLoadFirstTime(game, area) {
         var role = partyMember.roles.getBaseRole().getID();
         var inv = partyMember.inventory;
         
-        var item = inv.getUnequippedItems().add("potionHealing", "Mediocre");
+        inv.getUnequippedItems().add("potionHealing", "Mediocre");
         quickbar.addToFirstEmptySlot("potionHealing", "Mediocre");
         
 		inv.addAndEquip("boots_leather_base", "Mediocre");
@@ -33,14 +31,14 @@ function onAreaLoadFirstTime(game, area) {
 		    inv.addAndEquip("armor_robe");
             inv.addAndEquip("dagger", "Mediocre");
             
-            item = inv.getUnequippedItems().add("potionCha", "Mediocre");
+            inv.getUnequippedItems().add("potionCha", "Mediocre");
             quickbar.addToFirstEmptySlot("potionCha", "Mediocre");
             
         } else if (role.equals("Mage")) {
 		    inv.addAndEquip("armor_robe");
             inv.addAndEquip("quarterstaff", "Mediocre");
             
-            item = inv.getUnequippedItems().add("potionInt", "Mediocre");
+            inv.getUnequippedItems().add("potionInt", "Mediocre");
             quickbar.addToFirstEmptySlot("potionInt", "Mediocre");
             
         } else if (role.equals("Priest")) {
@@ -48,17 +46,17 @@ function onAreaLoadFirstTime(game, area) {
             inv.addAndEquip("mace", "Mediocre");
             inv.addAndEquip("shield_light_base", "Mediocre");
             
-            item = inv.getUnequippedItems().add("potionWis", "Mediocre");
+            inv.getUnequippedItems().add("potionWis", "Mediocre");
             quickbar.addToFirstEmptySlot("potionWis", "Mediocre");
             
         } else if (role.equals("Rogue")) {
 		    inv.addAndEquip("armor_clothes");
             inv.addAndEquip("dagger", "Mediocre");
             
-            item = inv.getUnequippedItems().add("spikeTrap", "Mediocre", 2);
+            inv.getUnequippedItems().add("spikeTrap", "Mediocre", 2);
             quickbar.addToFirstEmptySlot("spikeTrap", "Mediocre");
             
-            item = inv.getUnequippedItems().add("potionDex", "Mediocre");
+            inv.getUnequippedItems().add("potionDex", "Mediocre");
             quickbar.addToFirstEmptySlot("potionDex", "Mediocre");
             
         } else if (role.equals("Warrior")) {
@@ -66,20 +64,27 @@ function onAreaLoadFirstTime(game, area) {
             inv.addAndEquip("gloves_leather_base", "Mediocre");
             inv.addAndEquip("shortSword", "Mediocre");
             
-            item = inv.getUnequippedItems().add("potionStrength", "Mediocre");
+            inv.getUnequippedItems().add("potionStrength", "Mediocre");
             quickbar.addToFirstEmptySlot("potionStrength", "Mediocre");
             
         } else if (role.equals("Monk")) {
 			inv.addAndEquip("armor_clothes");
 			
-			item = inv.getUnequippedItems().add("potionWis", "Mediocre");
+			inv.getUnequippedItems().add("potionWis", "Mediocre");
 			quickbar.addToFirstEmptySlot("potionWis", "Mediocre");
 		} else if (role.equals("SpellSword")) {
 			inv.addAndEquip("armor_clothes");
 			inv.addAndEquip("boots_leather_base", "Mediocre");
 			inv.addAndEquip("handaxe", "Mediocre");
 			
-			item = inv.getUnequippedItems().add("potionCha", "Mediocre");
+			inv.getUnequippedItems().add("potionCha", "Mediocre");
+            quickbar.addToFirstEmptySlot("potionCha", "Mediocre");
+		} else if (role.equals("Medium")) {
+			inv.addAndEquip("armor_clothes");
+			inv.addAndEquip("boots_leather_base", "Mediocre");
+			inv.addAndEquip("shortspear", "Mediocre");
+			
+			inv.getUnequippedItems().add("potionCha", "Mediocre");
             quickbar.addToFirstEmptySlot("potionCha", "Mediocre");
 		}
         

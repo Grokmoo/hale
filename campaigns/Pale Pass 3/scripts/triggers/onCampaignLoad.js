@@ -86,6 +86,13 @@ function onAreaLoadFirstTime(game, area, transition) {
 			inv.addAndEquip("boots_mail_base", "Fine");
 			inv.addAndEquip("gloves_mail_base", "Fine");
 			inv.addAndEquip("helmet_mail_base", "Fine");
+		} else if (role.equals("Medium")) {
+			inv.addAndEquip("armor_robe");
+			inv.addAndEquip("bolt");
+            inv.addAndEquip("shortspear", "Fine");
+			inv.addAndEquip("boots_leather_base", "Fine");
+			inv.getUnequippedItems().add("crossbow", "Fine");
+			inv.getUnequippedItems().add("bolt", 200);
 		}
 	}
 }
