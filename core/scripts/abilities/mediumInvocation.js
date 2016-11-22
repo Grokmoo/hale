@@ -14,29 +14,26 @@ function canActivate(game, parent, slot) {
 	
 	if (!parent.timer.canActivateAbility(slot.getAbilityID())) return false;
 	
-	var words = getActiveWords(parent);
-	var gestures = getActiveGestures(parent);
-	
-	if (words.length == 0) return false;
+	if (getNumActiveWords(parent) == 0) return false;
 	
 	return true;
 }
 
-function getActiveWords(parent) {
-	var words = [];
+function getNumActiveWords(parent) {
+	var count = 0;
 	
-	if (parent.get("roleMediumWordFire") == true) words.push("Fire");
-	if (parent.get("roleMediumWordIce") == true) words.push("Ice");
-	if (parent.get("roleMediumWordAcid") == true) words.push("Acid");
-	if (parent.get("roleMediumWordLightning") == true) words.push("Lightning");
+	if (parent.get("roleMediumWordFire") == true) count++;
+	if (parent.get("roleMediumWordIce") == true) count++;
+	if (parent.get("roleMediumWordAcid") == true) count++;
+	if (parent.get("roleMediumWordLightning") == true) count++;
 	
-	return words;
+	return count;
 }
 
-function getActiveGestures(parent) {
-	var gestures = [];
+function getNumActiveGestures(parent) {
+	var count = 0;
 	
-	return gestures;
+	return count;
 }
 
 function onTargetSelect(game, targeter) {
@@ -64,6 +61,23 @@ function onTargetSelect(game, targeter) {
 	callback.start();
 }
 
+function getActiveWords(parent) {
+	var words = [];
+	
+	if (parent.get("roleMediumWordFire") == true) words.push("Fire");
+	if (parent.get("roleMediumWordIce") == true) words.push("Ice");
+	if (parent.get("roleMediumWordAcid") == true) words.push("Acid");
+	if (parent.get("roleMediumWordLightning") == true) words.push("Lightning");
+	
+	return words;
+}
+
+function getActiveGestures(parent) {
+	var gestures = [];
+	
+	return gestures;
+}
+
 function applyWords(game, parent, target, targeter) {
 	var words = getActiveWords(parent);
 	var spell = targeter.getSlot().getAbility();
@@ -74,33 +88,30 @@ function applyWords(game, parent, target, targeter) {
 	var position = target.getLocation().getCenteredScreenPoint();
 	anim.setPosition(position.x, position.y);
 	
-	for (var i = 0; i < words.length; i++) {
-		var word = words[i];
-		
-		switch (word) {
-		case "Fire" :
-			var damage = game.dice().rand(4, 8) + casterLevel;
-			spell.applyDamage(parent, target, damage, "Fire");
-			anim.setBlue(0.3);
-			anim.setGreen(0.3);
-			break;
-		case "Ice" : 
-			var damage = game.dice().rand(3, 6) + casterLevel;
-			spell.applyDamage(parent, target, damage, "Cold");
-			anim.setRed(0.3);
-			anim.setGreen(0.5);
-			break;
-		case "Acid" : 
-			var damage = game.dice().rand(2, 6) + casterLevel;
-			spell.applyDamage(parent, target, damage, "Acid");
-			anim.setRed(0.0);
-			anim.setBlue(0.0);
-			break;
-		case "Lightning" : 
-			var damage = game.dice().rand(4, 8) + casterLevel;
-			spell.applyDamage(parent, target, damage, "Electrical");
-			break;
-		}
+	if (parent.get("roleMediumWordFire") == true) {
+		var damage = game.dice().rand(4, 8) + casterLevel;
+		spell.applyDamage(parent, target, damage, "Fire");
+		anim.setBlue(0.3);
+		anim.setGreen(0.3);
+	}
+	
+	if (parent.get("roleMediumWordIce") == true) {
+		var damage = game.dice().rand(3, 6) + casterLevel;
+		spell.applyDamage(parent, target, damage, "Cold");
+		anim.setRed(0.3);
+		anim.setGreen(0.5);
+	}
+	
+	if (parent.get("roleMediumWordAcid") == true) {
+		var damage = game.dice().rand(2, 6) + casterLevel;
+		spell.applyDamage(parent, target, damage, "Acid");
+		anim.setRed(0.0);
+		anim.setBlue(0.0);
+	}
+	
+	if (parent.get("roleMediumWordLightning") == true) {
+		var damage = game.dice().rand(4, 8) + casterLevel;
+		spell.applyDamage(parent, target, damage, "Electrical");
 	}
 	
 	game.runAnimationNoWait(anim);

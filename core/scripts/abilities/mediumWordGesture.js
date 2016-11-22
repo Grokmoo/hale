@@ -51,8 +51,8 @@ function canActivate(game, parent, slot) {
 	var abilityID = slot.getAbilityID();
     var parent = slot.getParent();
 	
-	var numWords = getNumActiveWords(parent);
-	var numGestures = getNumActiveGestures(parent);
+	var numWords = game.runExternalScript("abilities/mediumInvocation", "getNumActiveWords", parent);
+	var numGestures = game.runExternalScript("abilities/mediumInvocation", "getNumActiveGestures", parent);
 	
 	if (abilityID.startsWith("Word")) {
 		// a word
@@ -67,23 +67,6 @@ function canActivate(game, parent, slot) {
 	}
 	
 	return true;
-}
-
-function getNumActiveWords(parent) {
-	var count = 0;
-	
-	if (parent.get("roleMediumWordFire") == true) count++;
-	if (parent.get("roleMediumWordIce") == true) count++;
-	if (parent.get("roleMediumWordAcid") == true) count++;
-	if (parent.get("roleMediumWordLightning") == true) count++;
-	
-	return count;
-}
-
-function getNumActiveGestures(parent) {
-	var count = 0;
-	
-	return count;
 }
 
 // called on the removal of the word / gesture effect
