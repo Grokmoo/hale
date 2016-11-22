@@ -59,7 +59,7 @@ function onTargetSelect(game, targeter) {
 	
 	// create the callback that will apply the effect
 	var callback = ability.createDelayedCallback("applyWords");
-	callback.setDelay(anim.getSecondsRemaining() - 0.3);
+	callback.setDelay(anim.getSecondsRemaining() - 0.2);
 	callback.addArguments([parent, target, targeter]);
 	callback.start();
 }

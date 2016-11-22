@@ -10,18 +10,39 @@ function onActivate(game, slot) {
    var effect = slot.createEffect("abilities/mediumWordGesture");
    effect.setDuration(duration);
    
+   // do a flash icon animation
+   var anim = game.getBaseAnimation("iconFlash");
+   if (parent.drawsWithSubIcons()) {
+	  anim.addFrame(parent.getIconRenderer().getIcon("BaseForeground"));
+	  anim.setColor(parent.getIconRenderer().getColor("BaseForeground"));
+		
+	  var pos = parent.getSubIconScreenPosition("BaseForeground");
+	  anim.setPosition(pos.x, pos.y);
+   } else {
+	  anim.addFrameAndSetColor(parent.getTemplate().getIcon());
+	  var pos = parent.getLocation().getCenteredScreenPoint();
+	  anim.setPosition(pos.x, pos.y);
+   }
+   
    if (abilityID.startsWith("Word")) {
 	  var wordString = abilityID.substring(4);
 	  effect.setTitle("Medium Word: " + wordString);
       effect.put("parentMediumValue", "roleMediumWord" + wordString);
       parent.put("roleMediumWord" + wordString, true);
 	  
+	  anim.setSecondaryRed(0.0);
+	  
    } else if (abilityID.startsWith("Gesture")) {
 	  var gestureString = abilityID.substring(7);
 	  effect.setTitle("Medium Gesture: " + gestureString);
       effect.put("parentMediumValue", "roleMediumGesture" + gestureString);
       parent.put("roleMediumGesture" + gestureString, true);
+	  
+	  anim.setSecondaryGreen(0.0);
    }
+   
+   game.runAnimationNoWait(anim);
+   game.lockInterface(anim.getSecondsRemaining());
    
    parent.applyEffect(effect);
 }
@@ -67,5 +88,5 @@ function getNumActiveGestures(parent) {
 
 // called on the removal of the word / gesture effect
 function onRemove(game, effect) {
-	parent.put(effect.get("parentMediumValue"), false);
+	effect.getTarget().put(effect.get("parentMediumValue"), false);
 }

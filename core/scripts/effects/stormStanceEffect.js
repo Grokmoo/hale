@@ -28,7 +28,7 @@ function searingImpact(game, effect, parent, target) {
 		callback.start();
 			
 		if (target.drawsWithSubIcons()) {
-			var anim = game.getBaseAnimation("subIconFlash");
+			var anim = game.getBaseAnimation("iconFlash");
 			anim.addFrame(target.getIconRenderer().getIcon("BaseForeground"));
 			anim.setColor(target.getIconRenderer().getColor("BaseForeground"));
 		

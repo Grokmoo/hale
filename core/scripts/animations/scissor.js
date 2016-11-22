@@ -5,9 +5,9 @@
  * animation.  It is not intended to be looped.
  */
  
-var anim = game.createAnimation("animations/scissors01", 0.08);
+var anim = game.createAnimation("animations/scissors01", 0.05);
 anim.addFrames("animations/scissors", 2, 13, 2);
 anim.setAlpha(1.0);
-anim.setDuration(1.04);
+anim.setDuration(0.65);
 
 anim;
