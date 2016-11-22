@@ -23,7 +23,6 @@ function onActivate(game, slot) {
       parent.put("roleMediumGesture" + gestureString, true);
    }
    
-   
    parent.applyEffect(effect);
 }
 

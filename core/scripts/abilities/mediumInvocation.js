@@ -50,9 +50,16 @@ function onTargetSelect(game, targeter) {
 	// check for spell failure
 	if (!ability.checkSpellFailure(parent, target)) return;
 	
+	// show the generic invocation animation
+	var anim = game.getBaseAnimation("scissor");
+	var position = parent.getLocation().getCenteredScreenPoint();
+	anim.setPosition(position.x, position.y);
+	game.runAnimationNoWait(anim);
+	game.lockInterface(anim.getSecondsRemaining());
+	
 	// create the callback that will apply the effect
 	var callback = ability.createDelayedCallback("applyWords");
-	callback.setDelay(0.2);
+	callback.setDelay(anim.getSecondsRemaining() - 0.3);
 	callback.addArguments([parent, target, targeter]);
 	callback.start();
 }
@@ -74,17 +81,20 @@ function applyWords(game, parent, target, targeter) {
 		case "Fire" :
 			var damage = game.dice().rand(4, 8) + casterLevel;
 			spell.applyDamage(parent, target, damage, "Fire");
-			anim.setSecondaryRed(1.0);
+			anim.setBlue(0.3);
+			anim.setGreen(0.3);
 			break;
 		case "Ice" : 
 			var damage = game.dice().rand(3, 6) + casterLevel;
 			spell.applyDamage(parent, target, damage, "Cold");
-			anim.setSecondaryBlue(1.0);
+			anim.setRed(0.3);
+			anim.setGreen(0.5);
 			break;
 		case "Acid" : 
 			var damage = game.dice().rand(2, 6) + casterLevel;
 			spell.applyDamage(parent, target, damage, "Acid");
-			anim.setSecondaryGreen(1.0);
+			anim.setRed(0.0);
+			anim.setBlue(0.0);
 			break;
 		case "Lightning" : 
 			var damage = game.dice().rand(4, 8) + casterLevel;
