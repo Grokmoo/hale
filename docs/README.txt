@@ -1,3 +1,7 @@
+If you just want to download the latest release, go to
+
+https://sourceforge.net/p/hale/wiki/Home/
+
 This game is distributed under the terms of the GPL.  See COPYING.txt for details.
 
 To Compile the source: run
