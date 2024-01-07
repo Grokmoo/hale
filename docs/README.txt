@@ -1,3 +1,7 @@
+# Hale - Remastered
+
+A remastered version of the RPG game Hale addressing Technical Debt and Software Quality issues.
+
 If you just want to download the latest release, go to
 
 https://sourceforge.net/p/hale/wiki/Home/
