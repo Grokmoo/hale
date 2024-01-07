@@ -654,4 +654,13 @@ public class ParticleGenerator implements Animated {
 		private Animated generator;
 		private float time;
 	}
+
+	public void runParticleGeneratorWait() {
+		Game.particleManager.add(this);
+		try {
+			Thread.sleep((long) (getTimeLeft() * 1000.0f));
+		} catch (InterruptedException e) {
+			return;
+		}
+	}
 }
