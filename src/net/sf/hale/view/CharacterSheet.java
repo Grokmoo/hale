@@ -89,18 +89,16 @@ public class CharacterSheet extends ScrollPane {
 	
 	public void updateContent(PC parent) {
 		StringBuilder sb = new StringBuilder();
-		
 		if (parent == null) {
 	       	handleNullParent();
 	        return;
 	    }
-		
+
 		updateCharacterInformation(parent, sb);
-		updateHitsCostsInformation(parent, sb);
-		updatePrimaryStats(parent, sb);
-		updateSecondaryStats(parent, sb);
 		updateHandsInformation(parent, sb);
-		updateFailureChance(parent, sb);
+		updatePrimaryStats(parent, sb);
+		updateFailureChance(parent, sb);    
+		updateSecondaryStats(parent, sb);
 		updateResistances(parent, sb);
 		
 		synchronized(parent.getEffects()) {
@@ -113,11 +111,10 @@ public class CharacterSheet extends ScrollPane {
 		invalidateLayout();
 	}
 	
+	
 	private void updateFailureChance(PC parent, StringBuilder sb) {
-//		sb.append("<td style=\"vertical-align: top\">");
-		sb.append("<td>");
-	    sb.append("<div style=\"width: 50%; display: inline-block; vertical-align: top;\">");
-
+		sb.append("</td><td style=\"vertical-align: top\">");
+		
 		if (parent.roles.getBaseRole().getMaximumSpellLevel() > 0) {
 			sb.append("<div style=\"font-family: medium-bold;\">Failure Chance by Spell Level</div>");
 			sb.append("<table style=\"width: 25ex;\">");
@@ -142,15 +139,9 @@ public class CharacterSheet extends ScrollPane {
 			sb.append("</table>");
 		}
 		
-		sb.append("</div></td></tr>");
-				
-
-		
 	}
 
 	private void updateResistances(PC parent, StringBuilder sb) {
-		sb.append("<td>");
-		
 		sb.append("<div style=\"font-family: medium-bold\">Resistances</div>");
 		sb.append("<table>");
 		int numResistances = 0;
@@ -185,13 +176,12 @@ public class CharacterSheet extends ScrollPane {
 		}
 		
 		sb.append("</td></tr></table>");
-		
-		
 	}
 
 	private void updateSecondaryStats(PC parent, StringBuilder sb) {
 
-		sb.append("<table><tr style=\"margin-top: 1em;\"><td>");
+		
+		sb.append("</td></tr><tr style=\"margin-top: 1em;\"><td>");
 		
 		sb.append("<div style=\"font-family: medium-bold\">Secondary Stats</div>");
 		sb.append("<div style=\"font-family: black;\"><table style=\"width: 30ex; \">");
@@ -237,12 +227,16 @@ public class CharacterSheet extends ScrollPane {
 		sb.append(spellResistance);
 		sb.append("</td></tr>");
 		
-		sb.append("</table></div></td></tr></table>");
+		sb.append("</table></div>");
+		
+		sb.append("</td><td>");
+
 		
 	}
 
 	private void updatePrimaryStats(PC parent, StringBuilder sb) {
-		sb.append("<table><tr style=\"margin-top: 1em;\"><td>");
+	
+		sb.append("</td></tr><tr style=\"margin-top: 1em;\"><td>");
 		
 		sb.append("<div style=\"font-family: medium-bold\">Primary Stats</div>");
 		sb.append("<div style=\"font-family: medium\"><table style=\"width: 24ex;\">"); {
@@ -277,15 +271,14 @@ public class CharacterSheet extends ScrollPane {
 			sb.append("<td style=\"width: 3ex; font-family: medium-bold\">").append(parent.stats.getCha()).append("</td></tr>");
 
 		}
-		sb.append("</table></div></td></tr></table>");
-		
+		sb.append("</table></div>");
 	}
 
 	private void updateHitsCostsInformation(PC parent, StringBuilder sb) {
-		sb.append("<table><tr style=\"margin-top: 1em;\"><td>");
+		sb.append("</td></tr><tr style=\"margin-top: 1em;\"><td>");
 
-		sb.append("<div style=\"font-family: medium;\"><table style=\"width: 22ex\">"); 
-		sb.append("<tr><td style=\"width: 14 ex;\">Hit Points</td><td style=\"text-align: right\">"); 
+		sb.append("<div style=\"font-family: medium;\"><table style=\"width: 22ex\">");
+		sb.append("<tr><td style=\"width: 14 ex;\">Hit Points</td><td style=\"text-align: right\">");
 		sb.append("<span style=\"font-family: medium-italic-green\">");
 		sb.append(parent.getCurrentHitPoints()).append("</span> / <span style=\"font-family: medium-italic-green\">");
 		sb.append(parent.stats.get(Stat.MaxHP)).append("</span></td></tr>");
@@ -308,12 +301,15 @@ public class CharacterSheet extends ScrollPane {
 		sb.append("<span style=\"font-family: medium-italic-blue\">");
 		sb.append(parent.stats.get(Stat.ArmorClass)).append("</span></td></tr>");
 		
-		sb.append("</table></div></td></tr></table>");
+		sb.append("</table></div>");
+		
+		sb.append("</td><td>");
+		
 		
 	}
 
 	private void updateHandsInformation(PC parent, StringBuilder sb) {
-		sb.append("<table><td style=\"width: 35ex \">");
+		sb.append("</td><td style=\"width: 35ex\">");
 		
 		Weapon mainHand = parent.getMainHandWeapon();
 		EquippableItem offHand = parent.inventory.getEquippedItem(Inventory.Slot.OffHand);
@@ -364,69 +360,64 @@ public class CharacterSheet extends ScrollPane {
 			sb.append(mainHand.getTemplate().getDamageType().getName()).append("</span></p><p>Critical ");
 			sb.append("<span style=\"font-family: medium-green;\">").append(Integer.toString(threatRange)).append(" - 100</span>");
 			sb.append(" / x").append("<span style=\"font-family: medium-blue;\">").append(Integer.toString(multiplier));
-			
-			sb.append("</span></p></div></td>");
+			sb.append("</span></p></div>");
 		}
-		
-		//OFFHAND
-	
+
+		updateHitsCostsInformation(parent, sb);
+
 		if (offHand == null) {
-//			sb.append("<p style=\"font-family: medium-bold\">Off hand</p>");
+			sb.append("<p style=\"font-family: medium-bold\">Off hand</p>");
 			sb.append("<div style=\"font-family: medium-italic-blue\">").append("Empty").append("</div>");
 		} else {
-//				sb.append("<div style=\"font-family: medium;\"><p style=\"font-family: medium-bold\">Off hand</p>"); 
-				sb.append("<div style=\"font-family: medium-italic-blue\">").append(offHand.getLongName()).append("</div>");
-	
-				switch (offHand.getTemplate().getType()) {
-				case Shield:
-					Armor offHandArmor = (Armor)offHand;
-					
-					String armorClass = Game.numberFormat(1).format(offHandArmor.getQualityModifiedArmorClass());
-	
-					sb.append("<p>Defense <span style=\"font-family: medium-green;\">").append(armorClass);
-					sb.append("</span></p>");
-					break;
-				case Weapon:
-					Weapon offHandWeapon = (Weapon)offHand;
-					
-					int attackBonus = parent.stats.get(Stat.OffHandAttackBonus) + parent.stats.get(Stat.LevelAttackBonus) +
-							offHand.bonuses.get(Bonus.Type.WeaponAttack) + offHandWeapon.getQualityAttackBonus() +
-							parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType);
-	
-					sb.append("<p>Attack Bonus <span style=\"font-family: medium-green;\">").append(attackBonus).append("</span></p>");
-	
-					float damageMult = 1.0f + (float)( parent.stats.get(Stat.LevelDamageBonus) +
-							parent.stats.get(Stat.OffHandDamageBonus) + offHandWeapon.getQualityDamageBonus() + 
-							parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) +
-							offHand.bonuses.get(Bonus.Type.WeaponDamage) ) / 100.0f ;
-					float damageMin = ((float)offHandWeapon.getTemplate().getMinDamage() * damageMult);
-					float damageMax = ((float)offHandWeapon.getTemplate().getMaxDamage() * damageMult);
-	
-					int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
-							parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
-							offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
-					int multiplier = offHandWeapon.getTemplate().getCriticalMultiplier() +
-							parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
-							offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
-					
-					sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
-					sb.append("</span> to <span style=\"font-family: medium-red;\">");
-					sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
-					sb.append(offHandWeapon.getTemplate().getDamageType().getName()).append("</span></p><p>Critical ");
-					sb.append("<span style=\"font-family: medium-green;\">").append(Integer.toString(threatRange)).append(" - 100</span>");
-					sb.append(" / x").append("<span style=\"font-family: medium-blue;\">").append(Integer.toString(multiplier));
-					sb.append("</span></p>");
-					break;
-				default:
-					// do nothing
-				}
-	
-				sb.append("</div>");
+			sb.append("<div style=\"font-family: medium;\"><p style=\"font-family: medium-bold\">Off hand</p>");
+			sb.append("<div style=\"font-family: medium-italic-blue\">").append(offHand.getLongName()).append("</div>");
+
+			switch (offHand.getTemplate().getType()) {
+			case Shield:
+				Armor offHandArmor = (Armor)offHand;
+				
+				String armorClass = Game.numberFormat(1).format(offHandArmor.getQualityModifiedArmorClass());
+
+				sb.append("<p>Defense <span style=\"font-family: medium-green;\">").append(armorClass);
+				sb.append("</span></p>");
+				break;
+			case Weapon:
+				Weapon offHandWeapon = (Weapon)offHand;
+				
+				int attackBonus = parent.stats.get(Stat.OffHandAttackBonus) + parent.stats.get(Stat.LevelAttackBonus) +
+						offHand.bonuses.get(Bonus.Type.WeaponAttack) + offHandWeapon.getQualityAttackBonus() +
+						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.AttackForWeaponType);
+
+				sb.append("<p>Attack Bonus <span style=\"font-family: medium-green;\">").append(attackBonus).append("</span></p>");
+
+				float damageMult = 1.0f + (float)( parent.stats.get(Stat.LevelDamageBonus) +
+						parent.stats.get(Stat.OffHandDamageBonus) + offHandWeapon.getQualityDamageBonus() + 
+						parent.stats.get(offHandWeapon.getTemplate().getDamageType().getName(), Bonus.Type.DamageForWeaponType) +
+						offHand.bonuses.get(Bonus.Type.WeaponDamage) ) / 100.0f ;
+				float damageMin = ((float)offHandWeapon.getTemplate().getMinDamage() * damageMult);
+				float damageMax = ((float)offHandWeapon.getTemplate().getMaxDamage() * damageMult);
+
+				int threatRange = offHandWeapon.getTemplate().getCriticalThreat() -
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalChance) -
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalChance) - parent.stats.get(Bonus.Type.CriticalChance);
+				int multiplier = offHandWeapon.getTemplate().getCriticalMultiplier() +
+						parent.stats.get(offHandWeapon.getTemplate().getBaseWeapon().getName(), Bonus.Type.BaseWeaponCriticalMultiplier) +
+						offHandWeapon.bonuses.get(Bonus.Type.WeaponCriticalMultiplier) + parent.stats.get(Bonus.Type.CriticalMultiplier);
+				
+				sb.append("<p>Damage <span style=\"font-family: medium-red;\">").append(Game.numberFormat(1).format(damageMin));
+				sb.append("</span> to <span style=\"font-family: medium-red;\">");
+				sb.append(Game.numberFormat(1).format(damageMax)).append("</span><span style=\"font-family: medium-green\"> ");
+				sb.append(offHandWeapon.getTemplate().getDamageType().getName()).append("</span></p><p>Critical ");
+				sb.append("<span style=\"font-family: medium-green;\">").append(Integer.toString(threatRange)).append(" - 100</span>");
+				sb.append(" / x").append("<span style=\"font-family: medium-blue;\">").append(Integer.toString(multiplier));
+				sb.append("</span></p>");
+				break;
+			default:
+				// do nothing
 			}
-						
-			sb.append("</table></div></td></tr></table>");
 
-
+			sb.append("</div>");
+		}
 	}
 
 	private void updateCharacterInformation(PC parent, StringBuilder sb) {
@@ -447,7 +438,7 @@ public class CharacterSheet extends ScrollPane {
 		xpBar.setValue(frac);
 		
 		sb.append("<table style=\"vertical-align: top\">");
-		sb.append("<tr><td style=\"width: 32ex\">"); 
+		sb.append("<tr><td style=\"width: 32ex\">");
 		
 		sb.append("<div style=\"font-family: large;\">").append(parent.getTemplate().getName()).append("</div>");
 		
@@ -468,8 +459,8 @@ public class CharacterSheet extends ScrollPane {
 			sb.append("<span style=\"font-family: medium-red;\">").append(role.getName()).append("</span>");
 			sb.append("</p>");
 		}
-		
-		sb.append("</div></td></tr></table>");
+
+		sb.append("</div>");
 
 	}
 
