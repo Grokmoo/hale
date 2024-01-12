@@ -359,7 +359,7 @@ public class PortraitViewer extends BasePortraitViewer implements Runnable, Drop
 				
 				if (maxQuantity > 0) {
 					// don't allow buy attempts when the item can't be afforded
-					pc.inventory.getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
+					pc.inventory.getCallBack().getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
 				}
 			}
 		}
