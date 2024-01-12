@@ -56,6 +56,12 @@ public class Inventory implements ItemList.Listener, Saveable {
 	
 	private final ItemList unequippedItems;
 	
+	private final InvCallBackManager callBackManager;
+	
+	public InvCallBackManager getCallBack() {
+		return callBackManager;
+	}
+	
 	private final Map<Slot, EquippableItem> equippedItems;
 	
 	/**
@@ -294,6 +300,8 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public Inventory(Creature parent) {
+		callBackManager = new InvCallBackManager(this);
+		
 		this.parent = parent;
 		
 		unequippedItems = new ItemList();
@@ -311,6 +319,8 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 */
 	
 	public Inventory(Inventory other, Creature parent) {
+		callBackManager = new InvCallBackManager(this);
+		
 		this.parent = parent;
 		
 		unequippedItems = new ItemList(other.unequippedItems);
@@ -772,6 +782,7 @@ public class Inventory implements ItemList.Listener, Saveable {
 	
 	/**
 	 * Gets the boots equipped in the Boots slot, or null if no item is in that slot
+	 * @return 
 	 * @return the item in the Boots slot
 	 */
 	
@@ -1269,9 +1280,9 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 * @return a callback for buying an item from a merchant
 	 */
 	
-	public Runnable getBuyCallback(Item item, int maxQuantity, Merchant merchant) {
-		return new BuyCallback(item, maxQuantity, merchant);
-	}
+//	public Runnable getBuyCallback(Item item, int maxQuantity, Merchant merchant) {
+//		return new BuyCallback(item, maxQuantity, merchant);
+//	}
 	
 	/**
 	 * Returns a callback which, when run, will sell up to the specified quantity of the item to
@@ -1284,9 +1295,9 @@ public class Inventory implements ItemList.Listener, Saveable {
 	 * @return a callback for selling an item to a merchant
 	 */
 	
-	public Runnable getSellCallback(Item item, int maxQuantity, Merchant merchant) {
-		return new SellCallback(item, maxQuantity, merchant);
-	}
+//	public Runnable getSellCallback(Item item, int maxQuantity, Merchant merchant) {
+//		return new SellCallback(item, maxQuantity, merchant);
+//	}
 	
 	/**
 	 * Returns a callback which, when run, will sell the item in the specified inventory slot
@@ -1584,47 +1595,47 @@ public class Inventory implements ItemList.Listener, Saveable {
 		}
 	}
 	
-	private class BuyCallback extends MultipleCallback {
-		private Merchant merchant;
-		
-		private BuyCallback(Item item, int maxQuantity, Merchant merchant) {
-			super(item, maxQuantity, "Buy");
-			this.merchant = merchant;
-		}
-
-		@Override public String getValueText(int quantity) {
-			int percent = merchant.getCurrentSellPercentage();
-			return "Price: " + Currency.getPlayerBuyCost(item, quantity, percent).shortString();
-		}
-
-		@Override public void performItemAction(int quantity) {
-			merchant.sellItem(item, parent, quantity);
-			
-			Game.mainViewer.getMenu().hide();
-			Game.mainViewer.updateInterface();
-		}
-	}
+//	private class BuyCallback extends MultipleCallback {
+//		private Merchant merchant;
+//		
+//		private BuyCallback(Item item, int maxQuantity, Merchant merchant) {
+//			super(item, maxQuantity, "Buy");
+//			this.merchant = merchant;
+//		}
+//
+//		@Override public String getValueText(int quantity) {
+//			int percent = merchant.getCurrentSellPercentage();
+//			return "Price: " + Currency.getPlayerBuyCost(item, quantity, percent).shortString();
+//		}
+//
+//		@Override public void performItemAction(int quantity) {
+//			merchant.sellItem(item, parent, quantity);
+//			
+//			Game.mainViewer.getMenu().hide();
+//			Game.mainViewer.updateInterface();
+//		}
+//	}
 	
-	private class SellCallback extends MultipleCallback {
-		private Merchant merchant;
-		
-		private SellCallback(Item item, int maxQuantity, Merchant merchant) {
-			super(item, maxQuantity, "Sell");
-			this.merchant = merchant;
-		}
-		
-		@Override public String getValueText(int quantity) {
-			int percent = merchant.getCurrentBuyPercentage();
-			return "Price: " + Currency.getPlayerSellCost(item, quantity, percent).shortString();
-		}
-		
-		@Override public void performItemAction(int quantity) {
-			merchant.buyItem(item, parent, quantity);
-			
-			Game.mainViewer.getMenu().hide();
-			Game.mainViewer.updateInterface();
-		}
-	}
+//	private class SellCallback extends MultipleCallback {
+//		private Merchant merchant;
+//		
+//		private SellCallback(Item item, int maxQuantity, Merchant merchant) {
+//			super(item, maxQuantity, "Sell");
+//			this.merchant = merchant;
+//		}
+//		
+//		@Override public String getValueText(int quantity) {
+//			int percent = merchant.getCurrentBuyPercentage();
+//			return "Price: " + Currency.getPlayerSellCost(item, quantity, percent).shortString();
+//		}
+//		
+//		@Override public void performItemAction(int quantity) {
+//			merchant.buyItem(item, parent, quantity);
+//			
+//			Game.mainViewer.getMenu().hide();
+//			Game.mainViewer.updateInterface();
+//		}
+//	}
 	
 	private class SellEquippedCallback implements Runnable {
 		private Slot slot;
