@@ -1,0 +1,10 @@
+diff a/src/net/sf/hale/bonus/StatManager.java b/src/net/sf/hale/bonus/StatManager.java	(rejected hunks)
+@@ -17,6 +17,8 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+  */
+ 
++//comment
++
+ package net.sf.hale.bonus;
+ 
+ import java.util.ArrayList;
