@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-//comment
-
 package net.sf.hale.bonus;
 
 import java.util.ArrayList;
@@ -63,17 +61,14 @@ public class StatManager {
 		this.stats = new HashMap<Stat, Integer>(other.stats);
 	}
 	
-	public void removeEffectPenaltiesOfType(String bonusType) {
+	public void removeEffect(String bonusType) {
 		Bonus.Type type = Bonus.parseType(bonusType);
 		
 		this.removeAll(parent.getEffects().getPenaltiesOfType(type));
-	}
-	
-	public void removeEffectBonusesOfType(String bonusType) {
-		Bonus.Type type = Bonus.parseType(bonusType);
-		
 		this.removeAll(parent.getEffects().getBonusesOfType(type));
 	}
+	
+	
 	
 	public int reducePenaltiesOfTypeByAmount(String bonusType, int amount) {
 		if (amount == 0) return 0;
@@ -126,13 +121,18 @@ public class StatManager {
 		return amountLeft;
 	}
 	
-	public void changeEquipment(EquippableItemTemplate.Type itemType) {
+	public void changeAttackBonus(EquippableItemTemplate.Type itemType) {
 		switch (itemType) {
 		case Weapon: case Shield: case Ammo:
-			// recompute attack bonus for shield swaps due to shield attack penalty
 			recomputeAttackBonus();
-			// recompute defense for weapon swaps for a few fringe cases where weapons affect your AC
-		case Armor: case Gloves: case Helmet: case Boots:
+			break;
+		default:
+		}
+	}
+	
+	public void changeArmorClass(EquippableItemTemplate.Type itemType) {
+		switch(itemType) {
+			case Armor: case Gloves: case Helmet: case Boots:
 			recomputeArmorClass();
 			break;
 		default:
@@ -142,12 +142,7 @@ public class StatManager {
 	private void checkRecompute(BonusList bonuses, RecomputeMode mode, int oldConBonus) {
 		boolean recomputeArmorClass = false;
 		boolean recomputeAttackBonus = false;
-		boolean recomputeStr = false;
-		boolean recomputeDex = false;
-		boolean recomputeCon = false;
-		boolean recomputeInt = false;
-		boolean recomputeWis = false;
-		boolean recomputeCha = false;
+		boolean recompute = false;
 		
 		for (Bonus bonus : bonuses) {
 			switch (bonus.getType()) {
@@ -166,22 +161,22 @@ public class StatManager {
 				recomputeAttackBonus = true;
 				break;
 			case BaseStr: case Str:
-				recomputeStr = true;
+				recompute = true;
 				break;
 			case BaseDex: case Dex:
-				recomputeDex = true;
+				recompute = true;
 				break;
 			case BaseCon: case Con:
-				recomputeCon = true;
+				recompute = true;
 				break;
 			case BaseInt: case Int:
-				recomputeInt = true;
+				recompute = true;
 				break;
 			case BaseWis: case Wis:
-				recomputeWis = true;
+				recompute = true;
 				break;
 			case BaseCha: case Cha:
-				recomputeCha = true;
+				recompute = true;
 				break;
 			case TemporaryHP:
 				switch (mode) {
@@ -197,24 +192,21 @@ public class StatManager {
 			}
 		}
 		
-		if (recomputeStr && recomputeDex) {
-			recomputeStrNoAttackBonus();
-			recomputeDex();
+		if (recompute) {
+			recompute();
+			recompute();
 			recomputeArmorClass = false;
 			recomputeAttackBonus = false;
-		} else if (recomputeStr) {
-			recomputeStr();
+		} else if (recompute) {
+			recompute();
 			recomputeAttackBonus = false;
-		} else if (recomputeDex) {
-			recomputeDex();
+		} else if (recompute) {
+			recompute();
 			recomputeArmorClass = false;
 			recomputeAttackBonus = false;
 		}
 		
-		if (recomputeCon) recomputeCon();
-		if (recomputeInt) recomputeInt();
-		if (recomputeWis) recomputeWis();
-		if (recomputeCha) recomputeCha();
+		recompute();
 		
 		if (recomputeArmorClass) recomputeArmorClass();
 		if (recomputeAttackBonus) recomputeAttackBonus();
@@ -249,9 +241,6 @@ public class StatManager {
 		checkRecompute(bonuses, RecomputeMode.Addition, oldConBonus);
 	}
 	
-	public void addAllNoRecompute(BonusList bonuses) {
-		this.bonuses.addAll(bonuses);
-	}
 	
 	public boolean has(String type) {
 		return has(Bonus.parseType(type));
@@ -265,17 +254,11 @@ public class StatManager {
 		return bonuses.get(superType, type);
 	}
 	
-	public int getDamageReduction(String damageType) {
-		return bonuses.getDamageReduction(Game.ruleset.getDamageType(damageType));
-	}
 	
 	public int getDamageReduction(DamageType damageType) {
 		return bonuses.getDamageReduction(damageType);
 	}
 	
-	public int getDamageImmunity(String damageType) {
-		return bonuses.getDamageImmunity(Game.ruleset.getDamageType(damageType));
-	}
 	
 	public int getDamageImmunity(DamageType damageType) {
 		return bonuses.getDamageImmunity(damageType);
@@ -304,16 +287,12 @@ public class StatManager {
 		else return 0;
 	}
 	
-	public boolean hasWeaponProficiency(String baseWeapon) {
-		if ( baseWeapon.equals(Game.ruleset.getString("DefaultBaseWeapon")) ) return true;
+	public boolean hasProficiency(String baseWeapon, String armorType) {
+		if ( baseWeapon.equals(Game.ruleset.getString("DefaultBaseWeapon")) && 
+			 armorType.equals(Game.ruleset.getString("DefaultArmorType")) ) return true;
 		
-		return bonuses.hasWeaponProficiency(baseWeapon);
-	}
-	
-	public boolean hasArmorProficiency(String armorType) {
-		if ( armorType.equals(Game.ruleset.getString("DefaultArmorType")) ) return true;
+		return bonuses.hasProficiency(baseWeapon, armorType);
 		
-		return bonuses.hasArmorProficiency(armorType);
 	}
 	
 	public int getSkillBonus(String skillID) {
@@ -340,43 +319,23 @@ public class StatManager {
 		}
 	}
 	
-	public void recomputeStr() {
+	public void recompute() {
 		stats.put(Stat.Str, getBaseStr() + get(Bonus.Type.Str));
-		recomputeWeightLimit();
-		recomputeAttackBonus();
-	}
-	
-	// for use when recomputing all stats so we don't compute attackBonus twice - once for str and again for dex
-	private void recomputeStrNoAttackBonus() {
-		stats.put(Stat.Str, getBaseStr() + get(Bonus.Type.Str));
-		recomputeWeightLimit();
-	}
-	
-	public void recomputeDex() {
 		stats.put(Stat.Dex, getBaseDex() + get(Bonus.Type.Dex));
-		recomputeReflexResistance();
-		recomputeArmorClass();
-		recomputeAttackBonus();
-	}
-	
-	public void recomputeCon() {
 		stats.put(Stat.Con, getBaseCon() + get(Bonus.Type.Con));
-		recomputeLevelAndMaxHP();
-		recomputePhysicalResistance();
-	}
-	
-	public void recomputeInt() {
 		stats.put(Stat.Int, getBaseInt() + get(Bonus.Type.Int));
-	}
-	
-	public void recomputeWis() {
 		stats.put(Stat.Wis, getBaseWis() + get(Bonus.Type.Wis));
-		recomputeMentalResistance();
+		stats.put(Stat.Cha, getBaseCha() + get(Bonus.Type.Cha));
+		
+		recomputeWeightLimit();
+		recomputeAttackBonus();
+		recomputeResistances();
+		recomputeArmorClass();
+		recomputeLevelAndMaxHP();
+		
 	}
 	
-	public void recomputeCha() {
-		stats.put(Stat.Cha, getBaseCha() + get(Bonus.Type.Cha));
-	}
+	
 	
 	public void recomputeLevelAndMaxHP() {
 		zeroStats(Stat.LevelAttackBonus, Stat.LevelDamageBonus, Stat.MaxHP);
@@ -400,22 +359,16 @@ public class StatManager {
 		
 		addToStat(Stat.MaxHP, ((getCon() - 10) * get(Stat.CreatureLevel)) / 3);
 		
-		recomputeMentalResistance();
-		recomputePhysicalResistance();
-		recomputeReflexResistance();
+		recomputeResistances();
 	}
 	
-	public void recomputeMentalResistance() {
+	public void recomputeResistances() {
 		stats.put(Stat.MentalResistance, (getWis() - 10) * 2 + getCreatureLevel() * 3);
-	}
-	
-	public void recomputePhysicalResistance() {
 		stats.put(Stat.PhysicalResistance, (getCon() - 10) * 2 + getCreatureLevel() * 3);
+		stats.put(Stat.ReflexResistance, (getDex() - 10) * 2 + getCreatureLevel() * 3);
+		
 	}
 	
-	public void recomputeReflexResistance() {
-		stats.put(Stat.ReflexResistance, (getDex() - 10) * 2 + getCreatureLevel() * 3);
-	}
 	
 	public void recomputeWeightLimit() {
 		stats.put(Stat.WeightLimit, Game.ruleset.getValue("WeightLimitBase") +
@@ -610,7 +563,7 @@ public class StatManager {
 		
 		synchronized(parent.getEffects()) {
 			for (Effect effect: parent.getEffects()) {
-				addAllNoRecompute(effect.getBonuses());
+				addAll(effect.getBonuses());
 			}
 		}
 		
@@ -618,25 +571,16 @@ public class StatManager {
 			EquippableItem item = parent.inventory.getEquippedItem(slot);
 			if (item == null) continue;
 			
-			addAllNoRecompute(item.getBonusList());
+			addAll(item.getBonusList());
 		}
 		
-		recomputeStrNoAttackBonus();
-		recomputeDex();
-		recomputeCon();
-		recomputeInt();
-		recomputeWis();
-		recomputeCha();
+		recompute();
 	}
 	
-	public void setStat(String stat, int value) {
-		setStat(Stat.valueOf(stat), value);
-	}
-	
-	public void setStat(Stat stat, int value) {
-		stats.put(stat, value);
+	public void setStat(String stat, Stat statist, int value) {
+		setStat(stat, Stat.valueOf(stat),  value);
+		stats.put(statist, value);
 		
-		recomputeAllStats();
 	}
 	
 	public void setAttributes(int[] attributes) {
