@@ -29,7 +29,6 @@ import de.matthiasmann.twl.utils.TintAnimator;
  * The BuilderPane for editing cosmetic aspects of the Buildable character:
  * name, gender, portrait, hair, and hair color
  * @author Jared Stephen
- *
  */
 
 public class BuilderPaneCosmetic extends AbstractBuilderPane implements PortraitSelector.Callback {
