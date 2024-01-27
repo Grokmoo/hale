@@ -134,6 +134,9 @@ public class Game {
 	 */
 	
 	public static ScriptInterface scriptInterface;
+	public static ScriptInterfaceCohesive scriptInterfaceCohesive;
+
+	
 	
 	/**
 	 * keeps track of all current Script Engines.  Scripts are
@@ -277,6 +280,8 @@ public class Game {
 	private static String partiesBaseDirectory;
 	private static String saveBaseDirectory;
 	private static String logBaseDirectory;
+
+	
 	
 	/**
 	 * Returns the directory containing config and similar files
@@ -349,6 +354,7 @@ public class Game {
 		
 		Game.scriptEngineManager = new JSEngineManager();
 		Game.scriptInterface = new ScriptInterface();
+		Game.scriptInterfaceCohesive = new ScriptInterfaceCohesive();		
 		
 		Game.particleManager = new ParticleManager();
 		
@@ -659,4 +665,6 @@ public class Game {
 
 		return cmd.toString();
 	}
+	
+	
 }

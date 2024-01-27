@@ -27,9 +27,14 @@ import de.matthiasmann.twl.Color;
 
 import net.sf.hale.Game;
 import net.sf.hale.ability.AbilitySlot;
+import net.sf.hale.ability.CircleTargeter;
+import net.sf.hale.ability.ConeTargeter;
 import net.sf.hale.ability.CreatureAbilitySet;
 import net.sf.hale.ability.Effect;
+import net.sf.hale.ability.LineTargeter;
+import net.sf.hale.ability.ListTargeter;
 import net.sf.hale.ability.ScriptFunctionType;
+import net.sf.hale.ability.Scriptable;
 import net.sf.hale.area.Area;
 import net.sf.hale.bonus.Stat;
 import net.sf.hale.bonus.StatManager;
@@ -44,6 +49,10 @@ import net.sf.hale.interfacelock.EntityOffsetAnimation;
 import net.sf.hale.loading.JSONOrderedObject;
 import net.sf.hale.loading.LoadGameException;
 import net.sf.hale.loading.ReferenceHandler;
+import net.sf.hale.particle.CircleParticleGenerator;
+import net.sf.hale.particle.LineParticleGenerator;
+import net.sf.hale.particle.ParticleGenerator;
+import net.sf.hale.particle.RectParticleGenerator;
 import net.sf.hale.rules.Attack;
 import net.sf.hale.rules.Damage;
 import net.sf.hale.rules.RoleSet;
@@ -1260,4 +1269,76 @@ public abstract class Creature extends Entity {
 		
 		return 1;
 	}
+
+	public Creature createSummon(String creatureID, int duration) {
+		NPC creature = EntityManager.getNPC(creatureID);
+		creature.setFaction(getFaction());
+		if (isPlayerFaction()) {
+			Game.curCampaign.party.addSummon(creature);
+		} else {
+			creature.setEncounter(getEncounter());
+			getEncounter().getCreaturesInArea().add(creature);
+		}
+		creature.setSummoned(duration);
+		return creature;
+	}
+
+	public boolean moveCreature(int x, int y) {
+		boolean retVal = setLocation(new Location(getLocation().getArea(), x, y));
+		Game.areaListener.getCombatRunner().checkAIActivation();
+		return retVal;
+	}
+
+	public Attack getAttack(Creature defender, String slot) {
+		Attack attack = performSingleAttack(defender, Inventory.Slot.valueOf(slot));
+		attack.computeFlankingBonus(Game.curCampaign.curArea.getEntities());
+		attack.computeIsHit();
+		return attack;
+	}
+	public ParticleGenerator createParticleGenerator(String type, String mode, String particle, float numParticles) {
+		if (type.equalsIgnoreCase("Point")) {
+			return new ParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
+		} else if (type.equalsIgnoreCase("Line")) {
+			return new LineParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
+		} else if (type.equalsIgnoreCase("Rect")) {
+			return new RectParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
+		} else if (type.equalsIgnoreCase("Circle")) {
+			return new CircleParticleGenerator(ParticleGenerator.Mode.valueOf(mode), particle, numParticles);
+		} else {
+			return null;
+		}
+	}
+	
+	public void runParticleGeneratorWait(ParticleGenerator generator) {
+		Game.particleManager.add(generator);
+		
+		try {
+			Thread.sleep((long) (generator.getTimeLeft() * 1000.0f));
+		} catch (InterruptedException e) {
+			return;
+		}
+	}
+	
+	
+	
+	public void runParticleGeneratorNoWait(ParticleGenerator generator) {
+		Game.particleManager.add(generator);
+	}
+
+	public CircleTargeter createCircleTargeter(Creature parent, Scriptable scriptable) {
+		return new CircleTargeter(parent, scriptable, null);
+	}
+	
+	public ListTargeter createListTargeter(Creature parent, Scriptable scriptable) {
+		return new ListTargeter(parent, scriptable, null);
+	}
+	
+	public LineTargeter createLineTargeter(Creature parent, Scriptable scriptable) {
+		return new LineTargeter(parent, scriptable, null);
+	}
+	
+	public ConeTargeter createConeTargeter(Creature parent, Scriptable scriptable) {
+		return new ConeTargeter(parent, scriptable, null);
+	}
+	
 }

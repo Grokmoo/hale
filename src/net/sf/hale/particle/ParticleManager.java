@@ -90,7 +90,9 @@ public class ParticleManager {
 	private void loadAnimation(String resource) {
 		JSEngine engine = Game.scriptEngineManager.getEngine();
 		
-		engine.put("game", Game.scriptInterface);
+		//engine.put("game", Game.scriptInterface);
+		engine.put("game", Game.scriptInterfaceCohesive);
+
 		
 		Animation animation = null;
 		
@@ -113,7 +115,9 @@ public class ParticleManager {
 	private void loadBaseGenerator(String resource) {
 		JSEngine engine = Game.scriptEngineManager.getEngine();
 		
-		engine.put("game", Game.scriptInterface);
+		//engine.put("game", Game.scriptInterface);
+		engine.put("game", Game.scriptInterfaceCohesive);
+
 		
 		ParticleGenerator generator = null;
 		

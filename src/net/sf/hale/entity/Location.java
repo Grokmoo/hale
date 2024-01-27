@@ -21,7 +21,7 @@ package net.sf.hale.entity;
 
 import java.util.Collection;
 import java.util.List;
-
+import net.sf.hale.Game;
 import net.sf.hale.ability.Effect;
 import net.sf.hale.area.Area;
 import net.sf.hale.area.Transition;
@@ -468,5 +468,18 @@ public class Location implements Saveable {
 		} else {
 			return "(" + x + ", " + y + ")";
 		}
+	}
+
+	public void finishSummon(NPC creature) {
+		creature.resetTime();
+		if (isPassable() && getCreature() == null) {
+			creature.setLocation(this);
+			getArea().getEntities().addEntity(creature);
+		}
+		if (Game.isInTurnMode()) {
+			Game.areaListener.getCombatRunner().insertCreature(creature);
+		}
+		Game.mainViewer.updateInterface();
+		Game.areaListener.getCombatRunner().checkAIActivation();
 	}
 }

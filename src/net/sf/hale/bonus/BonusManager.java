@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+//comment2
+
 package net.sf.hale.bonus;
 
 import java.util.HashMap;

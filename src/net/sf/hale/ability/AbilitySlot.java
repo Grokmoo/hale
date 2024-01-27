@@ -694,4 +694,20 @@ public class AbilitySlot implements Saveable {
 		if (abilityID == null) return "None";
 		else return abilityID;
 	}
+
+	public CircleTargeter createCircleTargeter() {
+		return new CircleTargeter(getParent(), getAbility(), this);
+	}
+
+	public ListTargeter createListTargeter() {
+		return new ListTargeter(getParent(), getAbility(), this);
+	}
+
+	public LineTargeter createLineTargeter() {
+		return new LineTargeter(getParent(), getAbility(), this);
+	}
+
+	public ConeTargeter createConeTargeter() {
+		return new ConeTargeter(getParent(), getAbility(), this);
+	}
 }

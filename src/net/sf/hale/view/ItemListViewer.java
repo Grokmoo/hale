@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+//comment2
+
 package net.sf.hale.view;
 
 import java.util.ArrayList;
@@ -437,13 +439,13 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		buyText.append(Currency.shortString(item.getQualityValue(), merchant.getCurrentSellPercentage()));
 		
 		Button button = new Button(buyText.toString());
-		button.addCallback(creature.inventory.getBuyCallback(item, 1, merchant));
+		button.addCallback(creature.inventory.getCallBack().getBuyCallback(item, 1, merchant));
 		button.setEnabled(maxBuy >= 1);
 		menu.addButton(button);
 		
 		if (maxBuy > 1) {
 			button = new Button("Buy Multiple...");
-			button.addCallback(creature.inventory.getBuyCallback(item, maxBuy, merchant));
+			button.addCallback(creature.inventory.getCallBack().getBuyCallback(item, maxBuy, merchant));
 			menu.addButton(button);
 		}
 	}
@@ -468,12 +470,12 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			sellText.append(Currency.shortString(item.getQualityValue(), merchant.getCurrentBuyPercentage()));
 			
 			Button button = new Button(sellText.toString());
-			button.addCallback(creature.inventory.getSellCallback(item, 1, merchant));
+			button.addCallback(creature.inventory.getCallBack().getSellCallback(item, 1, merchant));
 			menu.addButton(button);
 			
 			if (quantity > 1) {
 				button = new Button("Sell Multiple...");
-				button.addCallback(creature.inventory.getSellCallback(item, quantity, merchant));
+				button.addCallback(creature.inventory.getCallBack().getSellCallback(item, quantity, merchant));
 				menu.addButton(button);
 			}
 		}
@@ -634,7 +636,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 		private void dragDropMerchantFromInventory(DragTarget target) {
 			int maxQuantity = target.getParentPC().inventory.getUnequippedItems().getQuantity(target.getItem());
 
-			target.getParentPC().inventory.getSellCallback(target.getItem(), maxQuantity, merchant).run();
+			target.getParentPC().inventory.getCallBack().getSellCallback(target.getItem(), maxQuantity, merchant).run();
 		}
 		
 		private void dragDropInventoryFromMerchant(DragTarget target) {
@@ -644,7 +646,7 @@ public class ItemListViewer extends Widget implements ItemIconViewer.Listener, D
 			
 			if (maxQuantity > 0) {
 				// don't allow buy attempts when the item can't be afforded
-				creature.inventory.getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
+				creature.inventory.getCallBack().getBuyCallback(target.getItem(), maxQuantity, target.getItemMerchant()).run();
 			}
 		}
 		

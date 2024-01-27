@@ -1,27 +1,12 @@
 /*
- * Hale is highly moddable tactical RPG.
- * Copyright (C) 2011 Jared Stephen
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
-
-package net.sf.hale.characterbuilder;
+ package net.sf.hale.characterbuilder;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import net.sf.hale.Game;
 import net.sf.hale.entity.Creature;
@@ -44,17 +29,10 @@ import de.matthiasmann.twl.utils.TintAnimator;
  * The BuilderPane for editing cosmetic aspects of the Buildable character:
  * name, gender, portrait, hair, and hair color
  * @author Jared Stephen
- *
  */
 
 public class BuilderPaneCosmetic extends AbstractBuilderPane implements PortraitSelector.Callback {
 	private static final Color DEFAULT_CLOTHING_COLOR = Color.GREEN;
-	
-	private static final Color[] CLOTHING_COLORS = { Color.WHITE, Color.SILVER, Color.GRAY, new Color(0xFF444444),
-		Color.MAROON, Color.RED, Color.ORANGE, Color.YELLOW, Color.LIGHTYELLOW,
-		Color.GREEN, Color.OLIVE, Color.LIME, Color.TEAL, Color.AQUA, Color.LIGHTBLUE,
-		Color.BLUE, Color.NAVY, Color.LIGHTPINK,
-		Color.FUCHSIA, Color.PURPLE, new Color(0xFF501002) };
 	
 	private Widget appearanceHolder;
 	private CharacterViewer characterViewer;
@@ -116,175 +94,26 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		numberFormat = NumberFormat.getInstance();
 		numberFormat.setMinimumIntegerDigits(3);
 		numberFormat.setMaximumIntegerDigits(3);
-		
-		// determine the total number of available hairstyles
-		int i = 1;
-		String currentValue = null;
-		do {
-			currentValue = "subIcons/hair" + numberFormat.format(i);
-			i++;
-		} while(SpriteManager.hasSprite(currentValue));
 
-		this.hairStyleMax = i - 2;
-		
-		hairValid = new boolean[hairStyleMax + 1];
+		this.hairStyleMax = determineMaxFeaturestyles();
+        hairValid = new boolean[hairStyleMax + 1];
 
-		// determine the total number of available beard styles
-		i = 1;
-		currentValue = null;
-		do {
-			currentValue = "subIcons/beard" + numberFormat.format(i);
-			i++;
-		} while(SpriteManager.hasSprite(currentValue));
+        this.beardStyleMax = determineMaxFeaturestyles();
+        beardsValid = new boolean[beardStyleMax + 1];
 
-		this.beardStyleMax = i - 2;
-		
 		beardsValid = new boolean[beardStyleMax + 1];
-		
-		// add widgets
-		appearanceHolder = new AppearanceArea();
-		add(appearanceHolder);
-		
-		characterViewer = new CharacterViewer();
-		characterViewer.setTheme("characterviewer");
-		appearanceHolder.add(characterViewer);
-		
-		portraitViewer = new PortraitViewer(workingCopy);
-		appearanceHolder.add(portraitViewer);
-		
-		nameLabel = new Label("Name");
-		nameLabel.setTheme("namelabel");
-		add(nameLabel);
-		
-		nameField = new EditField();
-		nameField.addCallback(new EditField.Callback() {
-			@Override public void callback(int key) {
-				setName(nameField.getText());
-			}
-		});
-		nameField.setTheme("nameeditfield");
-		add(nameField);
-		
-		randomName = new Button("Random");
-		randomName.setTheme("randomnamebutton");
-		randomName.addCallback(new Runnable() {
-			@Override public void run() {
-				// setting the name field text will fire the nameField callback
-				if (workingCopy.getTemplate().getGender() == Ruleset.Gender.Male) {
-					nameField.setText(workingCopy.getTemplate().getRace().getRandomMaleName());
-				} else {
-					nameField.setText(workingCopy.getTemplate().getRace().getRandomFemaleName());
-				}
-			}
-		});
-		add(randomName);
-		
-		genderLabel = new Label("Gender");
-		genderLabel.setTheme("genderlabel");
-		add(genderLabel);
-		
-		genderSelectors = new ArrayList<GenderSelector>();
-		for (Ruleset.Gender gender : Ruleset.Gender.values()) {
-			String iconRule = gender.toString() + "Icon";
-			
-			GenderSelector g = new GenderSelector(gender, Game.ruleset.getString(iconRule));
-			g.setTheme("genderselector");
-			add(g);
-			genderSelectors.add(g);
-		}
-		
-		hairLabel = new Label("Hair");
-		hairLabel.setTheme("hairlabel");
-		add(hairLabel);
-		
-		hairStyleLabel = new Label("Style");
-		hairStyleLabel.setTheme("hairstylelabel");
-		add(hairStyleLabel);
-		
-		prevHairStyle = new Button("<");
-		prevHairStyle.addCallback(new Runnable() {
-			@Override public void run() {
-				previousHairStyle();
-			}
-		});
-		prevHairStyle.setTheme("prevhairstyle");
-		add(prevHairStyle);
-		
-		nextHairStyle = new Button(">");
-		nextHairStyle.addCallback(new Runnable() {
-			@Override public void run() {
-				nextHairStyle();
-			}
-		});
-		nextHairStyle.setTheme("nexthairstyle");
-		add(nextHairStyle);
-		
-		beardLabel = new Label("Beard");
-		beardLabel.setTheme("beardlabel");
-		add(beardLabel);
-		
-		beardStyleLabel = new Label("Style");
-		beardStyleLabel.setTheme("beardstylelabel");
-		add(beardStyleLabel);
-		
-		prevBeardStyle = new Button("<");
-		prevBeardStyle.addCallback(new Runnable() {
-			@Override public void run() {
-				previousBeardStyle();
-			}
-		});
-		prevBeardStyle.setTheme("prevbeardstyle");
-		add(prevBeardStyle);
-		
-		nextBeardStyle = new Button(">");
-		nextBeardStyle.addCallback(new Runnable() {
-			@Override public void run() {
-				nextBeardStyle();
-			}
-		});
-		nextBeardStyle.setTheme("nextbeardstyle");
-		add(nextBeardStyle);
-		
-		skinLabel = new Label("Skin");
-		skinLabel.setTheme("skinlabel");
-		add(skinLabel);
-		
-		clothingLabel = new Label("Clothing");
-		clothingLabel.setTheme("clothinglabel");
-		add(clothingLabel);
-		
-		clothingColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setClothingColor(color);
-			}
 
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedClothingColor();
-			}
-		}, CLOTHING_COLORS);
-		clothingColorPicker.setTheme("clothingcolorpicker");
-		add(clothingColorPicker);
-		
-		currentClothingColor = DEFAULT_CLOTHING_COLOR;
-		
-		portraitLabel = new Label("Portrait");
-		portraitLabel.setTheme("portraitlabel");
-		add(portraitLabel);
-		
-		choosePortrait = new Button("Choose...");
-		choosePortrait.addCallback(new Runnable() {
-			@Override public void run() {
-				PortraitSelector p = new PortraitSelector(BuilderPaneCosmetic.this, getCharacter());
-				p.setCallback(BuilderPaneCosmetic.this);
-				p.openPopupCentered();
-			}
-		});
-		choosePortrait.setTheme("chooseportraitbutton");
-		add(choosePortrait);
-		
-		getNextButton().setText("Finish & Save");
-		
-		updateWorkingCopy();
+
+		addAppearanceWidgets();
+        addNameWidgets();
+        addGenderWidgets();
+        addHairstyleWidgets();
+        addBeardWidgets();
+        addSkinWidgets();
+        addClothingWidgets();
+        addPortraitWidgets();
+        setupAfterAddingWidgets();
+
 	}
 
 	@Override public void next() {
@@ -305,23 +134,20 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	@Override protected void layout() {
 		super.layout();
 		
-		// determine label column width
-		
-		nameLabel.setSize(nameLabel.getPreferredWidth(), nameLabel.getPreferredHeight());
-		genderLabel.setSize(genderLabel.getPreferredWidth(), genderLabel.getPreferredHeight());
-		hairLabel.setSize(hairLabel.getPreferredWidth(), hairLabel.getPreferredHeight());
-		beardLabel.setSize(beardLabel.getPreferredWidth(), beardLabel.getPreferredHeight());
-		skinLabel.setSize(skinLabel.getPreferredWidth(), skinLabel.getPreferredHeight());
-		clothingLabel.setSize(clothingLabel.getPreferredWidth(), clothingLabel.getPreferredHeight());
-		portraitLabel.setSize(portraitLabel.getPreferredWidth(), portraitLabel.getPreferredHeight());
-		
-		int labelColumnWidth = Math.max(nameLabel.getWidth(), genderLabel.getWidth());
-		labelColumnWidth = Math.max(labelColumnWidth, hairLabel.getWidth());
-		labelColumnWidth = Math.max(labelColumnWidth, beardLabel.getWidth());
-		labelColumnWidth = Math.max(labelColumnWidth, skinLabel.getWidth());
-		labelColumnWidth = Math.max(labelColumnWidth, portraitLabel.getWidth());
-		labelColumnWidth = Math.max(labelColumnWidth, clothingLabel.getWidth());
+		Label[] labels = { nameLabel, genderLabel, hairLabel, beardLabel, skinLabel, portraitLabel, clothingLabel };
+
+		for (Label label : labels) {
+		    label.setSize(label.getPreferredWidth(), label.getPreferredHeight());
+		}
+
+		int labelColumnWidth = 0;
+
+		for (Label label : labels) {
+		    labelColumnWidth = Math.max(labelColumnWidth, label.getWidth());
+		}
+
 		labelColumnWidth += gap;
+
 		
 		// layout content column
 		int contentColumnX = getInnerX() + labelColumnWidth + gap;
@@ -346,31 +172,11 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		}
 		int genderCenterY = genderSelectors.get(0).getY() + genderSelectors.get(0).getHeight() / 2;
 		
-		// layout hair selector widgets
-		hairColorPicker.setSize(hairColorPicker.getPreferredWidth(), hairColorPicker.getPreferredHeight());
 		int hairCenterY = genderSelectors.get(0).getBottom() + gap + hairColorPicker.getHeight() / 2;
-		
-		hairStyleLabel.setSize(hairStyleLabel.getPreferredWidth(), hairStyleLabel.getPreferredHeight());
-		prevHairStyle.setSize(prevHairStyle.getPreferredWidth(), hairStyleLabel.getPreferredHeight());
-		nextHairStyle.setSize(nextHairStyle.getPreferredWidth(), hairStyleLabel.getPreferredHeight());
-		
-		prevHairStyle.setPosition(contentColumnX, hairCenterY - prevHairStyle.getHeight() / 2);
-		hairStyleLabel.setPosition(prevHairStyle.getRight() + smallGap, hairCenterY - hairStyleLabel.getHeight() / 2);
-		nextHairStyle.setPosition(hairStyleLabel.getRight() + smallGap, hairCenterY - nextHairStyle.getHeight() / 2);
-		hairColorPicker.setPosition(nextHairStyle.getRight() + smallGap, hairCenterY - hairColorPicker.getHeight() / 2);
-		
-		// layout beard selector widgets
-		beardColorPicker.setSize(beardColorPicker.getPreferredWidth(), beardColorPicker.getPreferredHeight());
+		layoutSelectorWidgets(contentColumnX,hairColorPicker, hairStyleLabel, prevHairStyle, nextHairStyle, hairCenterY);
+
 		int beardCenterY = hairColorPicker.getBottom() + gap + beardColorPicker.getHeight() / 2;
-		
-		beardStyleLabel.setSize(beardStyleLabel.getPreferredWidth(), beardStyleLabel.getPreferredHeight());
-		prevBeardStyle.setSize(prevBeardStyle.getPreferredWidth(), beardStyleLabel.getPreferredHeight());
-		nextBeardStyle.setSize(nextBeardStyle.getPreferredWidth(), beardStyleLabel.getPreferredHeight());
-		
-		prevBeardStyle.setPosition(contentColumnX, beardCenterY - prevBeardStyle.getHeight() / 2);
-		beardStyleLabel.setPosition(prevBeardStyle.getRight() + smallGap, beardCenterY - beardStyleLabel.getHeight() / 2);
-		nextBeardStyle.setPosition(beardStyleLabel.getRight() + smallGap, beardCenterY - nextBeardStyle.getHeight() / 2);
-		beardColorPicker.setPosition(nextBeardStyle.getRight() + smallGap, beardCenterY - beardColorPicker.getHeight() / 2);
+		layoutSelectorWidgets(contentColumnX,beardColorPicker, beardStyleLabel, prevBeardStyle, nextBeardStyle, beardCenterY);
 		
 		// layout skin selector
 		skinColorPicker.setSize(skinColorPicker.getPreferredWidth(), skinColorPicker.getPreferredHeight());
@@ -464,79 +270,35 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 	}
 	
 	private void createHairBeardAndSkinPickers() {
-		if (hairColorPicker != null) {
-			this.removeChild(hairColorPicker);
-		}
+		removeIfExists(hairColorPicker);
+	    removeIfExists(skinColorPicker);
+	    removeIfExists(beardColorPicker);
 		
-		if (skinColorPicker != null) {
-			this.removeChild(skinColorPicker);
-		}
-		
-		if (beardColorPicker != null) {
-			this.removeChild(beardColorPicker);
-		}
-		
-		List<String> hairBeardColorsList = workingRace.getHairAndBeardColors();
-		Color[] hairBeardColors = new Color[hairBeardColorsList.size()];
-		int i = 0;
-		for (String color : hairBeardColorsList) {
-			hairBeardColors[i] = Color.parserColor(color);
-			i++;
-		}
-		
-		List<String> skinColorsList = workingRace.getSkinColors();
-		Color[] skinColors = new Color[skinColorsList.size()];
-		i = 0;
-		for (String color : skinColorsList) {
-			skinColors[i] = Color.parserColor(color);
-			i++;
-		}
-		
-		hairColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setHairColor(color);
-			}
+	    List<String> hairBeardColorsList = workingRace.getHairAndBeardColors();
+	    Color[] hairBeardColors = convertStringListToColorArray(hairBeardColorsList);
 
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedHairColor();
-			}
-		}, hairBeardColors);
-		hairColorPicker.setTheme("haircolorpicker");
-		add(hairColorPicker);
-		
-		beardColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setBeardColor(color);
-			}
+	    List<String> skinColorsList = workingRace.getSkinColors();
+	    Color[] skinColors = convertStringListToColorArray(skinColorsList);
 
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedBeardColor();
-			}
-		}, hairBeardColors);
-		beardColorPicker.setTheme("beardcolorpicker");
-		add(beardColorPicker);
 		
-		skinColorPicker = new ColorPicker(new ColorCallback() {
-			@Override public void colorSet(Color color) {
-				setSkinColor(color);
-			}
+	    setupColorPicker(hairColorPicker, hairBeardColors, "haircolorpicker", this::setHairColor,
+	            () -> getCharacter().getSelectedHairColor());
 
-			@Override public Color getCurrentColor() {
-				return getCharacter().getSelectedSkinColor();
-			}
-		}, skinColors);
-		skinColorPicker.setTheme("skincolorpicker");
-		add(skinColorPicker);
+	    setupColorPicker(beardColorPicker, hairBeardColors, "beardcolorpicker", this::setBeardColor,
+	            () -> getCharacter().getSelectedBeardColor());
+
+	    setupColorPicker(skinColorPicker, skinColors, "skincolorpicker", this::setSkinColor,
+	            () -> getCharacter().getSelectedSkinColor());
+
 		
-		for (i = 0; i < hairValid.length; i++) { hairValid[i] = false; }
-		for (int hairIndex : workingRace.getSelectableHairIndices()) {
-			hairValid[hairIndex] = true;
-		}
-		
-		for (i = 0; i < beardsValid.length; i++) { beardsValid[i] = false; }
-		for (int beardIndex : workingRace.getSelectableBeardIndices()) {
-			beardsValid[beardIndex] = true;
-		}
+	    setValidIndices(hairValid, workingRace.getSelectableHairIndices());
+	    setValidIndices(beardsValid, workingRace.getSelectableBeardIndices());
+	}
+	
+	private void removeIfExists(ColorPicker picker) {
+	    if (picker != null) {
+	        this.removeChild(picker);
+	    }
 	}
 	
 	@Override protected void updateCharacter() {
@@ -602,19 +364,7 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		
 		updateWorkingCopy();
 	}
-	
-	private void setName(String name) {
-		getCharacter().setSelectedName(name);
-		
-		updateWorkingCopy();
-	}
-	
-	private void setClothingColor(Color color) {
-		currentClothingColor = color;
-		getCharacter().setSelectedClothingColor(color);
-		
-		updateWorkingCopy();
-	}
+
 	
 	private void setSkinColor(Color color) {
 		currentSkinColor = color;
@@ -686,6 +436,178 @@ public class BuilderPaneCosmetic extends AbstractBuilderPane implements Portrait
 		getCharacter().setSelectedHairIcon("subIcons/hair" + numberFormat.format(currentHairStyle));
 		
 		updateWorkingCopy();
+	}
+	
+	
+	private int determineMaxFeaturestyles()
+    {
+        int i = 1;
+        String currentValue = null;
+
+        do {
+		    currentValue = "subIcons/feature" + numberFormat.format(i);
+		    i++;
+	    } while(SpriteManager.hasSprite(currentValue));
+
+        return  i - 2;
+    }  
+
+	private void addAppearanceWidgets()
+	{
+	    appearanceHolder = new AppearanceArea();
+		add(appearanceHolder);
+
+		characterViewer = new CharacterViewer();
+		characterViewer.setTheme("characterviewer");
+		appearanceHolder.add(characterViewer);
+
+		portraitViewer = new PortraitViewer(workingCopy);
+		appearanceHolder.add(portraitViewer);
+	}
+
+	
+	private void addNameWidgets()
+	{
+	    nameLabel = new Label("Name");
+			nameLabel.setTheme("namelabel");
+			add(nameLabel);
+	}
+
+	private void addGenderWidgets()
+	{
+	    genderLabel = new Label("Gender");
+			genderLabel.setTheme("genderlabel");
+			add(genderLabel);
+	}
+
+	private void addHairstyleWidgets()
+	{
+	    hairLabel = new Label("Hair");
+			hairLabel.setTheme("hairlabel");
+			add(hairLabel);
+			
+			hairStyleLabel = new Label("Style");
+			hairStyleLabel.setTheme("hairstylelabel");
+			add(hairStyleLabel);
+			
+			prevHairStyle = new Button("<");
+			prevHairStyle.addCallback(new Runnable() {
+				@Override public void run() {
+					previousHairStyle();
+				}
+			});
+			prevHairStyle.setTheme("prevhairstyle");
+			add(prevHairStyle);
+			
+			nextHairStyle = new Button(">");
+			nextHairStyle.addCallback(new Runnable() {
+				@Override public void run() {
+					nextHairStyle();
+				}
+			});
+			nextHairStyle.setTheme("nexthairstyle");
+			add(nextHairStyle);
+	}
+
+	private void addBeardWidgets()
+	{
+	    beardLabel = new Label("Beard");
+			beardLabel.setTheme("beardlabel");
+			add(beardLabel);
+			
+			beardStyleLabel = new Label("Style");
+			beardStyleLabel.setTheme("beardstylelabel");
+			add(beardStyleLabel);
+			
+			prevBeardStyle = new Button("<");
+			prevBeardStyle.addCallback(new Runnable() {
+				@Override public void run() {
+					previousBeardStyle();
+				}
+			});
+			prevBeardStyle.setTheme("prevbeardstyle");
+			add(prevBeardStyle);
+			
+			nextBeardStyle = new Button(">");
+			nextBeardStyle.addCallback(new Runnable() {
+				@Override public void run() {
+					nextBeardStyle();
+				}
+			});
+			nextBeardStyle.setTheme("nextbeardstyle");
+			add(nextBeardStyle);
+	}
+
+	private void addSkinWidgets()
+	{
+	    skinLabel = new Label("Skin");
+			skinLabel.setTheme("skinlabel");
+			add(skinLabel);
+	}
+
+	private void addClothingWidgets()
+	{
+	    clothingLabel = new Label("Clothing");
+			clothingLabel.setTheme("clothinglabel");
+			add(clothingLabel);
+	}
+
+	private void addPortraitWidgets()
+	{
+	    portraitLabel = new Label("Portrait");
+			portraitLabel.setTheme("portraitlabel");
+			add(portraitLabel);
+	}
+	
+	private void setupAfterAddingWidgets() {
+	    getNextButton().setText("Finish & Save");
+	    updateWorkingCopy();
+	}
+	
+	private Color[] convertStringListToColorArray(List<String> colorList) {
+	    Color[] colors = new Color[colorList.size()];
+	    for (int i = 0; i < colorList.size(); i++) {
+	        colors[i] = Color.parserColor(colorList.get(i));
+	    }
+	    return colors;
+	}
+
+	private void setupColorPicker(ColorPicker colorPicker, Color[] colorArray, String theme,
+            Consumer<Color> setColorFunction, Supplier<Color> getCurrentColorFunction) {
+			colorPicker = new ColorPicker(new ColorCallback() {
+				@Override
+				public void colorSet(Color color) {
+					setColorFunction.accept(color);
+				}
+
+				@Override
+				public Color getCurrentColor() {
+					return getCurrentColorFunction.get();
+				}
+			}, colorArray);
+
+			colorPicker.setTheme(theme);
+			add(colorPicker);
+		}
+
+	private void setValidIndices(boolean[] validArray, List<Integer> selectableIndices) {
+	    Arrays.fill(validArray, false);
+	    for (int index : selectableIndices) {
+	        validArray[index] = true;
+	    }
+	}
+	
+	private void layoutSelectorWidgets(int contentColumnX,ColorPicker colorPicker, Label styleLabel, Button prevStyle, Button nextStyle,int centerY) {
+			colorPicker.setSize(colorPicker.getPreferredWidth(), colorPicker.getPreferredHeight());
+
+			styleLabel.setSize(styleLabel.getPreferredWidth(), styleLabel.getPreferredHeight());
+			prevStyle.setSize(prevStyle.getPreferredWidth(), styleLabel.getPreferredHeight());
+			nextStyle.setSize(nextStyle.getPreferredWidth(), styleLabel.getPreferredHeight());
+
+			prevStyle.setPosition(contentColumnX, centerY - prevStyle.getHeight() / 2);
+			styleLabel.setPosition(prevStyle.getRight() + smallGap, centerY - styleLabel.getHeight() / 2);
+			nextStyle.setPosition(styleLabel.getRight() + smallGap, centerY - nextStyle.getHeight() / 2);
+			colorPicker.setPosition(nextStyle.getRight() + smallGap, centerY - colorPicker.getHeight() / 2);
 	}
 	
 	private class AppearanceArea extends Widget {
